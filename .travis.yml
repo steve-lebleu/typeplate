@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+    - "10.9"
+services: mysql
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS ts_express_boilerplate_test;' 
+script: mkdir -p ./dist/logs ./dist/uploads/archives ./dist/uploads/documents ./dist/uploads/images/master-copy ./dist/uploads/images/rescale/extra-small ./dist/uploads/images/rescale/medium ./dist/uploads/images/rescale/extra-large && cp -r ./src/env ./dist/ && npm i typescript -g && npm i typeorm -g && npm i && tsc && env ENVIRONMENT=test env RUNNER=travis ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000
+cache:
+  directories:
+    - "node_modules"

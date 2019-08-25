@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": false,
+    "baseUrl": "./src",
+    "paths": {
+      "@bases/*": ["api/types/classes/*"],
+      "@config/*": ["config/*"],
+      "@classes/*": ["api/classes/*"],
+      "@controllers/*": ["api/controllers/*"],
+      "@enums/*": ["api/types/enums/*"],
+      "@errors/*": ["api/types/errors/*"],
+      "@interfaces/*": ["api/types/interfaces/*"],
+      "@middlewares/*": ["api/middlewares/*"],
+      "@models/*": ["api/models/*"],
+      "@repositories/*": ["api/repositories/*"],
+      "@routes/*": ["api/routes/v1/*"],
+      "@serializers/*": ["api/serializers/*"],
+      "@services/*": ["api/services/*"],
+      "@transporters/*": ["api/services/transporters/*"],
+      "@utils/*": ["api/utils/*"],
+      "@validations/*": ["api/validations/*"],
+      "@whitelists/*": ["api/serializers/whitelists/*"]
+    },
+    "lib": ["dom", "es5", "es6", "es7"],
+    "target": "es2017",
+    "module": "commonjs",
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+  },
+  "exclude" : [
+    "**/**/node_modules",
+    "node_modules"
+  ]
+}

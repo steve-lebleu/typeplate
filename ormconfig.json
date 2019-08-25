@@ -1,0 +1,20 @@
+{
+  "type": "mysql",
+  "name": "default",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "root",
+  "database": "your-database",
+  "synchronize": false,
+  "logging": false,
+  "entities": [
+    "dist/api/models/**/*.js"
+  ],
+  "migrations": [
+    "src/migration/**/*.ts"
+  ],
+  "subscribers": [
+    "src/subscribers/**/*.ts"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Your project",
+  "version": "1.0.0",
+  "description": "Final user documentation",
+  "title": "API final user documentation",
+  "url": "https://www.your-project.com/docs/apidoc",
+  "order": [
+    "Info",
+    "Auth",
+    "User",
+    "Document"
+  ],
+  "template": {
+    "withGenerator": false
+  }
+}

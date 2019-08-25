@@ -1,4 +1,4 @@
-# 3rd party Typescript boilerplate
+# Typescript / Express.js / Typeorm Rest API boilerplate
 
 [![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
 [![Coverage](https://img.shields.io/badge/Coverage-86.49%25-green)](https://github.com/ellerbrock/typescript-badges/)
@@ -8,13 +8,11 @@
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.2-orange)](https://typeorm.io/#/)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
-This repository contains API part about mail sending, [REST API Typescript-Express-Typeorm](https://github.com/konfer-be/rest-api-ts-express-typeorm) based.
+This repository contain small but badass, scalable REST API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based.
 
 ## Setup
 
-This repository contains badass 3rd party REST API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based.
-
-As a starter project, he implements some classic features :
+As a starter project, boilerplate implement some classic features :
 
 * ORM couch
 * User's management
@@ -129,14 +127,34 @@ If required, yo can adapt typescript configuration in [tsconfig.json](https://ww
 ```javascript
 {
   "compilerOptions": {
-    "lib": ["dom", "es5", "es6"],
+    "outDir": "./dist/",
+    "sourceMap": false,
+    "baseUrl": "./src",
+    "paths": {
+      "@bases/*": ["api/types/classes/*"],
+      "@config/*": ["config/*"],
+      "@classes/*": ["api/classes/*"],
+      "@controllers/*": ["api/controllers/*"],
+      "@enums/*": ["api/types/enums/*"],
+      "@errors/*": ["api/types/errors/*"],
+      "@interfaces/*": ["api/types/interfaces/*"],
+      "@middlewares/*": ["api/middlewares/*"],
+      "@models/*": ["api/models/*"],
+      "@repositories/*": ["api/repositories/*"],
+      "@routes/*": ["api/routes/v1/*"],
+      "@serializers/*": ["api/serializers/*"],
+      "@services/*": ["api/services/*"],
+      "@transporters/*": ["api/services/transporters/*"],
+      "@utils/*": ["api/utils/*"],
+      "@validations/*": ["api/validations/*"],
+      "@whitelists/*": ["api/serializers/whitelists/*"]
+    },
+    "lib": ["dom", "es5", "es6", "es7"],
     "target": "es2017",
     "module": "commonjs",
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": false,
-    "outDir": "./dist/"
   },
   "exclude" : [
     "**/**/node_modules",
@@ -158,8 +176,8 @@ If you will use TypeORM as CLI, begin by update the ormconfig.json file and fill
   "host": "localhost",
   "port": 3306,
   "username": "root",
-  "password": "root",
-  "database": "your-database",
+  "password": "e2q2mak7",
+  "database": "cliam",
   "synchronize": false,
   "logging": false,
   "entities": [
@@ -169,7 +187,8 @@ If you will use TypeORM as CLI, begin by update the ormconfig.json file and fill
     "./dist/migrations/**/*.js"
   ],
   "cli": {
-    "migrationsDir": "./dist/migrations"
+    "migrationsDir": "./dist/migrations",
+    "subscribersDir": "./dist/subscribers"
   },
   "subscribers": [
     "src/subscribers/**/*.ts"

@@ -10,20 +10,12 @@ require('module-alias/register');
  * 
  */
 
-import { MySQLServer } from "./server.mysql";
+import { Server } from "@servers/http.server";
 
-const dbServer = new MySQLServer();
-dbServer.start();
-
-import { ApplicationConfiguration } from "@config/app.config";
-import { Server } from "./server.http";
-
-const applicationConfig = new ApplicationConfiguration();
-
-const server = new Server( applicationConfig.app );
+const server = new Server();
 server.start();
 
-const exportWrappedHttpServerForTesting = server.server;
-const exportWrappedExpressApplicationForTesting = applicationConfig.app;
+const wrappedHttpServerForTesting = server.http;
+const wrappedApplicationForTesting = server.app;
 
-export { exportWrappedExpressApplicationForTesting as application, exportWrappedHttpServerForTesting as server };
+export { wrappedApplicationForTesting as application, wrappedHttpServerForTesting as server };

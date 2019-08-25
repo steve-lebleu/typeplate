@@ -35,7 +35,7 @@
     "init": "npm-run-all -s kicklogs kickuploads kickenv",
     "test": "nyc --reporter=html --report-dir=./docs/nyc-coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000",
     "coverage": "plato -r -t 'API code coverage report' -d ./docs/plato-coverage ./dist",
-    "todo-ci": "leasot -x --reporter markdown 'src/**/*.ts' > TODO.md",
+    "todo-ci": "leasot -x --reporter markdown './src/**/*.ts' > TODO.md",
     "apidoc-ci": "apidoc -i src/ -o docs/apidoc/",
     "typedoc-ci": "typedoc --mode modules --name 'API documentation' --defaultCategory 'Root' --categorizeByGroup  --out ./docs/typedoc ./src"
   },
@@ -52,6 +52,7 @@
     "@repositories": "dist/api/repositories",
     "@routes": "dist/api/routes/v1",
     "@serializers": "dist/api/serializers",
+    "@servers": "dist/servers",
     "@services": "dist/api/services",
     "@utils": "dist/api/utils",
     "@validations": "dist/api/validations",

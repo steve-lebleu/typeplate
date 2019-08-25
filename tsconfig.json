@@ -16,6 +16,7 @@
       "@repositories/*": ["api/repositories/*"],
       "@routes/*": ["api/routes/v1/*"],
       "@serializers/*": ["api/serializers/*"],
+      "@servers/*": ["servers/*"],
       "@services/*": ["api/services/*"],
       "@transporters/*": ["api/services/transporters/*"],
       "@utils/*": ["api/utils/*"],

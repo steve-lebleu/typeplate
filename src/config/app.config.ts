@@ -28,7 +28,7 @@ import { Catcher } from "@middlewares/catcher.middleware";
  * Instanciate and set Express application.
  * Configure and plug middlewares from local options or dedicated files in ./config.
  */
-export class ApplicationConfiguration {
+export class Application {
 
   /**
    * @description Wrapped Express.js application

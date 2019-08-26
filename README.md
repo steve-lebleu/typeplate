@@ -8,7 +8,7 @@
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.2-orange)](https://typeorm.io/#/)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
-This repository contain small but badass, scalable RESTful API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based.
+This repository contain scalable RESTful API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based.
 
 Thanks a lot to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration with her [Express REST 2017 boilerplate](https://github.com/danielfsousa/express-rest-es2017-boilerplate).
 

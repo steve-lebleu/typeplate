@@ -17,7 +17,7 @@ describe("Authentification routes", function () {
   before(function (done) {
 
     agent      = request.agent(server);
-    password   = fixtures.password();
+    password   = 'e2q2mak7';
     user       = fixtures.entity('admin', password);
     apikey     = crypt(user.email + process.env.JWT_SECRET, 64);
 

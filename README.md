@@ -200,7 +200,7 @@ More info about [typeorm subscribers](https://typeorm.io/#/listeners-and-subscri
 
 ### Entity generating
 
-The boilerplate provide a basic entity generator (kfr-ba), which be used as cli tool. This generate following files :
+The boilerplate provide a basic entity generator (kfr-kem), which be used as cli tool. This generate following files :
 
 * Controller
 * Model 
@@ -214,10 +214,12 @@ The boilerplate provide a basic entity generator (kfr-ba), which be used as cli 
 To use the file generating, run the following command :
 
 ```bash
-$ ba
+$ kem
 ```
 
-The prompt ask you first the destination, and check if the local directory exists. 
+The prompt ask you first the local destination, and check if the local directory exists. Please, provide the absolute root folder path of the project (ie /var/www/my-project).
+
+Next, you will enter the name of the entity to generate. You can provide one or many words separated by spaces, generator will use hyphens for filename, and PascalCase for entity name.
 
 Note that the generated files contains only basic features. Note also that some parts must be filled by yourself :
 

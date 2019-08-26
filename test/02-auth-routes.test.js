@@ -3,12 +3,12 @@ var { crypt } = require(process.cwd() + '/dist/api/utils/string.util');
 
 var request = require('supertest');
 var chance = require('chance').Chance();
+
 var { clone } = require('lodash');
 var { expect } = require('chai');
 
 var fixtures = require(process.cwd() + '/test/fixtures').user;
 var { doRequest } = require(process.cwd() + '/test/utils');
-
 
 describe("Authentification routes", function () {
   

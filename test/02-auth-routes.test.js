@@ -16,6 +16,7 @@ describe("Authentification routes", function () {
   before(function (done) {
 
     try {
+
       agent       = request.agent(server);
       password    = 'e2q2mak7';
       credentials = fixtures.user.entity('admin', password);
@@ -27,6 +28,7 @@ describe("Authentification routes", function () {
         refreshToken  = res.body.token.refreshToken; 
         done();
       });
+      
     } catch(e) {
       console.log(e.message);
       done(e);

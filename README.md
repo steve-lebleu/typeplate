@@ -1,7 +1,7 @@
 # Typescript / Express.js / Typeorm RESTful API boilerplate
 
 [![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
-[![Coverage](https://img.shields.io/badge/Coverage-88.35%25-green)](https://github.com/ellerbrock/typescript-badges/)
+[![Coverage](https://img.shields.io/badge/Coverage-88.35%25-green)](https://github.com/konfer-be/ts-express-typeorm-boilerplate)
 [![Node](https://img.shields.io/badge/Node-10.9-green)](https://nodejs.org/docs/latest-v10.x/api/index.html)
 [![Express](https://img.shields.io/badge/Express-4.16-lightgrey)](https://expressjs.com/fr/)
 [![TypeScript](https://img.shields.io/badge/Typescript-5.3-blue)](https://www.typescriptlang.org/)
@@ -11,7 +11,7 @@
 
 Scalable RESTful API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based.
 
-Thanks a lot to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration with [Express REST 2017 boilerplate](https://github.com/danielfsousa/express-rest-es2017-boilerplate).
+Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration with [Express REST 2017 boilerplate](https://github.com/danielfsousa/express-rest-es2017-boilerplate).
 
 ## Summary
 

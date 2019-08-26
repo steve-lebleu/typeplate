@@ -3,7 +3,7 @@ var { crypt } = require(process.cwd() + '/dist/api/utils/string.util');
 
 var request = require('supertest');
 var chance = require('chance').Chance();
-var fixtures = require(process.cwd() + '/test/fixtures').user;
+var fixtures = require(process.cwd() + '/test/fixtures');
 
 var { clone } = require('lodash');
 var { expect } = require('chai');
@@ -11,16 +11,16 @@ var { doRequest } = require(process.cwd() + '/test/utils');
 
 describe("Authentification routes", function () {
   
-  var agent, password, user, token, refreshToken, apikey;
+  var agent, password, credentials, token, refreshToken, apikey;
   
   before(function (done) {
 
-    agent      = request.agent(server);
-    password   = 'e2q2mak7';
-    user       = fixtures.entity('admin', password);
-    apikey     = crypt(user.email + process.env.JWT_SECRET, 64);
+    agent       = request.agent(server);
+    password    = 'e2q2mak7';
+    credentials = fixtures.user.entity('admin', password);
+    apikey      = crypt(credentials.email + process.env.JWT_SECRET, 64);
 
-    doRequest(agent, 'post', '/api/v1/auth/register', null, null, user, 201, function(err, res) {
+    doRequest(agent, 'post', '/api/v1/auth/register', null, null, credentials, 201, function(err, res) {
       expect(res.statusCode).to.eqls(201);
       token         = res.body.token.accessToken;
       refreshToken  = res.body.token.refreshToken; 
@@ -45,7 +45,7 @@ describe("Authentification routes", function () {
     });
 
     it('POST /api/v1/auth/register 400 - bad email', function (done) {
-      const payload = fixtures.entity('user');
+      const payload = fixtures.user.entity('user');
       payload.email = 'imnotanemail';
       doRequest(agent, 'post', '/api/v1/auth/register', null, null, payload, 400, function(err, res) {
         expect(res.statusCode).to.eqls(400);
@@ -54,7 +54,7 @@ describe("Authentification routes", function () {
     });
 
     it('POST /api/v1/auth/register 400 - password too short', function (done) {
-      const payload = fixtures.entity('user');
+      const payload = fixtures.user.entity('user');
       payload.password = chance.hash({ length: 7 });
       doRequest(agent, 'post', '/api/v1/auth/register', null, null, payload, 400, function(err, res) {
         expect(res.statusCode).to.eqls(400);
@@ -63,7 +63,7 @@ describe("Authentification routes", function () {
     });
 
     it('POST /api/v1/auth/register 400 - password too long', function (done) {
-      const payload = fixtures.entity('user');
+      const payload = fixtures.user.entity('user');
       payload.password = chance.hash({ length: 17 });
       doRequest(agent, 'post', '/api/v1/auth/register', null, null, payload, 400, function(err, res) {
         expect(res.statusCode).to.eqls(400);
@@ -72,14 +72,14 @@ describe("Authentification routes", function () {
     });
 
     it('POST /api/v1/auth/register 409 - duplicate entry (email)', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/register', null, null, user, 409, function(err, res) {
+      doRequest(agent, 'post', '/api/v1/auth/register', null, null, credentials, 409, function(err, res) {
         expect(res.statusCode).to.eqls(409);
         done();
       });
     });
 
     it('POST /api/v1/auth/register 201', function (done) {
-      const payload = fixtures.entity('admin', 'e2q2mak7');
+      const payload = fixtures.user.entity('admin', 'e2q2mak7');
       doRequest(agent, 'post', '/api/v1/auth/register', null, null, payload, 201, function(err, res) {
         expect(res.statusCode).to.eqls(201);
         done();
@@ -98,7 +98,7 @@ describe("Authentification routes", function () {
     });
 
     it('POST /api/v1/auth/login 401 - bad password', function (done) {
-      const payload = clone(user);
+      const payload = clone(credentials);
       payload.password = chance.hash({ length: 8 })
       doRequest(agent, 'post', '/api/v1/auth/login', null, null, payload, 401, function(err, res) {
         expect(res.statusCode).to.eqls(401);
@@ -107,14 +107,14 @@ describe("Authentification routes", function () {
     });
 
     it('POST /api/v1/auth/login 404 - API key not found', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { apikey: 'fake' + user.apikey }, 404, function(err, res) {
+      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { apikey: 'fake' + credentials.apikey }, 404, function(err, res) {
         expect(res.statusCode).to.eqls(404);
         done();
       });
     });
 
     it('POST /api/v1/auth/login 404 - email not found', function (done) {
-      const payload = clone(user);
+      const payload = clone(credentials);
       payload.email = 'fake' + chance.email();
       doRequest(agent, 'post', '/api/v1/auth/login', null, null, payload, 404, function(err, res) {
         expect(res.statusCode).to.eqls(404);
@@ -123,14 +123,14 @@ describe("Authentification routes", function () {
     });
 
     it('POST /api/v1/auth/login 200 - with credentials', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { email: user.email, password: password }, 200, function(err, res) {
+      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { email: credentials.email, password: password }, 200, function(err, res) {
         expect(res.statusCode).to.eqls(200);
         done();
       });
     });
 
     it('POST /api/v1/auth/login 200 - with credentials + data ok', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { email: user.email, password: password }, 200, function(err, res) {
+      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { email: credentials.email, password: password }, 200, function(err, res) {
         expect(res.statusCode).to.eqls(200);
         expect(res.body).to.have.all.keys(['token', 'user']);
         expect(res.body.token).to.have.all.keys(['tokenType', 'accessToken', 'refreshToken', 'expiresIn']);

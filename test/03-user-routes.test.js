@@ -1,10 +1,10 @@
 var { server } = require(process.cwd() + '/dist/api/app.bootstrap');
+var { expect } = require('chai');
 
 var request = require('supertest');
 var chance = require('chance').Chance();
-var { expect } = require('chai');
-
 var fixtures = require(process.cwd() + '/test/fixtures');
+
 var { doRequest, doQueryRequest, dataOk, pools, expectations } = require(process.cwd() + '/test/utils');
 
 describe("User routes", function () {

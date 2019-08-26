@@ -15,17 +15,23 @@ describe("Authentification routes", function () {
   
   before(function (done) {
 
-    agent       = request.agent(server);
-    password    = 'e2q2mak7';
-    credentials = fixtures.user.entity('admin', password);
-    apikey      = crypt(credentials.email + process.env.JWT_SECRET, 64);
-
-    doRequest(agent, 'post', '/api/v1/auth/register', null, null, credentials, 201, function(err, res) {
-      expect(res.statusCode).to.eqls(201);
-      token         = res.body.token.accessToken;
-      refreshToken  = res.body.token.refreshToken; 
-      done();
-    });
+    try {
+      agent       = request.agent(server);
+      password    = 'e2q2mak7';
+      credentials = fixtures.user.entity('admin', password);
+      apikey      = crypt(credentials.email + process.env.JWT_SECRET, 64);
+  
+      doRequest(agent, 'post', '/api/v1/auth/register', null, null, credentials, 201, function(err, res) {
+        expect(res.statusCode).to.eqls(201);
+        token         = res.body.token.accessToken;
+        refreshToken  = res.body.token.refreshToken; 
+        done();
+      });
+    } catch(e) {
+      console.log(e.message);
+      done(e);
+    }
+    
 
   });
   

@@ -36,6 +36,7 @@ class EnvironmentConfiguration {
     this.set();
     require('dotenv').config( { path : `${process.cwd()}/dist/env/${this.environment}.env` } );
   }
+
 }
 
 EnvironmentConfiguration.load();
@@ -57,7 +58,9 @@ const typeorm               = {
   host: process.env.TYPEORM_HOST, 
   database: process.env.TYPEORM_DB, 
   user: process.env.TYPEORM_USER, 
-  pwd: process.env.TYPEORM_PWD 
+  pwd: process.env.TYPEORM_PWD,
+  sync: this.environment === ENVIRONMENT.production ? false : !!process.env.TYPEORM_SYNC,
+  log: !!process.env.TYPEORM_LOG,
 };
 const upload                = {
   path: process.cwd() + '/dist/' + process.env.UPLOAD_PATH,

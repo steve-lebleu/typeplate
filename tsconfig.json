@@ -6,7 +6,6 @@
     "paths": {
       "@bases/*": ["api/types/classes/*"],
       "@config/*": ["config/*"],
-      "@classes/*": ["api/classes/*"],
       "@controllers/*": ["api/controllers/*"],
       "@enums/*": ["api/types/enums/*"],
       "@errors/*": ["api/types/errors/*"],
@@ -18,7 +17,6 @@
       "@serializers/*": ["api/serializers/*"],
       "@servers/*": ["servers/*"],
       "@services/*": ["api/services/*"],
-      "@transporters/*": ["api/services/transporters/*"],
       "@utils/*": ["api/utils/*"],
       "@validations/*": ["api/validations/*"],
       "@whitelists/*": ["api/serializers/whitelists/*"]

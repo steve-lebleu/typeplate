@@ -3,7 +3,6 @@ import { httpLogs, authorized, version, env, contentType } from "@config/environ
 
 import * as Express from "express";
 import * as Hpp from "hpp";
-import * as HBSRenderEngine from "express-hbs";
 import * as BodyParser from "body-parser";
 import * as Cors from "cors";
 import * as Compression from "compression";
@@ -46,17 +45,6 @@ export class Application {
       },
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
       allowedHeaders: ["Accept", "Content-Type", "Authorization", "Origin", "From"]
-    },
-    render: {
-      active: true,
-      engine: 'hbs',
-      paths: {
-        hbs: {
-          partialsDir: [ `${process.cwd()}/dist/api/views/partials` ],
-          defaultLayout: `${process.cwd()}/dist/api/views/layouts/default.hbs`
-        }
-      },
-      views: `${process.cwd()}/dist/api/views`
     },
     stream: env === ENVIRONMENT.production ? createWriteStream(`${process.cwd()}/dist/logs/access.log`, { flags: 'a+' }) : Container.resolve('Logger').get('stream'),
     rate: {
@@ -126,21 +114,6 @@ export class Application {
     this.app.use( Cors( this.options.cors ) );
 
     /**
-     * Configure render engine
-     */
-    this.options.render.active && this.app.engine( this.options.render.engine, HBSRenderEngine.express4(this.options.render.paths[this.options.render.engine]) );
-
-    /**
-     * Set render engine
-     */
-    this.options.render.active && this.app.set('view engine', this.options.render.engine);
-
-    /**
-     * Set path views
-     */
-    this.options.render.active && this.app.set('views', this.options.render.views);
-
-    /**
      * Passport configuration
      * 
      * @see http://www.passportjs.org/
@@ -169,10 +142,13 @@ export class Application {
     
     /**
      * Set global middlewares on Express Application
-     * Note that after router, and before resolver, some routes pass by the Serializer middleware
-     * See routes/v1/index.ts to check which route serializes her data before exiting
      * 
-     * - ApiLimiter
+     * Note that after router, and before resolver, some routes pass by the Serializer middleware
+     * See services/proxy-router.service.ts to check which route serializes her data before exiting
+     * 
+     * Note also that middlewares are implemented in each route file (Guard, Validation, Upload, ...)
+     * 
+     * - RateLimit
      * - Deserializer (if Content-Type is application/vnd.api+json)
      * - Router(s)
      * - Resolver
@@ -183,7 +159,7 @@ export class Application {
      * Errors handlers
      */
     if( [ENVIRONMENT.development].includes(env as ENVIRONMENT) ) {
-      this.app.use( Catcher.notification ); // Notify in dev|test
+      this.app.use( Catcher.notification ); // Notify in dev
     } 
 
     this.app.use( Catcher.log, Catcher.exit, Catcher.notFound ); // Log, exit with error || exit with 404

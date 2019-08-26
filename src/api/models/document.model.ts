@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { UPLOAD_MIME_TYPE } from "@enums/mime-type.enum";
-import { DOCUMENT_TYPE } from "@enums/document-type.enum";
 import { User } from "@models/user.model";
 import { IModelize } from "@interfaces/IModelize.interface";
 import { whitelist } from '@whitelists/document.whitelist';

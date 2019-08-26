@@ -7,10 +7,11 @@
 [![TypeScript](https://img.shields.io/badge/Typescript-5.3-blue)](https://www.typescriptlang.org/)
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.2-orange)](https://typeorm.io/#/)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+[![Dependencies](https://david-dm.org/konfer-be/ts-express-typeorm-boilerplate.svg)](https://david-dm.org/konfer-be/ts-express-typeorm-boilerplate)
 
-This repository contain scalable RESTful API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based.
+Scalable RESTful API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based.
 
-Thanks a lot to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration with her [Express REST 2017 boilerplate](https://github.com/danielfsousa/express-rest-es2017-boilerplate).
+Thanks a lot to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration with [Express REST 2017 boilerplate](https://github.com/danielfsousa/express-rest-es2017-boilerplate).
 
 ## Summary
 
@@ -42,7 +43,7 @@ Give the kickstart :
 $ npm run kickstart
 ```
 
-This will be install Typescript and Typeorm globaly, install NPM packages, create *dist* directory and sub-directories, and run a one shot compilation.
+This will be install Typescript, Typeorm and cli entity generator globaly, NPM packages, create *dist* directory and sub-directories, and run a one shot compilation.
 
 ### Configure
 
@@ -199,29 +200,32 @@ More info about [typeorm subscribers](https://typeorm.io/#/listeners-and-subscri
 
 ### Entity generating
 
-The boilerplate expose a basic entity generator, which be used as NPM task. This generate following files :
+The boilerplate provide a basic entity generator (kfr-ba), which be used as cli tool. This generate following files :
 
-* Model
-* Controller 
+* Controller
+* Model 
 * Repository
 * Validation 
 * Route
 * Test
 * Serializer
-
-So, the proxy router service is updated with the dedicated entity router which has just been created.
+* Whitelist
 
 To use the file generating, run the following command :
 
 ```bash
-$ npm run generate YOUR_ENTITY_NAME
+$ ba
 ```
+
+The prompt ask you first the destination, and check if the local directory exists. 
 
 Note that the generated files contains only basic features. Note also that some parts must be filled by yourself :
 
-* **Validation rules**: body rules are created but empty by default. Fill it with your rules.
+* **Container**: The dependencies container must be updated with the controller. At least one.
+* **Proxy-router**: The proxy-router service must be updated with the created router. 
 * **Model**: model is filled with a primary auto-incremented id, and date system columns. Fill it with your columns and relations.
-* **Serializer**: attributes as empty by default.Fill it with your entity attributes.
+* **Serializer**: attributes as empty by default. Fill it with your entity attributes.
+* **Validation rules**: body rules are created but empty by default. Fill it with your rules.
 
 ### Tests
 

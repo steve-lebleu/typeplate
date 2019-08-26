@@ -30,7 +30,7 @@
   "main": "./dist/api/app.bootstrap.js",
   "lint": "tslint --project tslint.json",
   "scripts": {
-    "kickstart": "npm i typescript -g && npm i typeorm -g && npm i && npm-run-all -s kick:*",
+    "kickstart": "npm i typescript -g && npm i typeorm -g && npm i kfr-ba -g && npm i && npm-run-all -s kick:*",
     "kick:directories": "mkdir -p ./dist/logs ./dist/uploads/archives ./dist/uploads/documents ./dist/uploads/images/master-copy ./dist/uploads/images/rescale/extra-small ./dist/uploads/images/rescale/medium ./dist/uploads/images/rescale/extra-large",
     "kick:env": "cp -r ./src/env ./dist/",
     "test": "nyc --reporter=html --report-dir=./docs/nyc-coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000",

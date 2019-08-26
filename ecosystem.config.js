@@ -33,7 +33,7 @@ module.exports = {
       ref  : 'origin/master',
       repo : 'git@github.com:repo.git',
       path : '/var/www/production',
-      'post-deploy' : 'npm install && npm run distify && tsc && pm2 reload ecosystem.config.js --env staging'
+      'post-deploy' : 'npm install && npm run distify && tsc && pm2 reload ecosystem.config.js --env production'
     }
   }
 };

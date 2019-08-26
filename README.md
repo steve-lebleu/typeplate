@@ -59,7 +59,7 @@ This will install Typescript, Typeorm and cli entity generator globaly, NPM pack
 
 ### Configure
 
-Adapt/create .env files (dev, test, staging, production) with your own configuration for mandatory properties:
+Adapt/create .env files (dev, test, staging, production) with your own configuration for mandatory properties :
 
 ```env
 # TypeORM

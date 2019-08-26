@@ -1,35 +1,47 @@
 # Typescript / Express.js / Typeorm RESTful API boilerplate
 
-[![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
-[![Coverage](https://img.shields.io/badge/Coverage-88.35%25-green)](https://github.com/konfer-be/ts-express-typeorm-boilerplate)
 [![Node](https://img.shields.io/badge/Node-10.9-green)](https://nodejs.org/docs/latest-v10.x/api/index.html)
-[![Express](https://img.shields.io/badge/Express-4.16-lightgrey)](https://expressjs.com/fr/)
 [![TypeScript](https://img.shields.io/badge/Typescript-5.3-blue)](https://www.typescriptlang.org/)
+[![Express](https://img.shields.io/badge/Express-4.16-lightgrey)](https://expressjs.com/fr/)
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.2-orange)](https://typeorm.io/#/)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+
+[![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
+[![Coverage](https://img.shields.io/badge/coverage-88.35%25-green)](https://github.com/konfer-be/ts-express-typeorm-boilerplate)
 [![Dependencies](https://david-dm.org/konfer-be/ts-express-typeorm-boilerplate.svg)](https://david-dm.org/konfer-be/ts-express-typeorm-boilerplate)
+[![devDependencies](https://david-dm.org/konfer-be/ts-express-typeorm-boilerplate/dev-status.svg)](https://david-dm.org/konfer-be/ts-express-typeorm-boilerplate?type=dev)
+[![Known Vulnerabilities](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?style=plastic)](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate)
 
 Scalable RESTful API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based.
 
 Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration with [Express REST 2017 boilerplate](https://github.com/danielfsousa/express-rest-es2017-boilerplate).
 
-## Summary
+## Table of contents
 
-* [Start](#start)
-* [Environment features](#environment-features)
+* [Getting started](#getting-started)
+* [Development features](#development-features)
   * [Typescript](#typescript)
   * [Object Relational Mapping](#orm)
   * [Entity generating](#entity-generating)
   * [Tests](#tests)
   * [Deployment](#deployment)
   * [Documentation](#documentation)
+  * [Dev dependencies](#dev-dependencies)
+* [Application features](#application-features)
+  * [Dependency injection](#dependency-injection)
+  * [Authentication](#authentication)
+  * [File upload](#file-upload)
+  * [Validation](#validation)
+  * [Logs management](#logs-management)
+  * [Errors management](#errors-management)
+  * [Security](#security)
   * [Dependencies](#dependencies)
 
-## Start
+## Getting started
 
 ### Install
 
-Clone the boilerplate :
+Clone boilerplate :
 
 ```bash
 $ git clone https://github.com/konfer-be/rest-api-ts-express-typeorm.git your-project-name/
@@ -37,17 +49,17 @@ $ git clone https://github.com/konfer-be/rest-api-ts-express-typeorm.git your-pr
 
 ### Build
 
-Give the kickstart :
+Give kickstart :
 
 ```bash
 $ npm run kickstart
 ```
 
-This will be install Typescript, Typeorm and cli entity generator globaly, NPM packages, create *dist* directory and sub-directories, and run a one shot compilation.
+This will install Typescript, Typeorm and cli entity generator globaly, NPM packages, create *dist* directory and sub-directories, and run a one shot compilation.
 
 ### Configure
 
-Adapt yours .env files (dev, test, staging, production) with your own configuration for mandatory properties:
+Adapt/create .env files (dev, test, staging, production) with your own configuration for mandatory properties:
 
 ```env
 # TypeORM
@@ -64,7 +76,7 @@ Enjoy with :
 $ nodemon
 ```
 
-## Environment features
+## Development features
 
 ### Typescript
 
@@ -217,11 +229,11 @@ To use the file generating, run the following command :
 $ kem
 ```
 
-The prompt ask you first the local destination, and check if the local directory exists. Please, provide the absolute root folder path of the project (ie /var/www/my-project).
+First, the prompt ask you local folder destination, and check if the directory exists. Please, provide absolute root folder path of the project (ie /var/www/my-project).
 
 Next, you will enter the name of the entity to generate. You can provide one or many words separated by spaces, generator will use hyphens for filename, and PascalCase for entity name.
 
-Note that the generated files contains only basic features. Note also that some parts must be filled by yourself :
+Note that generated files contains only basic features and some parts must be obviously filled by yourself :
 
 * **Container**: The dependencies container must be updated with the controller. At least one.
 * **Proxy-router**: The proxy-router service must be updated with the created router. 
@@ -231,7 +243,7 @@ Note that the generated files contains only basic features. Note also that some 
 
 ### Tests
 
-Many packages are used to provide an useful test environment: [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [Supertest]();
+Many packages are used to provide an useful test environment: [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [Supertest](https://github.com/visionmedia/supertest);
 
 Basic tests are already writted and are located in *test* directory.
 
@@ -347,7 +359,73 @@ A code documentation website is generated into *./docs/typedoc/*.
 
 See [typedoc](https://typedoc.org/) for more informations about customization.
 
+## Application features
 
+A lot of parameters/features are setted/plugged in the [Application](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/app.config.ts) config file. Heavier configurations are maked in dedicated config. 
+
+### Dependency injection
+
+[Awilix](https://github.com/jeffijoe/awilix) is used to provide controllers and services instances as dependencies. Each dependency is resolved as singleton, but you can easily adapt this behavior.
+
+See [Container](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/container.config.ts) class.
+
+### Authentication
+
+Full authentication process is principaly based on [passport.js](http://www.passportjs.org/).
+
+* **Implemented strategies**: Bearer, oauth Facebook, oauth Google
+* **Token lifetime**: see .env file
+
+### File upload
+
+Files can be managed as [Documents](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/models/document.model.ts) entities, and are uploaded
+with [Uploader](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/middlewares/uploader.middleware.ts) middleware.
+
+The middleware use [Multer](https://www.npmjs.com/package/multer) and [Jimp](https://www.npmjs.com/package/jimp), and provide following features:
+
+* Document creation
+* Single upload
+* Multiple uploads
+* Image resizing
+
+You can set upload options from scratch on each route, or by default in .env files. By default, upload middleware is only plugged on [document router](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/routes/v1/document.route.ts), but it can be used on other routes whitout difficult, with or without Document creation.
+
+### Validation
+
+Route validation is implemented with [express-validator](https://github.com/express-validator/express-validator), [express-validation](https://www.npmjs.com/package/express-validation) and [Joi](https://github.com/hapijs/joi).
+
+One entity, one validation file.
+
+You can define your own globals validation settings in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/validation.config.ts). This file wrap express-validator and provide it to the validation middleware, which is used on routes to validate.
+
+### Logs management
+
+Simple logs management is provided, principaly based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
+
+You can configure main parameters in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/winston.config.ts).
+
+### Errors management
+
+API respond **always** on the same format :
+
+* **Success**: JSON body which contain one or more entities. Or empty, with 200, 201 or 204 HTTP status code.
+* **Error**: JSON object which implements [IError](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/types/interfaces/IError.interface.ts) interface. Includes upload errors, db errors or 404 errors. The errors property can be an array of strings, or an array of [IFieldError](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/types/interfaces/IFieldError.interface.ts).
+
+```json
+{
+    "statusCode": 401,
+    "statusText": "Unauthorized",
+    "errors": [
+      "Forbidden area"
+    ]
+}
+```
+
+Depending by environment, errors can be logged or not.
+
+### Security
+
+Some classic features are implemented with [CORS](https://expressjs.com/en/resources/middleware/cors.html), [Helmet](https://helmetjs.github.io/), [Hpp](https://www.npmjs.com/package/hpp) and [Express rate limit](https://www.npmjs.com/package/express-rate-limit).
 
 ### Dependencies
 

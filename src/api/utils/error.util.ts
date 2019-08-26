@@ -74,7 +74,7 @@ const getErrorStatusCode = (error): number => {
 const getErrorOutput = (error): IError => {
 
   // JS native ( Error | EvalError | RangeError | SyntaxError | TypeError | URIError )
-  if (!error.httpStatusCode && !error.statusCode && !error.status && !error.isBoom) { 
+  /*if (!error.httpStatusCode && !error.statusCode && !error.status && !error.isBoom) { 
     switch(error.constructor.name) {
       case 'Error': 
       case 'EvalError': 
@@ -87,7 +87,7 @@ const getErrorOutput = (error): IError => {
       default:
         error = badImplementation(error.message);
     }
-  }
+  }*/
   
   if (error.isBoom) {
     return {

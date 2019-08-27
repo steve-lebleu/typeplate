@@ -26,7 +26,6 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
   * [Tests](#tests)
   * [Deployment](#deployment)
   * [Documentation](#documentation)
-  * [Dev dependencies](#dev-dependencies)
 * [Application features](#application-features)
   * [Dependency injection](#dependency-injection)
   * [Authentication](#authentication)
@@ -243,7 +242,7 @@ Note that generated files contains only basic features and some parts must be ob
 
 ### Tests
 
-Many packages are used to provide an useful test environment: [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [Supertest](https://github.com/visionmedia/supertest);
+Many packages are used to provide an useful test environment: [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [Supertest](https://github.com/visionmedia/supertest).
 
 Basic tests are already writted and are located in *test* directory.
 
@@ -374,7 +373,7 @@ See [Container](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob
 Full authentication process is principaly based on [passport.js](http://www.passportjs.org/).
 
 * **Implemented strategies**: Bearer, oauth Facebook, oauth Google
-* **Token lifetime**: see .env file
+* **Token lifetime/secret**: see .env files
 
 ### File upload
 

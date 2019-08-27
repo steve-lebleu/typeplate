@@ -18,7 +18,7 @@ import { UploadError } from "@errors/upload-error";
  */
 const checkMySQLError = (error: any) => {
   if (error.name === 'QueryFailedError') { 
-    if([1052, 1062, 1364, 1452].includes(error.errno)) {
+    if([1052, 1062, 1452].includes(error.errno)) {
       return conflict( 'MySQL validation error', { // 409
         errors: [{
           field: getErrorColumnName(error),

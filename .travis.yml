@@ -3,8 +3,9 @@ node_js:
     - "10.9"
 services: mysql
 before_install:
-  - mysql -e CREATE USER 'travis'@'localhost' IDENTIFIED BY 'travis';
-  - mysql -e GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON *.* TO 'travis'@'localhost';
+  - mysql -e CREATE USER 'dev'@'localhost' IDENTIFIED BY 'dev';
+  - mysql -e GRANT ALL PRIVILEGES ON *.* TO 'dev'@'localhost';
+  - mysql -e FLUSH PRIVILEGES;
   - mysql -e CREATE DATABASE IF NOT EXISTS ts_express_boilerplate_test;
 script: mkdir -p ./dist/logs ./dist/uploads/archives ./dist/uploads/documents ./dist/uploads/images/master-copy ./dist/uploads/images/rescale/extra-small ./dist/uploads/images/rescale/medium ./dist/uploads/images/rescale/extra-large && cp -r ./src/env ./dist/ && npm i typescript -g && npm i typeorm -g && npm i && tsc && typeorm schema:sync && env ENVIRONMENT=test env RUNNER=travis ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000
 cache:

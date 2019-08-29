@@ -1,3 +1,4 @@
+require('module-alias/register');
 import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, AfterLoad, BeforeInsert, OneToMany, OneToOne, JoinColumn } from "typeorm";
 import { jwtSecret, jwtExpirationInterval } from "@config/environment.config";
 import { ROLE } from "@enums/role.enum";

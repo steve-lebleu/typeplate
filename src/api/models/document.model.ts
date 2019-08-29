@@ -1,3 +1,4 @@
+require('module-alias/register');
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { UPLOAD_MIME_TYPE } from "@enums/mime-type.enum";
 import { User } from "@models/user.model";

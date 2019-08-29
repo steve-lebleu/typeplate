@@ -43,7 +43,7 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
 Clone boilerplate :
 
 ```bash
-$ git clone https://github.com/konfer-be/rest-api-ts-express-typeorm.git your-project-name/
+$ git clone https://github.com/konfer-be/ts-express-typeorm-boilerplate.git your-project-name/
 ```
 
 ### Build
@@ -54,11 +54,11 @@ Give kickstart :
 $ npm run kickstart
 ```
 
-This will install Typescript, Typeorm and cli entity generator globaly, NPM packages, create *dist* directory and sub-directories, and run a one shot compilation.
+This will install Typescript, Typeorm and Kem (cli entity generator) globaly, NPM packages, create *dist* directory and sub-directories, and run a one shot compilation.
 
 ### Configure
 
-Adapt/create .env files (dev, test, staging, production) with your own configuration for mandatory properties :
+Adapt/create .env files with your own configuration for mandatory properties :
 
 ```env
 # TypeORM
@@ -360,7 +360,7 @@ See [typedoc](https://typedoc.org/) for more informations about customization.
 
 ## Application features
 
-A lot of parameters/features are setted/plugged in the [Application](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/app.config.ts) config file. Heavier configurations are maked in dedicated config. 
+A lot of parameters are setted/plugged in the [Application](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/app.config.ts) config file. Heavier configurations are maked in dedicated config. 
 
 ### Dependency injection
 

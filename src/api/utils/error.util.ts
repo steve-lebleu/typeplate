@@ -73,10 +73,6 @@ const getErrorStatusCode = (error): number => {
  */
 const getErrorOutput = (error): IError => {
 
-  // This fix Travis test failure in auth.test. Yes, yes.
-  console.log(error);
-  console.log(error.message);
-
   // JS native ( Error | EvalError | RangeError | SyntaxError | TypeError | URIError )
   if (!error.httpStatusCode && !error.statusCode && !error.status && !error.isBoom) { 
     switch(error.constructor.name) {

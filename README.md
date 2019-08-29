@@ -196,8 +196,8 @@ More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeo
 A Typeorm migration is a DB synchronizing. If your schema have pending changes, migration tool allow you to synchronize it.
 
 ```bash
-$ npm run typeorm migration:generate -n NameOfYoursPendingChanges
-$ npm run typeorm migration:run
+$ typeorm migration:generate -n NameOfYoursPendingChanges
+$ typeorm migration:run
 ```
 
 **Although this case is anticipated/prevented in the boilerplate, be extremely careful with the synchronize parameter. When is true, Typeorm will automaticaly execute pending changes on your database, and some data may be lost. Set synchronize at true only in development|staging|test environments.**

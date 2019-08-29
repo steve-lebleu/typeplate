@@ -3,10 +3,10 @@
   "name": "default",
   "host": "localhost",
   "port": 3306,
-  "username": "root",
-  "password": "root",
-  "database": "your-database",
-  "synchronize": false,
+  "username": "travis",
+  "password": "travis",
+  "database": "ts_express_boilerplate_test",
+  "synchronize": true,
   "logging": false,
   "entities": [
     "dist/api/models/**/*.js"
@@ -16,5 +16,9 @@
   ],
   "subscribers": [
     "src/subscribers/**/*.ts"
-  ]
+  ],
+  "cli": {
+    "migrationsDir": "./dist/migrations",
+    "subscribersDir": "./dist/subscribers"
+  }
 }

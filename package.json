@@ -30,14 +30,15 @@
   "main": "./dist/api/app.bootstrap.js",
   "lint": "tslint --project tslint.json",
   "scripts": {
-    "kickstart": "npm i typescript -g && npm i typeorm -g && npm i kfr-kem -g && npm i && npm-run-all -s kick:*",
+    "kickstart": "npm i typescript -g && npm i -g ts-node && npm i typeorm -g && npm i kfr-kem -g && npm i && npm-run-all -s kick:*",
     "kick:directories": "mkdir -p ./dist/logs ./dist/uploads/archives ./dist/uploads/documents ./dist/uploads/images/master-copy ./dist/uploads/images/rescale/extra-small ./dist/uploads/images/rescale/medium ./dist/uploads/images/rescale/extra-large",
     "kick:env": "cp -r ./src/env ./dist/",
     "test": "nyc --reporter=html --report-dir=./docs/nyc-coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000",
     "coverage": "plato -r -t 'API code coverage report' -d ./docs/plato-coverage ./dist",
     "todo-ci": "leasot -x --reporter markdown './src/**/*.ts' > TODO.md",
     "apidoc-ci": "apidoc -i src/ -o docs/apidoc/",
-    "typedoc-ci": "typedoc --mode modules --name 'API documentation' --defaultCategory 'Root' --categorizeByGroup  --out ./docs/typedoc ./src"
+    "typedoc-ci": "typedoc --mode modules --name 'API documentation' --defaultCategory 'Root' --categorizeByGroup  --out ./docs/typedoc ./src",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"  
   },
   "_moduleAliases": {
     "@bases": "dist/api/types/classes",

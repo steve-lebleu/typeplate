@@ -26,7 +26,7 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
   * [Tests](#tests)
   * [Deployment](#deployment)
   * [Documentation](#documentation)
-  * [Todo's](#todo-s)
+  * [Todo and fixme](#todo-and-fixme-tasks)
 * [Application features](#application-features)
   * [Dependency injection](#dependency-injection)
   * [Authentication](#authentication)
@@ -359,7 +359,7 @@ A code documentation website is generated into *./docs/typedoc/*.
 
 See [typedoc](https://typedoc.org/) for more informations about customization.
 
-### Todo's
+### Todo and fixme tasks
 
 A small tool is provided to help you with recensement of lost todo's. Run npm task to recense TODO and FIXME patterns.
 

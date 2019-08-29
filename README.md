@@ -26,6 +26,7 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
   * [Tests](#tests)
   * [Deployment](#deployment)
   * [Documentation](#documentation)
+  * [Todo's](#todo-s)
 * [Application features](#application-features)
   * [Dependency injection](#dependency-injection)
   * [Authentication](#authentication)
@@ -357,6 +358,16 @@ $ npm run typedoc-ci
 A code documentation website is generated into *./docs/typedoc/*.
 
 See [typedoc](https://typedoc.org/) for more informations about customization.
+
+### Todo's
+
+A small tool is provided to help you with recensement of lost todo's. Run npm task to recense TODO and FIXME patterns.
+
+```bash
+$ npm run todo-ci
+```
+
+More information about [leasot](https://www.npmjs.com/package/leasot).
 
 ## Application features
 

@@ -8,7 +8,6 @@
 
 [![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
 [![Coverage](https://img.shields.io/badge/coverage-88.35%25-green)](https://github.com/konfer-be/ts-express-typeorm-boilerplate)
-
 [![Known Vulnerabilities](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?style=plastic)](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate)
 
 Scalable RESTful API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based.

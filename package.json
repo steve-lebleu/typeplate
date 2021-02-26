@@ -63,7 +63,7 @@
     "@types/node": "^12.7.2",
     "awilix": "^4.2.2",
     "axios": "^0.21.1",
-    "bcrypt": "^3.0.3",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.18.3",
     "boom": "^7.3.0",
     "compression": "^1.7.3",

@@ -18,7 +18,6 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
 
 * [Getting started](#getting-started)
 * [Development features](#development-features)
-  * [Dependency injection](#dependency-injection)
   * [Entity generating](#entity-generating)
   * [Todo and fixme](#todo-and-fixme-tasks)
   * [Tests](#tests)
@@ -337,12 +336,6 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 ## Application features
 
 A lot of parameters are setted/plugged in the [Application](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/app.config.ts) config file. Heavier configurations are maked in dedicated config. 
-
-### Dependency injection
-
-[Awilix](https://github.com/jeffijoe/awilix) is used to provide controllers and services instances as dependencies. Each dependency is resolved as singleton, but you can easily adapt this behavior.
-
-See [Container](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/container.config.ts) class.
 
 ### Authentication
 

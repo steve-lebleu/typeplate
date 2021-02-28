@@ -59,7 +59,7 @@ const typeorm               = {
   database: process.env.TYPEORM_DB, 
   user: process.env.TYPEORM_USER, 
   pwd: process.env.TYPEORM_PWD,
-  sync: this.environment === ENVIRONMENT.production ? false : !!process.env.TYPEORM_SYNC,
+  sync: process.env.NODE_ENV === ENVIRONMENT.production ? false : !!process.env.TYPEORM_SYNC,
   log: !!process.env.TYPEORM_LOG,
 };
 const upload                = {

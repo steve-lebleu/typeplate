@@ -47,7 +47,7 @@ export class AuthController extends Controller {
    * @param res Express response object
    * @param next Callback function
    */
-  async login(req: Request, res : Response, next: Function): Promise<void> {
+  async login(req: Request, res : Response, next: Function) {
     try {
       const repository = getCustomRepository(UserRepository);
       const { user, accessToken } = await repository.findAndGenerateToken(req.body, req.headers.from);
@@ -66,7 +66,7 @@ export class AuthController extends Controller {
    * @param res Express response object
    * @param next Callback function
    */
-  async oAuth (req: Request, res : Response, next: Function): Promise<void> {
+  async oAuth (req: Request, res : Response, next: Function) {
     try {
       const user = req.body;
       const accessToken = user.token();
@@ -85,7 +85,7 @@ export class AuthController extends Controller {
    * @param res Express response object
    * @param next Callback function
    */
-  async authorize (req: Request, res : Response, next: Function): Promise<void> {
+  async authorize (req: Request, res : Response, next: Function) {
     try {
       const user = req.body;
       const accessToken = user.token();
@@ -104,7 +104,7 @@ export class AuthController extends Controller {
    * @param res Express response object
    * @param next Callback function
    */
-  async refresh(req: Request, res : Response, next: Function): Promise<void> {
+  async refresh(req: Request, res : Response, next: Function) {
 
     try {
 

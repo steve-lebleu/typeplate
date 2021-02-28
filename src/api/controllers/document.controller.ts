@@ -2,10 +2,12 @@ import { expectationFailed } from 'boom';
 import { CREATED, NO_CONTENT } from 'http-status';
 import { unlink } from 'fs';
 
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Container } from '@config/container.config';
 
 import { Document } from '@models/document.model';
+
+import { IFileRequest } from '@interfaces/IFileRequest.interface';
 
 import { getRepository, getCustomRepository } from 'typeorm';
 import { DocumentRepository } from '@repositories/document.repository';
@@ -20,8 +22,8 @@ class DocumentController extends Controller {
 
   /** */
   constructor() {
- super();
-}
+    super();
+  }
 
   /**
    * @description Retrieve one document according to :documentId
@@ -32,7 +34,7 @@ class DocumentController extends Controller {
    *
    * @public
    */
-  async get(req: Request, res: Response, next: Function) {
+  async get(req: IFileRequest, res: Response, next: Function) {
     try {
       const documentRepository = getRepository(Document);
       const document = await documentRepository.findOneOrFail(req.params.documentId, { relations: ['owner'] });
@@ -51,7 +53,7 @@ class DocumentController extends Controller {
    * @param res Express response object
    * @param next Callback function
    */
-  async list (req: Request, res : Response, next: Function) {
+  async list (req: IFileRequest, res : Response, next: Function) {
     try {
       const repository = getCustomRepository(DocumentRepository);
       const documents = await repository.list(req.query);
@@ -71,7 +73,7 @@ class DocumentController extends Controller {
    *
    * @public
    */
-  async create(req: Request, res: Response, next: Function) {
+  async create(req: IFileRequest, res: Response, next: Function) {
     try {
       const documentRepository = getRepository(Document);
       const documents = [].concat(req.files).map( (file) => {
@@ -95,7 +97,7 @@ class DocumentController extends Controller {
    *
    * @public
    */
-  async update(req: Request, res: Response, next: Function) {
+  async update(req: IFileRequest, res: Response, next: Function) {
     try {
 
       const documentRepository = getRepository(Document);
@@ -128,7 +130,7 @@ class DocumentController extends Controller {
    *
    * @public
    */
-  async remove (req: Request, res : Response, next: Function) {
+  async remove (req: IFileRequest, res : Response, next: Function) {
 
     try {
 

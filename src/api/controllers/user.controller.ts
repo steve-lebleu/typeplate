@@ -8,6 +8,7 @@ import { Controller } from '@bases/controller.class';
 import { User } from '@models/user.model';
 import { UserRepository } from '@repositories/user.repository';
 import { checkMySQLError } from '@utils/error.util';
+import { IUserRequest } from '@interfaces/IUserRequest.interface';
 
 /**
  * Manage incoming requests for api/{version}/users
@@ -42,7 +43,7 @@ export class UserController extends Controller {
    * @param res Express response object
    * @param next Callback function
    */
-  public loggedIn (req: Request, res : Response, next: Function) {
+  public loggedIn (req: IUserRequest, res : Response, next: Function) {
     try {
       res.locals.data = new User(req.user);
       next();

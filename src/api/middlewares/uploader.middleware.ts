@@ -1,13 +1,14 @@
 import { expectationFailed } from 'boom';
 import * as Jimp from 'jimp';
 
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { getRepository } from 'typeorm';
 import { Document } from '@models/document.model';
 import { jimp as JimpConfiguration } from '@config/environment.config';
 import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
 import { MulterConfiguration } from '@config/multer.config';
 import { IUpload } from '@interfaces/IUpload.interface';
+import { IFileRequest } from '@interfaces/IFileRequest.interface';
 import { clone } from 'lodash';
 import { UploadError } from '@errors/upload-error';
 
@@ -27,7 +28,7 @@ export class Uploader {
    * @param res Express response object
    * @param next Callback function
    */
-  static create = (req: Request, res: Response, next: Function) => {
+  static create = (req: IFileRequest, res: Response, next: Function) => {
     try {
       const documentRepository = getRepository(Document);
       const document = new Document(req.file);
@@ -47,7 +48,7 @@ export class Uploader {
    * @param res Express response object
    * @param next Callback function
    */
-  static uploadMultiple = ( options?: IUpload ) => (req: Request, res: Response, next: Function) => {
+  static uploadMultiple = ( options?: IUpload ) => (req: IFileRequest, res: Response, next: Function) => {
     const middleware = Uploader.configuration.multer( Uploader.configuration.get(options) ).any();
     middleware(req, res, function(err) {
       if(err) {
@@ -73,7 +74,7 @@ export class Uploader {
    * @param res Express response object
    * @param next Callback function
    */
-  static upload = ( options?: IUpload ) => (req: Request, res: Response, next: Function) => {
+  static upload = ( options?: IUpload ) => (req: IFileRequest, res: Response, next: Function) => {
     if ( typeof res.locals.data === 'undefined' ) {
       return next(new UploadError(new Error('Original data cannot be found')));
     }
@@ -97,7 +98,7 @@ export class Uploader {
    * @param res Express response object
    * @param next Callback function
    */
-  static resize = async (req: Request, res: Response, next: Function) => {
+  static resize = async (req: IFileRequest, res: Response, next: Function) => {
 
     const entries = [].concat(req.files || req.file);
 

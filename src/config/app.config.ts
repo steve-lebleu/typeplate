@@ -41,10 +41,10 @@ export class ExpressConfiguration {
     cors: {
       origin: (origin, callback) => {
         if (authorized.indexOf(origin) !== -1) {
- callback(null, true);
-} else {
- callback( notAcceptable('Domain not allowed by CORS') );
-}
+          callback(null, true);
+        } else {
+          callback( notAcceptable('Domain not allowed by CORS') );
+        }
       },
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
       allowedHeaders: ['Accept', 'Content-Type', 'Authorization', 'Origin', 'From']

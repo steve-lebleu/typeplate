@@ -17,9 +17,15 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
 ## Table of contents
 
 * [Getting started](#getting-started)
+  * [Install](#install)
+  * [Build](#build)
+  * [Setup](#setup)
+    * [Typescript](#typescript)
+    * [TypeORM](#typeorm)
+  * [Compile](#compile)
+  * [Run](#run)
 * [Development features](#development-features)
   * [Entity generation](#entity-generation)
-  * [Todo's & fixme's](#todo-and-fixme-tasks)
   * [Tests](#tests)
   * [Documentation](#documentation)
   * [Deployment](#deployment)
@@ -205,16 +211,6 @@ Generated files contains only basic features and some parts must be filled by yo
 * **Model**: model is filled with a primary auto-incremented id, and date system columns. Fill it with your columns and relations.
 * **Serializer**: attributes as empty by default. Fill it with your entity attributes.
 * **Validation rules**: body rules are created but empty by default. Fill it with your rules.
-
-### Todo and fixme tasks
-
-A small tool is provided to help you with recensement of lost todo's. Run npm task to recense TODO and FIXME patterns.
-
-```bash
-$ npm run todo-ci
-```
-
-More information about [leasot](https://www.npmjs.com/package/leasot).
 
 ### Tests
 

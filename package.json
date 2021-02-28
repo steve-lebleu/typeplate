@@ -61,7 +61,7 @@
     "@types/body-parser": "^1.17.0",
     "@types/express": "^4.16.0",
     "@types/node": "^12.7.2",
-    "awilix": "^4.2.2",
+    "awilix": "^4.3.3",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.18.3",

@@ -11,9 +11,9 @@ import { Container } from "@config/container.config";
 TypeormConfiguration.connect().catch( (e: Error) => { throw new Error(e.message) } );
 
 const application = new ExpressConfiguration( Express() ).get();
-const server = ServerConfiguration.server(application);
+const HTTPServer = ServerConfiguration.server(application);
 
-server.listen(port, function() {
+const server = HTTPServer.listen(port, function() {
     Container.resolve('Logger').log('info', `HTTP(S) server is now running on port ${port} (${env})`, { label: 'Server' } );
 });
 

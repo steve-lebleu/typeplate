@@ -20,8 +20,6 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
 * [Development features](#development-features)
   * [Dependency injection](#dependency-injection)
   * [Entity generating](#entity-generating)
-  * [Logs management](#logs-management)
-  * [Errors management](#errors-management)
   * [Todo and fixme](#todo-and-fixme-tasks)
   * [Tests](#tests)
   * [Documentation](#documentation)
@@ -53,20 +51,7 @@ $ npm run kickstart
 
 This will install Typescript, Typeorm and Kem (cli entity generator) globaly, NPM packages, create *dist* directory and sub-directories, and run a one shot compilation.
 
-### Set up
-
-#### Environment
-
-Adapt/create .env files with your own configuration for mandatory properties :
-
-```env
-# TypeORM
-TYPEORM_HOST = "localhost"
-TYPEORM_DB = "your-database-name"
-TYPEORM_USER = "root"
-TYPEORM_PWD = "root"
-TYPEORM_PORT = "3306"
-```
+### Setup
 
 #### Typescript
 
@@ -159,36 +144,15 @@ If you will use Typeorm as CLI, update also the *ormconfig.json* file and fill i
 
 More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeorm cli](https://typeorm.io/#/using-cli/installing-cli).
 
-##### Migration
-
-A Typeorm migration is a DB synchronizing. If your schema have pending changes, migration tool allow you to synchronize it.
-
-```bash
-$ typeorm migration:generate -n NameOfYoursPendingChanges
-$ typeorm migration:run
-```
-
-**Although this case is anticipated/prevented in the boilerplate, be extremely careful with the synchronize parameter. When is true, Typeorm will automaticaly execute pending changes on your database, and some data may be lost. Set synchronize at true only in development|staging|test environments.**
-
-More info about [typeorm migration](http://typeorm.io/#/migrations).
-
-##### Events subscribers
-
-Typeorm provides events listening on your models. So, you can define your owns listeners/subscribers, and use it to do actions when a specific event is fired.
-
-More info about [typeorm subscribers](https://typeorm.io/#/listeners-and-subscribers).
-
 #### Logs
 
 Simple logs management is provided, principaly based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
 
 You can configure main parameters in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/winston.config.ts).
 
-### Run
+### Compile
 
-#### Compilation
-
-Run time compilation :
+Runtime compilation :
 
 ```bash
 $ tsc
@@ -200,7 +164,7 @@ Watching compilation :
 $ tsc --watch
 ```
 
-#### Running
+### Run
 
 Enjoy with :
 

@@ -18,22 +18,22 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
 
 * [Getting started](#getting-started)
 * [Development features](#development-features)
+  * [Dependency injection](#dependency-injection)
   * [Typescript](#typescript)
   * [Object Relational Mapping](#orm)
   * [Entity generating](#entity-generating)
-  * [Tests](#tests)
-  * [Deployment](#deployment)
-  * [Documentation](#documentation)
+  * [Logs management](#logs-management)
+  * [Errors management](#errors-management)
   * [Todo and fixme](#todo-and-fixme-tasks)
+  * [Tests](#tests)
+  * [Documentation](#documentation)
+  * [Deployment](#deployment)
 * [Application features](#application-features)
-  * [Dependency injection](#dependency-injection)
   * [Authentication](#authentication)
   * [File upload](#file-upload)
   * [Validation](#validation)
-  * [Logs management](#logs-management)
-  * [Errors management](#errors-management)
   * [Security](#security)
-  * [Dependencies](#dependencies)
+* [Dependencies](#dependencies)
 
 ## Getting started
 
@@ -239,6 +239,41 @@ Note that generated files contains only basic features and some parts must be ob
 * **Serializer**: attributes as empty by default. Fill it with your entity attributes.
 * **Validation rules**: body rules are created but empty by default. Fill it with your rules.
 
+### Logs management
+
+Simple logs management is provided, principaly based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
+
+You can configure main parameters in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/winston.config.ts).
+
+### Errors management
+
+API respond **always** on the same format :
+
+* **Success**: JSON body which contain one or more entities. Or empty, with 200, 201 or 204 HTTP status code.
+* **Error**: JSON object which implements [IError](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/types/interfaces/IError.interface.ts) interface. Includes upload errors, db errors or 404 errors. The errors property can be an array of strings, or an array of [IFieldError](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/types/interfaces/IFieldError.interface.ts).
+
+```json
+{
+    "statusCode": 401,
+    "statusText": "Unauthorized",
+    "errors": [
+      "Forbidden area"
+    ]
+}
+```
+
+Depending by environment, errors can be logged or not.
+
+### Todo and fixme tasks
+
+A small tool is provided to help you with recensement of lost todo's. Run npm task to recense TODO and FIXME patterns.
+
+```bash
+$ npm run todo-ci
+```
+
+More information about [leasot](https://www.npmjs.com/package/leasot).
+
 ### Tests
 
 Many packages are used to provide an useful test environment: [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [Supertest](https://github.com/visionmedia/supertest).
@@ -268,6 +303,35 @@ $ npm run coverage
 A coverage report is generated in *./docs/plato-coverage*.
 
 Unfortunately, Plato is not longer maintened and some functionalities are broken with ES6. See [es6-plato](https://www.npmjs.com/package/es6-plato) if you wish implements this feature.
+
+
+### Documentation
+
+Here are two ways to generate your documentation : api and code.
+
+#### API documentation
+
+This way provide a documentation for **consumers**.
+
+```bash
+$ npm run apidoc-ci
+```
+
+An API documentation website is generated into *./docs/apidoc/*.
+
+See [apidoc](http://apidocjs.com/) for more informations about customization.
+
+#### Code documentation
+
+This way provide a documentation for **developers**.
+
+```bash
+$ npm run typedoc-ci
+```
+
+A code documentation website is generated into *./docs/typedoc/*.
+
+See [typedoc](https://typedoc.org/) for more informations about customization.
 
 ### Deployment
 
@@ -329,44 +393,6 @@ More info about [PM2 deploy](https://pm2.io/doc/en/runtime/guide/easy-deploy-wit
 
 More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
-### Documentation
-
-Here are two ways to generate your documentation : api and code.
-
-#### API documentation
-
-This way provide a documentation for **consumers**.
-
-```bash
-$ npm run apidoc-ci
-```
-
-An API documentation website is generated into *./docs/apidoc/*.
-
-See [apidoc](http://apidocjs.com/) for more informations about customization.
-
-#### Code documentation
-
-This way provide a documentation for **developers**.
-
-```bash
-$ npm run typedoc-ci
-```
-
-A code documentation website is generated into *./docs/typedoc/*.
-
-See [typedoc](https://typedoc.org/) for more informations about customization.
-
-### Todo and fixme tasks
-
-A small tool is provided to help you with recensement of lost todo's. Run npm task to recense TODO and FIXME patterns.
-
-```bash
-$ npm run todo-ci
-```
-
-More information about [leasot](https://www.npmjs.com/package/leasot).
-
 ## Application features
 
 A lot of parameters are setted/plugged in the [Application](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/app.config.ts) config file. Heavier configurations are maked in dedicated config. 
@@ -406,36 +432,11 @@ One entity, one validation file.
 
 You can define your own globals validation settings in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/validation.config.ts). This file wrap express-validator and provide it to the validation middleware, which is used on routes to validate.
 
-### Logs management
-
-Simple logs management is provided, principaly based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
-
-You can configure main parameters in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/winston.config.ts).
-
-### Errors management
-
-API respond **always** on the same format :
-
-* **Success**: JSON body which contain one or more entities. Or empty, with 200, 201 or 204 HTTP status code.
-* **Error**: JSON object which implements [IError](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/types/interfaces/IError.interface.ts) interface. Includes upload errors, db errors or 404 errors. The errors property can be an array of strings, or an array of [IFieldError](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/types/interfaces/IFieldError.interface.ts).
-
-```json
-{
-    "statusCode": 401,
-    "statusText": "Unauthorized",
-    "errors": [
-      "Forbidden area"
-    ]
-}
-```
-
-Depending by environment, errors can be logged or not.
-
 ### Security
 
 Some classic features are implemented with [CORS](https://expressjs.com/en/resources/middleware/cors.html), [Helmet](https://helmetjs.github.io/), [Hpp](https://www.npmjs.com/package/hpp) and [Express rate limit](https://www.npmjs.com/package/express-rate-limit).
 
-### Dependencies
+## Dependencies
 
 - awilix (dependency injection)
 - axios (http requests)

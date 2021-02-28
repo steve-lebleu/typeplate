@@ -16,27 +16,96 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
 
 ## Table of contents
 
-* [Application features](#application-features)
+* [Features](#features)
   * [Authentication](#authentication)
   * [File upload](#file-upload)
   * [Validation](#validation)
   * [Security](#security)
+  * [Entity generation](#entity-generation)
 * [Getting started](#getting-started)
   * [Install](#install)
   * [Build](#build)
   * [Setup](#setup)
     * [Typescript](#typescript)
     * [TypeORM](#typeorm)
-    * [Logs](#logs)
   * [Compile](#compile)
   * [Run](#run)
-* [Development features](#development-features)
-  * [Entity generation](#entity-generation)
 * [Tests](#tests)
 * [Documentation](#documentation)
 * [Continuous integration](#continuous-integration)
 * [Deployment](#deployment)
 
+## Features
+
+A lot of parameters are setted/plugged in the [Application](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/app.config.ts) config file. Heavier configurations are maked in dedicated config. 
+
+### Authentication
+
+Full authentication process is principaly based on [passport.js](http://www.passportjs.org/).
+
+* **Implemented strategies**: Bearer, oauth Facebook, oauth Google
+* **Token lifetime/secret**: see .env files
+
+### File upload
+
+Files can be managed as [Documents](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/models/document.model.ts) entities, and are uploaded
+with [Uploader](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/middlewares/uploader.middleware.ts) middleware.
+
+The middleware use [Multer](https://www.npmjs.com/package/multer) and [Jimp](https://www.npmjs.com/package/jimp), and provide following features:
+
+* Document creation
+* Single upload
+* Multiple uploads
+* Image resizing
+
+You can set upload options from scratch on each route, or by default in .env files. By default, upload middleware is only plugged on [document router](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/routes/v1/document.route.ts), but it can be used on other routes whitout difficult, with or without Document creation.
+
+### Validation
+
+Route validation is implemented with [express-validator](https://github.com/express-validator/express-validator), [express-validation](https://www.npmjs.com/package/express-validation) and [Joi](https://github.com/hapijs/joi).
+
+One entity, one validation file.
+
+You can define your own globals validation settings in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/validation.config.ts). This file wrap express-validator and provide it to the validation middleware, which is used on routes to validate.
+
+### Security
+
+Some classic features are implemented with [CORS](https://expressjs.com/en/resources/middleware/cors.html), [Helmet](https://helmetjs.github.io/), [Hpp](https://www.npmjs.com/package/hpp) and [Express rate limit](https://www.npmjs.com/package/express-rate-limit).
+
+
+
+
+
+### Entity generation
+
+The boilerplate provide a basic entity generator (kfr-kem), which be used as cli tool. This generate following files :
+
+* Controller
+* Model 
+* Repository
+* Validation 
+* Route
+* Test
+* Serializer
+* Whitelist
+
+To use the file generation, run the following command :
+
+```bash
+$ kem
+```
+
+First, the prompt ask you local folder destination, and check if the directory exists. Please, provide absolute root folder path of the project (ie /var/www/my-project).
+
+Next, you will enter the name of the entity to generate. You can provide one or many words separated by spaces, generator will use hyphens for filename, and PascalCase for entity name.
+
+Generated files contains only basic features and some parts must be filled by yourself :
+
+* **Container**: The dependencies container must be updated with the controller. At least one.
+* **Proxy-router**: The proxy-router service must be updated with the created router. 
+* **Model**: model is filled with a primary auto-incremented id, and date system columns. Fill it with your columns and relations.
+* **Serializer**: attributes as empty by default. Fill it with your entity attributes.
+* **Validation rules**: body rules are created but empty by default. Fill it with your rules.
 
 ## Getting started
 
@@ -181,38 +250,6 @@ Enjoy with :
 $ nodemon
 ```
 
-## Development features
-
-### Entity generation
-
-The boilerplate provide a basic entity generator (kfr-kem), which be used as cli tool. This generate following files :
-
-* Controller
-* Model 
-* Repository
-* Validation 
-* Route
-* Test
-* Serializer
-* Whitelist
-
-To use the file generation, run the following command :
-
-```bash
-$ kem
-```
-
-First, the prompt ask you local folder destination, and check if the directory exists. Please, provide absolute root folder path of the project (ie /var/www/my-project).
-
-Next, you will enter the name of the entity to generate. You can provide one or many words separated by spaces, generator will use hyphens for filename, and PascalCase for entity name.
-
-Generated files contains only basic features and some parts must be filled by yourself :
-
-* **Container**: The dependencies container must be updated with the controller. At least one.
-* **Proxy-router**: The proxy-router service must be updated with the created router. 
-* **Model**: model is filled with a primary auto-incremented id, and date system columns. Fill it with your columns and relations.
-* **Serializer**: attributes as empty by default. Fill it with your entity attributes.
-* **Validation rules**: body rules are created but empty by default. Fill it with your rules.
 
 ### Tests
 
@@ -320,42 +357,6 @@ More info about [PM2 deploy](https://pm2.io/doc/en/runtime/guide/easy-deploy-wit
 
 More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
-## Application features
-
-A lot of parameters are setted/plugged in the [Application](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/app.config.ts) config file. Heavier configurations are maked in dedicated config. 
-
-### Authentication
-
-Full authentication process is principaly based on [passport.js](http://www.passportjs.org/).
-
-* **Implemented strategies**: Bearer, oauth Facebook, oauth Google
-* **Token lifetime/secret**: see .env files
-
-### File upload
-
-Files can be managed as [Documents](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/models/document.model.ts) entities, and are uploaded
-with [Uploader](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/middlewares/uploader.middleware.ts) middleware.
-
-The middleware use [Multer](https://www.npmjs.com/package/multer) and [Jimp](https://www.npmjs.com/package/jimp), and provide following features:
-
-* Document creation
-* Single upload
-* Multiple uploads
-* Image resizing
-
-You can set upload options from scratch on each route, or by default in .env files. By default, upload middleware is only plugged on [document router](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/routes/v1/document.route.ts), but it can be used on other routes whitout difficult, with or without Document creation.
-
-### Validation
-
-Route validation is implemented with [express-validator](https://github.com/express-validator/express-validator), [express-validation](https://www.npmjs.com/package/express-validation) and [Joi](https://github.com/hapijs/joi).
-
-One entity, one validation file.
-
-You can define your own globals validation settings in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/validation.config.ts). This file wrap express-validator and provide it to the validation middleware, which is used on routes to validate.
-
-### Security
-
-Some classic features are implemented with [CORS](https://expressjs.com/en/resources/middleware/cors.html), [Helmet](https://helmetjs.github.io/), [Hpp](https://www.npmjs.com/package/hpp) and [Express rate limit](https://www.npmjs.com/package/express-rate-limit).
 
 ## Dependencies
 

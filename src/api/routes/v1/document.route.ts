@@ -1,15 +1,17 @@
-import { getRepository } from "typeorm";
-import { Container } from "@config/container.config";
-import { Router } from "@bases/router.class";
-import { Guard, ADMIN, LOGGED_USER } from "@middlewares/guard.middleware";
-import { Validator } from "@middlewares/validator.middleware";
-import { Uploader } from "@middlewares/uploader.middleware";
+import { getRepository } from 'typeorm';
+import { Container } from '@config/container.config';
+import { Router } from '@bases/router.class';
+import { Guard, ADMIN, LOGGED_USER } from '@middlewares/guard.middleware';
+import { Validator } from '@middlewares/validator.middleware';
+import { Uploader } from '@middlewares/uploader.middleware';
 
-import { listDocuments, insertDocument, getDocument, replaceDocument, updateDocument, removeDocument } from "@validations/document.validation";
+import { listDocuments, insertDocument, getDocument, replaceDocument, updateDocument, removeDocument } from '@validations/document.validation';
 
 export class DocumentRouter extends Router {
 
-  constructor(){ super(); }
+  constructor(){
+ super();
+}
 
   /**
    * @description Plug routes definitions
@@ -69,11 +71,11 @@ export class DocumentRouter extends Router {
        *      "updatedAt": null
        *    }
        *  ]
-       * 
+       *
        * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
        * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
        * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
-       * 
+       *
        * @apiErrorExample {json} ValidationError
        * {
        *    "statusCode": 400,
@@ -90,7 +92,7 @@ export class DocumentRouter extends Router {
        *      }
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Unauthorized
        * {
        *    "statusCode": 401,
@@ -99,7 +101,7 @@ export class DocumentRouter extends Router {
        *      "Forbidden area"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Forbidden
        * {
        *    "statusCode": 403,
@@ -108,7 +110,7 @@ export class DocumentRouter extends Router {
        *      "You can't access to this ressource"
        *    ]
        * }
-       * 
+       *
        */
       .get(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(listDocuments), Container.resolve('DocumentController').list)
 
@@ -157,10 +159,10 @@ export class DocumentRouter extends Router {
        *      "updatedAt": null
        *    }
        *  ]
-       * 
+       *
        * @apiError (Bad request 400)    ValidationError   Some parameters may contain invalid values
        * @apiError (Forbidden 403)      Forbidden         Only authenticated users can insert the data
-       * 
+       *
        * @apiErrorExample {json} ValidationError
        * {
        *    "statusCode": 400,
@@ -177,7 +179,7 @@ export class DocumentRouter extends Router {
        *      }
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Forbidden
        * {
        *    "statusCode": 403,
@@ -186,7 +188,7 @@ export class DocumentRouter extends Router {
        *      "You can't access to this ressource"
        *    ]
        * }
-       * 
+       *
        */
       .post(Guard.authorize([ADMIN, LOGGED_USER]), Uploader.uploadMultiple(), Uploader.resize, Validator.validate(insertDocument), Container.resolve('DocumentController').create);
 
@@ -223,12 +225,12 @@ export class DocumentRouter extends Router {
        *      "createdAt": "2019-08-23T08:49:00.000Z",
        *      "updatedAt": null
        *    }
-       * 
+       *
        * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
        * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
        * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
        * @apiError (Not Found 404)     NotFound           Document does not exist
-       * 
+       *
        * @apiErrorExample {json} ValidationError
        * {
        *    "statusCode": 400,
@@ -245,7 +247,7 @@ export class DocumentRouter extends Router {
        *      }
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Unauthorized
        * {
        *    "statusCode": 401,
@@ -254,7 +256,7 @@ export class DocumentRouter extends Router {
        *      "Forbidden area"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Forbidden
        * {
        *    "statusCode": 403,
@@ -263,7 +265,7 @@ export class DocumentRouter extends Router {
        *      "You can't access to this ressource"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} NotFound
        * {
        *    "statusCode": 404,
@@ -306,12 +308,12 @@ export class DocumentRouter extends Router {
        *      "createdAt": "2019-08-23T08:49:00.000Z",
        *      "updatedAt": null
        *    }
-       * 
+       *
        * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
        * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
        * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
        * @apiError (Not Found 404)     NotFound           Document does not exist
-       * 
+       *
        * @apiErrorExample {json} ValidationError
        * {
        *    "statusCode": 400,
@@ -328,7 +330,7 @@ export class DocumentRouter extends Router {
        *      }
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Unauthorized
        * {
        *    "statusCode": 401,
@@ -337,7 +339,7 @@ export class DocumentRouter extends Router {
        *      "Forbidden area"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Forbidden
        * {
        *    "statusCode": 403,
@@ -346,7 +348,7 @@ export class DocumentRouter extends Router {
        *      "You can't access to this ressource"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} NotFound
        * {
        *    "statusCode": 404,
@@ -389,12 +391,12 @@ export class DocumentRouter extends Router {
        *      "createdAt": "2019-08-23T08:49:00.000Z",
        *      "updatedAt": null
        *    }
-       * 
+       *
        * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
        * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
        * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
        * @apiError (Not Found 404)     NotFound           Document does not exist
-       * 
+       *
        * @apiErrorExample {json} ValidationError
        * {
        *    "statusCode": 400,
@@ -411,7 +413,7 @@ export class DocumentRouter extends Router {
        *      }
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Unauthorized
        * {
        *    "statusCode": 401,
@@ -420,7 +422,7 @@ export class DocumentRouter extends Router {
        *      "Forbidden area"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Forbidden
        * {
        *    "statusCode": 403,
@@ -429,7 +431,7 @@ export class DocumentRouter extends Router {
        *      "You can't access to this ressource"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} NotFound
        * {
        *    "statusCode": 404,
@@ -455,7 +457,7 @@ export class DocumentRouter extends Router {
        * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
        * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
        * @apiError (Not Found 404)     NotFound           Document does not exist
-       * 
+       *
        * @apiErrorExample {json} ValidationError
        * {
        *    "statusCode": 400,
@@ -472,7 +474,7 @@ export class DocumentRouter extends Router {
        *      }
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Unauthorized
        * {
        *    "statusCode": 401,
@@ -481,7 +483,7 @@ export class DocumentRouter extends Router {
        *      "Forbidden area"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Forbidden
        * {
        *    "statusCode": 403,
@@ -490,7 +492,7 @@ export class DocumentRouter extends Router {
        *      "You can't access to this ressource"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} NotFound
        * {
        *    "statusCode": 404,

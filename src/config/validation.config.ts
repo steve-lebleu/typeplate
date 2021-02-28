@@ -1,7 +1,7 @@
-import * as ExpressValidation from "express-validation";
+import * as ExpressValidation from 'express-validation';
 
 /**
- * Set ExpressValidation default configuration 
+ * Set ExpressValidation default configuration
  */
 export class ValidationConfiguration {
 
@@ -29,4 +29,4 @@ export class ValidationConfiguration {
     this.handler.options(this.options);
   }
 
-};
+}

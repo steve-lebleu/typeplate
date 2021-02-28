@@ -1,7 +1,7 @@
-const whitelist = [ 
+const whitelist = [
   'id',
-  'username', 
-  'email', 
+  'username',
+  'email',
   'role',
   'providers',
   'smtps',

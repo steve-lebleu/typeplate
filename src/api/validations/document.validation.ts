@@ -1,9 +1,9 @@
-import * as Joi from "joi";
-import * as schemas from "@validations/schemas";
-import { UPLOAD_MIME_TYPE } from "@enums/mime-type.enum";
+import * as Joi from 'joi';
+import * as schemas from '@validations/schemas';
+import { UPLOAD_MIME_TYPE } from '@enums/mime-type.enum';
 
 const schemaDocuments = () => {
-  return Joi.array().items( 
+  return Joi.array().items(
     Joi.object().keys({
       fieldname: schemas.fieldname().required(),
       filename: schemas.filename().required(),
@@ -11,7 +11,7 @@ const schemaDocuments = () => {
       mimetype: schemas.mimetype(UPLOAD_MIME_TYPE).required(),
       size: Joi.number().required(),
       owner: Joi.number().required()
-    }) 
+    })
   )
 };
 

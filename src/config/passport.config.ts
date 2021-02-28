@@ -25,7 +25,7 @@ export class PassportConfiguration {
       jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer')
     }
   };
-  
+
   constructor() {}
 
   /**
@@ -38,7 +38,9 @@ export class PassportConfiguration {
       const userData = await Container.resolve('AuthProvider')[service](token);
       const user = await userRepository.oAuthLogin(userData);
       next(null, user);
-    } catch (err) { return next(err); }
+    } catch (err) {
+ return next(err);
+}
   }
 
   /**
@@ -53,24 +55,26 @@ export class PassportConfiguration {
         return next(null, user);
       }
       return next(null, false);
-    } catch (error) { return next(error, false); }
+    } catch (error) {
+ return next(error, false);
+}
   }
 
   /**
    * @description Provide a passport strategy instance
-   * 
-   * @param {string} strategy Strategy to instanciate
+   *
+   * @param strategy Strategy to instanciate
    */
   static factory (strategy: string): any {
     let instance;
     switch(strategy) {
-      case 'jwt': 
+      case 'jwt':
         instance = new JwtStrategy(this.options.jwt, this.jwt);
       break;
-      case 'facebook': 
+      case 'facebook':
         instance = new BearerStrategy(this.oAuth('facebook'));
       break;
-      case 'google': 
+      case 'google':
         instance = new BearerStrategy(this.oAuth('google'));
       break;
     }

@@ -1,13 +1,13 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import { IRoute } from "@interfaces/IRoute.interface";
+import { IRoute } from '@interfaces/IRoute.interface';
 
-import { RootRouter } from "@routes/root.route";
-import { AuthRouter } from "@routes/auth.route";
-import { DocumentRouter } from "@routes/document.route";
-import { UserRouter } from "@routes/user.route";
+import { RootRouter } from '@routes/root.route';
+import { AuthRouter } from '@routes/auth.route';
+import { DocumentRouter } from '@routes/document.route';
+import { UserRouter } from '@routes/user.route';
 
-import { Serializer } from "@middlewares/serializer.middleware";
+import { Serializer } from '@middlewares/serializer.middleware';
 
 /**
  * Load all application routes and plug it on main router
@@ -45,4 +45,4 @@ export class ProxyRouter {
     });
   }
 
-};
+}

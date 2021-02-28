@@ -1,20 +1,20 @@
-import { RefreshTokenRepository } from "@repositories/refresh-token.repository";
-import { jwtExpirationInterval } from "@config/environment.config";
-import { getCustomRepository, getRepository } from "typeorm";
-import { User } from "@models/user.model";
-import { RefreshToken } from "@models/refresh-token.model";
+import { RefreshTokenRepository } from '@repositories/refresh-token.repository';
+import { jwtExpirationInterval } from '@config/environment.config';
+import { getCustomRepository, getRepository } from 'typeorm';
+import { User } from '@models/user.model';
+import { RefreshToken } from '@models/refresh-token.model';
 
-import * as Moment from "moment-timezone";
+import * as Moment from 'moment-timezone';
 
 /**
  * @description Build a token response and return it
  *
- * @param {Object} user
- * @param {String} accessToken
+ * @param user
+ * @param accessToken
  */
 const generateTokenResponse = async (user : User, accessToken : string) => {
   const tokenType = 'Bearer';
-  const oldToken = await getRepository(RefreshToken).findOne({ where : { user : user } });
+  const oldToken = await getRepository(RefreshToken).findOne({ where : { user } });
   if (oldToken) {
     await getRepository(RefreshToken).remove(oldToken)
   }

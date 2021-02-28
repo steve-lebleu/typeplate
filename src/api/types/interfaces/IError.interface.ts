@@ -1,4 +1,4 @@
-import { IFieldError } from "@interfaces/IFieldError.interface";
+import { IFieldError } from '@interfaces/IFieldError.interface';
 
 /**
  * Define error output format
@@ -19,4 +19,4 @@ export interface IError {
    * @description HTTP response errors
    */
   errors: Array<IFieldError|string>;
-};
+}

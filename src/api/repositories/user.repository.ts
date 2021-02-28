@@ -1,22 +1,24 @@
-import * as Moment from "moment-timezone";
+import * as Moment from 'moment-timezone';
 
-import { Repository, EntityRepository, getRepository } from "typeorm";
-import { omitBy, isNil } from "lodash";
-import { uuidv4 } from "uuid/v4";
-import { badRequest, notFound, unauthorized } from "boom";
+import { Repository, EntityRepository, getRepository } from 'typeorm';
+import { omitBy, isNil } from 'lodash';
+import { uuidv4 } from 'uuid/v4';
+import { badRequest, notFound, unauthorized } from 'boom';
 
-import { User } from "@models/user.model";
+import { User } from '@models/user.model';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User>  {
 
-  constructor() { super(); }
+  constructor() {
+ super();
+}
 
   /**
    * @description Get one user
-   * 
-   * @param {number} id - The id of user
-   * 
+   *
+   * @param id - The id of user
+   *
    */
   async one(id: number) {
 
@@ -30,7 +32,7 @@ export class UserRepository extends Repository<User>  {
     if (!user) {
       throw notFound('User not found');
     }
-    
+
     return new User(user);
   }
 
@@ -38,53 +40,53 @@ export class UserRepository extends Repository<User>  {
    * @description Get a list of users according to current query parameters
    */
   async list({ page = 1, perPage = 30, username, email, role, transporter, smtp }) {
-    
+
     const repository = getRepository(User);
     const options = omitBy({ username, email, role, transporter, smtp }, isNil);
 
     let users;
 
-    let query = repository
-      .createQueryBuilder("user")
-      .leftJoinAndSelect("user.documents", "d");
+    const query = repository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.documents', 'd');
 
     if(options.username) {
-      query.andWhere("user.username = :username", { username });
+      query.andWhere('user.username = :username', { username });
     }
 
     if(options.email) {
-      query.andWhere("email = :email", { email });
+      query.andWhere('email = :email', { email });
     }
 
     if(options.role){
-      query.andWhere("role = :role", { role });
+      query.andWhere('role = :role', { role });
     }
 
     users = await query
       .skip( ( page - 1 ) * perPage )
       .take( perPage )
       .getMany();
-    
+
     return users;
   }
 
   /**
    * @description Find user by email and try to generate a JWT token
    *
-   * @param {any} options Payload data
-   * @param {string} origin
-   * 
+   * @param options Payload data
+   * @param origin
+   *
    */
   async findAndGenerateToken(options, origin?: string) {
 
     const { email, password, refreshObject, apikey } = options;
 
-    if (!email && !apikey) { 
-      throw badRequest('An email or an API key is required to generate a token') 
-    };
+    if (!email && !apikey) {
+      throw badRequest('An email or an API key is required to generate a token')
+    }
 
-    const user = await this.findOne({ 
-      where : email ? { email } : { apikey } 
+    const user = await this.findOne({
+      where : email ? { email } : { apikey }
     });
 
     if (!user) {
@@ -93,7 +95,7 @@ export class UserRepository extends Repository<User>  {
       throw unauthorized('Password must match to authorize a token generating');
     } else if (refreshObject && refreshObject.user.email === email && Moment(refreshObject.expires).isBefore()) {
       throw unauthorized('Invalid refresh token');
-    } 
+    }
 
     return { user, accessToken: user.token() };
   }
@@ -108,7 +110,7 @@ export class UserRepository extends Repository<User>  {
     const userRepository = getRepository(User);
 
     const user = await userRepository.findOne({
-      where: { email : email },
+      where: { email },
     });
 
     if (user) {

@@ -1,4 +1,4 @@
-import { Router } from "@bases/router.class";
+import { Router } from '@bases/router.class';
 
 /**
  * Define route definition members
@@ -19,4 +19,4 @@ export interface IRoute {
    * @description Indicates if the route response must be serialized
    */
   serializable: boolean;
-};
+}

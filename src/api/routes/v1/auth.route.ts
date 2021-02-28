@@ -1,13 +1,15 @@
-import { Container } from "@config/container.config";
-import { Router } from "@bases/router.class";
-import { Guard } from "@middlewares/guard.middleware";
-import { Validator } from "@middlewares/validator.middleware";
+import { Container } from '@config/container.config';
+import { Router } from '@bases/router.class';
+import { Guard } from '@middlewares/guard.middleware';
+import { Validator } from '@middlewares/validator.middleware';
 
-import { register, login, oAuth, refresh } from "@validations/auth.validation";
+import { register, login, oAuth, refresh } from '@validations/auth.validation';
 
 export class AuthRouter extends Router {
 
-  constructor() { super(); }
+  constructor() {
+ super();
+}
 
   /**
    * @description Plug routes definitions
@@ -15,9 +17,9 @@ export class AuthRouter extends Router {
   define(): void {
 
     /**
-     * 
+     *
      * @apiDefine BaseHeaderSimple
-     * 
+     *
      * @apiHeader {String="application/json"} Content-Type   Mime-type
      * @apiHeader {String} Origin             Origin url
      *
@@ -26,17 +28,17 @@ export class AuthRouter extends Router {
      *    "Content-Type": "application/json",
      *    "Origin": "https://your-host.com"
      * }
-     * 
+     *
      */
 
     /**
-     * 
+     *
      * @apiDefine BaseHeader
-     * 
+     *
      * @apiHeader {String="application/json"} Content-Type   Mime-type
      * @apiHeader {String}                    Origin         Origin url
      * @apiHeader {String}                    Authorization  Bearer access token
-     * 
+     *
      * @apiHeaderExample {json} Request headers
      * {
      *    "Content-Type": "application/json",
@@ -46,24 +48,24 @@ export class AuthRouter extends Router {
      */
 
          /**
-     * 
-     * @apiDefine MultipartHeader
-     * 
-     * @apiHeader {String="multipart/form-data"}  Content-Type   Mime-type
-     * @apiHeader {String}                        Origin         Origin url
-     * @apiHeader {String}                        Authorization  Bearer access token
-     * 
-     * @apiHeaderExample {json} Request headers
-     * {
-     *    "Content-Type": "multipart/form-data",
-     *    "Origin": "https://your-host.com",
-     *    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzI2ODQ3MjgsImlhdCI6MTU2NTQyNzEyOCwic3ViIjoxfQ.h9OfTyJbzRmBtGcM1DOqtwkYlcFzoLjdVKHMV22tGBY"
-     * }
-     */
+          *
+          * @apiDefine MultipartHeader
+          *
+          * @apiHeader {String="multipart/form-data"}  Content-Type   Mime-type
+          * @apiHeader {String}                        Origin         Origin url
+          * @apiHeader {String}                        Authorization  Bearer access token
+          *
+          * @apiHeaderExample {json} Request headers
+          * {
+          *    "Content-Type": "multipart/form-data",
+          *    "Origin": "https://your-host.com",
+          *    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzI2ODQ3MjgsImlhdCI6MTU2NTQyNzEyOCwic3ViIjoxfQ.h9OfTyJbzRmBtGcM1DOqtwkYlcFzoLjdVKHMV22tGBY"
+          * }
+          */
 
     /**
      * @apiDefine SuccessToken
-     * 
+     *
      * @apiSuccess {Object}   token                Main token object
      * @apiSuccess {String}   token.tokenType      Access Token's type
      * @apiSuccess {String}   token.accessToken    Authorization Token
@@ -79,7 +81,7 @@ export class AuthRouter extends Router {
      *      "expiresIn": "2019-11-08T10:41:23.619Z"
      *    }
      * }
-     * 
+     *
      */
 
     /**
@@ -91,18 +93,18 @@ export class AuthRouter extends Router {
      * @apiPermission public
      *
      * @apiUse BaseHeaderSimple
-     * 
+     *
      * @apiParam {String{..32}}      username  User username
      * @apiParam {String}            email     User email address
      * @apiParam {String{8..16}}     password  User password
-     * 
+     *
      * @apiParamExample {json} Payload example
      * {
      *    "username": "john-doe",
      *    "email": "contact@john-doe.com",
      *    "password": "lo1Rs9#q"
      * }
-     * 
+     *
      * @apiSuccess (Created 201) {Object}      token               Token main object
      * @apiSuccess (Created 201) {String}      token.tokenType     Access Token's type
      * @apiSuccess (Created 201) {String}      token.accessToken   Authorization Token
@@ -140,7 +142,7 @@ export class AuthRouter extends Router {
      *
      * @apiError (Bad Request 400)  ValidationError   Some parameters may contain invalid values
      * @apiError (Conflict 409)     MySQLError        Some parameters are already presents in database (username or email)
-     * 
+     *
      * @apiErrorExample {json} ValidationError
      * {
      *    "statusCode": 400,
@@ -157,7 +159,7 @@ export class AuthRouter extends Router {
      *      }
      *    ]
      * }
-     * 
+     *
      * @apiErrorExample {json} MySQLError
      * {
      *    "statusCode": 409,
@@ -166,7 +168,7 @@ export class AuthRouter extends Router {
      *      "MySQL validation error"
      *    ]
      * }
-     * 
+     *
      */
     this.router
       .route('/register')
@@ -181,16 +183,16 @@ export class AuthRouter extends Router {
      * @apiPermission public
      *
      * @apiUse BaseHeaderSimple
-     * 
+     *
      * @apiParam  (With credentials)  {String}            email     User email address
      * @apiParam  (With credentials)  {String{8..16}}     password  User password
      * @apiParam  (With API key)      {String{64}}        apikey    User apikey
-     * 
+     *
      * @apiParamExample {json} Payload example
      * {
      *    "apikey": "$2b$10$sYFWFtKOR1QKm8/z6TxhQOgXCxvpZ.L13Xv3Lx496rH.L.EhobhJS"
      * }
-     * 
+     *
      * @apiSuccess (Success 200) {Object}      token               Token main object
      * @apiSuccess (Success 200) {String}      token.tokenType     Access Token's type
      * @apiSuccess (Success 200) {String}      token.accessToken   Authorization Token
@@ -225,11 +227,11 @@ export class AuthRouter extends Router {
      *      "updatedAt": "2019-08-10T08:22:03.000Z"
      *    }
      * }
-     * 
+     *
      * @apiError (Bad Request 400)   ValidationError    Some parameters may contain invalid values
      * @apiError (Unauthorized 401)  Unauthorized       Incorrect password
      * @apiError (Not found 404)     Notfound           API key or email not found
-     * 
+     *
      * @apiErrorExample {json} ValidationError
      * {
      *    "statusCode": 400,
@@ -246,7 +248,7 @@ export class AuthRouter extends Router {
      *      }
      *    ]
      * }
-     * 
+     *
      * @apiErrorExample {json} Unauthorized
      * {
      *    "statusCode": 401,
@@ -255,7 +257,7 @@ export class AuthRouter extends Router {
      *      "Password must match to authorize a token generating"
      *    ]
      * }
-     * 
+     *
      * @apiErrorExample {json} NotFound
      * {
      *    "statusCode": 404,
@@ -264,7 +266,7 @@ export class AuthRouter extends Router {
      *     "User not found"
      *    ]
      * }
-     * 
+     *
      */
     this.router
       .route('/login')
@@ -279,22 +281,22 @@ export class AuthRouter extends Router {
      * @apiPermission public
      *
      * @apiUse BaseHeaderSimple
-     * 
+     *
      * @apiParam  {Object}  token               Main token aquired when user logged in
      * @apiParam  {string}  token.refreshToken  Refresh token
-     * 
+     *
      * @apiParamExample {json} Payload example
      * {
      *    "token": {
      *      "refreshToken": "1.6df01971a1ce4dbe4b8752963e50b61632db5685e9c5c9dccedd93ec04b46cf25f40799dedeb926f"
      *    }
      * }
-     * 
+     *
      * @apiUse SuccessToken
-     * 
+     *
      * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
      * @apiError (Not found 404)    NotFound         Refresh token not found
-     * 
+     *
      * @apiErrorExample {json} ValidationError
      * {
      *    "statusCode": 400,
@@ -311,7 +313,7 @@ export class AuthRouter extends Router {
      *      }
      *    ]
      * }
-     * 
+     *
      * @apiErrorExample {json} NotFound
      * {
      *    "statusCode": 404,
@@ -320,7 +322,7 @@ export class AuthRouter extends Router {
      *     "RefreshObject not found"
      *    ]
      * }
-     * 
+     *
      */
     this.router
       .route('/refresh-token')
@@ -335,14 +337,14 @@ export class AuthRouter extends Router {
      * @apiPermission public
      *
      * @apiUse BaseHeaderSimple
-     * 
+     *
      * @apiParam  {String}  access_token  Facebook's access_token
      *
      * @apiUse SuccessToken
-     * 
+     *
      * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
      * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
-     * 
+     *
      * @apiErrorExample {json} ValidationError
      * {
      *    "statusCode": 400,
@@ -359,7 +361,7 @@ export class AuthRouter extends Router {
      *      }
      *    ]
      * }
-     * 
+     *
      * @apiErrorExample {json} Unauthorized example
      * {
      *    "statusCode": 401,
@@ -368,7 +370,7 @@ export class AuthRouter extends Router {
      *      "Invalid access token"
      *    ]
      * }
-     * 
+     *
      */
     this.router
       .route('/facebook')
@@ -383,14 +385,14 @@ export class AuthRouter extends Router {
      * @apiPermission public
      *
      * @apiUse BaseHeaderSimple
-     * 
+     *
      * @apiParam  {String}  access_token  Google's access_token
      *
      * @apiUse SuccessToken
-     * 
+     *
      * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
      * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
-     * 
+     *
      * @apiErrorExample {json} ValidationError
      * {
      *    "statusCode": 400,
@@ -407,7 +409,7 @@ export class AuthRouter extends Router {
      *      }
      *    ]
      * }
-     * 
+     *
      * @apiErrorExample {json} Unauthorized
      * {
      *    "statusCode": 401,
@@ -423,4 +425,4 @@ export class AuthRouter extends Router {
 
   }
 
-};
+}

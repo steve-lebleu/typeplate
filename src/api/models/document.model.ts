@@ -1,11 +1,11 @@
 require('module-alias/register');
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { UPLOAD_MIME_TYPE } from "@enums/mime-type.enum";
-import { User } from "@models/user.model";
-import { IModelize } from "@interfaces/IModelize.interface";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { UPLOAD_MIME_TYPE } from '@enums/mime-type.enum';
+import { User } from '@models/user.model';
+import { IModelize } from '@interfaces/IModelize.interface';
 import { whitelist } from '@whitelists/document.whitelist';
 import { filter } from '@utils/serializing.util';
-import * as Moment from "moment";
+import * as Moment from 'moment';
 
 @Entity()
 export class Document implements IModelize {
@@ -13,7 +13,9 @@ export class Document implements IModelize {
   /**
    * @param payload Object data to assign
    */
-  constructor(payload: Object ) { Object.assign(this, payload); }
+  constructor(payload: Object ) {
+ Object.assign(this, payload);
+}
 
   @PrimaryGeneratedColumn()
   id: Number;
@@ -34,10 +36,10 @@ export class Document implements IModelize {
   path: String;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: UPLOAD_MIME_TYPE
   })
-  mimetype: "application/vnd.ms-excel" | "application/vnd.ms-powerpoint" | "application/msword" | "application/pdf" | "application/vnd.oasis.opendocument.presentation" | "application/vnd.oasis.opendocument.spreadsheet" | "application/vnd.oasis.opendocument.text" | "application/x-7z-compressed" | "application/x-rar-compressed" | "application/x-tar" | "application/zip" | "image/bmp" | "image/gif" | "image/jpg" | "image/jpeg"| "image/png" | "text/csv"
+  mimetype: 'application/vnd.ms-excel' | 'application/vnd.ms-powerpoint' | 'application/msword' | 'application/pdf' | 'application/vnd.oasis.opendocument.presentation' | 'application/vnd.oasis.opendocument.spreadsheet' | 'application/vnd.oasis.opendocument.text' | 'application/x-7z-compressed' | 'application/x-rar-compressed' | 'application/x-tar' | 'application/zip' | 'image/bmp' | 'image/gif' | 'image/jpg' | 'image/jpeg'| 'image/png' | 'text/csv'
 
   @Column({
     type: Number
@@ -45,10 +47,10 @@ export class Document implements IModelize {
   size;
 
   @ManyToOne(type => User, user => user.documents, {
-    onDelete: "CASCADE" // Remove all documents when user is deleted
+    onDelete: 'CASCADE' // Remove all documents when user is deleted
   })
   owner: User;
-  
+
   @Column({
     type: Date,
     default: Moment( new Date() ).format('YYYY-MM-DD HH:ss')

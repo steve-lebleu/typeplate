@@ -1,8 +1,8 @@
-import * as Helmet from "helmet";
+import * as Helmet from 'helmet';
 
 /**
  * Set Helmet security middleware
- * 
+ *
  * @see https://github.com/helmetjs/helmet
  */
 export class HelmetConfiguration {
@@ -18,11 +18,11 @@ export class HelmetConfiguration {
   private static options = {
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: ["'self'", "'api.mail.konfer.be'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"],
+        defaultSrc: ['\'self\'', '\'api.mail.konfer.be\''],
+        scriptSrc: ['\'self\'', '\'unsafe-inline\''],
         sandbox: ['allow-forms', 'allow-scripts'],
         reportUri: '/report-violation',
-        objectSrc: ["'none'"],
+        objectSrc: ['\'none\''],
         upgradeInsecureRequests: true,
         workerSrc: false  // This is not set.
       }
@@ -47,8 +47,10 @@ export class HelmetConfiguration {
    * @description Helmet instance getter as Singleton
    */
   static get(): Function {
-    if (!this.helmet) { return this.plug(); }
+    if (!this.helmet) {
+ return this.plug();
+}
     return this.helmet;
   }
 
-};
+}

@@ -1,13 +1,13 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import { createConnection, Connection } from "typeorm";
+import { createConnection, Connection } from 'typeorm';
 
-import { Container } from "@config/container.config";
-import { env, typeorm } from "@config/environment.config";
+import { Container } from '@config/container.config';
+import { env, typeorm } from '@config/environment.config';
 
 /**
  * Typeorm default configuration
- * 
+ *
  * @see https://http://typeorm.io
  */
 export class TypeormConfiguration {
@@ -18,10 +18,10 @@ export class TypeormConfiguration {
    * @description Connect to MySQL server
    * @async
    */
-  static async connect(): Promise<Connection> { 
+  static async connect(): Promise<Connection> {
     return new Promise( (resolve, reject) => {
       createConnection({
-        type: "mysql",
+        type: 'mysql',
         name: typeorm.name,
         host: typeorm.host,
         port: parseInt(typeorm.port,10),
@@ -32,14 +32,14 @@ export class TypeormConfiguration {
         synchronize: true,
         logging: false
       })
-      .then( (connection: Connection) => { 
+      .then( (connection: Connection) => {
         Container.resolve('Logger').log('info', `Connection to MySQL server established on port ${typeorm.port} (${env})`, { label: 'MySQL' });
-        resolve(connection); 
+        resolve(connection);
       })
-      .catch( (error) => { 
-        Container.resolve('Logger').log('error', error.message, { label: 'MySQL' }); 
-        reject(error); 
+      .catch( (error) => {
+        Container.resolve('Logger').log('error', error.message, { label: 'MySQL' });
+        reject(error);
       });
     });
   }
-};
+}

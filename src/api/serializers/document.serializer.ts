@@ -1,7 +1,7 @@
-import { Serializer } from "@bases/serializer.class";
-import { whitelist as UserWhitelist } from "@whitelists/user.whitelist";
-import { getRepository } from "typeorm";
-import { User } from "@models/user.model";
+import { Serializer } from '@bases/serializer.class';
+import { whitelist as UserWhitelist } from '@whitelists/user.whitelist';
+import { getRepository } from 'typeorm';
+import { User } from '@models/user.model';
 
 /**
  * Implements specific typed properties for Document json-api serializing / unserializing
@@ -9,30 +9,32 @@ import { User } from "@models/user.model";
 export class DocumentSerializer extends Serializer {
 
   /**
-   * @constructor 
+   * @constructor
    */
-  constructor() { super('documents', [ 
+  constructor() {
+ super('documents', [
     'id',
-    'fieldname', 
-    'filename', 
-    'path', 
-    'mimetype', 
-    'size', 
-    'owner', 
-    'createdAt' 
-  ], 
+    'fieldname',
+    'filename',
+    'path',
+    'mimetype',
+    'size',
+    'owner',
+    'createdAt'
+  ],
   {
     user: {
       ref: 'id',
       attributes: UserWhitelist
     }
-  }, 
+  },
   {
     user: {
-      valueForRelationship: async function (relationship) {
+      async valueForRelationship (relationship) {
         return await getRepository(User).findOne(relationship.id);
       }
     },
-  }) };
+  })
+}
 
 }

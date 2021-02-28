@@ -1,6 +1,6 @@
-import * as Joi from "joi";
-import { ROLE } from "@enums/role.enum";
-import { list } from "@utils/enum.util";
+import * as Joi from 'joi';
+import { ROLE } from '@enums/role.enum';
+import { list } from '@utils/enum.util';
 
 // GET api/v1/users
 const listUsers = {
@@ -23,7 +23,7 @@ const getUser = {
 // POST api/v1/users
 const createUser = {
   body: {
-    username: Joi.string().max(32).required(), 
+    username: Joi.string().max(32).required(),
     email: Joi.string().email({ minDomainAtoms: 2 }).required(),
     password: Joi.string().min(8).max(16).required()
   }
@@ -35,7 +35,7 @@ const replaceUser = {
     userId: Joi.string().regex(/^[0-9]{1,4}$/).required()
   },
   body: {
-    username: Joi.string().max(32).required(), 
+    username: Joi.string().max(32).required(),
     email: Joi.string().email({ minDomainAtoms: 2 }).required(),
     password: Joi.string().min(8).max(16).required(),
   }
@@ -47,7 +47,7 @@ const updateUser = {
     userId: Joi.string().regex(/^[0-9]{1,4}$/).required(),
   },
   body: {
-    username: Joi.string().max(32), 
+    username: Joi.string().max(32),
     email: Joi.string().email({ minDomainAtoms: 2 }),
     password: Joi.string().min(8).max(16),
   }

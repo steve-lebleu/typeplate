@@ -2,7 +2,7 @@
  * Define field error format
  */
 export interface IFieldError {
-  
+
   /**
    * @description Field name|path
    */
@@ -22,4 +22,4 @@ export interface IFieldError {
    * @description Help link
    */
   help?: string;
-};
+}

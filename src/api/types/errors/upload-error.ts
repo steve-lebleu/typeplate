@@ -1,5 +1,5 @@
-import { IError } from "@interfaces/IError.interface";
-import { IFieldError } from "@interfaces/IFieldError.interface";
+import { IError } from '@interfaces/IError.interface';
+import { IFieldError } from '@interfaces/IFieldError.interface';
 
 /**
  * Type upload error
@@ -22,11 +22,11 @@ export class UploadError implements IError {
   errors: Array<IFieldError|string>;
 
   /**
-   * @param {number} status 
-   * @param {message} message 
-   * @param {Array<IFieldError|string>} errors 
+   * @param status
+   * @param message
+   * @param errors
    */
-  constructor(error: Error) { 
+  constructor(error: Error) {
     this.statusCode = 400;
     this.statusText = error.name;
     this.errors = [error.message];

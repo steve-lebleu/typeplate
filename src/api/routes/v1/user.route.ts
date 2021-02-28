@@ -1,13 +1,15 @@
-import { Router } from "@bases/router.class";
-import { Container } from "@config/container.config";
-import { Guard, ADMIN, LOGGED_USER } from "@middlewares/guard.middleware";
-import { Validator } from "@middlewares/validator.middleware";
+import { Router } from '@bases/router.class';
+import { Container } from '@config/container.config';
+import { Guard, ADMIN, LOGGED_USER } from '@middlewares/guard.middleware';
+import { Validator } from '@middlewares/validator.middleware';
 
-import { listUsers, getUser, createUser, replaceUser, updateUser, removeUser } from "@validations/user.validation";
+import { listUsers, getUser, createUser, replaceUser, updateUser, removeUser } from '@validations/user.validation';
 
 export class UserRouter extends Router {
 
-  constructor() { super(); }
+  constructor() {
+ super();
+}
 
   /**
    * @description Plug routes definitions
@@ -16,7 +18,7 @@ export class UserRouter extends Router {
 
     this.router
       .route('/')
-      
+
       /**
        * @api {get} /users List users
        * @apiDescription Get a list of users.
@@ -66,10 +68,10 @@ export class UserRouter extends Router {
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
        *  }
        * ]
-       * 
+       *
        * @apiError (Bad Request 400)   ValidationError    Some parameters may contain invalid values
        * @apiError (Unauthorized 403)  Forbidden          Incorrect token or unsuffisant access rights
-       * 
+       *
        * @apiErrorExample {json} ValidationError
        * {
        *    "statusCode": 400,
@@ -86,7 +88,7 @@ export class UserRouter extends Router {
        *      }
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Forbidden
        * {
        *    "statusCode": 403,
@@ -95,7 +97,7 @@ export class UserRouter extends Router {
        *      "You can't access to this ressource"
        *    ]
        * }
-       * 
+       *
        */
       .get(Guard.authorize([ADMIN]), Validator.validate(listUsers), Container.resolve('UserController').list)
 
@@ -137,11 +139,11 @@ export class UserRouter extends Router {
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
        *  }
-       * 
+       *
        * @apiError (Bad Request 400)   ValidationError  Some parameters may contain invalid values
        * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users can create the data
        * @apiError (Forbidden 403)     Forbidden        Only admins can create the data
-       * 
+       *
        * @apiErrorExample {json} ValidationError
        * {
        *    "statusCode": 400,
@@ -158,7 +160,7 @@ export class UserRouter extends Router {
        *      }
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Unauthorized
        * {
        *    "statusCode": 401,
@@ -167,7 +169,7 @@ export class UserRouter extends Router {
        *      "Forbidden area"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Forbidden
        * {
        *    "statusCode": 403,
@@ -176,7 +178,7 @@ export class UserRouter extends Router {
        *      "No auth token"
        *    ]
        * }
-       * 
+       *
        */
       .post(Guard.authorize([ADMIN]), Validator.validate(createUser), Container.resolve('UserController').create);
 
@@ -216,7 +218,7 @@ export class UserRouter extends Router {
        *  }
        *
        * @apiError (Unauthorized 401)  Unauthorized  Only authenticated Users can access the data
-       * 
+       *
        * @apiErrorExample {json} Unauthorized
        * {
        *    "statusCode": 401,
@@ -267,7 +269,7 @@ export class UserRouter extends Router {
        * @apiError (Forbidden 403)    Forbidden     Only user with same id or admins can access the data
        * @apiError (Not Found 404)    NotFound      User does not exist
        * @apiError (Expectation failed 417)   ExpectationFailed   The id parameters failed to match
-       * 
+       *
        * @apiErrorExample {json} Unauthorized
        * {
        *    "statusCode": 401,
@@ -276,7 +278,7 @@ export class UserRouter extends Router {
        *      "Forbidden area"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Forbidden
        * {
        *    "statusCode": 403,
@@ -285,7 +287,7 @@ export class UserRouter extends Router {
        *      "You can't access to this ressource"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} NotFound
        * {
        *    "statusCode": 404,
@@ -294,7 +296,7 @@ export class UserRouter extends Router {
        *      "User not found"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} ExpectationFailed
        * {
        *    "statusCode": 417,
@@ -303,7 +305,7 @@ export class UserRouter extends Router {
        *      ":userId parameter must be a number"
        *    ]
        * }
-       * 
+       *
        */
       .get(Guard.authorize([ADMIN]), Validator.validate(getUser), Container.resolve('UserController').get)
 
@@ -323,7 +325,7 @@ export class UserRouter extends Router {
        * @apiParam  {Provider[]}      [providers]     User providers
        * @apiParam  {Smtp[]}          [smtps]         User smtps
        * @apiParam  {String=admin}    [role]          User role
-       * 
+       *
        * @apiSuccess (Success 200) {User}        user                User
        * @apiSuccess (Success 200) {String}      user.username       User name
        * @apiSuccess (Success 200) {String}      user.username       User name
@@ -351,7 +353,7 @@ export class UserRouter extends Router {
        * @apiError (Forbidden 403)    Forbidden         Only user with same id or admins can access the data
        * @apiError (Not Found 404)    NotFound          User does not exist
        * @apiError (Expectation failed 417)   ExpectationFailed   The id parameters failed to match
-       * 
+       *
        * @apiErrorExample {json} ValidationError
        * {
        *    "statusCode": 400,
@@ -368,7 +370,7 @@ export class UserRouter extends Router {
        *      }
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Unauthorized
        * {
        *    "statusCode": 401,
@@ -377,7 +379,7 @@ export class UserRouter extends Router {
        *      "Forbidden area"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Forbidden
        * {
        *    "statusCode": 403,
@@ -386,7 +388,7 @@ export class UserRouter extends Router {
        *      "You can't access to this ressource"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} NotFound
        * {
        *    "statusCode": 404,
@@ -395,8 +397,8 @@ export class UserRouter extends Router {
        *      "User not found"
        *    ]
        * }
-       * 
-       * @apiErrorExample {json} ExpectationFailed 
+       *
+       * @apiErrorExample {json} ExpectationFailed
        * {
        *    "statusCode": 417,
        *    "statusText": "Expectation failed",
@@ -404,7 +406,7 @@ export class UserRouter extends Router {
        *      ":userId parameter must be a number"
        *    ]
        * }
-       * 
+       *
        */
       .put(Guard.authorize([ADMIN]), Validator.validate(replaceUser), Container.resolve('UserController').update)
 
@@ -417,14 +419,14 @@ export class UserRouter extends Router {
        * @apiPermission user
        *
        * @apiUse BaseHeader
-       * 
+       *
        * @apiParam  {String}          [email]         User email
        * @apiParam  {String{8..16}}   [password]      User password
        * @apiParam  {String{..32}}    [username]      User username
        * @apiParam  {Provider[]}      [providers]     User providers
        * @apiParam  {Smtp[]}          [smtps]         User smtps
        * @apiParam  {String=admin}    [role]          User role
-       * 
+       *
        * @apiSuccess (Success 200) {User}        user                User
        * @apiSuccess (Success 200) {String}      user.username       User name
        * @apiSuccess (Success 200) {String}      user.username       User name
@@ -452,7 +454,7 @@ export class UserRouter extends Router {
        * @apiError (Forbidden 403)    Forbidden         Only user with same id or admins can access the data
        * @apiError (Not Found 404)    NotFound          User does not exist
        * @apiError (Expectation failed 417)   ExpectationFailed   The id parameters failed to match
-       * 
+       *
        * @apiErrorExample {json} ValidationError
        * {
        *    "statusCode": 400,
@@ -469,7 +471,7 @@ export class UserRouter extends Router {
        *      }
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Unauthorized
        * {
        *    "statusCode": 401,
@@ -478,7 +480,7 @@ export class UserRouter extends Router {
        *      "Forbidden area"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Forbidden
        * {
        *    "statusCode": 403,
@@ -487,7 +489,7 @@ export class UserRouter extends Router {
        *      "You can't access to this ressource"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} NotFound
        * {
        *    "statusCode": 404,
@@ -496,7 +498,7 @@ export class UserRouter extends Router {
        *      "User not found"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} ExpectationFailed
        * {
        *    "statusCode": 417,
@@ -505,7 +507,7 @@ export class UserRouter extends Router {
        *      ":userId parameter must be a number"
        *    ]
        * }
-       * 
+       *
        */
       .patch(Guard.authorize([ADMIN]), Validator.validate(updateUser), Container.resolve('UserController').update)
 
@@ -518,14 +520,14 @@ export class UserRouter extends Router {
        * @apiPermission user
        *
        * @apiUse BaseHeader
-       * 
+       *
        * @apiSuccess (No Content 204) Successfully deleted
        *
        * @apiError (Unauthorized 401)         Unauthorized        Only authenticated users can access the data
        * @apiError (Forbidden 403)            Forbidden           Only user with same id or admins can access the data
        * @apiError (Not Found 404)            NotFound            User does not exist
        * @apiError (Expectation failed 417)   ExpectationFailed   The id parameters failed to match
-       * 
+       *
        * @apiErrorExample {json} ValidationError
        * {
        *    "statusCode": 400,
@@ -542,7 +544,7 @@ export class UserRouter extends Router {
        *      }
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Unauthorized
        * {
        *    "statusCode": 401,
@@ -551,7 +553,7 @@ export class UserRouter extends Router {
        *      "Forbidden area"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} Forbidden
        * {
        *    "statusCode": 403,
@@ -560,7 +562,7 @@ export class UserRouter extends Router {
        *      "You can't access to this ressource"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} NotFound
        * {
        *    "statusCode": 404,
@@ -569,7 +571,7 @@ export class UserRouter extends Router {
        *      "User not found"
        *    ]
        * }
-       * 
+       *
        * @apiErrorExample {json} ExpectationFailed
        * {
        *    "statusCode": 417,
@@ -578,10 +580,10 @@ export class UserRouter extends Router {
        *      ":userId parameter must be a number"
        *    ]
        * }
-       * 
+       *
        */
       .delete(Guard.authorize([ADMIN]), Validator.validate(removeUser), Container.resolve('UserController').remove);
 
   }
 
-};
+}

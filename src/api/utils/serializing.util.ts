@@ -1,12 +1,12 @@
-import { Serializer } from "@bases/serializer.class";
-import { UserSerializer } from "@serializers/user.serializer";
-import { DocumentSerializer } from "@serializers/document.serializer";
-import { isDate, isNull, isString } from "util";
-import * as Pluralize from "pluralize";
+import { Serializer } from '@bases/serializer.class';
+import { UserSerializer } from '@serializers/user.serializer';
+import { DocumentSerializer } from '@serializers/document.serializer';
+import { isDate, isNull, isString } from 'util';
+import * as Pluralize from 'pluralize';
 
 /**
  * @description Say if a value can be serialized
- * @param {any} value Value to check as serializable 
+ * @param value Value to check as serializable
  */
 const isSerializable = (value: any): boolean => {
   const typeOf = typeof(value);
@@ -18,26 +18,26 @@ const isSerializable = (value: any): boolean => {
 
 /**
  * @description Whitelist an entity when Content-Type is application/json
- * @param {string[]} whitelist Whitelisted properties
- * @param {any} entity Entity to serialize 
+ * @param whitelist Whitelisted properties
+ * @param entity Entity to serialize
  */
 const filter = (whitelist: string[], entity: any): any => {
-  let obj = {} as any;
-  Object.keys(entity).map( (key) => { 
+  const obj = {} as any;
+  Object.keys(entity).map( (key) => {
     if (whitelist.includes(key) || whitelist.includes(Pluralize(key))) {
       if( isSerializable( entity[key] ) ) {
         obj[key] = Array.isArray(entity[key]) ? entity[key].map( (model: any) => model.whitelist() ) : entity[key].whitelist();
       } else {
         obj[key] = entity[key];
-      }  
-    } 
+      }
+    }
   });
   return obj;
 };
 
 /**
  * @description Get a serializer according to current request
- * @param {string} name 
+ * @param name
  * TODO: no hardcode
  */
 const getSerializer = (name: string): Serializer => {
@@ -59,78 +59,78 @@ const getSerializer = (name: string): Serializer => {
 };
 
 const example = {
-  "links": {
-    "self": "http://example.com/articles",
-    "next": "http://example.com/articles?page[offset]=2",
-    "last": "http://example.com/articles?page[offset]=10"
+  links: {
+    self: 'http://example.com/articles',
+    next: 'http://example.com/articles?page[offset]=2',
+    last: 'http://example.com/articles?page[offset]=10'
   },
-  "data": [{
-    "type": "articles",
-    "id": "1",
-    "attributes": {
-      "title": "JSON:API paints my bikeshed!"
+  data: [{
+    type: 'articles',
+    id: '1',
+    attributes: {
+      title: 'JSON:API paints my bikeshed!'
     },
-    "relationships": {
-      "author": {
-        "links": {
-          "self": "http://example.com/articles/1/relationships/author",
-          "related": "http://example.com/articles/1/author"
+    relationships: {
+      author: {
+        links: {
+          self: 'http://example.com/articles/1/relationships/author',
+          related: 'http://example.com/articles/1/author'
         },
-        "data": { "type": "people", "id": "9" }
+        data: { type: 'people', id: '9' }
       },
-      "comments": {
-        "links": {
-          "self": "http://example.com/articles/1/relationships/comments",
-          "related": "http://example.com/articles/1/comments"
+      comments: {
+        links: {
+          self: 'http://example.com/articles/1/relationships/comments',
+          related: 'http://example.com/articles/1/comments'
         },
-        "data": [
-          { "type": "comments", "id": "5" },
-          { "type": "comments", "id": "12" }
+        data: [
+          { type: 'comments', id: '5' },
+          { type: 'comments', id: '12' }
         ]
       }
     },
-    "links": {
-      "self": "http://example.com/articles/1"
+    links: {
+      self: 'http://example.com/articles/1'
     }
   }],
-  "included": [{
-    "type": "people",
-    "id": "9",
-    "attributes": {
-      "firstName": "Dan",
-      "lastName": "Gebhardt",
-      "twitter": "dgeb"
+  included: [{
+    type: 'people',
+    id: '9',
+    attributes: {
+      firstName: 'Dan',
+      lastName: 'Gebhardt',
+      twitter: 'dgeb'
     },
-    "links": {
-      "self": "http://example.com/people/9"
+    links: {
+      self: 'http://example.com/people/9'
     }
   }, {
-    "type": "comments",
-    "id": "5",
-    "attributes": {
-      "body": "First!"
+    type: 'comments',
+    id: '5',
+    attributes: {
+      body: 'First!'
     },
-    "relationships": {
-      "author": {
-        "data": { "type": "people", "id": "2" }
+    relationships: {
+      author: {
+        data: { type: 'people', id: '2' }
       }
     },
-    "links": {
-      "self": "http://example.com/comments/5"
+    links: {
+      self: 'http://example.com/comments/5'
     }
   }, {
-    "type": "comments",
-    "id": "12",
-    "attributes": {
-      "body": "I like XML better"
+    type: 'comments',
+    id: '12',
+    attributes: {
+      body: 'I like XML better'
     },
-    "relationships": {
-      "author": {
-        "data": { "type": "people", "id": "9" }
+    relationships: {
+      author: {
+        data: { type: 'people', id: '9' }
       }
     },
-    "links": {
-      "self": "http://example.com/comments/12"
+    links: {
+      self: 'http://example.com/comments/12'
     }
   }]
 };

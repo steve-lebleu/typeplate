@@ -1,10 +1,10 @@
-import { env } from "@config/environment.config";
-import * as Winston from "winston";
-import { format } from "winston";
+import { env } from '@config/environment.config';
+import * as Winston from 'winston';
+import { format } from 'winston';
 
 /**
  * This logger implements Winston module for writing custom logs
- * 
+ *
  * @see https://github.com/winstonjs/winston
  */
 export class WinstonConfiguration {
@@ -73,7 +73,7 @@ export class WinstonConfiguration {
 
   constructor() {
 
-    let logger = Winston.createLogger({
+    const logger = Winston.createLogger({
       level: 'info',
       transports: [
         //
@@ -81,20 +81,20 @@ export class WinstonConfiguration {
         // - Write all logs error (and below) to `error.log`.
         //
         new Winston.transports.File(this.options.error),
-        new Winston.transports.File(this.options.info),   
+        new Winston.transports.File(this.options.info),
       ],
       exitOnError: false
     });
-    
+
     // If we're not in production||test then log to the `console`
     if ( !['production', 'test'].includes(process.env.NODE_ENV) ) {
       logger.add( new Winston.transports.Console(this.options.console) );
     }
-    
-    logger.stream = { 
-      write: function(message, encoding) { 
-        logger.info(message.trim()); 
-      } 
+
+    logger.stream = {
+      write(message, encoding) {
+        logger.info(message.trim());
+      }
     } as any;
 
     this.logger = logger;
@@ -104,10 +104,10 @@ export class WinstonConfiguration {
 
   /**
    * @description Generic property getter
-   * 
-   * @param {string} property Property name to returns
+   *
+   * @param property Property name to returns
    */
-  get(property: string) { 
+  get(property: string) {
     return this[property];
   }
 }

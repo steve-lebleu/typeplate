@@ -7,14 +7,14 @@ import { Server as HttpsServer, createServer } from 'https';
 export class ServerConfiguration {
 
     /**
-     * 
+     *
      */
     static options = {
         credentials: {
             key: ssl.isActive === 1 ? readFileSync(ssl.key, 'utf8') : null,
             cert: ssl.isActive === 1 ? readFileSync(ssl.cert, 'utf8') : null,
         },
-        port: port
+        port
     }
 
     constructor() {}

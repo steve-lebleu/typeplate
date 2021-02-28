@@ -3,15 +3,15 @@ import { list } from '@utils/enum.util';
 import { UPLOAD_MIME_TYPE } from '@enums/mime-type.enum';
 
 /**
- * Configure dotenv with variables.env file before app, to allow process.env accessibility in 
+ * Configure dotenv with variables.env file before app, to allow process.env accessibility in
  * app.js
- * 
+ *
  * @dependency dotenv
- * 
+ *
  * @see https://www.npmjs.com/package/dotenv
  */
 class EnvironmentConfiguration {
-  
+
   /**
    * @description Current environment (default dev)
    */
@@ -51,13 +51,13 @@ const jwtExpirationInterval = process.env.JWT_EXPIRATION_MINUTES;
 const logs                  = process.env.NODE_ENV === 'production' ? 'combined' : 'development';
 const httpLogs              = process.env.NODE_ENV === 'production' ? 'combined' : 'dev';
 const contentType           = process.env.CONTENT_TYPE;
-const typeorm               = { 
-  type: process.env.TYPEORM_TYPE, 
+const typeorm               = {
+  type: process.env.TYPEORM_TYPE,
   name: process.env.TYPEORM_NAME,
-  port: process.env.TYPEORM_PORT, 
-  host: process.env.TYPEORM_HOST, 
-  database: process.env.TYPEORM_DB, 
-  user: process.env.TYPEORM_USER, 
+  port: process.env.TYPEORM_PORT,
+  host: process.env.TYPEORM_HOST,
+  database: process.env.TYPEORM_DB,
+  user: process.env.TYPEORM_USER,
   pwd: process.env.TYPEORM_PWD,
   sync: process.env.NODE_ENV === ENVIRONMENT.production ? false : !!process.env.TYPEORM_SYNC,
   log: !!process.env.TYPEORM_LOG,

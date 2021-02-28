@@ -1,12 +1,12 @@
-const whitelist = [ 
+const whitelist = [
   'id',
-  'fieldname', 
-  'filename', 
-  'path', 
-  'mimetype', 
-  'size', 
+  'fieldname',
+  'filename',
+  'path',
+  'mimetype',
+  'size',
   'createdAt',
-  'updatedAt' 
+  'updatedAt'
 ];
 
 export { whitelist }

@@ -27,12 +27,12 @@ import { Catcher } from "@middlewares/catcher.middleware";
  * Instanciate and set Express application.
  * Configure and plug middlewares from local options or dedicated files in ./config.
  */
-export class Application {
+export class ExpressConfiguration {
 
   /**
    * @description Wrapped Express.js application
    */
-  public app: Express.Application;
+  private instance: Express.Application;
 
   /**
    * @description Middlewares options
@@ -54,71 +54,58 @@ export class Application {
     }
   };
 
-  constructor() {
-    this.init();
-    this.plug();
-  }
+  constructor(app: Express.Application) {
 
-  /**
-   * @description Instantiate Express application
-   */
-  private init(): void {
-    this.app = Express();
-  }
-
-  /**
-   * @description Plug and set middlewares on Express app
-   */
-  private plug(): void {
+    this.instance = app;
 
     /**
      * First, before all : check headers validity 
      *
      */
-    this.app.use( Header.check({ contentType }) );
+    this.instance.use( Header.check({ contentType }) );
 
     /**
      * Expose body on req.body
      * 
      * @see https://www.npmjs.com/package/body-parser
      */
-    this.app.use( BodyParser.urlencoded({ extended : false }) );
-    this.app.use( BodyParser.json({ type: contentType }) );
+    this.instance.use( BodyParser.urlencoded({ extended : false }) );
+    this.instance.use( BodyParser.json({ type: contentType }) );
 
     /**
      * Prevent request parameter pollution
      * 
      * @see https://www.npmjs.com/package/hpp
      */
-    this.app.use( Hpp({ checkBody: false }) );
+    this.instance.use( Hpp({ checkBody: false }) );
 
     /**
      * GZIP compression
      * 
      * @see https://github.com/expressjs/compression
      */
-    this.app.use( Compression() );
+    this.instance.use( Compression() );
 
     /**
      * Enable and set Helmet security middleware
      * 
      * @see https://github.com/helmetjs/helmet
      */
-    this.app.use( HelmetConfiguration.get()() );
+    this.instance.use( HelmetConfiguration.get()() );
 
     /**
      * Enable CORS - Cross Origin Resource Sharing
      *
      * @see https://www.npmjs.com/package/cors
      */
-    this.app.use( Cors( this.options.cors ) );
+    this.instance.use( Cors( this.options.cors ) );
 
     /**
      * Passport configuration
      * 
      * @see http://www.passportjs.org/
      */
-    this.app.use( PassportInitialize() );
+    this.instance.use( PassportInitialize() );
 
     PassportUse('jwt', PassportConfiguration.factory('jwt'));
     PassportUse('facebook', PassportConfiguration.factory('facebook'));
@@ -130,7 +117,7 @@ export class Application {
      * 
      * @see https://github.com/expressjs/morgan
      */
-    this.app.use( Morgan(httpLogs, { stream: this.options.stream }) );
+    this.instance.use( Morgan(httpLogs, { stream: this.options.stream }) );
 
     /**
      * Configure API Rate limit
@@ -138,7 +125,7 @@ export class Application {
      * 
      * @see https://www.npmjs.com/package/express-rate-limit
      */
-    this.app.enable("trust proxy"); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+    this.instance.enable("trust proxy"); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
     
     /**
      * Set global middlewares on Express Application
@@ -153,17 +140,22 @@ export class Application {
      * - Router(s)
      * - Resolver
      */
-    this.app.use(`/api/${version}`, RateLimit(this.options.rate), Serializer.deserialize, Container.resolve('ProxyRouter').router, Resolver.resolve);
+    this.instance.use(`/api/${version}`, RateLimit(this.options.rate), Serializer.deserialize, Container.resolve('ProxyRouter').router, Resolver.resolve);
 
     /**
      * Errors handlers
      */
     if( [ENVIRONMENT.development].includes(env as ENVIRONMENT) ) {
-      this.app.use( Catcher.notification ); // Notify in dev
+      this.instance.use( Catcher.notification ); // Notify in dev
     } 
 
-    this.app.use( Catcher.log, Catcher.exit, Catcher.notFound ); // Log, exit with error || exit with 404
-
+    this.instance.use( Catcher.log, Catcher.exit, Catcher.notFound ); // Log, exit with error || exit with 404
   }
 
+  /**
+   * @description Instantiate Express application
+   */
+  get(): Express.Application {
+    return this.instance;
+  }
 } 

@@ -1,15 +1,15 @@
-import { jwtSecret } from "@config/environment.config";
+import { jwtSecret } from '@config/environment.config';
 
-import * as BearerStrategy from "passport-http-bearer";
+import * as BearerStrategy from 'passport-http-bearer';
 
-import { Strategy as JwtStrategy } from "passport-jwt";
-import { ExtractJwt } from "passport-jwt";
-import { getCustomRepository, getRepository } from "typeorm";
+import { Strategy as JwtStrategy } from 'passport-jwt';
+import { ExtractJwt } from 'passport-jwt';
+import { getCustomRepository, getRepository } from 'typeorm';
 
-import { Container } from "@config/container.config";
+import { Container } from '@config/container.config';
 
-import { UserRepository } from "@repositories/user.repository";
-import { User } from "@models/user.model";
+import { UserRepository } from '@repositories/user.repository';
+import { User } from '@models/user.model';
 
 /**
  * Passport configuration

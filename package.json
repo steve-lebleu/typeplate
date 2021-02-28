@@ -3,7 +3,7 @@
   "engines": {
     "node": ">=14.16"
   },
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "Steve Lebleu",
   "license": "MIT",
   "description": "This repository contains REST API boilerplate Typescript / Express.js / TypeORM based.",

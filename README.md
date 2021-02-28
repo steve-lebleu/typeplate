@@ -19,8 +19,6 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
 * [Getting started](#getting-started)
 * [Development features](#development-features)
   * [Dependency injection](#dependency-injection)
-  * [Typescript](#typescript)
-  * [Object Relational Mapping](#orm)
   * [Entity generating](#entity-generating)
   * [Logs management](#logs-management)
   * [Errors management](#errors-management)
@@ -55,7 +53,9 @@ $ npm run kickstart
 
 This will install Typescript, Typeorm and Kem (cli entity generator) globaly, NPM packages, create *dist* directory and sub-directories, and run a one shot compilation.
 
-### Configure
+### Set up
+
+#### Environment
 
 Adapt/create .env files with your own configuration for mandatory properties :
 
@@ -68,19 +68,7 @@ TYPEORM_PWD = "root"
 TYPEORM_PORT = "3306"
 ```
 
-Enjoy with :
-
-```bash
-$ nodemon
-```
-
-## Development features
-
-### Typescript
-
-The latest version of [Typescript](https://www.typescriptlang.org/) is used by default.
-
-#### Configuration
+#### Typescript
 
 You can adapt Typescript configuration in *./tsconfig.json* file :
 
@@ -123,25 +111,7 @@ You can adapt Typescript configuration in *./tsconfig.json* file :
 
 More info about [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html).
 
-#### Compilation
-
-Run time compilation :
-
-```bash
-$ tsc
-```
-
-Watching compilation :
-
-```bash
-$ tsc --watch
-```
-
-### ORM
-
-ORM couch is provided by [Typeorm](https://github.com/typeorm/typeorm).
-
-#### Configuration
+#### TypeORM
 
 Update *.env* files (development, staging, production, test) with your own settings :
 
@@ -189,7 +159,7 @@ If you will use Typeorm as CLI, update also the *ormconfig.json* file and fill i
 
 More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeorm cli](https://typeorm.io/#/using-cli/installing-cli).
 
-#### Migration
+##### Migration
 
 A Typeorm migration is a DB synchronizing. If your schema have pending changes, migration tool allow you to synchronize it.
 
@@ -202,11 +172,43 @@ $ typeorm migration:run
 
 More info about [typeorm migration](http://typeorm.io/#/migrations).
 
-#### Events subscribers
+##### Events subscribers
 
 Typeorm provides events listening on your models. So, you can define your owns listeners/subscribers, and use it to do actions when a specific event is fired.
 
 More info about [typeorm subscribers](https://typeorm.io/#/listeners-and-subscribers).
+
+#### Logs
+
+Simple logs management is provided, principaly based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
+
+You can configure main parameters in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/winston.config.ts).
+
+### Run
+
+#### Compilation
+
+Run time compilation :
+
+```bash
+$ tsc
+```
+
+Watching compilation :
+
+```bash
+$ tsc --watch
+```
+
+#### Running
+
+Enjoy with :
+
+```bash
+$ nodemon
+```
+
+## Development features
 
 ### Entity generating
 
@@ -238,31 +240,6 @@ Note that generated files contains only basic features and some parts must be ob
 * **Model**: model is filled with a primary auto-incremented id, and date system columns. Fill it with your columns and relations.
 * **Serializer**: attributes as empty by default. Fill it with your entity attributes.
 * **Validation rules**: body rules are created but empty by default. Fill it with your rules.
-
-### Logs management
-
-Simple logs management is provided, principaly based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
-
-You can configure main parameters in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/winston.config.ts).
-
-### Errors management
-
-API respond **always** on the same format :
-
-* **Success**: JSON body which contain one or more entities. Or empty, with 200, 201 or 204 HTTP status code.
-* **Error**: JSON object which implements [IError](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/types/interfaces/IError.interface.ts) interface. Includes upload errors, db errors or 404 errors. The errors property can be an array of strings, or an array of [IFieldError](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/types/interfaces/IFieldError.interface.ts).
-
-```json
-{
-    "statusCode": 401,
-    "statusText": "Unauthorized",
-    "errors": [
-      "Forbidden area"
-    ]
-}
-```
-
-Depending by environment, errors can be logged or not.
 
 ### Todo and fixme tasks
 

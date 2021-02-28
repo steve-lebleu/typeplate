@@ -1,6 +1,6 @@
 # Typescript / Express.js / Typeorm RESTful API boilerplate
 
-[![Node](https://img.shields.io/badge/Node-10.9-green)](https://nodejs.org/docs/latest-v14.x/api/index.html)
+[![Node](https://img.shields.io/badge/Node-14.16.0-green)](https://nodejs.org/docs/latest-v14.x/api/index.html)
 [![TypeScript](https://img.shields.io/badge/Typescript-5.3-blue)](https://www.typescriptlang.org/)
 [![Express](https://img.shields.io/badge/Express-4.16.4-lightgrey)](https://expressjs.com/fr/)
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-orange)](https://typeorm.io/#/)

@@ -16,25 +16,27 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
 
 ## Table of contents
 
+* [Application features](#application-features)
+  * [Authentication](#authentication)
+  * [File upload](#file-upload)
+  * [Validation](#validation)
+  * [Security](#security)
 * [Getting started](#getting-started)
   * [Install](#install)
   * [Build](#build)
   * [Setup](#setup)
     * [Typescript](#typescript)
     * [TypeORM](#typeorm)
+    * [Logs](#logs)
   * [Compile](#compile)
   * [Run](#run)
 * [Development features](#development-features)
   * [Entity generation](#entity-generation)
-  * [Tests](#tests)
-  * [Documentation](#documentation)
-  * [Deployment](#deployment)
-* [Application features](#application-features)
-  * [Authentication](#authentication)
-  * [File upload](#file-upload)
-  * [Validation](#validation)
-  * [Security](#security)
-* [Dependencies](#dependencies)
+* [Tests](#tests)
+* [Documentation](#documentation)
+* [Continuous integration](#continuous-integration)
+* [Deployment](#deployment)
+
 
 ## Getting started
 

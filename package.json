@@ -3,7 +3,7 @@
   "engines": {
     "node": ">=14.16"
   },
-  "version": "1.0.2",
+  "version": "1.0.4",
   "author": "Steve Lebleu",
   "license": "MIT",
   "description": "This repository contains REST API boilerplate Typescript / Express.js / TypeORM based.",
@@ -28,7 +28,13 @@
     "url": "https://github.com/konfer-be/ts-express-typeorm-boilerplate/issues"
   },
   "main": "./dist/api/app.bootstrap.js",
-  "lint": "tslint --project tslint.json",
+  "lint": "eslint ./src/**/*.ts",
+  "auto-changelog": {
+    "output": "CHANGELOG.md",
+    "template": "keepachangelog",
+    "unreleased": true,
+    "commitLimit": false
+  },
   "scripts": {
     "kickstart": "npm i typescript -g && npm i typeorm -g && npm i kfr-kem -g && npm i && npm-run-all -s kick:*",
     "kick:directories": "mkdir -p ./dist/logs ./dist/uploads/archives ./dist/uploads/documents ./dist/uploads/images/master-copy ./dist/uploads/images/rescale/extra-small ./dist/uploads/images/rescale/medium ./dist/uploads/images/rescale/extra-large",
@@ -36,7 +42,8 @@
     "test": "nyc --reporter=html --report-dir=./docs/nyc-coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000",
     "todo-ci": "leasot -x --reporter markdown './src/**/*.ts' > TODO.md",
     "apidoc-ci": "apidoc -i src/ -o docs/apidoc/",
-    "typedoc-ci": "typedoc --mode modules --name 'API documentation' --defaultCategory 'Root' --categorizeByGroup  --out ./docs/typedoc ./src"
+    "typedoc-ci": "typedoc --mode modules --name 'API documentation' --defaultCategory 'Root' --categorizeByGroup  --out ./docs/typedoc ./src",
+    "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "_moduleAliases": {
     "@bases": "dist/api/types/classes",

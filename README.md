@@ -72,10 +72,6 @@ You can define your own globals validation settings in dedicated [config file](h
 
 Some classic features are implemented with [CORS](https://expressjs.com/en/resources/middleware/cors.html), [Helmet](https://helmetjs.github.io/), [Hpp](https://www.npmjs.com/package/hpp) and [Express rate limit](https://www.npmjs.com/package/express-rate-limit).
 
-
-
-
-
 ### Entity generation
 
 The boilerplate provide a basic entity generator (kfr-kem), which be used as cli tool. This generate following files :
@@ -111,15 +107,11 @@ Generated files contains only basic features and some parts must be filled by yo
 
 ### Install
 
-Clone boilerplate :
-
 ```bash
 $ git clone https://github.com/konfer-be/ts-express-typeorm-boilerplate.git your-project-name/
 ```
 
 ### Build
-
-Give kickstart :
 
 ```bash
 $ npm run kickstart
@@ -354,48 +346,3 @@ $ pm2 deploy production exec "pm2 reload all"
 More info about [PM2 deploy](https://pm2.io/doc/en/runtime/guide/easy-deploy-with-ssh/).
 
 More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
-
-
-## Dependencies
-
-- awilix (dependency injection)
-- axios (http requests)
-- bcrypt (cryptography)
-- body-parser (payload exposition)
-- boom (errors throwing)
-- compression (gzip responses)
-
-- cors (security)
-- crypto (cryptography)
-- dotenv (.env files)
-
-- es6-promisify (es6 promisification)
-- express (framework)
-- express-rate-limit (rate limit on api)
-- express-validation (validation)
-- express-validator (on the fly validation)
-- helmet (security)
-- hpp (security)
-- http-status (easy HTTP status response)
-- jimp (image manipulation)
-- joi (validation rules)
-- json-api-serializer (serializing)
-- jwt-simple (JWT enconding / decoding)
-- lodash (utils)
-- module-alias (typescript paths)
-- moment (date treatments)
-- moment-timezone (date treatments)
-- morgan (HTTP logs)
-- multer (file upload)
-- node-notifier (desktop notifications)
-- passport (authentification)
-- passport-facebook (authentification with Facebook graph)
-- passport-google-auth (authentification with Google oAuth)
-- passport-http-bearer (authentification with Bearer strategy)
-- passport-jwt (authentification with JWT)
-- passport-local (authentification with local database)
-- pluralize (pluralization)
-- reflect-metadata (model reflection)
-- typeorm (ORM)
-- uuid (unique identifier generating)
-- winston (logs)

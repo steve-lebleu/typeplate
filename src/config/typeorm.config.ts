@@ -2,8 +2,9 @@ import 'reflect-metadata';
 
 import { createConnection, Connection } from 'typeorm';
 
-import { Container } from '@config/container.config';
 import { env, typeorm } from '@config/environment.config';
+
+import { Logger } from '@services/logger.service';
 
 /**
  * Typeorm default configuration
@@ -33,11 +34,11 @@ export class TypeormConfiguration {
         logging: false
       })
       .then( (connection: Connection) => {
-        Container.resolve('Logger').log('info', `Connection to MySQL server established on port ${typeorm.port} (${env})`, { label: 'MySQL' });
+        Logger.log('info', `Connection to MySQL server established on port ${typeorm.port} (${env})`, { label: 'MySQL' });
         resolve(connection);
       })
-      .catch( (error) => {
-        Container.resolve('Logger').log('error', error.message, { label: 'MySQL' });
+      .catch( (error: Error) => {
+        Logger.log('error', error.message, { label: 'MySQL' });
         reject(error);
       });
     });

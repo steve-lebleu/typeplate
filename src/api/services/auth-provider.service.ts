@@ -1,5 +1,6 @@
 import { default as Axios } from 'axios';
-import { getCustomRepository } from 'typeorm';
+
+import { IAuthExternalProvider } from '@interfaces/IAuthExternalProvider.interface';
 
 /**
  * Manage some authentication related actions:
@@ -17,42 +18,38 @@ export class AuthProvider {
    *
    * @param access_token Token registered on user // TODO:
    */
-  facebook = async (access_token: string) => {
+  static facebook = async (access_token: string): Promise<IAuthExternalProvider> => {
     const fields = 'id, name, email, picture';
     const url = 'https://graph.facebook.com/me';
     const params = { access_token, fields };
     const response = await Axios.get(url, { params });
-    const {
-      id, name, email, picture,
-    } = response.data;
+    const { id, name, email, picture } = response.data as { id: number, name: string, email: string, picture: { data: { url: string } } };
     return {
       service: 'facebook',
       picture: picture.data.url,
       id,
       name,
-      email,
+      email
     };
-  };
+  }
 
   /**
    * @description Try to connect to Google
    *
    * @param access_token Token registered on user // TODO:
    */
-  google = async (access_token: string) => {
+  static google = async (access_token: string): Promise<IAuthExternalProvider> => {
     const url = 'https://www.googleapis.com/oauth2/v3/userinfo';
     const params = { access_token };
     const response = await Axios.get(url, { params });
-    const {
-      sub, name, email, picture,
-    } = response.data;
+    const { sub, name, email, picture } = response.data as { sub: number, name: string, email: string, picture: string };
     return {
       service: 'google',
       picture,
       id: sub,
       name,
-      email,
+      email
     };
-  };
+  }
 
 }

@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { OK } from 'http-status';
-import { Container } from '@config/container.config';
+
 import { Controller } from '@bases/controller.class';
+import { Logger } from '@services/logger.service';
+import { safe } from '@decorators/safe.decorator';
 
 /**
  * Manage incoming requests from api/{version}/.
@@ -10,31 +12,30 @@ import { Controller } from '@bases/controller.class';
 export class RootController extends Controller {
 
   constructor() {
- super();
-}
+    super();
+  }
 
   /**
    * @description Ping api
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    */
-  status = (req: Request, res: Response, next: Function) => {
+  @safe
+  static status = (req: Request, res: Response): any => {
     res.status(OK);
     res.end();
   };
 
   /**
-   * @description Log CSP report violation. This end point is called programmaticaly by helmet.
+   * @description Log CSP report violation. This endpoint is called programmaticaly by helmet.
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    */
-  report = (req: Request, res: Response, next: Function) => {
-    const message = req.body ? 'CSP Violation: ' + req.body : 'CSP Violation';
-    Container.resolve('Logger').log('error', message, { label: 'CSP violation' });
+  @safe
+  static report = (req: Request, res: Response): any => {
+    Logger.log('error', req.body ? `CSP Violation: ${JSON.stringify(req.body)}` : 'CSP Violation', { label: 'CSP violation' });
     res.status(OK);
     res.end();
   };

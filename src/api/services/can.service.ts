@@ -17,8 +17,8 @@ export class Can {
    *
    * @throws {Error} 403 Forbidden
    */
-  check(user: User, entity: any) {
-    const checkOn = entity.hasOwnProperty('owner') ? entity.owner.id : entity.createdBy;
+  static check(user: User, entity: { owner?: { id?: number }, createdBy?: number }): void {
+    const checkOn = entity.owner.id || entity.createdBy;
     if (user.role !== ROLE.admin && user.id !== checkOn) {
       throw forbidden('You can\'t access to this ressource');
     }
@@ -30,14 +30,12 @@ export class Can {
    * @param user Current user
    * @param data Current entities collection
    */
-  filter(user: User, data: any[]) {
-    return [].concat(data).filter( (entry: any) => {
-      const checkOn = entry.hasOwnProperty('owner') ? entry.owner.id : entry.createdBy;
-      if ( user.role === ROLE.admin ) {
- return entry;
-} else if (checkOn === user.id) {
- return entry;
-}
+  static filter(user: User, data: { owner?: { id?: number }, createdBy?: number }[]): any[] {
+    return [].concat(data).filter( (entity: { owner?: { id?: number }, createdBy?: number }) => {
+      const checkOn = entity.owner.id || entity.createdBy;
+      if ( user.role === ROLE.admin || checkOn === user.id ) {
+        return entity;
+      }
     });
   }
 }

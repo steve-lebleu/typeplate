@@ -13,7 +13,7 @@ export interface IRoute {
   /**
    * @description Router definition or Router concrete instance
    */
-  router: any|Router;
+  provider: any|Router;
 
   /**
    * @description Indicates if the route response must be serialized

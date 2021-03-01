@@ -15,8 +15,5 @@ export abstract class Router {
     this.define();
   }
 
-  /**
-   * @description Plug routes definitions
-   */
-  protected define(): void {}
+  define(): void {}
 }

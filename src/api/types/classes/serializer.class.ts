@@ -77,12 +77,12 @@ export abstract class Serializer {
   public serialize = async (payload: any) => {
     try {
       if(Array.isArray(payload)) {
- return payload.map( entry => this.serializes(entry));
-}
+        return payload.map( entry => this.serializes(entry));
+      }
       return await this.serializes(payload);
     } catch(e) {
- throw expectationFailed(e.message)
-}
+      throw expectationFailed(e.message)
+    }
   }
 
   /**
@@ -95,8 +95,8 @@ export abstract class Serializer {
     try {
       return await this.deserializes(req.body);
     } catch (e) {
- throw expectationFailed(e.message);
-}
+      throw expectationFailed(e.message);
+    }
   }
 
 }

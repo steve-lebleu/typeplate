@@ -13,17 +13,9 @@ import * as Jwt from 'jwt-simple';
 import * as Bcrypt from 'bcrypt';
 import * as Boom from 'boom';
 
+import { badImplementation } from 'boom';
 @Entity()
 export class User implements IModelize {
-
-  /**
-   * @param payload Object data to assign
-   */
-  constructor(payload: Object) {
- Object.assign(this, payload);
-}
-
-  private temporaryPassword;
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -81,6 +73,15 @@ export class User implements IModelize {
   })
   deletedAt;
 
+  private temporaryPassword;
+
+  /**
+   * @param payload Object data to assign
+   */
+  constructor(payload: object) {
+    Object.assign(this, payload);
+  }
+
   @AfterLoad()
   storeTemporaryPassword() : void {
     this.temporaryPassword = this.password;
@@ -88,7 +89,7 @@ export class User implements IModelize {
 
   @BeforeInsert()
   @BeforeUpdate()
-  async hashPassword() {
+  async hashPassword(): Promise<string|boolean> {
     try {
       if (this.temporaryPassword === this.password) {
         return true;
@@ -96,25 +97,25 @@ export class User implements IModelize {
       this.password = await Bcrypt.hash(this.password, 10);
       return true;
     } catch (error) {
- throw Boom.badImplementation(error.message);
-}
+      throw badImplementation(error.message);
+    }
   }
 
   @BeforeInsert()
   @BeforeUpdate()
-  async hashApiKey() {
+  async hashApiKey(): Promise<boolean> {
     try {
       this.apikey = crypt(this.email + jwtSecret, 64);
       return true;
     } catch (error) {
- throw Boom.badImplementation(error.message);
-}
+      throw badImplementation(error.message);
+    }
   }
 
   /**
    *
    */
-  token() {
+  token(): string {
     const payload = {
       exp: Moment().add(jwtExpirationInterval, 'minutes').unix(),
       iat: Moment().unix(),
@@ -132,7 +133,7 @@ export class User implements IModelize {
   }
 
   public whitelist() {
- return filter(whitelist, this);
-}
+    return filter(whitelist, this);
+  }
 
 }

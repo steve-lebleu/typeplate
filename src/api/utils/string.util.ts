@@ -10,7 +10,7 @@ const symbols = ['@','#','&','$','.'];
  *
  * @param a
  */
-const shuffle = (a: any[]) => {
+const shuffle = (a: any[]): string => {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
@@ -39,10 +39,7 @@ const crypt = (str: string, length: number): string => {
   const table = [].concat(chars).concat(numbers).concat(symbols);
   return str
     .split('')
-    .map( (letter: string) => {
-      const index = table.lastIndexOf(letter);
-      return table.reverse()[index];
-    })
+    .map( (letter: string) => table.reverse()[table.lastIndexOf(letter)] as string)
     .join('')
     .substr(0, length);
 };
@@ -67,38 +64,37 @@ const base64Decode = (stream: Buffer, path: string): void => {
 
 /**
  * @description Get filename without extension
- * @param filename Filename to parse
+ * @param name Filename to parse
  */
-const filename = (filename: string) => {
-  return filename.lastIndexOf('.') !== -1 ? filename.substring(0, filename.lastIndexOf('.')) : filename;
+const filename = (name: string): string => {
+  return name.lastIndexOf('.') !== -1 ? name.substring(0, name.lastIndexOf('.')) : name;
 };
 
 /**
  * @description Get file extension with or without .
- * @param filename Filename to parse
+ * @param name Filename to parse
  * @param include Get extension with . if true, without . else
  */
-const extension = (filename: string, include = false) => {
-  return filename.lastIndexOf('.') !== -1 ? include === true ? filename.substring(filename.lastIndexOf('.')) : filename.substring(filename.lastIndexOf('.') + 1) : filename;
+const extension = (name: string, include = false): string => {
+  return name.lastIndexOf('.') !== -1 ? include === true ? name.substring(name.lastIndexOf('.')) : name.substring(name.lastIndexOf('.') + 1) : name;
 };
 
 /**
  * @description Determine document type from mime type
  * @param mimetype
  */
-const fieldname = (mimetype: string) => {
-  const mimes = {
-    document: DOCUMENT_MIME_TYPE,
-    archive: ARCHIVE_MIME_TYPE,
-    image: IMAGE_MIME_TYPE
-  };
-  let is = null;
-  for(const key in mimes) {
-    if (typeof mimes[key][mimetype] !== 'undefined') {
-      is = key;
-    }
+const fieldname = (mimetype: string): string => {
+  if ( DOCUMENT_MIME_TYPE[mimetype] ) {
+    return 'document'
   }
-  return is;
+
+  if ( ARCHIVE_MIME_TYPE[mimetype] ) {
+    return 'archive';
+  }
+
+  if ( IMAGE_MIME_TYPE[mimetype] ) {
+    return 'image';
+  }
 };
 
 export { shuffle, hash, crypt, base64Encode, base64Decode, filename, extension, fieldname };

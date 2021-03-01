@@ -7,6 +7,7 @@
       "@bases/*": ["api/types/classes/*"],
       "@config/*": ["config/*"],
       "@controllers/*": ["api/controllers/*"],
+      "@decorators/*": ["api/decorators/*"],
       "@enums/*": ["api/types/enums/*"],
       "@errors/*": ["api/types/errors/*"],
       "@interfaces/*": ["api/types/interfaces/*"],
@@ -22,7 +23,7 @@
       "@whitelists/*": ["api/serializers/whitelists/*"]
     },
     "lib": ["dom", "es5", "es6", "es7"],
-    "target": "es2017",
+    "target": "es5",
     "module": "commonjs",
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,

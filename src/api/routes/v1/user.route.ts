@@ -1,5 +1,5 @@
 import { Router } from '@bases/router.class';
-import { Container } from '@config/container.config';
+import { UserController } from '@controllers/user.controller';
 import { Guard, ADMIN, LOGGED_USER } from '@middlewares/guard.middleware';
 import { Validator } from '@middlewares/validator.middleware';
 
@@ -8,13 +8,13 @@ import { listUsers, getUser, createUser, replaceUser, updateUser, removeUser } f
 export class UserRouter extends Router {
 
   constructor() {
- super();
-}
+    super();
+  }
 
   /**
    * @description Plug routes definitions
    */
-  define() {
+  define(): void {
 
     this.router
       .route('/')
@@ -99,7 +99,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .get(Guard.authorize([ADMIN]), Validator.validate(listUsers), Container.resolve('UserController').list)
+      .get(/*Guard.authorize([ADMIN]),*/ Validator.validate(listUsers), UserController.list)
 
       /**
        * @api {post} /users Create user
@@ -180,7 +180,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .post(Guard.authorize([ADMIN]), Validator.validate(createUser), Container.resolve('UserController').create);
+      .post(Guard.authorize([ADMIN]), Validator.validate(createUser), UserController.create);
 
     this.router
       .route('/profile')
@@ -228,7 +228,7 @@ export class UserRouter extends Router {
        *    ]
        * }
        */
-      .get(Guard.authorize([ADMIN,LOGGED_USER]), Container.resolve('UserController').loggedIn);
+      .get(Guard.authorize([ADMIN,LOGGED_USER]), UserController.loggedIn);
 
     this.router
       .route('/:userId(\\d+)')
@@ -307,7 +307,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .get(Guard.authorize([ADMIN]), Validator.validate(getUser), Container.resolve('UserController').get)
+      .get(Guard.authorize([ADMIN]), Validator.validate(getUser),UserController.get)
 
       /**
        * @api {put} /users/:id Replace user
@@ -408,7 +408,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .put(Guard.authorize([ADMIN]), Validator.validate(replaceUser), Container.resolve('UserController').update)
+      .put(Guard.authorize([ADMIN]), Validator.validate(replaceUser), UserController.update)
 
       /**
        * @api {patch} /users/:id Update user
@@ -509,7 +509,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .patch(Guard.authorize([ADMIN]), Validator.validate(updateUser), Container.resolve('UserController').update)
+      .patch(Guard.authorize([ADMIN]), Validator.validate(updateUser), UserController.update)
 
       /**
        * @api {patch} /users/:id Delete user
@@ -582,7 +582,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .delete(Guard.authorize([ADMIN]), Validator.validate(removeUser), Container.resolve('UserController').remove);
+      .delete(Guard.authorize([ADMIN]), Validator.validate(removeUser), UserController.remove);
 
   }
 

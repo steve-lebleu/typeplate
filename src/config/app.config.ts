@@ -1,6 +1,3 @@
-import { ENVIRONMENT } from '@enums/environment.enum';
-import { httpLogs, authorized, version, env, contentType } from '@config/environment.config';
-
 import * as Express from 'express';
 import * as Hpp from 'hpp';
 import * as BodyParser from 'body-parser';
@@ -13,10 +10,14 @@ import { createWriteStream } from 'fs';
 import { initialize as PassportInitialize, use as PassportUse } from 'passport';
 import { notAcceptable } from 'boom';
 
-import { Container } from '@config/container.config';
+import { ENVIRONMENT } from '@enums/environment.enum';
 
+import { httpLogs, authorized, version, env, contentType } from '@config/environment.config';
 import { HelmetConfiguration } from '@config/helmet.config';
 import { PassportConfiguration } from '@config/passport.config';
+
+import { Logger } from '@services/logger.service';
+import { ProxyRouter } from '@services/proxy-router.service';
 
 import { Header } from '@middlewares/header.middleware';
 import { Serializer } from '@middlewares/serializer.middleware';
@@ -39,7 +40,7 @@ export class ExpressConfiguration {
    */
   private options = {
     cors: {
-      origin: (origin, callback) => {
+      origin: (origin, callback: ( error: Error, status?: boolean ) => void) => {
         if (authorized.indexOf(origin) !== -1) {
           callback(null, true);
         } else {
@@ -49,7 +50,7 @@ export class ExpressConfiguration {
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
       allowedHeaders: ['Accept', 'Content-Type', 'Authorization', 'Origin', 'From']
     },
-    stream: env === ENVIRONMENT.production ? createWriteStream(`${process.cwd()}/dist/logs/access.log`, { flags: 'a+' }) : Container.resolve('Logger').get('stream'),
+    stream: env === ENVIRONMENT.production ? createWriteStream(`${process.cwd()}/dist/logs/access.log`, { flags: 'a+' }) : Logger.stream,
     rate: {
       windowMs: 60 * 60 * 1000, // 1 hour
       max: 2500,
@@ -143,7 +144,7 @@ export class ExpressConfiguration {
      * - Router(s)
      * - Resolver
      */
-    this.instance.use(`/api/${version}`, RateLimit(this.options.rate), Serializer.deserialize, Container.resolve('ProxyRouter').router, Resolver.resolve);
+    this.instance.use(`/api/${version}`, RateLimit(this.options.rate), Serializer.deserialize, ProxyRouter.get(), Resolver.resolve);
 
     /**
      * Errors handlers
@@ -152,7 +153,7 @@ export class ExpressConfiguration {
       this.instance.use( Catcher.notification ); // Notify in dev
     }
 
-    this.instance.use( Catcher.log, Catcher.exit, Catcher.notFound ); // Log, exit with error || exit with 404
+    this.instance.use( Catcher.log, Catcher.exit, Catcher.notFound ); // Log, exit with error, exit with 404
   }
 
   /**

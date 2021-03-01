@@ -10,8 +10,8 @@ import { RefreshToken } from '@models/refresh-token.model';
 export class RefreshTokenRepository extends Repository<RefreshToken> {
 
   constructor() {
- super();
-}
+    super();
+  }
 
   /**
    * @description Generate a new refresh token
@@ -21,12 +21,12 @@ export class RefreshTokenRepository extends Repository<RefreshToken> {
   generate(user: User): RefreshToken {
     try {
       const token = `${user.id}.${randomBytes(40).toString('hex')}`;
-      const expires = Moment().add(30, 'days').toDate();
+      const expires = Moment().add(30, 'days').toDate() as Date;
       const refreshToken = new RefreshToken( token, user, expires );
       this.save(refreshToken);
       return refreshToken;
     } catch(e) {
- throw expectationFailed(e.message);
-}
+      throw expectationFailed(e.message);
+    }
   }
 }

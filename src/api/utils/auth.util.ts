@@ -12,7 +12,7 @@ import * as Moment from 'moment-timezone';
  * @param user
  * @param accessToken
  */
-const generateTokenResponse = async (user : User, accessToken : string) => {
+const generateTokenResponse = async (user : User, accessToken : string): Promise<{ tokenType, accessToken, refreshToken, expiresIn }> => {
   const tokenType = 'Bearer';
   const oldToken = await getRepository(RefreshToken).findOne({ where : { user } });
   if (oldToken) {

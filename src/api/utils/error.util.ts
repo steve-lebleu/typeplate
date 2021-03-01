@@ -1,8 +1,21 @@
 import { badData, badImplementation, conflict, notFound } from 'boom';
 
 import { IError } from '@interfaces/IError.interface';
+import { IHTTPError } from '@interfaces/IHTTPError.interface';
 import { ValidationError } from 'express-validation';
 import { UploadError } from '@errors/upload-error';
+import { MySQLError } from '@errors/mysql-error';
+
+/**
+ * @description Get the error schema column name
+ *
+ * @param error
+ */
+const getErrorColumnName = (error: MySQLError): string => {
+  const start = error.sqlMessage.indexOf('\'');
+  const restart = error.sqlMessage.substring(start + 1).indexOf('\'');
+  return error.sqlMessage.substring(start + 1, start + restart + 1);
+};
 
 /**
  * @description Fallback error function when creating / updating fail
@@ -16,43 +29,32 @@ import { UploadError } from '@errors/upload-error';
  * @example 1364 ER_NO_DEFAULT_FOR_FIELD
  * @example 1406 ER_DATA_TOO_LONG
  */
-const checkMySQLError = (error: any) => {
+const checkMySQLError = (error: any): Error => {
   if (error.name === 'QueryFailedError') {
-    if([1052, 1062, 1452].includes(error.errno)) {
+    if( [1052, 1062, 1452].includes(error?.errno) ) {
       return conflict( 'MySQL validation error', { // 409
         errors: [{
           field: getErrorColumnName(error),
           location: 'body',
-          messages: [error.sqlMessage],
+          messages: [error?.sqlMessage],
         }]
-      });
+      }) as Error;
     }
     if([1364, 1406].includes(error.errno)) {
       return badData( 'MySQL validation error', { // 422
         errors: [{
           field: getErrorColumnName(error),
           location: 'body',
-          messages: [error.sqlMessage],
+          messages: [error?.sqlMessage],
         }]
-      });
+      }) as Error;
     }
   }
   if (error.name === 'EntityNotFound') {
-    return notFound(error.message)
+    return notFound(error.message) as Error
   }
   return error;
 }
-
-/**
- * @description Get the error schema column name
- *
- * @param error
- */
-const getErrorColumnName = (error): string => {
-  const start = parseInt(error.sqlMessage.indexOf('\''), 10);
-  const restart = parseInt(error.sqlMessage.substring(start + 1).indexOf('\''), 10);
-  return error.sqlMessage.substring(start + 1, start + restart + 1);
-};
 
 /**
  * @description Get error status code
@@ -71,7 +73,7 @@ const getErrorStatusCode = (error): number => {
  * @param error Error object
  * @returns Formalized error object
  */
-const getErrorOutput = (error): IError => {
+const getErrorOutput = (error): IHTTPError => {
 
   // JS native ( Error | EvalError | RangeError | SyntaxError | TypeError | URIError )
   if (!error.httpStatusCode && !error.statusCode && !error.status && !error.isBoom) {

@@ -1,10 +1,10 @@
-import { IError } from '@interfaces/IError.interface';
+import { IHTTPError } from '@interfaces/IHTTPError.interface';
 import { IFieldError } from '@interfaces/IFieldError.interface';
 
 /**
  * Type upload error
  */
-export class UploadError implements IError {
+export class UploadError extends Error implements IHTTPError {
 
   /**
    * @description HTTP response status code
@@ -27,6 +27,7 @@ export class UploadError implements IError {
    * @param errors
    */
   constructor(error: Error) {
+    super();
     this.statusCode = 400;
     this.statusText = error.name;
     this.errors = [error.message];

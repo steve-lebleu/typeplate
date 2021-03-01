@@ -1,6 +1,7 @@
-import { env } from '@config/environment.config';
 import * as Winston from 'winston';
-import { format } from 'winston';
+import { format, Logger as WinstonLogger } from 'winston';
+
+import { env } from '@config/environment.config';
 
 /**
  * This logger implements Winston module for writing custom logs
@@ -12,37 +13,31 @@ export class WinstonConfiguration {
   /**
    * @description Wrapped Winston instance
    */
-  private logger: any;
-
-  /**
-   * @description Wrap and expose Winston.logger.stream
-   * @alias this.logger.stream
-   */
-  private stream;
+  private static logger: WinstonLogger;
 
   /**
    * @description Output directory
    */
-  private output = env === 'test' ? 'test' : 'dist';
+  private static output = env === 'test' ? 'test' : 'dist';
 
   /**
    * @description Output format
    */
-  private formater = format.printf( ( { level, message, label, timestamp } ) => {
-    return `${timestamp} [${level}] ${label} : ${message}`;
+  private static formater = format.printf( ( { level, message, label, timestamp } ) => {
+    return `${timestamp as string} [${level}] ${label as string} : ${message}`;
   });
 
   /**
    * @description Default options
    */
-  private options = {
+  private static options = {
     error: {
       level: 'error',
       format: format.combine(
         format.timestamp(),
-        this.formater
+        WinstonConfiguration.formater
       ),
-      filename: `${process.cwd()}/${this.output}/logs/error.log`,
+      filename: `${process.cwd()}/${WinstonConfiguration.output}/logs/error.log`,
       handleException: true,
       json: true,
       maxSize: 5242880, // 5MB
@@ -53,9 +48,9 @@ export class WinstonConfiguration {
       level: 'info',
       format: format.combine(
         format.timestamp(),
-        this.formater
+        WinstonConfiguration.formater
       ),
-      filename: `${process.cwd()}/${this.output}/logs/combined.log`,
+      filename: `${process.cwd()}/${WinstonConfiguration.output}/logs/combined.log`,
       handleException: false,
       json: true,
       maxSize: 5242880, // 5MB
@@ -71,8 +66,22 @@ export class WinstonConfiguration {
     }
   };
 
-  constructor() {
+  constructor() {}
 
+  /**
+   * @description Generic property getter
+   */
+  public static get(): WinstonLogger {
+    if ( !WinstonConfiguration.logger ) {
+      WinstonConfiguration.init();
+    }
+    return WinstonConfiguration.logger;
+  }
+
+  /**
+   * @description Initialize default logger configuration
+   */
+  private static init(): void {
     const logger = Winston.createLogger({
       level: 'info',
       transports: [
@@ -80,34 +89,25 @@ export class WinstonConfiguration {
         // - Write to all logs with level `info` and below to `combined.log`
         // - Write all logs error (and below) to `error.log`.
         //
-        new Winston.transports.File(this.options.error),
-        new Winston.transports.File(this.options.info),
+        new Winston.transports.File(WinstonConfiguration.options.error),
+        new Winston.transports.File(WinstonConfiguration.options.info),
       ],
       exitOnError: false
     });
 
     // If we're not in production||test then log to the `console`
     if ( !['production', 'test'].includes(process.env.NODE_ENV) ) {
-      logger.add( new Winston.transports.Console(this.options.console) );
+      logger.add( new Winston.transports.Console(WinstonConfiguration.options.console) );
     }
 
     logger.stream = {
-      write(message, encoding) {
-        logger.info(message.trim());
+      write: (message: string): void => {
+        logger.info( message.trim() );
       }
-    } as any;
+    }
 
-    this.logger = logger;
-    this.stream = this.logger.stream;
-
+    WinstonConfiguration.logger = logger;
   }
 
-  /**
-   * @description Generic property getter
-   *
-   * @param property Property name to returns
-   */
-  get(property: string) {
-    return this[property];
-  }
+
 }

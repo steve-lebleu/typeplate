@@ -28,7 +28,7 @@ export class Uploader {
    * @param res Express response object
    * @param next Callback function
    */
-  static create = (req: IFileRequest, res: Response, next: Function) => {
+  static create = (req: IFileRequest, res: Response, next: (error?: Error) => void): void => {
     try {
       const documentRepository = getRepository(Document);
       const document = new Document(req.file);
@@ -36,8 +36,8 @@ export class Uploader {
       req.doc = document;
       return next();
     } catch (e) {
- return next( expectationFailed(e.message) );
-}
+      return next( expectationFailed(e.message) );
+    }
   };
 
   /**
@@ -48,9 +48,9 @@ export class Uploader {
    * @param res Express response object
    * @param next Callback function
    */
-  static uploadMultiple = ( options?: IUpload ) => (req: IFileRequest, res: Response, next: Function) => {
-    const middleware = Uploader.configuration.multer( Uploader.configuration.get(options) ).any();
-    middleware(req, res, function(err) {
+  static uploadMultiple = ( options?: IUpload ) => (req: IFileRequest, res: Response, next: (error?: Error) => void) => {
+    const middleware = Uploader.configuration.multer( Uploader.configuration.get(options) ).any() as (req, res, err) => void;
+    middleware(req, res, (err: Error) => {
       if(err) {
         return next(new UploadError(err));
       } else if (typeof req.files === 'undefined') {
@@ -74,7 +74,7 @@ export class Uploader {
    * @param res Express response object
    * @param next Callback function
    */
-  static upload = ( options?: IUpload ) => (req: IFileRequest, res: Response, next: Function) => {
+  static upload = ( options?: IUpload ) => (req: IFileRequest, res: Response, next: (error?: Error) => void) => {
     if ( typeof res.locals.data === 'undefined' ) {
       return next(new UploadError(new Error('Original data cannot be found')));
     }
@@ -98,48 +98,49 @@ export class Uploader {
    * @param res Express response object
    * @param next Callback function
    */
-  static resize = async (req: IFileRequest, res: Response, next: Function) => {
+  static resize = (req: IFileRequest, res: Response, next: (error?: Error) => void): void => {
 
     const entries = [].concat(req.files || req.file);
 
-    if ( entries.filter( file => IMAGE_MIME_TYPE.hasOwnProperty(file.mimetype)).length === 0 ) {
+    if ( entries.filter( ( file: { mimetype: string } ) => IMAGE_MIME_TYPE.hasOwnProperty(file.mimetype)).length === 0 ) {
       return next();
     }
 
     // If image optimization is activated and current upload is image mime type
     if ( JimpConfiguration.isActive === 1 ) {
 
-      entries.forEach( async (file: any) => {
+      entries.forEach( (file: any) => {
 
         const towards = clone(file.destination).split('/'); towards.pop(); towards.push('rescale');
 
-        const destination = towards.join('/');
+        const destination = towards.join('/') as string;
 
         // Read original file
-        const image = await Jimp.read(file.path);
+        Jimp.read(file.path)
+          .then( (image) => {
+            const xsImage = image.clone();
+            const mdImage = image.clone();
+            const xlImage = image.clone();
 
-        // Clone in 3 files according to 3 sizes
-        const xsImage = image.clone(); const mdImage = image.clone(); const xlImage = image.clone();
+            xsImage
+              .resize(JimpConfiguration.xs, Jimp.AUTO)
+              .write( `${destination}/extra-small/${file.filename}`, (err: Error) => {
+                if(err) throw expectationFailed(err.message);
+              });
 
-        // Resize and write file in server
-        xsImage
-          .resize(JimpConfiguration.xs, Jimp.AUTO)
-          .write( destination + '/extra-small/' + file.filename, function(err, doc){
-            if(err) throw expectationFailed(err.message);
-          });
+            mdImage
+              .resize(JimpConfiguration.md, Jimp.AUTO)
+              .write( `${destination}/medium/${file.filename}`, (err: Error) => {
+                if(err) throw expectationFailed(err.message);
+              });
 
-        mdImage
-          .resize(JimpConfiguration.md, Jimp.AUTO)
-          .write( destination + '/medium/' + file.filename, function(err, doc){
-            if(err) throw expectationFailed(err.message);
-          });
-
-        xlImage
-          .resize(JimpConfiguration.xl, Jimp.AUTO)
-          .write( destination + '/extra-large/' + file.filename, function(err, doc){
-            if(err) throw expectationFailed(err.message);
-          });
-
+            xlImage
+              .resize(JimpConfiguration.xl, Jimp.AUTO)
+              .write( `${destination}/extra-large/${file.filename}`, (err: Error) => {
+                if(err) throw expectationFailed(err.message);
+              });
+          })
+          .catch();
       });
 
     }

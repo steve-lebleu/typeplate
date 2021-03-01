@@ -1,22 +1,30 @@
-import { IFieldError } from '@interfaces/IFieldError.interface';
-
 /**
- * Define error output format
+ * Define generic Error interface
  */
 export interface IError {
 
   /**
-   * @description HTTP response status code
+   * @description MySQL error status code
    */
-  statusCode: number;
+  errno?: number;
 
   /**
-   * @description HTTP response status message
+   * @description MySQL error message
    */
-  statusText: string;
+  sqlMessage?: string;
 
   /**
-   * @description HTTP response errors
+   * @description Error name
    */
-  errors: Array<IFieldError|string>;
+  name: string;
+
+  /**
+   * @description Error message
+   */
+  message?: string;
+
+  /**
+   * @description Error call stack
+   */
+  stack?: string;
 }

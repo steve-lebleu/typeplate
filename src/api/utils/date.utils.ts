@@ -2,7 +2,7 @@
  * @description Get age from birthdate
  * @param dateString
  */
-const getAge = ( dateString ) => {
+const getAge = ( dateString: string ): number => {
   const today = new Date();
   const birthDate = new Date( dateString );
   let age = today.getFullYear() - birthDate.getFullYear();

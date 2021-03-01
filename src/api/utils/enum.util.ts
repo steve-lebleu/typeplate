@@ -1,13 +1,13 @@
 /**
  * @description List enum values
- * @param en Enum to list
+ * @param enm Enum to list
  */
-const list = ( en: any ): string[] => {
-  const list = [];
-  for(const item in en) {
-    list.push(en[item]);
+const list = ( enm: any ): string[] => {
+  const values = [];
+  for(const item in enm) {
+    values.push(enm[item]);
   }
-  return list;
+  return values;
 };
 
 export { list };

@@ -6,8 +6,7 @@ import { Strategy as JwtStrategy } from 'passport-jwt';
 import { ExtractJwt } from 'passport-jwt';
 import { getCustomRepository, getRepository } from 'typeorm';
 
-import { Container } from '@config/container.config';
-
+import { AuthProvider } from '@services/auth-provider.service';
 import { UserRepository } from '@repositories/user.repository';
 import { User } from '@models/user.model';
 
@@ -35,7 +34,7 @@ export class PassportConfiguration {
   private static oAuth = service => async (token, next: Function) => {
     try {
       const userRepository = getCustomRepository(UserRepository);
-      const userData = await Container.resolve('AuthProvider')[service](token);
+      const userData = await AuthProvider[service](token);
       const user = await userRepository.oAuthLogin(userData);
       next(null, user);
     } catch (err) {
@@ -56,8 +55,8 @@ export class PassportConfiguration {
       }
       return next(null, false);
     } catch (error) {
- return next(error, false);
-}
+      return next(error, false);
+    }
   }
 
   /**

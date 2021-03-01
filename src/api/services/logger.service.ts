@@ -1,4 +1,5 @@
 import { WinstonConfiguration } from '@config/winston.config';
+import { Logger as WinstonLogger } from 'winston';
 
 /**
  * Log service
@@ -6,34 +7,11 @@ import { WinstonConfiguration } from '@config/winston.config';
 export class Logger {
 
   /**
-   * @description Wrapped WinstonConfiguration
-   */
-  private configuration: WinstonConfiguration;
-
-  /**
    * @description Wrapped logger instance, here winston
    */
-  private logger;
+  private static instance?: WinstonLogger;
 
-  /**
-   * @description Wrapped logger.stream property
-   * @alias Winston.stream
-   */
-  private stream;
-
-  constructor() {
-    this.configuration = new WinstonConfiguration();
-    this.logger = this.configuration.get('logger');
-    this.stream = this.configuration.get('stream');
-  }
-
-  /**
-   * @description Generic property getter
-   * @param property
-   */
-  get(property: string) {
-    return this[property];
-  }
+  constructor() {}
 
   /**
    * @description Do log action
@@ -41,7 +19,17 @@ export class Logger {
    * @param message
    * @param scope
    */
-  log(level: string, message: string, scope: { label: string }) {
-    this.logger[level](message, scope.label);
+  static log(level: string, message: string, scope: { label: string } ): void {
+    if ( !Logger.instance ) {
+      Logger.instance =  WinstonConfiguration.get()
+    }
+    Logger.instance[level](message, scope.label);
+  }
+
+  static get stream(): any {
+    if ( !Logger.instance ) {
+      Logger.instance =  WinstonConfiguration.get()
+    }
+    return Logger.instance.stream;
   }
 }

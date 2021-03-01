@@ -1,15 +1,15 @@
-import { Container } from '@config/container.config';
 import { Router } from '@bases/router.class';
 import { Guard } from '@middlewares/guard.middleware';
 import { Validator } from '@middlewares/validator.middleware';
+import { AuthController } from '@controllers/auth.controller';
 
 import { register, login, oAuth, refresh } from '@validations/auth.validation';
 
 export class AuthRouter extends Router {
 
   constructor() {
- super();
-}
+    super();
+  }
 
   /**
    * @description Plug routes definitions
@@ -47,21 +47,21 @@ export class AuthRouter extends Router {
      * }
      */
 
-         /**
-          *
-          * @apiDefine MultipartHeader
-          *
-          * @apiHeader {String="multipart/form-data"}  Content-Type   Mime-type
-          * @apiHeader {String}                        Origin         Origin url
-          * @apiHeader {String}                        Authorization  Bearer access token
-          *
-          * @apiHeaderExample {json} Request headers
-          * {
-          *    "Content-Type": "multipart/form-data",
-          *    "Origin": "https://your-host.com",
-          *    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzI2ODQ3MjgsImlhdCI6MTU2NTQyNzEyOCwic3ViIjoxfQ.h9OfTyJbzRmBtGcM1DOqtwkYlcFzoLjdVKHMV22tGBY"
-          * }
-          */
+  /**
+    *
+    * @apiDefine MultipartHeader
+    *
+    * @apiHeader {String="multipart/form-data"}  Content-Type   Mime-type
+    * @apiHeader {String}                        Origin         Origin url
+    * @apiHeader {String}                        Authorization  Bearer access token
+    *
+    * @apiHeaderExample {json} Request headers
+    * {
+    *    "Content-Type": "multipart/form-data",
+    *    "Origin": "https://your-host.com",
+    *    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzI2ODQ3MjgsImlhdCI6MTU2NTQyNzEyOCwic3ViIjoxfQ.h9OfTyJbzRmBtGcM1DOqtwkYlcFzoLjdVKHMV22tGBY"
+    * }
+    */
 
     /**
      * @apiDefine SuccessToken
@@ -172,7 +172,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/register')
-        .post(Validator.validate(register), Container.resolve('AuthController').register);
+        .post(Validator.validate(register), AuthController.register);
 
     /**
      * @api {post} /auth/login Login
@@ -270,7 +270,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/login')
-        .post(Validator.validate(login), Container.resolve('AuthController').login);
+        .post(Validator.validate(login), AuthController.login);
 
     /**
      * @api {post} /auth/refresh-token Refresh token
@@ -326,7 +326,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/refresh-token')
-        .post(Validator.validate(refresh), Container.resolve('AuthController').refresh);
+        .post(Validator.validate(refresh), AuthController.refresh);
 
     /**
      * @api {post} /auth/facebook Facebook oauth
@@ -374,7 +374,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/facebook')
-        .post(Validator.validate(oAuth), Guard.oauth('facebook'), Container.resolve('AuthController').oAuth);
+        .post(Validator.validate(oAuth), Guard.oauth('facebook'), AuthController.oAuth);
 
     /**
      * @api {post} /auth/google Google oauth
@@ -421,7 +421,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/google')
-        .post(Validator.validate(oAuth), Guard.oauth('google'), Container.resolve('AuthController').oAuth);
+        .post(Validator.validate(oAuth), Guard.oauth('google'), AuthController.oAuth);
 
   }
 

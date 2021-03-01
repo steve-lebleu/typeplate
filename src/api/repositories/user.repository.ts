@@ -6,13 +6,14 @@ import { uuidv4 } from 'uuid/v4';
 import { badRequest, notFound, unauthorized } from 'boom';
 
 import { User } from '@models/user.model';
+import { IUserQueryString } from '@interfaces/IUserQueryString.interface';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User>  {
 
   constructor() {
- super();
-}
+    super();
+  }
 
   /**
    * @description Get one user
@@ -20,9 +21,9 @@ export class UserRepository extends Repository<User>  {
    * @param id - The id of user
    *
    */
-  async one(id: number) {
+  async one(id: number): Promise<User> {
 
-    const repository = await getRepository(User);
+    const repository = getRepository(User);
     const options = omitBy({ id }, isNil);
 
     const user = await repository.findOne({
@@ -39,12 +40,10 @@ export class UserRepository extends Repository<User>  {
   /**
    * @description Get a list of users according to current query parameters
    */
-  async list({ page = 1, perPage = 30, username, email, role, transporter, smtp }) {
+  async list({ page = 1, perPage = 30, username, email, role, transporter, smtp }: IUserQueryString): Promise<User[]> {
 
     const repository = getRepository(User);
-    const options = omitBy({ username, email, role, transporter, smtp }, isNil);
-
-    let users;
+    const options = omitBy({ username, email, role, transporter, smtp }, isNil) as IUserQueryString;
 
     const query = repository
       .createQueryBuilder('user')
@@ -62,7 +61,7 @@ export class UserRepository extends Repository<User>  {
       query.andWhere('role = :role', { role });
     }
 
-    users = await query
+    const users = await query
       .skip( ( page - 1 ) * perPage )
       .take( perPage )
       .getMany();
@@ -77,7 +76,7 @@ export class UserRepository extends Repository<User>  {
    * @param origin
    *
    */
-  async findAndGenerateToken(options, origin?: string) {
+  async findAndGenerateToken(options, origin?: string): Promise<{user: User, accessToken: string}> {
 
     const { email, password, refreshObject, apikey } = options;
 
@@ -105,7 +104,7 @@ export class UserRepository extends Repository<User>  {
    * TODO: don't create user if not exists
    * TODO: deprecated ?
    */
-  async oAuthLogin({ service, id, email, username, picture }) {
+  async oAuthLogin({ service, id, email, username, picture }): Promise<User> {
 
     const userRepository = getRepository(User);
 

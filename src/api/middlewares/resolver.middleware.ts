@@ -1,6 +1,7 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { NO_CONTENT } from 'http-status';
 import { expectationFailed } from 'boom';
+import { IResponse } from '@interfaces/IResponse.interface';
 
 /**
  * Resolver middleware that close all requests by response sending (404 except)
@@ -19,7 +20,7 @@ export class Resolver {
    * FIXME: The check on id parameter should be on validation -> change doRequest by doQueryRequest allow 400, by validation error.
    * For other methods (PUP, PATCH, DELETE), find other solution
    */
-  static resolve = (req: Request, res: Response, next: Function) => {
+  static resolve = (req: Request, res: IResponse, next: (error?: Error) => void): void => {
 
     const cond = typeof res.locals.data !== 'undefined' && res.locals.data.hasOwnProperty('statusCode') ;
 

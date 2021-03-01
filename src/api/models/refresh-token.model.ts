@@ -1,21 +1,10 @@
 require('module-alias/register');
+
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
 import { User } from '@models/user.model';
 
 @Entity()
 export class RefreshToken {
-
-  /**
-   *
-   * @param token
-   * @param user
-   * @param expires
-   */
-  constructor(token: String, user: User, expires: Date) {
-    this.token = token;
-    this.expires = expires;
-    this.user = user;
-  }
 
   @PrimaryGeneratedColumn()
   id: Number;
@@ -32,4 +21,16 @@ export class RefreshToken {
 
   @Column()
   expires: Date;
+
+  /**
+   *
+   * @param token
+   * @param user
+   * @param expires
+   */
+  constructor(token: string, user: User, expires: Date) {
+    this.token = token;
+    this.expires = expires;
+    this.user = user;
+  }
 }

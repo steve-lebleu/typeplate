@@ -18,7 +18,7 @@ export class Serializer {
    * @param res Express Response instance
    * @param next Callback function
    */
-  static serialize = async(req: Request, res: Response, next: Function) => {
+  static serialize = async(req: Request, res: Response, next: (error?: Error) => void) => {
 
     try {
 
@@ -60,7 +60,7 @@ export class Serializer {
    * @param res Express Response instance
    * @param next Callback function
    */
-  static deserialize = async (req: Request, res: Response, next: Function) => {
+  static deserialize = async (req: Request, res: Response, next: (error?: Error) => void) => {
 
     // If we are in application/json, we next
     if ( process.env.CONTENT_TYPE === APPLICATION_MIME_TYPE['application/json'] ) {

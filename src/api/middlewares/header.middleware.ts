@@ -17,7 +17,7 @@ export class Header {
    * @param res Express response object
    * @param next Callback function
    */
-  static check = ({ contentType }) => (req: Request, res: Response, next: Function) => {
+  static check = ({ contentType }: { contentType: string }) => (req: Request, res: Response, next: (e?: Error) => void): void => {
     if (!req.headers['content-type']) {
       return next( notAcceptable(`Content-Type header must be ${contentType} or 'multipart/form-data`) );
     }

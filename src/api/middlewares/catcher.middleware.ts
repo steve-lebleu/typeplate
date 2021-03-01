@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { notify } from 'node-notifier';
 import { notFound } from 'boom';
 
-import { Container } from '@config/container.config';
+import { Logger } from '@services/logger.service';
 import { getErrorStatusCode, getErrorOutput } from '@utils/error.util';
 
 /**
@@ -25,9 +25,8 @@ export class Catcher {
    * @param res Express response object
    * @param next Callback function
    */
-  static log = (err: Error, req: Request, res: Response, next: Function) => {
-    const message =  req.method + ' ' + req.url + ' ' + getErrorStatusCode(err) + ' : ' + err.message + '\n' + err.stack;
-    Container.resolve('Logger').log('error', message, { label: 'Application' });
+  static log = (err: Error, req: Request, res: Response, next: (error: Error, req, res, next) => void): void => {
+    Logger.log('error', `${req.method} ${req.url}  ${getErrorStatusCode(err)} : ${err.message} \n ${err.stack}`, { label: 'Application' });
     next(err, req, res, next);
   };
 
@@ -42,10 +41,9 @@ export class Catcher {
    * @require libnotify-bin
    * @require node-notifier
    */
-  static notification = (err: Error, req: Request, res: Response, next: Function) => {
-    const title = 'Error in ' + req.method + ' ' + req.url;
+  static notification = (err: Error, req: Request, res: Response, next: (error: Error, req, res, next) => void): void => {
     notify({
-      title,
+      title: `Error in ${req.method} ${req.url}`,
       message : err.message + '\n' + err.stack ? err.stack : ''
     });
     next(err, req, res, next);
@@ -57,9 +55,8 @@ export class Catcher {
    * @param err Error object
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    */
-  static exit = (err: any, req: Request, res: Response, next: Function) => {
+  static exit = (err: Error, req: Request, res: Response): void => {
     res.status( getErrorStatusCode(err) );
     res.json( getErrorOutput(err) );
   };
@@ -69,9 +66,8 @@ export class Catcher {
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    */
-  static notFound = (req: Request, res: Response, next: Function) => {
+  static notFound = (req: Request, res: Response): void => {
     res.status( 404 );
     res.json( getErrorOutput( notFound('End point not found') ) );
   };

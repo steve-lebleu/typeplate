@@ -8,7 +8,7 @@ import { getRepository } from 'typeorm';
 export class UserSerializer extends Serializer {
 
   constructor() {
- super('users', UserWhitelist, {}, {})
-}
+    super('users', UserWhitelist, {}, {})
+  }
 
 }

@@ -49,6 +49,7 @@
     "@bases": "dist/api/types/classes",
     "@config": "dist/config",
     "@controllers": "dist/api/controllers",
+    "@decorators": "dist/api/decorators",
     "@enums": "dist/api/types/enums",
     "@errors": "dist/api/types/errors",
     "@interfaces": "dist/api/types/interfaces",

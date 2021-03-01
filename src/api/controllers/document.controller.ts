@@ -1,49 +1,37 @@
 import { expectationFailed } from 'boom';
 import { CREATED, NO_CONTENT } from 'http-status';
 import { unlink } from 'fs';
-
-import { Response } from 'express';
-import { Container } from '@config/container.config';
-
-import { Document } from '@models/document.model';
+import { getRepository, getCustomRepository } from 'typeorm';
 
 import { IFileRequest } from '@interfaces/IFileRequest.interface';
-
-import { getRepository, getCustomRepository } from 'typeorm';
+import { IResponse } from '@interfaces/IResponse.interface';
+import { Can } from '@services/can.service';
+import { Document } from '@models/document.model';
 import { DocumentRepository } from '@repositories/document.repository';
-import { Controller } from '@bases/controller.class';
-
-import { checkMySQLError } from '@utils/error.util';
+import { safe } from '@decorators/safe.decorator';
 
 /**
  * Manage incoming requests for api/{version}/documents
  */
-class DocumentController extends Controller {
+class DocumentController {
 
   /** */
-  constructor() {
-    super();
-  }
+  constructor() {}
 
   /**
    * @description Retrieve one document according to :documentId
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    *
    * @public
    */
-  async get(req: IFileRequest, res: Response, next: Function) {
-    try {
-      const documentRepository = getRepository(Document);
-      const document = await documentRepository.findOneOrFail(req.params.documentId, { relations: ['owner'] });
-      Container.resolve('Can').check(req.user, document);
-      res.locals.data = document;
-      next();
-    } catch(e) {
-      next( checkMySQLError( e ) );
-    }
+  @safe
+  static async get(req: IFileRequest, res: IResponse): Promise<void> {
+    const documentRepository = getRepository(Document);
+    const document = await documentRepository.findOneOrFail(req.params.documentId, { relations: ['owner'] });
+    Can.check(req.user, document);
+    res.locals.data = document;
   }
 
   /**
@@ -51,17 +39,12 @@ class DocumentController extends Controller {
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    */
-  async list (req: IFileRequest, res : Response, next: Function) {
-    try {
-      const repository = getCustomRepository(DocumentRepository);
-      const documents = await repository.list(req.query);
-      res.locals.data = Container.resolve('Can').filter(req.user, documents);
-      next();
-    } catch (e) {
-      next( checkMySQLError( e ) );
-    }
+  @safe
+  static async list (req: IFileRequest, res : IResponse): Promise<void> {
+    const repository = getCustomRepository(DocumentRepository);
+    const documents = await repository.list(req.query);
+    res.locals.data = Can.filter(req.user, documents);
   }
 
   /**
@@ -69,23 +52,18 @@ class DocumentController extends Controller {
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    *
    * @public
    */
-  async create(req: IFileRequest, res: Response, next: Function) {
-    try {
-      const documentRepository = getRepository(Document);
-      const documents = [].concat(req.files).map( (file) => {
-        return new Document(file);
-      });
-      await documentRepository.save(documents);
-      res.status( CREATED );
-      res.locals.data = documents;
-      next();
-    } catch(e) {
-      next( checkMySQLError( e ) );
-    }
+  @safe
+  static async create(req: IFileRequest, res: IResponse): Promise<void> {
+    const documentRepository = getRepository(Document);
+    const documents = [].concat(req.files).map( (file) => {
+      return new Document(file);
+    });
+    await documentRepository.save(documents);
+    res.status( CREATED );
+    res.locals.data = documents;
   }
 
   /**
@@ -93,32 +71,26 @@ class DocumentController extends Controller {
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    *
    * @public
    */
-  async update(req: IFileRequest, res: Response, next: Function) {
-    try {
+  @safe
+  static async update(req: IFileRequest, res: IResponse): Promise<void> {
+    const documentRepository = getRepository(Document);
+    const document = await documentRepository.findOne(req.params.documentId, { relations: ['owner'] });
 
-      const documentRepository = getRepository(Document);
-      const document = await documentRepository.findOne(req.params.documentId, { relations: ['owner'] });
+    Can.check(req.user, document);
 
-      Container.resolve('Can').check(req.user, document);
-
-      if(req.file.filename !== document.filename) {
-        unlink(document.path.toString(), (err) => {
-          if(err) throw expectationFailed(err.message);
-        });
-      }
-
-      documentRepository.merge(document, req.file);
-      documentRepository.save(document);
-
-      res.locals.data = document;
-      next();
-    } catch(e) {
-      next( checkMySQLError( e ) );
+    if(req.file.filename !== document.filename) {
+      unlink(document.path.toString(), (err) => {
+        if(err) throw expectationFailed(err.message);
+      });
     }
+
+    documentRepository.merge(document, req.file);
+    await documentRepository.save(document);
+
+    res.locals.data = document;
   }
 
   /**
@@ -130,25 +102,20 @@ class DocumentController extends Controller {
    *
    * @public
    */
-  async remove (req: IFileRequest, res : Response, next: Function) {
+  @safe
+  static async remove (req: IFileRequest, res: IResponse, next: (error?: Error) => void): Promise<void> {
 
-    try {
+    const documentRepository = getRepository(Document);
+    const document = await documentRepository.findOneOrFail(req.params.documentId, { relations: ['owner'] });
 
-      const documentRepository = getRepository(Document);
-      const document = await documentRepository.findOneOrFail(req.params.documentId, { relations: ['owner'] });
+    Can.check(req.user, document);
 
-      Container.resolve('Can').check(req.user, document);
-
-      unlink(document.path.toString(), (err) => {
-        if(err) throw expectationFailed(err.message);
-        documentRepository.remove(document);
-        res.status(NO_CONTENT);
-        next();
-      });
-
-    } catch(e) {
-      next( checkMySQLError( e ) );
-    }
+    unlink(document.path.toString(), (err) => {
+      if(err) throw expectationFailed(err.message);
+      documentRepository.remove(document);
+      res.status(NO_CONTENT);
+      next();
+    });
 
   }
 }

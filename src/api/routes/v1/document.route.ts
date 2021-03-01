@@ -1,9 +1,8 @@
-import { getRepository } from 'typeorm';
-import { Container } from '@config/container.config';
 import { Router } from '@bases/router.class';
 import { Guard, ADMIN, LOGGED_USER } from '@middlewares/guard.middleware';
 import { Validator } from '@middlewares/validator.middleware';
 import { Uploader } from '@middlewares/uploader.middleware';
+import { DocumentController } from '@controllers/document.controller';
 
 import { listDocuments, insertDocument, getDocument, replaceDocument, updateDocument, removeDocument } from '@validations/document.validation';
 
@@ -112,7 +111,7 @@ export class DocumentRouter extends Router {
        * }
        *
        */
-      .get(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(listDocuments), Container.resolve('DocumentController').list)
+      .get(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(listDocuments), DocumentController.list)
 
       /**
        * @api {post} api/v1/documents Create document(s)
@@ -190,7 +189,7 @@ export class DocumentRouter extends Router {
        * }
        *
        */
-      .post(Guard.authorize([ADMIN, LOGGED_USER]), Uploader.uploadMultiple(), Uploader.resize, Validator.validate(insertDocument), Container.resolve('DocumentController').create);
+      .post(Guard.authorize([ADMIN, LOGGED_USER]), Uploader.uploadMultiple(), Uploader.resize, Validator.validate(insertDocument), DocumentController.create);
 
     this.router.route('/:documentId')
 
@@ -275,7 +274,7 @@ export class DocumentRouter extends Router {
        *    ]
        * }
        */
-      .get(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(getDocument), Container.resolve('DocumentController').get)
+      .get(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(getDocument), DocumentController.get)
 
       /**
        * @api {put} api/v1/documents/:id Replace document
@@ -358,7 +357,7 @@ export class DocumentRouter extends Router {
        *    ]
        * }
        */
-      .put(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(replaceDocument), Container.resolve('DocumentController').get, Uploader.upload(), Uploader.resize, Validator.validate(insertDocument), Container.resolve('DocumentController').update)
+      .put(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(replaceDocument), DocumentController.get, Uploader.upload(), Uploader.resize, Validator.validate(insertDocument), DocumentController.update)
 
       /**
        * @api {patch} api/v1/documents/:id Update document
@@ -441,7 +440,7 @@ export class DocumentRouter extends Router {
        *    ]
        * }
        */
-      .patch(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(updateDocument), Container.resolve('DocumentController').get, Uploader.upload(), Uploader.resize, Container.resolve('DocumentController').update)
+      .patch(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(updateDocument), DocumentController.get, Uploader.upload(), Uploader.resize, DocumentController.update)
 
       /**
        * @api {patch} api/v1/documents/:id Delete document
@@ -502,7 +501,7 @@ export class DocumentRouter extends Router {
        *    ]
        * }
        */
-      .delete(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(removeDocument), Container.resolve('DocumentController').remove);
+      .delete(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(removeDocument), DocumentController.remove);
 
   }
 }

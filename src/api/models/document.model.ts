@@ -1,21 +1,16 @@
 require('module-alias/register');
+
+import * as Moment from 'moment';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+
 import { UPLOAD_MIME_TYPE } from '@enums/mime-type.enum';
 import { User } from '@models/user.model';
 import { IModelize } from '@interfaces/IModelize.interface';
 import { whitelist } from '@whitelists/document.whitelist';
 import { filter } from '@utils/serializing.util';
-import * as Moment from 'moment';
 
 @Entity()
 export class Document implements IModelize {
-
-  /**
-   * @param payload Object data to assign
-   */
-  constructor(payload: Object ) {
- Object.assign(this, payload);
-}
 
   @PrimaryGeneratedColumn()
   id: Number;
@@ -68,6 +63,13 @@ export class Document implements IModelize {
     default: null
   })
   deletedAt;
+
+  /**
+   * @param payload Object data to assign
+   */
+  constructor(payload: object) {
+    Object.assign(this, payload);
+  }
 
   public whitelist() {
     return filter(whitelist, this);

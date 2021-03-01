@@ -57,7 +57,6 @@
     "@repositories": "dist/api/repositories",
     "@routes": "dist/api/routes/v1",
     "@serializers": "dist/api/serializers",
-    "@servers": "dist/servers",
     "@services": "dist/api/services",
     "@utils": "dist/api/utils",
     "@validations": "dist/api/validations",

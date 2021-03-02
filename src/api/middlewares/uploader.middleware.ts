@@ -1,57 +1,69 @@
-import { expectationFailed } from 'boom';
-import * as Jimp from 'jimp';
+import * as Multer from 'multer';
+import * as Pluralize from 'pluralize';
+import * as filenamify from 'filenamify';
 
-import { Response } from 'express';
-import { getRepository } from 'typeorm';
-import { Document } from '@models/document.model';
-import { jimp as JimpConfiguration } from '@config/environment.config';
-import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
-import { MulterConfiguration } from '@config/multer.config';
-import { IUploadOptions } from '@interfaces/IUploadOptions.interface';
-import { IFileRequest } from '@interfaces/IFileRequest.interface';
-import { clone } from 'lodash';
-import { UploadError } from '@errors/upload-error';
+import { unsupportedMediaType, entityTooLarge } from 'boom';
+
+import { jimp as JimpConfiguration, upload } from '@config/environment.config';
+
+import { IMediaRequest } from '@interfaces/IMediaRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
-import { IFile } from '@interfaces/IFile.interface';
+import { IUploadMulterOptions } from '@interfaces/IUploadMulterOptions.interface';
+import { IUploadOptions } from '@interfaces/IUploadOptions.interface';
+import { IMedia } from '@interfaces/IMedia.interface';
+
+import { UploadError } from '@errors/upload-error';
+import { foldername, extension, fieldname } from '@utils/string.util';
+import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
+
+import { MEDIA_EVENT_EMITTER } from '@events/media.event';
+
+interface IMulter {
+  diskStorage: ( { destination, filename } ) => void;
+  any: () => void;
+  single: () => void;
+}
+
 
 /**
- * Uploading middleware
+ * File upload middleware
  */
 export class Uploader {
 
-  static configuration = new MulterConfiguration();
+  static instance: IMulter = Multer as IMulter;
+
+  /**
+   * @description Default options
+   */
+  static default: IUploadOptions = {
+    destination: upload.path,
+    filesize: upload.maxFileSize, // 1000000 bytes = 0,95367 Mo
+    wildcards: upload.wildcards,
+    maxFiles: upload.maxFiles
+  };
 
   constructor() { }
 
   /**
-   * @description Create Document and append it to req
-   *
-   * @param req Express request object derived from http.incomingMessage
-   * @param res Express response object
-   * @param next Callback function
-   */
-  static create = (req: IFileRequest, res: IResponse, next: (error?: Error) => void): void => {
-    try {
-      const documentRepository = getRepository(Document);
-      const document = new Document(req.file);
-      void documentRepository.save(document);
-      req.doc = document;
-      return next();
-    } catch (e) {
-      return next( expectationFailed(e.message) );
-    }
-  };
-
-  /**
-   * @description Upload multiple files
+   * @description Upload file(s)
    *
    * @param options Upload parameters (destination, maxFileSize, wildcards)
+   *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    * @param next Callback function
    */
-  static uploadMultiple = ( options?: IUploadOptions ) => (req: IFileRequest, res: IResponse, next: (error?: Error) => void): void => {
-    const middleware = Uploader.configuration.multer( Uploader.configuration.get(options) ).any() as (req, res, err) => void;
+  static upload = ( options?: IUploadOptions ) => (req: IMediaRequest, res: IResponse, next: (error?: Error) => void): void => {
+
+    const opts = options ? Object.keys(options)
+      .filter(key => Uploader.default[key])
+      .reduce((acc: IUploadOptions, current: string) => {
+        acc[current] = options[current] as string|number|Record<string,unknown>;
+        return acc;
+      }, Uploader.default) : Uploader.default;
+
+    const middleware = Uploader.instance( Uploader.cfg(opts) ).any() as (req, res, err) => void;
+
     middleware(req, res, (err: Error) => {
       if(err) {
         return next(new UploadError(err));
@@ -59,84 +71,71 @@ export class Uploader {
         return next(new UploadError(new Error('Binary data cannot be found')));
       }
       req.body.files = req.files
-        .slice(0, Uploader.configuration.options.maxFiles)
-        .map( ( file: { owner: number } ) => {
-          file.owner = req.user.id;
-          return file;
+        .slice(0, opts.maxFiles)
+        .map( ( media: IMedia ) => {
+          const type = fieldname(media.mimetype);
+          media.owner = req.user.id;
+          media.url = `${type}/${type === 'image' ? 'master-copy/' : ''}${media.filename}`
+          return media;
         }) || [];
+
+        const images = req.files.filter( ( file: IMedia ) => IMAGE_MIME_TYPE.hasOwnProperty(file.mimetype));
+        if ( JimpConfiguration.isActive === 1 && images.length > 0 ) {
+          MEDIA_EVENT_EMITTER.emit('media.resize', images);
+        }
       next();
     });
-  };
+  }
 
   /**
-   * @description Upload single file
-   *
-   * @param options Upload parameters (destination, maxFileSize, wildcards)
-   * @param req Express request object derived from http.incomingMessage
-   * @param res Express response object
-   * @param next Callback function
+   * @description Set storage config
+   * @param destination As main destination
    */
-  static upload = ( options?: IUploadOptions ) => (req: IFileRequest, res: IResponse, next: (error?: Error) => void): void => {
-    if ( typeof res.locals.data === 'undefined' ) {
-      return next(new UploadError(new Error('Original data cannot be found')));
-    }
-    const middleware = Uploader.configuration.multer( Uploader.configuration.get(options) ).single(res.locals.data.fieldname) as (req, res, err) => void;
-    middleware(req, res, (err: Error) => {
-      if(err) {
-        return next(new UploadError(err));
-      } else if (typeof req.file === 'undefined') {
-        return next(new UploadError(new Error('Binary data cannot be found')));
+  private static storage(destination?: string): void {
+    return Uploader.instance.diskStorage({
+      destination: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
+        let towards = `${destination}/${Pluralize(fieldname(file.mimetype)) as string}`;
+        if (typeof IMAGE_MIME_TYPE[file.mimetype] !== 'undefined') {
+          towards += '/master-copy';
+        }
+        next(null, towards);
+      },
+      filename: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
+        const name = filenamify( foldername(file.originalname), { replacement: '-', maxLength: 123 } )
+          .replace(' ', '-')
+          .replace('_', '-')
+          .toLowerCase()
+          .concat('-')
+          .concat(Date.now().toString())
+          .concat('.')
+          .concat(extension(file.originalname).toLowerCase());
+        next(null, name);
       }
-      req.body.file = req.file || {};
-      req.body.file.owner = req.user.id;
-      next();
     });
-  };
+  }
 
   /**
-   * @description Resize image according to .env file directives
+   * @description Set Multer instance
    *
-   * @param req Express request object derived from http.incomingMessage
-   * @param res Express response object
-   * @param next Callback function
+   * @param destination Directory where file will be uploaded
+   * @param filesize Max file size authorized
+   * @param wildcards Array of accepted mime types
    */
-  static resize = (req: IFileRequest, res: Response, next: (e?: Error) => void): void => {
-
-    if ( JimpConfiguration.isActive === 1 ) {
-
-      const entries = [].concat(req.files || req.file);
-
-      if ( entries.filter( ( file: IFile ) => IMAGE_MIME_TYPE.hasOwnProperty(file.mimetype)).length === 0 ) {
-        return next();
+  private static cfg( options?: IUploadOptions ): IUploadMulterOptions {
+    return {
+      storage: Uploader.storage(options.destination),
+      limits: {
+        fileSize: options.filesize
+      },
+      fileFilter: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
+        if(options.wildcards.filter( mime => file.mimetype === mime ).length === 0) {
+          return next( unsupportedMediaType('File mimetype not supported'), false );
+        }
+        if (file.size > upload.maxFileSize) {
+          return next( entityTooLarge(`File too large : max file size is ${upload.maxFileSize} 'ko`), false );
+        }
+        return next(null, true);
       }
-
-      entries.forEach( (file: IFile) => {
-        const target = clone(file.destination) as string;
-        const towards = target.split('/'); towards.pop(); towards.push('rescale');
-        const destination = towards.join('/');
-
-        // Read original file
-        void Jimp.read(file.path)
-          .then( (image) => {
-            const configs = [
-              { size: JimpConfiguration.xs, segment: 'extra-small' },
-              { size: JimpConfiguration.md, segment: 'medium' },
-              { size: JimpConfiguration.xl, segment: 'extra-large' }
-            ];
-            configs.forEach( cfg => {
-              image
-                .clone()
-                .resize(cfg.size, Jimp.AUTO)
-                .write( `${destination}/${cfg.segment}/${file.filename}`, (err: Error) => {
-                  if(err) throw expectationFailed(err.message);
-                });
-            });
-          })
-          .catch();
-      });
-
-    }
-    next();
-  };
-
+    };
+  }
 }

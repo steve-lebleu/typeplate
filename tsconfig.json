@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
+    "outDir": "./dist/api",
     "sourceMap": false,
     "baseUrl": "./src",
     "paths": {
       "@bases/*": ["api/types/classes/*"],
-      "@config/*": ["config/*"],
+      "@config/*": ["api/config/*"],
       "@controllers/*": ["api/controllers/*"],
       "@decorators/*": ["api/decorators/*"],
       "@enums/*": ["api/types/enums/*"],
       "@errors/*": ["api/types/errors/*"],
+      "@events/*": ["api/types/events/*"],
       "@interfaces/*": ["api/types/interfaces/*"],
       "@middlewares/*": ["api/middlewares/*"],
       "@models/*": ["api/models/*"],

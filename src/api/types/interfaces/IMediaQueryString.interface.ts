@@ -1,6 +1,6 @@
 import { IQueryString } from '@interfaces/IQueryString.interface';
 
-export interface IDocumentQueryString extends IQueryString {
+export interface IMediaQueryString extends IQueryString {
     path?: string;
     fieldname?: string;
     filename?: string;

@@ -37,7 +37,7 @@
   },
   "scripts": {
     "kickstart": "npm i typescript -g && npm i typeorm -g && npm i kfr-kem -g && npm i && npm-run-all -s kick:*",
-    "kick:directories": "mkdir -p ./dist/logs ./dist/uploads/archives ./dist/uploads/documents ./dist/uploads/images/master-copy ./dist/uploads/images/rescale/extra-small ./dist/uploads/images/rescale/medium ./dist/uploads/images/rescale/extra-large",
+    "kick:directories": "mkdir -p ./dist/logs ./dist/public/archives ./dist/public/documents ./dist/public/images/master-copy ./dist/public/images/rescale/xs ./dist/public/images/rescale/sm ./dist/public/images/rescale/md ./dist/public/images/rescale/lg ./dist/public/images/rescale/xl ./dist/public/audios ./dist/public/videos",
     "kick:env": "cp -r ./src/env ./dist/",
     "test": "nyc --reporter=html --report-dir=./docs/nyc-coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000",
     "todo-ci": "leasot -x --reporter markdown './src/**/*.ts' > TODO.md",
@@ -47,11 +47,12 @@
   },
   "_moduleAliases": {
     "@bases": "dist/api/types/classes",
-    "@config": "dist/config",
+    "@config": "dist/api/config",
     "@controllers": "dist/api/controllers",
     "@decorators": "dist/api/decorators",
     "@enums": "dist/api/types/enums",
     "@errors": "dist/api/types/errors",
+    "@events": "dist/api/events",
     "@interfaces": "dist/api/types/interfaces",
     "@middlewares": "dist/api/middlewares",
     "@models": "dist/api/models",

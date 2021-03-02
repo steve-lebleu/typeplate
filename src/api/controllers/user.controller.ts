@@ -8,7 +8,6 @@ import { UserRepository } from '@repositories/user.repository';
 import { IUserRequest } from '@interfaces/IUserRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
 import { safe } from '@decorators/safe.decorator';
-import { nextTick } from 'process';
 
 /**
  * Manage incoming requests for api/{version}/users
@@ -79,7 +78,6 @@ export class UserController {
    */
   @safe
   static async list (req: IUserRequest, res: IResponse): Promise<void> {
-    throw new Error('Test catcher')
     const repository = getCustomRepository(UserRepository);
     const users = await repository.list(req.query);
     res.locals.data = users;

@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { OK } from 'http-status';
 
-import { Controller } from '@bases/controller.class';
 import { Logger } from '@services/logger.service';
 import { safe } from '@decorators/safe.decorator';
 
@@ -9,11 +8,9 @@ import { safe } from '@decorators/safe.decorator';
  * Manage incoming requests from api/{version}/.
  * End points of this router resolve response by itself.
  */
-export class RootController extends Controller {
+export class RootController {
 
-  constructor() {
-    super();
-  }
+  constructor() {}
 
   /**
    * @description Ping api

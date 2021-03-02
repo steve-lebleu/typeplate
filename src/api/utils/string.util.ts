@@ -66,7 +66,7 @@ const base64Decode = (stream: Buffer, path: string): void => {
  * @description Get filename without extension
  * @param name Filename to parse
  */
-const filename = (name: string): string => {
+const foldername = (name: string): string => {
   return name.lastIndexOf('.') !== -1 ? name.substring(0, name.lastIndexOf('.')) : name;
 };
 
@@ -95,6 +95,18 @@ const fieldname = (mimetype: string): string => {
   if ( IMAGE_MIME_TYPE[mimetype] ) {
     return 'image';
   }
+
+  /*
+   TODO: implémenter
+  if ( IMAGE_MIME_TYPE[mimetype] ) {
+    return 'audio';
+  }
+
+  if ( IMAGE_MIME_TYPE[mimetype] ) {
+    return 'video';
+  }
+  */
+
 };
 
-export { shuffle, hash, crypt, base64Encode, base64Decode, filename, extension, fieldname };
+export { shuffle, hash, crypt, base64Encode, base64Decode, foldername, extension, fieldname };

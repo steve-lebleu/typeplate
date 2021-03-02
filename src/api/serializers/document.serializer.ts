@@ -8,33 +8,30 @@ import { User } from '@models/user.model';
  */
 export class DocumentSerializer extends Serializer {
 
-  /**
-   * @constructor
-   */
   constructor() {
- super('documents', [
-    'id',
-    'fieldname',
-    'filename',
-    'path',
-    'mimetype',
-    'size',
-    'owner',
-    'createdAt'
-  ],
-  {
-    user: {
-      ref: 'id',
-      attributes: UserWhitelist
-    }
-  },
-  {
-    user: {
-      async valueForRelationship (relationship) {
-        return await getRepository(User).findOne(relationship.id);
+    super('documents', [
+        'id',
+        'fieldname',
+        'filename',
+        'path',
+        'mimetype',
+        'size',
+        'owner',
+        'createdAt'
+      ],
+    {
+      user: {
+        ref: 'id',
+        attributes: UserWhitelist
       }
     },
-  })
-}
+    {
+      user: {
+        valueForRelationship: async (relationship: { id: number }) => {
+          return await getRepository(User).findOne(relationship.id);
+        }
+      }
+    })
+  }
 
 }

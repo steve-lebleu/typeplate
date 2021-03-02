@@ -14,7 +14,7 @@ export class Validator {
    * @description ExpressValidation instance
    * @alias ExpressValidation
    */
-  static validate = Validator.configuration.handler as () => void;
+  static validate = Validator.configuration.handler;
 
   constructor() {}
 }

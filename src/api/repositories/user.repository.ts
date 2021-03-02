@@ -34,7 +34,7 @@ export class UserRepository extends Repository<User>  {
       throw notFound('User not found');
     }
 
-    return new User(user);
+    return user;
   }
 
   /**

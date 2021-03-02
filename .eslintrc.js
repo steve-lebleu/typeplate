@@ -91,10 +91,16 @@ module.exports =  {
         "@typescript-eslint/triple-slash-reference": [
             "error",
             {
-                "path": "always",
-                "types": "prefer-import",
-                "lib": "always"
+              "path": "always",
+              "types": "prefer-import",
+              "lib": "always"
             }
+        ],
+        "@typescript-eslint/unbound-method": [
+          "error",
+          {
+            "ignoreStatic": true
+          }
         ],
         "@typescript-eslint/unified-signatures": "error",
         "arrow-parens": [
@@ -112,7 +118,7 @@ module.exports =  {
             "error",
             "smart"
         ],
-        "guard-for-in": "error",
+        "guard-for-in": "off",
         "id-blacklist": [
             "error",
             "any",

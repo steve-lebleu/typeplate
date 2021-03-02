@@ -23,7 +23,7 @@ export class RefreshTokenRepository extends Repository<RefreshToken> {
       const token = `${user.id}.${randomBytes(40).toString('hex')}`;
       const expires = Moment().add(30, 'days').toDate() as Date;
       const refreshToken = new RefreshToken( token, user, expires );
-      this.save(refreshToken);
+      void this.save(refreshToken);
       return refreshToken;
     } catch(e) {
       throw expectationFailed(e.message);

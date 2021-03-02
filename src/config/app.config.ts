@@ -50,7 +50,7 @@ export class ExpressConfiguration {
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
       allowedHeaders: ['Accept', 'Content-Type', 'Authorization', 'Origin', 'From']
     },
-    stream: env === ENVIRONMENT.production ? createWriteStream(`${process.cwd()}/dist/logs/access.log`, { flags: 'a+' }) : Logger.stream,
+    stream: ( env === ENVIRONMENT.production ? createWriteStream(`${process.cwd()}/dist/logs/access.log`, { flags: 'a+' }) : Logger.stream ) as ReadableStream,
     rate: {
       windowMs: 60 * 60 * 1000, // 1 hour
       max: 2500,
@@ -121,7 +121,7 @@ export class ExpressConfiguration {
      *
      * @see https://github.com/expressjs/morgan
      */
-    this.instance.use( Morgan(httpLogs, { stream: this.options.stream }) );
+    this.instance.use( Morgan(httpLogs, { stream: this.options.stream } ) );
 
     /**
      * Configure API Rate limit

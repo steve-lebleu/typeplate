@@ -2,10 +2,10 @@
  * @description List enum values
  * @param enm Enum to list
  */
-const list = ( enm: any ): string[] => {
-  const values = [];
-  for(const item in enm) {
-    values.push(enm[item]);
+const list = ( enm: Record<string,unknown> ): string[] => {
+  const values = [] as string[];
+  for(const key in enm) {
+    values.push(enm[key] as string);
   }
   return values;
 };

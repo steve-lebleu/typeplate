@@ -3,7 +3,7 @@ import { UPLOAD_MIME_TYPE } from '@enums/mime-type.enum';
 /**
  * Define allowed properties for upload options configuration
  */
-export interface IUpload {
+export interface IUploadOptions {
 
   /**
    * @description Destination directory path

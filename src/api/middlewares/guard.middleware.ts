@@ -35,7 +35,7 @@ export class Guard {
    * @description Authorize user access according to service.access_token
    * @param service Service to use for authentication
    */
-  static oauth = (service: IAuthExternalProvider) => authenticate(service, { session: false });
+  static oauth = (service: IAuthExternalProvider): IAuthExternalProvider => authenticate(service, { session: false });
 
   /**
    * @description Callback function provided to passport.authenticate when authentication strategy is JWT
@@ -45,7 +45,7 @@ export class Guard {
    * @param next Callback function
    * @param roles Authorized roles
    */
-  private static handleJWT = (req: IUserRequest, res: Response, next: (error?: Error) => void, roles: string|string[]) => async (err: Error, user: User, info) => {
+  private static handleJWT = (req: IUserRequest, res: Response, next: (error?: Error) => void, roles: string|string[]) => async (err: Error, user: User, info: string) => {
 
     const error = err || info;
     const logIn = promisify(req.logIn) as ( user, { session } ) => Promise<void>;
@@ -65,7 +65,6 @@ export class Guard {
       return next( badRequest(err) );
     }
 
-    // req.user = user.whitelist(); // TODO: deprecated ?
     req.user = user;
 
     return next();

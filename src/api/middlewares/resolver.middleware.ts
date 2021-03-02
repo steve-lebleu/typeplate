@@ -18,7 +18,7 @@ export class Resolver {
    * @param next Callback function
    *
    * FIXME: The check on id parameter should be on validation -> change doRequest by doQueryRequest allow 400, by validation error.
-   * For other methods (PUP, PATCH, DELETE), find other solution
+   * For other methods (PUT, PATCH, DELETE), find other solution
    */
   static resolve = (req: Request, res: IResponse, next: (error?: Error) => void): void => {
 

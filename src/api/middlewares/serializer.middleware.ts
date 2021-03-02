@@ -3,6 +3,7 @@ import { badData, expectationFailed } from 'boom';
 
 import { getSerializer } from '@utils/serializing.util';
 import { APPLICATION_MIME_TYPE } from '@enums/mime-type.enum';
+import { IResponse } from '@interfaces/IResponse.interface';
 
 /**
  * Serializing middleware
@@ -18,18 +19,18 @@ export class Serializer {
    * @param res Express Response instance
    * @param next Callback function
    */
-  static serialize = async(req: Request, res: Response, next: (error?: Error) => void) => {
+  static serialize = async (req: Request, res: IResponse, next: (error?: Error) => void): Promise<void> => {
 
     try {
 
       if (req.method === 'DELETE') {
- return next();
-}
+        return next();
+      }
 
       // If the res.locals.data property is not found, we get out with an error
       if (!res.locals.data) {
- return next( expectationFailed('Data not found') )
-}
+        return next( expectationFailed('Data not found') )
+      }
 
       // If we are in mode application/json, we whitelist only as pseudo serializing
       if (process.env.CONTENT_TYPE === APPLICATION_MIME_TYPE['application/json']) {
@@ -49,8 +50,8 @@ export class Serializer {
       next();
 
     } catch (e) {
- next( e );
-}
+      next( e );
+    }
   }
 
   /**
@@ -60,29 +61,29 @@ export class Serializer {
    * @param res Express Response instance
    * @param next Callback function
    */
-  static deserialize = async (req: Request, res: Response, next: (error?: Error) => void) => {
+  static deserialize = async (req: Request, res: Response, next: (error?: Error) => void): Promise<void> => {
 
     // If we are in application/json, we next
     if ( process.env.CONTENT_TYPE === APPLICATION_MIME_TYPE['application/json'] ) {
- return next();
-}
+      return next();
+    }
 
     // If method don't have payload, we next
     if ( ['GET', 'DELETE'].includes(req.method) ) {
- return next();
-}
+      return next();
+    }
 
     // If method need payload but payload is not found according to vnd.api+json format
     if ( !req.body.data ) {
- return next( badData('Malformed payload: data attribute not found') )
-}
+      return next( badData('Malformed payload: data attribute not found') )
+    }
 
     try {
       const serializer = getSerializer(req.body.data[0].type);
       req.body = await serializer.deserialize(req);
       next();
     } catch (e) {
- next( e );
-}
+      next( e );
+    }
   }
 }

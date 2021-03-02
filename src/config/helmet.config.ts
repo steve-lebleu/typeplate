@@ -10,7 +10,7 @@ export class HelmetConfiguration {
   /**
    * @description Wrapped Helmet instance
    */
-  private static helmet: Function;
+  private static helmet;
 
   /**
    * @description Plugins options. Add options to activate a specific plugin.
@@ -33,24 +33,24 @@ export class HelmetConfiguration {
   constructor() {}
 
   /**
-   * @description Set plugins according to scope options
+   * @description Helmet instance getter as Singleton
    */
-  private static plug(): Function {
-    this.helmet = Helmet;
-    Object.keys(this.options).forEach( key => {
-      this.helmet[key](this.options[key]);
-    });
-    return this.helmet;
+  static get() {
+    if (!HelmetConfiguration.helmet) {
+      return HelmetConfiguration.plug();
+    }
+    return HelmetConfiguration.helmet;
   }
 
   /**
-   * @description Helmet instance getter as Singleton
+   * @description Set plugins according to scope options
    */
-  static get(): Function {
-    if (!this.helmet) {
- return this.plug();
-}
-    return this.helmet;
+  private static plug() {
+    HelmetConfiguration.helmet = Helmet;
+    Object.keys(HelmetConfiguration.options).forEach( key => {
+      HelmetConfiguration.helmet[key](this.options[key]);
+    });
+    return HelmetConfiguration.helmet;
   }
 
 }

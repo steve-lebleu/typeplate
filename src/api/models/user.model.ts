@@ -1,5 +1,11 @@
 require('module-alias/register');
+
+import * as Moment from 'moment-timezone';
+import * as Jwt from 'jwt-simple';
+import * as Bcrypt from 'bcrypt';
 import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, AfterLoad, BeforeInsert, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { badImplementation } from 'boom';
+
 import { jwtSecret, jwtExpirationInterval } from '@config/environment.config';
 import { ROLE } from '@enums/role.enum';
 import { Document } from '@models/document.model';
@@ -8,12 +14,6 @@ import { whitelist } from '@whitelists/user.whitelist';
 import { filter } from '@utils/serializing.util';
 import { crypt } from '@utils/string.util';
 
-import * as Moment from 'moment-timezone';
-import * as Jwt from 'jwt-simple';
-import * as Bcrypt from 'bcrypt';
-import * as Boom from 'boom';
-
-import { badImplementation } from 'boom';
 @Entity()
 export class User implements IModelize {
 
@@ -48,7 +48,7 @@ export class User implements IModelize {
     enum: ROLE,
     default: ROLE.user
   })
-  role: 'admin' | 'user'
+  role: 'admin' | 'user' | 'ghost'
 
   @OneToMany( () => Document, document => document.owner, {
     eager: true
@@ -78,7 +78,7 @@ export class User implements IModelize {
   /**
    * @param payload Object data to assign
    */
-  constructor(payload: object) {
+  constructor(payload: Record<string, unknown>) {
     Object.assign(this, payload);
   }
 
@@ -132,7 +132,10 @@ export class User implements IModelize {
     return Bcrypt.compare(password, this.password);
   }
 
-  public whitelist() {
+  /**
+   * @description Filter on allowed entity fields
+   */
+  public whitelist(): IModelize {
     return filter(whitelist, this);
   }
 

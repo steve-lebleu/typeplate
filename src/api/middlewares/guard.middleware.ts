@@ -5,7 +5,6 @@ import { forbidden, badRequest } from 'boom';
 import { User } from '@models/user.model';
 import { ROLE } from '@enums/role.enum';
 import { list } from '@utils/enum.util';
-import { IAuthExternalProvider } from '@interfaces/IAuthExternalProvider.interface';
 import { IUserRequest } from '@interfaces/IUserRequest.interface';
 
 const ADMIN = ROLE.admin;
@@ -29,13 +28,13 @@ export class Guard {
    *
    * @param roles
    */
-  static authorize = (roles = list(ROLE)) => (req: Request, res: Response, next: () => void): void => authenticate( 'jwt', { session: false }, Guard.handleJWT(req, res, next, roles) ) (req, res, next);
+  static authorize = (roles = list(ROLE)) => (req, res, next) => authenticate( 'jwt', { session: false }, Guard.handleJWT(req, res, next, roles) ) (req, res, next);
 
   /**
    * @description Authorize user access according to service.access_token
    * @param service Service to use for authentication
    */
-  static oauth = (service: IAuthExternalProvider) => authenticate(service, { session: false });
+  static oauth = (service: string) => authenticate(service, { session: false });
 
   /**
    * @description Callback function provided to passport.authenticate when authentication strategy is JWT
@@ -45,7 +44,7 @@ export class Guard {
    * @param next Callback function
    * @param roles Authorized roles
    */
-  private static handleJWT = (req: IUserRequest, res: Response, next: (error?: Error) => void, roles: string|string[]) => async (err: Error, user: User, info) => {
+  private static handleJWT = (req: IUserRequest, res: Response, next: (error?: Error) => void, roles: string|string[]) => async (err: Error, user: User, info: string) => {
 
     const error = err || info;
     const logIn = promisify(req.logIn) as ( user, { session } ) => Promise<void>;
@@ -65,7 +64,6 @@ export class Guard {
       return next( badRequest(err) );
     }
 
-    // req.user = user.whitelist(); // TODO: deprecated ?
     req.user = user;
 
     return next();

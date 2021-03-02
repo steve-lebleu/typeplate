@@ -7,10 +7,12 @@ import { Document } from '@models/document.model';
 import { jimp as JimpConfiguration } from '@config/environment.config';
 import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
 import { MulterConfiguration } from '@config/multer.config';
-import { IUpload } from '@interfaces/IUpload.interface';
+import { IUploadOptions } from '@interfaces/IUploadOptions.interface';
 import { IFileRequest } from '@interfaces/IFileRequest.interface';
 import { clone } from 'lodash';
 import { UploadError } from '@errors/upload-error';
+import { IResponse } from '@interfaces/IResponse.interface';
+import { IFile } from '@interfaces/IFile.interface';
 
 /**
  * Uploading middleware
@@ -28,11 +30,11 @@ export class Uploader {
    * @param res Express response object
    * @param next Callback function
    */
-  static create = (req: IFileRequest, res: Response, next: (error?: Error) => void): void => {
+  static create = (req: IFileRequest, res: IResponse, next: (error?: Error) => void): void => {
     try {
       const documentRepository = getRepository(Document);
       const document = new Document(req.file);
-      documentRepository.save(document);
+      void documentRepository.save(document);
       req.doc = document;
       return next();
     } catch (e) {
@@ -48,7 +50,7 @@ export class Uploader {
    * @param res Express response object
    * @param next Callback function
    */
-  static uploadMultiple = ( options?: IUpload ) => (req: IFileRequest, res: Response, next: (error?: Error) => void) => {
+  static uploadMultiple = ( options?: IUploadOptions ) => (req: IFileRequest, res: IResponse, next: (error?: Error) => void): void => {
     const middleware = Uploader.configuration.multer( Uploader.configuration.get(options) ).any() as (req, res, err) => void;
     middleware(req, res, (err: Error) => {
       if(err) {
@@ -58,7 +60,7 @@ export class Uploader {
       }
       req.body.files = req.files
         .slice(0, Uploader.configuration.options.maxFiles)
-        .map( file => {
+        .map( ( file: { owner: number } ) => {
           file.owner = req.user.id;
           return file;
         }) || [];
@@ -74,12 +76,12 @@ export class Uploader {
    * @param res Express response object
    * @param next Callback function
    */
-  static upload = ( options?: IUpload ) => (req: IFileRequest, res: Response, next: (error?: Error) => void) => {
+  static upload = ( options?: IUploadOptions ) => (req: IFileRequest, res: IResponse, next: (error?: Error) => void): void => {
     if ( typeof res.locals.data === 'undefined' ) {
       return next(new UploadError(new Error('Original data cannot be found')));
     }
-    const middleware = Uploader.configuration.multer( Uploader.configuration.get(options) ).single(res.locals.data.fieldname);
-    middleware(req, res, function(err) {
+    const middleware = Uploader.configuration.multer( Uploader.configuration.get(options) ).single(res.locals.data.fieldname) as (req, res, err) => void;
+    middleware(req, res, (err: Error) => {
       if(err) {
         return next(new UploadError(err));
       } else if (typeof req.file === 'undefined') {
@@ -98,53 +100,42 @@ export class Uploader {
    * @param res Express response object
    * @param next Callback function
    */
-  static resize = (req: IFileRequest, res: Response, next: (error?: Error) => void): void => {
+  static resize = (req: IFileRequest, res: Response, next: (e?: Error) => void): void => {
 
-    const entries = [].concat(req.files || req.file);
-
-    if ( entries.filter( ( file: { mimetype: string } ) => IMAGE_MIME_TYPE.hasOwnProperty(file.mimetype)).length === 0 ) {
-      return next();
-    }
-
-    // If image optimization is activated and current upload is image mime type
     if ( JimpConfiguration.isActive === 1 ) {
 
-      entries.forEach( (file: any) => {
+      const entries = [].concat(req.files || req.file);
 
-        const towards = clone(file.destination).split('/'); towards.pop(); towards.push('rescale');
+      if ( entries.filter( ( file: IFile ) => IMAGE_MIME_TYPE.hasOwnProperty(file.mimetype)).length === 0 ) {
+        return next();
+      }
 
-        const destination = towards.join('/') as string;
+      entries.forEach( (file: IFile) => {
+        const target = clone(file.destination) as string;
+        const towards = target.split('/'); towards.pop(); towards.push('rescale');
+        const destination = towards.join('/');
 
         // Read original file
-        Jimp.read(file.path)
+        void Jimp.read(file.path)
           .then( (image) => {
-            const xsImage = image.clone();
-            const mdImage = image.clone();
-            const xlImage = image.clone();
-
-            xsImage
-              .resize(JimpConfiguration.xs, Jimp.AUTO)
-              .write( `${destination}/extra-small/${file.filename}`, (err: Error) => {
-                if(err) throw expectationFailed(err.message);
-              });
-
-            mdImage
-              .resize(JimpConfiguration.md, Jimp.AUTO)
-              .write( `${destination}/medium/${file.filename}`, (err: Error) => {
-                if(err) throw expectationFailed(err.message);
-              });
-
-            xlImage
-              .resize(JimpConfiguration.xl, Jimp.AUTO)
-              .write( `${destination}/extra-large/${file.filename}`, (err: Error) => {
-                if(err) throw expectationFailed(err.message);
-              });
+            const configs = [
+              { size: JimpConfiguration.xs, segment: 'extra-small' },
+              { size: JimpConfiguration.md, segment: 'medium' },
+              { size: JimpConfiguration.xl, segment: 'extra-large' }
+            ];
+            configs.forEach( cfg => {
+              image
+                .clone()
+                .resize(cfg.size, Jimp.AUTO)
+                .write( `${destination}/${cfg.segment}/${file.filename}`, (err: Error) => {
+                  if(err) throw expectationFailed(err.message);
+                });
+            });
           })
           .catch();
       });
 
     }
-
     next();
   };
 

@@ -39,7 +39,7 @@ export abstract class Serializer {
    * @param relations Description of embeded relations
    * @param relationships
    */
-  constructor(type: String, whitelist: Array<String>, relations: Object, relationships: Object) {
+  constructor(type: string, whitelist: Array<string>, relations: Object, relationships: Object) {
 
     this.type = type;
     this.withelist = whitelist;

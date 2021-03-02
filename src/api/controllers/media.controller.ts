@@ -12,8 +12,6 @@ import { MediaRepository } from '@repositories/media.repository';
 import { Media } from '@models/media.model';
 
 import { MEDIA_EVENT_EMITTER } from '@events/media.event';
-import { IMedia } from '@interfaces/IMedia.interface';
-import { User } from '@models/user.model';
 
 /**
  * Manage incoming requests for api/{version}/medias

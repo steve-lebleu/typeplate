@@ -7,10 +7,10 @@ import { User } from '@models/user.model';
 export class RefreshToken {
 
   @PrimaryGeneratedColumn()
-  id: Number;
+  id: number;
 
   @Column()
-  token: String;
+  token: string;
 
   @OneToOne(type => User, {
     eager : true,

@@ -3,6 +3,7 @@ import { UserSerializer } from '@serializers/user.serializer';
 import { DocumentSerializer } from '@serializers/document.serializer';
 import { isDate, isNull, isString } from 'util';
 import * as Pluralize from 'pluralize';
+import { IModelize } from '@interfaces/IModelize.interface';
 
 /**
  * @description Say if a value can be serialized
@@ -21,7 +22,7 @@ const isSerializable = (value: any): boolean => {
  * @param whitelist Whitelisted properties
  * @param entity Entity to serialize
  */
-const filter = (whitelist: string[], entity: any): any => {
+const filter = (whitelist: string[], entity: IModelize): IModelize => {
   const obj = {} as any;
   Object.keys(entity).map( (key) => {
     if (whitelist.includes(key) || whitelist.includes(Pluralize(key))) {

@@ -13,7 +13,7 @@ import { filter } from '@utils/serializing.util';
 export class Document implements IModelize {
 
   @PrimaryGeneratedColumn()
-  id: Number;
+  id: number;
 
   @Column({
     type: String,
@@ -28,7 +28,7 @@ export class Document implements IModelize {
   filename;
 
   @Column()
-  path: String;
+  path: string;
 
   @Column({
     type: 'enum',
@@ -67,11 +67,14 @@ export class Document implements IModelize {
   /**
    * @param payload Object data to assign
    */
-  constructor(payload: object) {
+  constructor(payload: Record<string,unknown>) {
     Object.assign(this, payload);
   }
 
-  public whitelist() {
+  /**
+   * @description Filter on allowed entity fields
+   */
+  public whitelist(): IModelize {
     return filter(whitelist, this);
   }
 }

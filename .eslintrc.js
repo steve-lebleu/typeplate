@@ -2,7 +2,8 @@ module.exports =  {
     "env": {
         "browser": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "mocha": true
     },
     "extends": [
         "plugin:@typescript-eslint/recommended",
@@ -78,6 +79,7 @@ module.exports =  {
             }
         ],
         "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-member-access": "error",
         "@typescript-eslint/no-unused-expressions": "error",
         "@typescript-eslint/no-use-before-define": "error",
         "@typescript-eslint/no-var-requires": "off",

@@ -24,25 +24,6 @@ export class Uploader {
   constructor() { }
 
   /**
-   * @description Create Document and append it to req
-   *
-   * @param req Express request object derived from http.incomingMessage
-   * @param res Express response object
-   * @param next Callback function
-   */
-  static create = (req: IFileRequest, res: IResponse, next: (error?: Error) => void): void => {
-    try {
-      const documentRepository = getRepository(Document);
-      const document = new Document(req.file);
-      void documentRepository.save(document);
-      req.doc = document;
-      return next();
-    } catch (e) {
-      return next( expectationFailed(e.message) );
-    }
-  };
-
-  /**
    * @description Upload multiple files
    *
    * @param options Upload parameters (destination, maxFileSize, wildcards)

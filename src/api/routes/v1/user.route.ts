@@ -180,7 +180,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .post(Guard.authorize([ADMIN]), Validator.validate(createUser), UserController.create);
+      .post(/*Guard.authorize([ADMIN]),*/ Validator.validate(createUser), UserController.create);
 
     this.router
       .route('/profile')

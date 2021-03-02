@@ -1,6 +1,7 @@
 import { expectationFailed } from 'boom';
+import * as Moment from 'moment';
 import { CREATED, NO_CONTENT } from 'http-status';
-import { unlink } from 'fs';
+
 import { getRepository, getCustomRepository } from 'typeorm';
 
 import { IFileRequest } from '@interfaces/IFileRequest.interface';
@@ -9,6 +10,8 @@ import { Can } from '@services/can.service';
 import { Document } from '@models/document.model';
 import { DocumentRepository } from '@repositories/document.repository';
 import { safe } from '@decorators/safe.decorator';
+import { can } from '@decorators/can.decorator';
+import { unlink } from '@decorators/unlink.decorator';
 
 /**
  * Manage incoming requests for api/{version}/documents
@@ -27,10 +30,10 @@ class DocumentController {
    * @public
    */
   @safe
+  @can('owner.id')
   static async get(req: IFileRequest, res: IResponse): Promise<void> {
     const documentRepository = getRepository(Document);
     const document = await documentRepository.findOneOrFail(req.params.documentId, { relations: ['owner'] });
-    Can.check(req.user, document);
     res.locals.data = document;
   }
 
@@ -75,22 +78,17 @@ class DocumentController {
    * @public
    */
   @safe
+  @unlink
   static async update(req: IFileRequest, res: IResponse): Promise<void> {
+    const documentToUpdate = res.locals.data as Document;
     const documentRepository = getRepository(Document);
-    const document = await documentRepository.findOne(req.params.documentId, { relations: ['owner'] });
 
-    Can.check(req.user, document);
+    documentToUpdate.updatedAt = Moment( new Date() ).format('YYYY-MM-DD HH:ss') as Date;
 
-    if(req.file.filename !== document.filename) {
-      unlink(document.path.toString(), (err) => {
-        if(err) throw expectationFailed(err.message);
-      });
-    }
+    documentRepository.merge(documentToUpdate, req.file);
+    await documentRepository.save(documentToUpdate);
 
-    documentRepository.merge(document, req.file);
-    await documentRepository.save(document);
-
-    res.locals.data = document;
+    res.locals.data = documentToUpdate;
   }
 
   /**
@@ -98,24 +96,19 @@ class DocumentController {
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    *
    * @public
    */
   @safe
-  static async remove (req: IFileRequest, res: IResponse, next: (error?: Error) => void): Promise<void> {
+  @unlink
+  static async remove (req: IFileRequest, res: IResponse): Promise<void> {
 
+    const documentToDelete = res.locals.data as Document;
     const documentRepository = getRepository(Document);
-    const document = await documentRepository.findOneOrFail(req.params.documentId, { relations: ['owner'] });
 
-    Can.check(req.user, document);
+    await documentRepository.remove(documentToDelete);
 
-    unlink(document.path.toString(), (err) => {
-      if(err) throw expectationFailed(err.message);
-      documentRepository.remove(document);
-      res.status(NO_CONTENT);
-      next();
-    });
+    res.status(NO_CONTENT);
 
   }
 }

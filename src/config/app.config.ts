@@ -66,7 +66,7 @@ export class ExpressConfiguration {
      * First, before all : check headers validity
      *
      */
-    this.instance.use( Header.check({ contentType }) );
+    this.instance.use( Header.check(contentType) );
 
     /**
      * Expose body on req.body

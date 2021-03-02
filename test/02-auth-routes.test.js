@@ -23,7 +23,6 @@ describe("Authentification routes", function () {
       apikey      = crypt(credentials.email + process.env.JWT_SECRET, 64);
 
       doRequest(agent, 'post', '/api/v1/auth/register', null, null, credentials, 201, function(err, res) {
-        console.log(res.body);
         expect(res.statusCode).to.eqls(201);
         token = res.body.token.accessToken;
         doRequest(agent, 'post', '/api/v1/auth/register', null, null, fixtures.user.entity('user', password), 201, function(err, res) {
@@ -34,7 +33,6 @@ describe("Authentification routes", function () {
       });
 
     } catch(e) {
-      console.log(e.message);
       done(e);
     }
     

@@ -10,18 +10,14 @@ const safe = ( target: Controller, key: string ): any => {
   const method = target[key] as (req, res, next) => Promise<void> | void;
   target[key] = function (...args: any[]): void {
     const next = args[2] as (e?: Error) => void;
-    try {
-      const result = method.apply(this, args) as Promise<void> | void;
-      if (result && result instanceof Promise) {
-        result
-          .then(() => next())
-          .catch(e => next(e));
-      }
-    } catch(e) {
-      next(e);
+    const result = method.apply(this, args) as Promise<void> | void;
+    if (result && result instanceof Promise) {
+      result
+        .then(() => next())
+        .catch(e => next(e));
     }
   }
-  return target[key] as () => void;
+  return target[key] as (req, res, next) => void;
 }
 
 export { safe }

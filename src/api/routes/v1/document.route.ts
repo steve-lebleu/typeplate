@@ -501,7 +501,7 @@ export class DocumentRouter extends Router {
        *    ]
        * }
        */
-      .delete(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(removeDocument), DocumentController.remove);
+      .delete(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(removeDocument), DocumentController.get, DocumentController.remove);
 
   }
 }

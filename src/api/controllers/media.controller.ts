@@ -1,12 +1,12 @@
-
 import { CREATED, NO_CONTENT } from 'http-status';
-
-
-import { IMediaRequest } from '@interfaces/IMediaRequest.interface';
 import { getRepository, getCustomRepository } from 'typeorm';
 
-import { safe } from '@decorators/safe.decorator';
+import { IMediaRequest } from '@interfaces/IMediaRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
+
+import { safe } from '@decorators/safe.decorator';
+import { can } from '@decorators/can.decorator';
+
 import { MediaRepository } from '@repositories/media.repository';
 import { Media } from '@models/media.model';
 
@@ -30,6 +30,7 @@ class MediaController {
    * @public
    */
   @safe
+  @can('owner.id')
   static async get(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
     const media = await repository.findOne(req.params.mediaId, { relations: ['owner'] });
@@ -44,6 +45,7 @@ class MediaController {
    * @param next Callback function
    */
   @safe
+  @can('owner.id')
   static async list (req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(MediaRepository);
     const medias = await repository.list(req.query);

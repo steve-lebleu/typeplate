@@ -21,6 +21,12 @@ const can = ( property: 'id' | 'owner.id' | 'createdBy' ): any => {
             const { locals } = args[1] as { locals?: { data: Record<string, unknown> | Record<string, unknown>[] } }
 
             if (Array.isArray(locals.data)) {
+              locals.data.filter( ( entity: { id?: number, owner?: { id?: number }, createdBy?: number } ) => {
+                const checkOn = entity.owner.id || entity.createdBy;
+                if ( user?.role === ROLE.admin || checkOn === user.id ) {
+                  return entity;
+                }
+              });
               return next();
             }
 

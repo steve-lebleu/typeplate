@@ -28,7 +28,7 @@ export class Guard {
    *
    * @param roles
    */
-  static authorize = (roles = list(ROLE)) => (req, res, next) => authenticate( 'jwt', { session: false }, Guard.handleJWT(req, res, next, roles) ) (req, res, next);
+  static authorize = (roles = list(ROLE)) => (req: IUserRequest, res: Response, next: (e?: Error) => void) => authenticate( 'jwt', { session: false }, Guard.handleJWT(req, res, next, roles) ) (req, res, next);
 
   /**
    * @description Authorize user access according to service.access_token

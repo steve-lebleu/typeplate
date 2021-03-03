@@ -94,7 +94,7 @@ export class User implements IModelize {
       if (this.temporaryPassword === this.password) {
         return true;
       }
-      this.password = await Bcrypt.hash(this.password, 10);
+      this.password = await Bcrypt.hash(this.password, 10) as string;
       return true;
     } catch (error) {
       throw badImplementation(error.message);
@@ -103,7 +103,7 @@ export class User implements IModelize {
 
   @BeforeInsert()
   @BeforeUpdate()
-  async hashApiKey(): Promise<boolean> {
+  hashApiKey(): boolean {
     try {
       this.apikey = crypt(this.email + jwtSecret, 64);
       return true;
@@ -129,7 +129,7 @@ export class User implements IModelize {
    * @param password
    */
   async passwordMatches(password: string): Promise<boolean> {
-    return Bcrypt.compare(password, this.password);
+    return await Bcrypt.compare(password, this.password);
   }
 
   /**

@@ -21,32 +21,48 @@ export class PassportConfiguration {
   private static options = {
     jwt: {
       secretOrKey: jwtSecret,
-      jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer')
+      jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer') as string
     }
   };
 
   constructor() {}
 
   /**
+   * @description Provide a passport strategy instance
+   *
+   * @param strategy Strategy to instanciate
+   */
+  static factory (strategy: string): JwtStrategy|BearerStrategy {
+    switch(strategy) {
+      case 'jwt':
+        return new JwtStrategy( PassportConfiguration.options.jwt, PassportConfiguration.jwt );
+      case 'facebook':
+        return new BearerStrategy( PassportConfiguration.oAuth('facebook') );
+      case 'google':
+        return new BearerStrategy( PassportConfiguration.oAuth('google') );
+    }
+  }
+
+  /**
    * @description Authentication by oAuth middleware function
    * @async
    */
-  private static oAuth = service => async (token, next: Function) => {
+  private static oAuth = (service: 'facebook' | 'google') => async (token, next: (e?: Error, v?: User) => void) => {
     try {
       const userRepository = getCustomRepository(UserRepository);
       const userData = await AuthProvider[service](token);
       const user = await userRepository.oAuthLogin(userData);
       next(null, user);
     } catch (err) {
- return next(err);
-}
+      return next(err);
+    }
   }
 
   /**
    * @description Authentication by JWT middleware function
    * @async
    */
-  private static jwt = async (payload, next: Function) => {
+  private static jwt = async (payload: { sub }, next: (e?: Error, v?: User|boolean) => void) => {
     try {
       const userRepository = getRepository(User);
       const user = await userRepository.findOne( payload.sub );
@@ -58,26 +74,4 @@ export class PassportConfiguration {
       return next(error, false);
     }
   }
-
-  /**
-   * @description Provide a passport strategy instance
-   *
-   * @param strategy Strategy to instanciate
-   */
-  static factory (strategy: string): any {
-    let instance;
-    switch(strategy) {
-      case 'jwt':
-        instance = new JwtStrategy(this.options.jwt, this.jwt);
-      break;
-      case 'facebook':
-        instance = new BearerStrategy(this.oAuth('facebook'));
-      break;
-      case 'google':
-        instance = new BearerStrategy(this.oAuth('google'));
-      break;
-    }
-    return instance;
-  }
-
 }

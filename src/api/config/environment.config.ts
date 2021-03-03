@@ -21,7 +21,7 @@ class EnvironmentConfiguration {
    */
   static set() {
     if (process.argv[2] && process.argv[2] === '--env' && process.argv[3] && ENVIRONMENT.hasOwnProperty(process.argv[3]) ) {
-      this.environment = ENVIRONMENT[process.argv[3]];
+      this.environment = ENVIRONMENT[process.argv[3]] as string;
     }
     if (process.env.ENVIRONMENT && ENVIRONMENT.hasOwnProperty(process.env.ENVIRONMENT) ) {
       this.environment = process.env.ENVIRONMENT as ENVIRONMENT;
@@ -33,7 +33,8 @@ class EnvironmentConfiguration {
    */
   static load() {
     this.set();
-    require('dotenv').config( { path : `${process.cwd()}/dist/env/${this.environment}.env` } );
+    const dtv: { config: (options) => void, parse: () => void } = require('dotenv') as { config: () => void, parse: () => void };
+    dtv.config( { path : `${process.cwd()}/dist/env/${this.environment}.env` } );
   }
 
 }
@@ -80,4 +81,5 @@ const ssl                 = {
   key: process.env.HTTPS_KEY,
   cert: process.env.HTTPS_CERT
 };
+
 export { env, port, url, authorized, contentType, ssl, jwtSecret, jwtExpirationInterval, version, logs, httpLogs, typeorm, upload, jimp };

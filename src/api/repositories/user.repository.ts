@@ -7,6 +7,8 @@ import { badRequest, notFound, unauthorized } from 'boom';
 
 import { User } from '@models/user.model';
 import { IUserQueryString } from '@interfaces/IUserQueryString.interface';
+import { IAuthExternalProvider } from '@interfaces/IAuthExternalProvider.interface';
+import { ITokenOptions } from '@interfaces/ITokenOptions.interface';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User>  {
@@ -24,7 +26,7 @@ export class UserRepository extends Repository<User>  {
   async one(id: number): Promise<User> {
 
     const repository = getRepository(User);
-    const options = omitBy({ id }, isNil);
+    const options: { id: number } = omitBy({ id }, isNil) as { id: number };
 
     const user = await repository.findOne({
       where: options
@@ -76,9 +78,9 @@ export class UserRepository extends Repository<User>  {
    * @param origin
    *
    */
-  async findAndGenerateToken(options, origin?: string): Promise<{user: User, accessToken: string}> {
+  async findAndGenerateToken(options: ITokenOptions): Promise<{user: User, accessToken: string}> {
 
-    const { email, password, refreshObject, apikey } = options;
+    const { email, password, refreshToken, apikey } = options;
 
     if (!email && !apikey) {
       throw badRequest('An email or an API key is required to generate a token')
@@ -92,7 +94,7 @@ export class UserRepository extends Repository<User>  {
       throw notFound('User not found');
     } else if (password && await user.passwordMatches(password) === false) {
       throw unauthorized('Password must match to authorize a token generating');
-    } else if (refreshObject && refreshObject.user.email === email && Moment(refreshObject.expires).isBefore()) {
+    } else if (refreshToken && refreshToken.user.email === email && Moment(refreshToken.expires).isBefore()) {
       throw unauthorized('Invalid refresh token');
     }
 
@@ -104,7 +106,9 @@ export class UserRepository extends Repository<User>  {
    * TODO: don't create user if not exists
    * TODO: deprecated ?
    */
-  async oAuthLogin({ service, id, email, username, picture }): Promise<User> {
+  async oAuthLogin(options: IAuthExternalProvider): Promise<User> {
+
+    const { email, name } = options;
 
     const userRepository = getRepository(User);
 
@@ -113,13 +117,15 @@ export class UserRepository extends Repository<User>  {
     });
 
     if (user) {
-      if (!user.username) user.username = username;
+      if (!user.username) {
+        user.username = name;
+      }
       return userRepository.save(user);
     }
 
-    const password = uuidv4();
+    const password = uuidv4() as string;
 
-    return userRepository.create({ email, password, username });
+    return userRepository.create({ email, password, username: name });
 
   }
 }

@@ -47,21 +47,21 @@ export class AuthRouter extends Router {
      * }
      */
 
-  /**
-    *
-    * @apiDefine MultipartHeader
-    *
-    * @apiHeader {String="multipart/form-data"}  Content-Type   Mime-type
-    * @apiHeader {String}                        Origin         Origin url
-    * @apiHeader {String}                        Authorization  Bearer access token
-    *
-    * @apiHeaderExample {json} Request headers
-    * {
-    *    "Content-Type": "multipart/form-data",
-    *    "Origin": "https://your-host.com",
-    *    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzI2ODQ3MjgsImlhdCI6MTU2NTQyNzEyOCwic3ViIjoxfQ.h9OfTyJbzRmBtGcM1DOqtwkYlcFzoLjdVKHMV22tGBY"
-    * }
-    */
+    /**
+     *
+     * @apiDefine MultipartHeader
+     *
+     * @apiHeader {String="multipart/form-data"}  Content-Type   Mime-type
+     * @apiHeader {String}                        Origin         Origin url
+     * @apiHeader {String}                        Authorization  Bearer access token
+     *
+     * @apiHeaderExample {json} Request headers
+     * {
+     *    "Content-Type": "multipart/form-data",
+     *    "Origin": "https://your-host.com",
+     *    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzI2ODQ3MjgsImlhdCI6MTU2NTQyNzEyOCwic3ViIjoxfQ.h9OfTyJbzRmBtGcM1DOqtwkYlcFzoLjdVKHMV22tGBY"
+     * }
+     */
 
     /**
      * @apiDefine SuccessToken

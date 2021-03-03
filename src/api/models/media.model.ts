@@ -6,11 +6,11 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { UPLOAD_MIME_TYPE } from '@enums/mime-type.enum';
 import { User } from '@models/user.model';
 import { IModelize } from '@interfaces/IModelize.interface';
-import { whitelist } from '@whitelists/document.whitelist';
+import { whitelist } from '@serializers/whitelists/media.whitelist';
 import { filter } from '@utils/serializing.util';
 
 @Entity()
-export class Document implements IModelize {
+export class Media implements IModelize {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -41,7 +41,7 @@ export class Document implements IModelize {
   })
   size;
 
-  @ManyToOne(type => User, user => user.documents, {
+  @ManyToOne(type => User, user => user.medias, {
     onDelete: 'CASCADE' // Remove all documents when user is deleted
   })
   owner: User;

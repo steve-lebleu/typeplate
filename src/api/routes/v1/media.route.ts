@@ -2,15 +2,15 @@ import { Router } from '@bases/router.class';
 import { Guard, ADMIN, LOGGED_USER } from '@middlewares/guard.middleware';
 import { Validator } from '@middlewares/validator.middleware';
 import { Uploader } from '@middlewares/uploader.middleware';
-import { DocumentController } from '@controllers/document.controller';
+import { MediaController } from '@controllers/media.controller';
 
-import { listDocuments, insertDocument, getDocument, replaceDocument, updateDocument, removeDocument } from '@validations/document.validation';
+import { listMedias, insertMedia, getMedia, replaceMedia, updateMedia, removeMedia } from '@validations/media.validation';
 
-export class DocumentRouter extends Router {
+export class MediaRouter extends Router {
 
   constructor(){
- super();
-}
+    super();
+  }
 
   /**
    * @description Plug routes definitions
@@ -20,32 +20,32 @@ export class DocumentRouter extends Router {
     this.router.route('/')
 
       /**
-       * @api {get} api/v1/documents List documents
-       * @apiDescription Get a list of documents
+       * @api {get} api/v1/medias List medias
+       * @apiDescription Get a list of medias
        * @apiVersion 1.0.0
-       * @apiName Listdocuments
-       * @apiGroup Document
+       * @apiName ListMedias
+       * @apiGroup Media
        * @apiPermission admin
        *
        * @apiUse BaseHeader
        *
        * @apiParam  {Number{1-}}         [page=1]     List page
-       * @apiParam  {Number{1-100}}      [perPage=1]  Document's per page
-       * @apiParam  {String}             [fieldname]  Document's fieldname
-       * @apiParam  {String}             [filename]   Document's filename
-       * @apiParam  {String}             [path]       Document's path
-       * @apiParam  {Number}             [size]       Document's size
-       * @apiParam  {String}             [mimetype]   Document's mime type
+       * @apiParam  {Number{1-100}}      [perPage=1]  Medias's per page
+       * @apiParam  {String}             [fieldname]  Medias's fieldname
+       * @apiParam  {String}             [filename]   Medias's filename
+       * @apiParam  {String}             [path]       Medias's path
+       * @apiParam  {Number}             [size]       Medias's size
+       * @apiParam  {String}             [mimetype]   Medias's mime type
        *
-       * @apiSuccess {Document[]}   document                Document instance
-       * @apiSuccess {Number}       document.id             Document id
-       * @apiSuccess {String}       document.fieldname      Document fieldname
-       * @apiSuccess {String}       document.filename       Document filename
-       * @apiSuccess {String}       document.path           Document path
-       * @apiSuccess {Number}       document.size           Document file size
-       * @apiSuccess {User}         document.owner          Document owner user
-       * @apiSuccess {Date}         document.createdAt      Document creation date
-       * @apiSuccess {Date}         document.updatedAt      Document updating date
+       * @apiSuccess {Medias[]}     media                Medias instance
+       * @apiSuccess {Number}       media.id             Medias id
+       * @apiSuccess {String}       media.fieldname      Medias fieldname
+       * @apiSuccess {String}       media.filename       Medias filename
+       * @apiSuccess {String}       media.path           Medias path
+       * @apiSuccess {Number}       media.size           Medias file size
+       * @apiSuccess {User}         media.owner          Medias owner user
+       * @apiSuccess {Date}         media.createdAt      Medias creation date
+       * @apiSuccess {Date}         media.updatedAt      Medias updating date
        *
        * @apiSuccessExample {json} Success response
        *  [
@@ -111,29 +111,29 @@ export class DocumentRouter extends Router {
        * }
        *
        */
-      .get(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(listDocuments), DocumentController.list)
+      .get(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(listMedias), MediaController.list)
 
       /**
-       * @api {post} api/v1/documents Create document(s)
-       * @apiDescription Create one or many new document(s)
+       * @api {post} api/v1/medias Create media(s)
+       * @apiDescription Create one or many new media(s)
        * @apiVersion 1.0.0
-       * @apiName CreateDocument
-       * @apiGroup Document
+       * @apiName CreateMedia
+       * @apiGroup Media
        * @apiPermission user
        *
        * @apiUse MultipartHeader
        *
        * @apiParam {FormData} Files Uploaded file(s)
        *
-       * @apiSuccess (Created 201) {Document[]}   document                Document instance
-       * @apiSuccess (Created 201) {Number}       document.id             Document id
-       * @apiSuccess (Created 201) {String}       document.fieldname      Document fieldname
-       * @apiSuccess (Created 201) {String}       document.filename       Document filename
-       * @apiSuccess (Created 201) {String}       document.path           Document path
-       * @apiSuccess (Created 201) {Number}       document.size           Document file size
-       * @apiSuccess (Created 201) {User}         document.owner          Document owner user
-       * @apiSuccess (Created 201) {Date}         document.createdAt      Document creation date
-       * @apiSuccess (Created 201) {Date}         document.updatedAt      Document updating date
+       * @apiSuccess (Created 201) {Media[]}      media                Media instance
+       * @apiSuccess (Created 201) {Number}       media.id             Media id
+       * @apiSuccess (Created 201) {String}       media.fieldname      Media fieldname
+       * @apiSuccess (Created 201) {String}       media.filename       Media filename
+       * @apiSuccess (Created 201) {String}       media.path           Media path
+       * @apiSuccess (Created 201) {Number}       media.size           Media file size
+       * @apiSuccess (Created 201) {User}         media.owner          Media owner user
+       * @apiSuccess (Created 201) {Date}         media.createdAt      Media creation date
+       * @apiSuccess (Created 201) {Date}         media.updatedAt      Media updating date
        *
        * @apiSuccessExample {json} Success response
        *  [
@@ -189,29 +189,29 @@ export class DocumentRouter extends Router {
        * }
        *
        */
-      .post(Guard.authorize([ADMIN, LOGGED_USER]), Uploader.uploadMultiple(), Uploader.resize, Validator.validate(insertDocument), DocumentController.create);
+      .post(Guard.authorize([ADMIN, LOGGED_USER]), Uploader.uploadMultiple(), Uploader.resize, Validator.validate(insertMedia), MediaController.create);
 
-    this.router.route('/:documentId')
+    this.router.route('/:mediaId')
 
       /**
-       * @api {get} api/v1/documents/:id Get one document
-       * @apiDescription Get document
+       * @api {get} api/v1/medias/:id Get one media
+       * @apiDescription Get media
        * @apiVersion 1.0.0
-       * @apiName GetDocument
-       * @apiGroup Document
+       * @apiName GetMedia
+       * @apiGroup Media
        * @apiPermission user
        *
        * @apiUse BaseHeader
        *
-       * @apiSuccess {Document}     document                Document instance
-       * @apiSuccess {Number}       document.id             Document id
-       * @apiSuccess {String}       document.fieldname      Document fieldname
-       * @apiSuccess {String}       document.filename       Document filename
-       * @apiSuccess {String}       document.path           Document path
-       * @apiSuccess {Number}       document.size           Document file size
-       * @apiSuccess {User}         document.owner          Document owner user
-       * @apiSuccess {Date}         document.createdAt      Document creation date
-       * @apiSuccess {Date}         document.updatedAt      Document updating date
+       * @apiSuccess {Media}     media                Media instance
+       * @apiSuccess {Number}       media.id             Media id
+       * @apiSuccess {String}       media.fieldname      Media fieldname
+       * @apiSuccess {String}       media.filename       Media filename
+       * @apiSuccess {String}       media.path           Media path
+       * @apiSuccess {Number}       media.size           Media file size
+       * @apiSuccess {User}         media.owner          Media owner user
+       * @apiSuccess {Date}         media.createdAt      Media creation date
+       * @apiSuccess {Date}         media.updatedAt      Media updating date
        *
        * @apiSuccessExample {json} Success response
        *    {
@@ -228,7 +228,7 @@ export class DocumentRouter extends Router {
        * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
        * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
        * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
-       * @apiError (Not Found 404)     NotFound           Document does not exist
+       * @apiError (Not Found 404)     NotFound           Media does not exist
        *
        * @apiErrorExample {json} ValidationError
        * {
@@ -270,31 +270,31 @@ export class DocumentRouter extends Router {
        *    "statusCode": 404,
        *    "statusText": "Not found",
        *    "errors": [
-       *      "Document not found"
+       *      "Media not found"
        *    ]
        * }
        */
-      .get(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(getDocument), DocumentController.get)
+      .get(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(getMedia), MediaController.get)
 
       /**
-       * @api {put} api/v1/documents/:id Replace document
-       * @apiDescription Replace the whole document with a new one
+       * @api {put} api/v1/medias/:id Replace media
+       * @apiDescription Replace the whole media with a new one
        * @apiVersion 1.0.0
        * @apiName ReplaceDocument
-       * @apiGroup Document
+       * @apiGroup Media
        * @apiPermission user
        *
        * @apiUse MultipartHeader
        *
-       * @apiSuccess {Document}     document                Document instance
-       * @apiSuccess {Number}       document.id             Document id
-       * @apiSuccess {String}       document.fieldname      Document fieldname
-       * @apiSuccess {String}       document.filename       Document filename
-       * @apiSuccess {String}       document.path           Document path
-       * @apiSuccess {Number}       document.size           Document file size
-       * @apiSuccess {User}         document.owner          Document owner user
-       * @apiSuccess {Date}         document.createdAt      Document creation date
-       * @apiSuccess {Date}         document.updatedAt      Document updating date
+       * @apiSuccess {Media}     media                Media instance
+       * @apiSuccess {Number}       media.id             Media id
+       * @apiSuccess {String}       media.fieldname      Media fieldname
+       * @apiSuccess {String}       media.filename       Media filename
+       * @apiSuccess {String}       media.path           Media path
+       * @apiSuccess {Number}       media.size           Media file size
+       * @apiSuccess {User}         media.owner          Media owner user
+       * @apiSuccess {Date}         media.createdAt      Media creation date
+       * @apiSuccess {Date}         media.updatedAt      Media updating date
        *
        * @apiSuccessExample {json} Success response
        *    {
@@ -311,7 +311,7 @@ export class DocumentRouter extends Router {
        * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
        * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
        * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
-       * @apiError (Not Found 404)     NotFound           Document does not exist
+       * @apiError (Not Found 404)     NotFound           Media does not exist
        *
        * @apiErrorExample {json} ValidationError
        * {
@@ -353,31 +353,31 @@ export class DocumentRouter extends Router {
        *    "statusCode": 404,
        *    "statusText": "Not found",
        *    "errors": [
-       *      "Document not found"
+       *      "Media not found"
        *    ]
        * }
        */
-      .put(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(replaceDocument), DocumentController.get, Uploader.upload(), Uploader.resize, Validator.validate(insertDocument), DocumentController.update)
+      .put(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(replaceMedia), MediaController.get, Uploader.upload(), Uploader.resize, Validator.validate(insertMedia), MediaController.update)
 
       /**
-       * @api {patch} api/v1/documents/:id Update document
-       * @apiDescription Update some fields of a document
+       * @api {patch} api/v1/medias/:id Update media
+       * @apiDescription Update some fields of a media
        * @apiVersion 1.0.0
        * @apiName UpdateDocument
-       * @apiGroup Document
+       * @apiGroup Media
        * @apiPermission user
        *
        * @apiUse MultipartHeader
        *
-       * @apiSuccess {Document}     document                Document instance
-       * @apiSuccess {Number}       document.id             Document id
-       * @apiSuccess {String}       document.fieldname      Document fieldname
-       * @apiSuccess {String}       document.filename       Document filename
-       * @apiSuccess {String}       document.path           Document path
-       * @apiSuccess {Number}       document.size           Document file size
-       * @apiSuccess {User}         document.owner          Document owner user
-       * @apiSuccess {Date}         document.createdAt      Document creation date
-       * @apiSuccess {Date}         document.updatedAt      Document updating date
+       * @apiSuccess {Media}     media                Media instance
+       * @apiSuccess {Number}       media.id             Media id
+       * @apiSuccess {String}       media.fieldname      Media fieldname
+       * @apiSuccess {String}       media.filename       Media filename
+       * @apiSuccess {String}       media.path           Media path
+       * @apiSuccess {Number}       media.size           Media file size
+       * @apiSuccess {User}         media.owner          Media owner user
+       * @apiSuccess {Date}         media.createdAt      Media creation date
+       * @apiSuccess {Date}         media.updatedAt      Media updating date
        *
        * @apiSuccessExample {json} Success response
        *    {
@@ -394,7 +394,7 @@ export class DocumentRouter extends Router {
        * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
        * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
        * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
-       * @apiError (Not Found 404)     NotFound           Document does not exist
+       * @apiError (Not Found 404)     NotFound           Media does not exist
        *
        * @apiErrorExample {json} ValidationError
        * {
@@ -436,18 +436,18 @@ export class DocumentRouter extends Router {
        *    "statusCode": 404,
        *    "statusText": "Not found",
        *    "errors": [
-       *      "Document not found"
+       *      "Media not found"
        *    ]
        * }
        */
-      .patch(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(updateDocument), DocumentController.get, Uploader.upload(), Uploader.resize, DocumentController.update)
+      .patch(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(updateMedia), MediaController.get, Uploader.upload(), Uploader.resize, MediaController.update)
 
       /**
-       * @api {patch} api/v1/documents/:id Delete document
-       * @apiDescription Delete a document
+       * @api {patch} api/v1/medias/:id Delete media
+       * @apiDescription Delete a media
        * @apiVersion 1.0.0
        * @apiName DeleteDocument
-       * @apiGroup Document
+       * @apiGroup Media
        * @apiPermission user
        *
        * @apiUse BaseHeader
@@ -455,7 +455,7 @@ export class DocumentRouter extends Router {
        * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
        * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
        * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
-       * @apiError (Not Found 404)     NotFound           Document does not exist
+       * @apiError (Not Found 404)     NotFound           Media does not exist
        *
        * @apiErrorExample {json} ValidationError
        * {
@@ -497,11 +497,11 @@ export class DocumentRouter extends Router {
        *    "statusCode": 404,
        *    "statusText": "Not found",
        *    "errors": [
-       *      "Document not found"
+       *      "Media not found"
        *    ]
        * }
        */
-      .delete(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(removeDocument), DocumentController.get, DocumentController.remove);
+      .delete(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(removeMedia), MediaController.get, MediaController.remove);
 
   }
 }

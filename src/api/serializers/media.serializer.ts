@@ -4,9 +4,9 @@ import { getRepository } from 'typeorm';
 import { User } from '@models/user.model';
 
 /**
- * Implements specific typed properties for Document json-api serializing / unserializing
+ * Implements specific typed properties for Media json-api serializing / unserializing
  */
-export class DocumentSerializer extends Serializer {
+export class MediaSerializer extends Serializer {
 
   constructor() {
     super('documents', [

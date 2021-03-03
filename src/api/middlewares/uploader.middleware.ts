@@ -2,8 +2,6 @@ import { expectationFailed } from 'boom';
 import * as Jimp from 'jimp';
 
 import { Response } from 'express';
-import { getRepository } from 'typeorm';
-import { Document } from '@models/document.model';
 import { jimp as JimpConfiguration } from '@config/environment.config';
 import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
 import { MulterConfiguration } from '@config/multer.config';

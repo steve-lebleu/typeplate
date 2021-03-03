@@ -8,7 +8,7 @@ import { badImplementation } from 'boom';
 
 import { jwtSecret, jwtExpirationInterval } from '@config/environment.config';
 import { ROLE } from '@enums/role.enum';
-import { Document } from '@models/document.model';
+import { Media } from '@models/media.model';
 import { IModelize } from '@interfaces/IModelize.interface';
 import { whitelist } from '@whitelists/user.whitelist';
 import { filter } from '@utils/serializing.util';
@@ -50,10 +50,10 @@ export class User implements IModelize {
   })
   role: 'admin' | 'user' | 'ghost'
 
-  @OneToMany( () => Document, document => document.owner, {
+  @OneToMany( () => Media, media => media.owner, {
     eager: true
   })
-  documents: Document[];
+  medias: Media[];
 
   @Column({
     type: Date,

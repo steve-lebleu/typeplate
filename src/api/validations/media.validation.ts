@@ -2,7 +2,7 @@ import * as Joi from 'joi';
 import * as schemas from '@validations/schemas';
 import { UPLOAD_MIME_TYPE } from '@enums/mime-type.enum';
 
-const schemaDocuments = () => {
+const schemaMedias = () => {
   return Joi.array().items(
     Joi.object().keys({
       fieldname: schemas.fieldname().required(),
@@ -15,8 +15,8 @@ const schemaDocuments = () => {
   )
 };
 
-// GET /v1/documents
-const listDocuments = {
+// GET /v1/medias
+const listMedias = {
   query: {
     page: schemas.pagination('page'),
     perPage: schemas.pagination('perPage'),
@@ -29,22 +29,22 @@ const listDocuments = {
   }
 };
 
-// POST /v1/documents
-const insertDocument = {
+// POST /v1/medias
+const insertMedia = {
   body: {
-    files: schemaDocuments()
+    files: schemaMedias()
   }
 };
 
-// GET /v1/documents/:documentId
-const getDocument = {
+// GET /v1/medias/:mediaId
+const getMedia = {
   params: {
     documentId: schemas.id()
   }
 };
 
-// PUT /v1/documents/:documentId
-const replaceDocument = {
+// PUT /v1/medias/:mediaId
+const replaceMedia = {
   params: {
     documentId: schemas.id()
   },
@@ -60,8 +60,8 @@ const replaceDocument = {
   }
 };
 
-// PATCH /v1/documents/:documentId
-const updateDocument = {
+// PATCH /v1/medias/:mediaId
+const updateMedia = {
   params: {
     documentId: schemas.id()
   },
@@ -77,11 +77,11 @@ const updateDocument = {
   }
 };
 
-// DELETE /v1/documents/:documentId
-const removeDocument = {
+// DELETE /v1/medias/:mediaId
+const removeMedia = {
   params: {
     documentId: schemas.id()
   }
 };
 
-export { listDocuments, insertDocument, getDocument, replaceDocument, updateDocument, removeDocument };
+export { listMedias, insertMedia, getMedia, replaceMedia, updateMedia, removeMedia };

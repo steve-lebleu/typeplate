@@ -1,4 +1,4 @@
-import { expectationFailed } from 'boom';
+
 import * as Moment from 'moment';
 import { CREATED, NO_CONTENT } from 'http-status';
 
@@ -7,22 +7,22 @@ import { getRepository, getCustomRepository } from 'typeorm';
 import { IFileRequest } from '@interfaces/IFileRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
 import { Can } from '@services/can.service';
-import { Document } from '@models/document.model';
-import { DocumentRepository } from '@repositories/document.repository';
+import { Media } from '@models/media.model';
+import { MediaRepository } from '@repositories/media.repository';
 import { safe } from '@decorators/safe.decorator';
 import { can } from '@decorators/can.decorator';
 import { unlink } from '@decorators/unlink.decorator';
 
 /**
- * Manage incoming requests for api/{version}/documents
+ * Manage incoming requests for api/{version}/medias
  */
-class DocumentController {
+class MediaController {
 
   /** */
   constructor() {}
 
   /**
-   * @description Retrieve one document according to :documentId
+   * @description Retrieve one media according to :mediaId
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
@@ -32,26 +32,26 @@ class DocumentController {
   @safe
   @can('owner.id')
   static async get(req: IFileRequest, res: IResponse): Promise<void> {
-    const documentRepository = getRepository(Document);
-    const document = await documentRepository.findOneOrFail(req.params.documentId, { relations: ['owner'] });
-    res.locals.data = document;
+    const repository = getRepository(Media);
+    const media = await repository.findOneOrFail(req.params.mediaId, { relations: ['owner'] });
+    res.locals.data = media;
   }
 
   /**
-   * @description Retrieve a list of documents, according to some parameters
+   * @description Retrieve a list of medias, according to query string parameters
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
   @safe
   static async list (req: IFileRequest, res : IResponse): Promise<void> {
-    const repository = getCustomRepository(DocumentRepository);
-    const documents = await repository.list(req.query);
-    res.locals.data = Can.filter(req.user, documents);
+    const repository = getCustomRepository(MediaRepository);
+    const medias = await repository.list(req.query);
+    res.locals.data = Can.filter(req.user, medias);
   }
 
   /**
-   * @description Create a new document
+   * @description Create a new media
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
@@ -60,17 +60,19 @@ class DocumentController {
    */
   @safe
   static async create(req: IFileRequest, res: IResponse): Promise<void> {
-    const documentRepository = getRepository(Document);
-    const documents = [].concat(req.files).map( (file) => {
-      return new Document(file);
+    const repository = getRepository(Media);
+    const medias = [].concat(req.files).map( (file) => {
+      return new Media(file);
     });
-    await documentRepository.save(documents);
+    await repository.save(medias);
     res.status( CREATED );
-    res.locals.data = documents;
+    res.locals.data = medias;
   }
 
   /**
-   * @description Update one document according to :documentId
+   * @description Update one media according to :mediaId
+   *
+   * @route /api/vn/medias/:mediaId
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
@@ -80,19 +82,19 @@ class DocumentController {
   @safe
   @unlink
   static async update(req: IFileRequest, res: IResponse): Promise<void> {
-    const documentToUpdate = res.locals.data as Document;
-    const documentRepository = getRepository(Document);
+    const mediaToUpdate = res.locals.data as Media;
+    const repository = getRepository(Media);
 
-    documentToUpdate.updatedAt = Moment( new Date() ).format('YYYY-MM-DD HH:ss') as Date;
+    mediaToUpdate.updatedAt = Moment( new Date() ).format('YYYY-MM-DD HH:ss') as Date;
 
-    documentRepository.merge(documentToUpdate, req.file);
-    await documentRepository.save(documentToUpdate);
+    repository.merge(mediaToUpdate, req.file);
+    await repository.save(mediaToUpdate);
 
-    res.locals.data = documentToUpdate;
+    res.locals.data = mediaToUpdate;
   }
 
   /**
-   * @description Delete one document according to :documentId
+   * @description Delete one media according to :mediaId
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
@@ -103,14 +105,14 @@ class DocumentController {
   @unlink
   static async remove (req: IFileRequest, res: IResponse): Promise<void> {
 
-    const documentToDelete = res.locals.data as Document;
-    const documentRepository = getRepository(Document);
+    const mediaToDelete = res.locals.data as Media;
+    const repository = getRepository(Media);
 
-    await documentRepository.remove(documentToDelete);
+    await repository.remove(mediaToDelete);
 
     res.status(NO_CONTENT);
 
   }
 }
 
-export { DocumentController };
+export { MediaController };

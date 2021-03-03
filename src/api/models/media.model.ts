@@ -3,7 +3,7 @@ require('module-alias/register');
 import * as Moment from 'moment';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
-import { UPLOAD_MIME_TYPE } from '@enums/mime-type.enum';
+import { MIME_TYPE, VIDEO_TYPE, AUDIO_TYPE, ARCHIVE_TYPE, DOCUMENT_TYPE, IMAGE_TYPE } from '@enums/mime-type.enum';
 import { User } from '@models/user.model';
 import { IModelize } from '@interfaces/IModelize.interface';
 import { whitelist } from '@serializers/whitelists/media.whitelist';
@@ -35,9 +35,9 @@ export class Media implements IModelize {
 
   @Column({
     type: 'enum',
-    enum: UPLOAD_MIME_TYPE
+    enum: MIME_TYPE
   })
-  mimetype: 'application/vnd.ms-excel' | 'application/vnd.ms-powerpoint' | 'application/msword' | 'application/pdf' | 'application/vnd.oasis.opendocument.presentation' | 'application/vnd.oasis.opendocument.spreadsheet' | 'application/vnd.oasis.opendocument.text' | 'application/x-7z-compressed' | 'application/x-rar-compressed' | 'application/x-tar' | 'application/zip' | 'image/bmp' | 'image/gif' | 'image/jpg' | 'image/jpeg'| 'image/png' | 'text/csv'
+  mimetype: VIDEO_TYPE | AUDIO_TYPE | ARCHIVE_TYPE | IMAGE_TYPE | DOCUMENT_TYPE
 
   @Column({
     type: Number

@@ -1,6 +1,5 @@
 import { ENVIRONMENT } from '@enums/environment.enum';
-import { list } from '@utils/enum.util';
-import { UPLOAD_MIME_TYPE } from '@enums/mime-type.enum';
+import { MIME_TYPE } from '@enums/mime-type.enum';
 
 /**
  * Configure dotenv with variables.env file before app, to allow process.env accessibility in
@@ -65,7 +64,7 @@ const typeorm               = {
 const upload                = {
   path: process.cwd() + '/dist/' + process.env.UPLOAD_PATH,
   maxFileSize: parseInt(process.env.UPLOAD_MAX_FILE_SIZE, 10),
-  wildcards: list(UPLOAD_MIME_TYPE) as UPLOAD_MIME_TYPE[],
+  wildcards: MIME_TYPE as string[],
   maxFiles: parseInt(process.env.UPLOAD_MAX_FILES, 10)
 };
 const jimp                  = {
@@ -74,12 +73,11 @@ const jimp                  = {
   sm: parseInt(process.env.JIMP_SIZE_SM, 10),
   md: parseInt(process.env.JIMP_SIZE_MD, 10),
   lg: parseInt(process.env.JIMP_SIZE_LG, 10),
-  xl: parseInt(process.env.JIMP_SIZE_XL, 10),
+  xl: parseInt(process.env.JIMP_SIZE_XL, 10)
 };
 const ssl                 = {
   isActive: parseInt(process.env.HTTPS_IS_ACTIVE, 10),
   key: process.env.HTTPS_KEY,
   cert: process.env.HTTPS_CERT
 };
-
 export { env, port, url, authorized, contentType, ssl, jwtSecret, jwtExpirationInterval, version, logs, httpLogs, typeorm, upload, jimp };

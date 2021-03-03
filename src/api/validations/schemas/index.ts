@@ -1,5 +1,4 @@
 import * as Joi from 'joi';
-import { list } from '@utils/enum.util';
 
 export const host = (type) => {
   const types = [
@@ -64,5 +63,5 @@ export const path = () => {
 };
 
 export const mimetype = (mimetypes) => {
-  return Joi.string().valid(list(mimetypes));
+  return Joi.string().valid(mimetypes);
 };

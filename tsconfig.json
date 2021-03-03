@@ -10,6 +10,7 @@
       "@decorators/*": ["api/decorators/*"],
       "@enums/*": ["api/types/enums/*"],
       "@errors/*": ["api/types/errors/*"],
+      "@events/*": ["api/types/events/*"],
       "@interfaces/*": ["api/types/interfaces/*"],
       "@middlewares/*": ["api/middlewares/*"],
       "@models/*": ["api/models/*"],

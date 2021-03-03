@@ -1,32 +1,25 @@
-
-import * as Jimp from 'jimp';
 import * as Multer from 'multer';
 import * as Pluralize from 'pluralize';
 import * as filenamify from 'filenamify';
-import { Response } from 'express';
-import { clone } from 'lodash';
 
-import { jimp as JimpConfiguration } from '@config/environment.config';
+import { unsupportedMediaType, entityTooLarge } from 'boom';
+
+import { jimp as JimpConfiguration, upload } from '@config/environment.config';
 
 import { IMediaRequest } from '@interfaces/IMediaRequest.interface';
-
-import { UploadError } from '@errors/upload-error';
 import { IResponse } from '@interfaces/IResponse.interface';
-
-
-import { unsupportedMediaType, expectationFailed, entityTooLarge } from 'boom';
 import { IUploadMulterOptions } from '@interfaces/IUploadMulterOptions.interface';
 import { IUploadOptions } from '@interfaces/IUploadOptions.interface';
-import { upload } from '@config/environment.config';
+import { IMedia } from '@interfaces/IMedia.interface';
+
+import { UploadError } from '@errors/upload-error';
 import { foldername, extension, fieldname } from '@utils/string.util';
 import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
-import { IFile } from '@interfaces/IFile.interface';
 
-import { IMedia } from '@interfaces/IMedia.interface';
+import { MEDIA_EVENT_EMITTER } from '@events/media.event';
 
 interface IMulter {
   diskStorage: ( { destination, filename } ) => void;
-  // eslint-disable-next-line id-blacklist
   any: () => void;
   single: () => void;
 }
@@ -61,13 +54,16 @@ export class Uploader {
    * @param next Callback function
    */
   static upload = ( options?: IUploadOptions ) => (req: IMediaRequest, res: IResponse, next: (error?: Error) => void): void => {
+
     const opts = options ? Object.keys(options)
       .filter(key => Uploader.default[key])
       .reduce((acc: IUploadOptions, current: string) => {
         acc[current] = options[current] as string|number|Record<string,unknown>;
         return acc;
       }, Uploader.default) : Uploader.default;
+
     const middleware = Uploader.instance( Uploader.cfg(opts) ).any() as (req, res, err) => void;
+
     middleware(req, res, (err: Error) => {
       if(err) {
         return next(new UploadError(err));
@@ -82,58 +78,14 @@ export class Uploader {
           media.url = `${type}/${type === 'image' ? 'master-copy/' : ''}${media.filename}`
           return media;
         }) || [];
+
+        const images = req.files.filter( ( file: IMedia ) => IMAGE_MIME_TYPE.hasOwnProperty(file.mimetype));
+        if ( JimpConfiguration.isActive === 1 && images.length > 0 ) {
+          MEDIA_EVENT_EMITTER.emit('media.resize', images);
+        }
       next();
     });
   }
-
-  /**
-   * @description Resize image according to .env file directives
-   *
-   * @param req Express request object derived from http.incomingMessage
-   * @param res Express response object
-   * @param next Callback function
-   */
-  static resize = (req: IMediaRequest, res: Response, next: (e?: Error) => void): void => {
-
-    if ( JimpConfiguration.isActive === 1 ) {
-
-      const entries = [].concat(req.files);
-
-      if ( entries.filter( ( file: IFile ) => IMAGE_MIME_TYPE.hasOwnProperty(file.mimetype)).length === 0 ) {
-        return next();
-      }
-
-      entries.forEach( (file: IFile) => {
-        const target = clone(file.destination) as string;
-        const towards = target.split('/'); towards.pop(); towards.push('rescale');
-        const destination = towards.join('/');
-
-        // Read original file
-        // TODO: récupérer dynamiquement
-        void Jimp.read(file.path)
-          .then( (image) => {
-            const configs = [
-              { size: JimpConfiguration.xs, segment: 'xs' },
-              { size: JimpConfiguration.s, segment: 's' },
-              { size: JimpConfiguration.md, segment: 'm' },
-              { size: JimpConfiguration.l, segment: 'l' },
-              { size: JimpConfiguration.xl, segment: 'xl' }
-            ];
-            configs.forEach( cfg => {
-              image
-                .clone()
-                .resize(cfg.size, Jimp.AUTO)
-                .write( `${destination}/${cfg.segment}/${file.filename}`, (err: Error) => {
-                  if(err) throw expectationFailed(err.message);
-                });
-            });
-          })
-          .catch();
-      });
-
-    }
-    next();
-  };
 
   /**
    * @description Set storage config
@@ -141,14 +93,14 @@ export class Uploader {
    */
   private static storage(destination?: string): void {
     return Uploader.instance.diskStorage({
-      destination: (req: Request, file: IFile, next: (e?: Error, v?: any) => void) => {
+      destination: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
         let towards = `${destination}/${Pluralize(fieldname(file.mimetype)) as string}`;
         if (typeof IMAGE_MIME_TYPE[file.mimetype] !== 'undefined') {
           towards += '/master-copy';
         }
         next(null, towards);
       },
-      filename: (req: Request, file: IFile, next: (e?: Error, v?: any) => void) => {
+      filename: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
         const name = filenamify( foldername(file.originalname), { replacement: '-', maxLength: 123 } )
           .replace(' ', '-')
           .replace('_', '-')
@@ -175,7 +127,7 @@ export class Uploader {
       limits: {
         fileSize: options.filesize
       },
-      fileFilter: (req: Request, file: IFile, next: (e?: Error, v?: any) => void) => {
+      fileFilter: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
         if(options.wildcards.filter( mime => file.mimetype === mime ).length === 0) {
           return next( unsupportedMediaType('File mimetype not supported'), false );
         }

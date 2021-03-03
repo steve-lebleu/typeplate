@@ -189,7 +189,7 @@ export class MediaRouter extends Router {
        * }
        *
        */
-      .post(Guard.authorize([ADMIN, LOGGED_USER]), Uploader.upload(), Uploader.resize, Validator.validate(insertMedia), MediaController.create);
+      .post(Guard.authorize([ADMIN, LOGGED_USER]), Uploader.upload(), Validator.validate(insertMedia), MediaController.create);
 
     this.router.route('/:mediaId')
 
@@ -357,7 +357,7 @@ export class MediaRouter extends Router {
        *    ]
        * }
        */
-      .put(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(replaceMedia), MediaController.get, Uploader.upload(), Uploader.resize, Validator.validate(insertMedia), MediaController.update)
+      .put(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(replaceMedia), MediaController.get, Uploader.upload(), Validator.validate(insertMedia), MediaController.update)
 
       /**
        * @api {patch} api/v1/medias/:id Update media
@@ -440,7 +440,7 @@ export class MediaRouter extends Router {
        *    ]
        * }
        */
-      .patch(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(updateMedia), MediaController.get, Uploader.upload(), Uploader.resize, MediaController.update)
+      .patch(Guard.authorize([ADMIN, LOGGED_USER]), Validator.validate(updateMedia), MediaController.get, Uploader.upload(), MediaController.update)
 
       /**
        * @api {patch} api/v1/medias/:id Delete media

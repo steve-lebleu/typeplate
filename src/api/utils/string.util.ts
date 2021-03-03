@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs';
-import { DOCUMENT_MIME_TYPE, ARCHIVE_MIME_TYPE, IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
+import { DOCUMENT_MIME_TYPE, ARCHIVE_MIME_TYPE, IMAGE_MIME_TYPE, AUDIO_MIME_TYPE, VIDEO_MIME_TYPE } from '@enums/mime-type.enum';
 
 const chars   = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 const numbers = ['0','1','2','3','4','5','6','7','8','9'];
@@ -80,7 +80,7 @@ const extension = (name: string, include = false): string => {
 };
 
 /**
- * @description Determine document type from mime type
+ * @description Determine media type from mime type
  * @param mimetype
  */
 const fieldname = (mimetype: string): string => {
@@ -96,16 +96,13 @@ const fieldname = (mimetype: string): string => {
     return 'image';
   }
 
-  /*
-   TODO: implémenter
-  if ( IMAGE_MIME_TYPE[mimetype] ) {
+  if ( AUDIO_MIME_TYPE[mimetype] ) {
     return 'audio';
   }
 
-  if ( IMAGE_MIME_TYPE[mimetype] ) {
+  if ( VIDEO_MIME_TYPE[mimetype] ) {
     return 'video';
   }
-  */
 
 };
 

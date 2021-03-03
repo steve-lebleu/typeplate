@@ -1,5 +1,3 @@
-import { UPLOAD_MIME_TYPE } from '@enums/mime-type.enum';
-
 /**
  * Define allowed properties for upload options configuration
  */
@@ -18,7 +16,7 @@ export interface IUploadOptions {
   /**
    * @description Authorized mime-types
    */
-  wildcards?: Array<UPLOAD_MIME_TYPE>;
+  wildcards?: string[];
 
   /**
    * @description Max concurrents files for the same upload process

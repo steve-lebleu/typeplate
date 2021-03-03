@@ -71,7 +71,9 @@ const upload                = {
 const jimp                  = {
   isActive: parseInt(process.env.JIMP_IS_ACTIVE, 10),
   xs: parseInt(process.env.JIMP_SIZE_XS, 10),
+  s: parseInt(process.env.JIMP_SIZE_S, 10),
   md: parseInt(process.env.JIMP_SIZE_MD, 10),
+  l: parseInt(process.env.JIMP_SIZE_L, 10),
   xl: parseInt(process.env.JIMP_SIZE_XL, 10),
 };
 const ssl                 = {

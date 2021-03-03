@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
+    "outDir": "./dist/api",
     "sourceMap": false,
     "baseUrl": "./src",
     "paths": {

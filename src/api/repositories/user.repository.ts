@@ -47,7 +47,7 @@ export class UserRepository extends Repository<User>  {
 
     const query = repository
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.documents', 'd');
+      .leftJoinAndSelect('user.medias', 'd');
 
     if(options.username) {
       query.andWhere('user.username = :username', { username });

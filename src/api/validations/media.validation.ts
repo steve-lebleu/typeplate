@@ -39,14 +39,14 @@ const insertMedia = {
 // GET /v1/medias/:mediaId
 const getMedia = {
   params: {
-    documentId: schemas.id()
+    mediaId: schemas.id()
   }
 };
 
 // PUT /v1/medias/:mediaId
 const replaceMedia = {
   params: {
-    documentId: schemas.id()
+    mediaId: schemas.id()
   },
   body: {
     file: {
@@ -63,7 +63,7 @@ const replaceMedia = {
 // PATCH /v1/medias/:mediaId
 const updateMedia = {
   params: {
-    documentId: schemas.id()
+    mediaId: schemas.id()
   },
   body: {
     file: {
@@ -80,7 +80,7 @@ const updateMedia = {
 // DELETE /v1/medias/:mediaId
 const removeMedia = {
   params: {
-    documentId: schemas.id()
+    mediaId: schemas.id()
   }
 };
 

@@ -1,17 +1,32 @@
-
-import * as Moment from 'moment';
+import { expectationFailed } from 'boom';
 import { CREATED, NO_CONTENT } from 'http-status';
+import { unlink } from 'fs';
+
+import { IMediaRequest } from '@interfaces/IMediaRequest.interface';
 
 import { getRepository, getCustomRepository } from 'typeorm';
 
-import { IFileRequest } from '@interfaces/IFileRequest.interface';
-import { IResponse } from '@interfaces/IResponse.interface';
-import { Can } from '@services/can.service';
-import { Media } from '@models/media.model';
-import { MediaRepository } from '@repositories/media.repository';
+
+import { EventEmitter } from 'events';
+import { promisify } from 'es6-promisify';
+
 import { safe } from '@decorators/safe.decorator';
-import { can } from '@decorators/can.decorator';
-import { unlink } from '@decorators/unlink.decorator';
+import { IResponse } from '@interfaces/IResponse.interface';
+import { MediaRepository } from '@repositories/media.repository';
+import { Media } from '@models/media.model';
+
+const emitter = new EventEmitter();
+
+emitter.on('media.synchronized', (media: Media) => {
+  console.log('unling');
+  /*
+   unlink(document.path.toString(), (err) => {
+        if(err) throw expectationFailed(err.message);
+        documentRepository.remove(document);
+        res.status(NO_CONTENT);
+        next();
+      });*/
+});
 
 /**
  * Manage incoming requests for api/{version}/medias
@@ -19,48 +34,50 @@ import { unlink } from '@decorators/unlink.decorator';
 class MediaController {
 
   /** */
-  constructor() {}
+  constructor() { }
 
   /**
-   * @description Retrieve one media according to :mediaId
+   * @description Retrieve one document according to :documentId
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
+   * @param next Callback function
    *
    * @public
    */
   @safe
-  @can('owner.id')
-  static async get(req: IFileRequest, res: IResponse): Promise<void> {
+  static async get(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
-    const media = await repository.findOneOrFail(req.params.mediaId, { relations: ['owner'] });
+    const media = await repository.findOne(req.params.mediaId, { relations: ['owner'] });
     res.locals.data = media;
   }
 
   /**
-   * @description Retrieve a list of medias, according to query string parameters
+   * @description Retrieve a list of documents, according to some parameters
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
+   * @param next Callback function
    */
   @safe
-  static async list (req: IFileRequest, res : IResponse): Promise<void> {
+  static async list (req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(MediaRepository);
     const medias = await repository.list(req.query);
-    res.locals.data = Can.filter(req.user, medias);
+    res.locals.data = medias;
   }
 
   /**
-   * @description Create a new media
+   * @description Create a new document
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
+   * @param next Callback function
    *
    * @public
    */
   @safe
-  static async create(req: IFileRequest, res: IResponse): Promise<void> {
-    const repository = getRepository(Media);
+  static async create(req: IMediaRequest, res: IResponse): Promise<void> {
+    const repository = getRepository(Document);
     const medias = [].concat(req.files).map( (file) => {
       return new Media(file);
     });
@@ -70,48 +87,40 @@ class MediaController {
   }
 
   /**
-   * @description Update one media according to :mediaId
-   *
-   * @route /api/vn/medias/:mediaId
+   * @description Update one document according to :documentId
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
+   * @param next Callback function
    *
    * @public
    */
   @safe
-  @unlink
-  static async update(req: IFileRequest, res: IResponse): Promise<void> {
-    const mediaToUpdate = res.locals.data as Media;
+  static async update(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
-
-    mediaToUpdate.updatedAt = Moment( new Date() ).format('YYYY-MM-DD HH:ss') as Date;
-
-    repository.merge(mediaToUpdate, req.file);
-    await repository.save(mediaToUpdate);
-
-    res.locals.data = mediaToUpdate;
+    const media = res.locals.data as Media;
+    repository.merge(media, req.file);
+    await repository.save(media);
+    emitter.emit('media.synchronized', res.locals.data as Media);
+    res.locals.data = media;
   }
 
   /**
-   * @description Delete one media according to :mediaId
+   * @description Delete one document according to :documentId
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
+   * @param next Callback function
    *
    * @public
    */
   @safe
-  @unlink
-  static async remove (req: IFileRequest, res: IResponse): Promise<void> {
-
-    const mediaToDelete = res.locals.data as Media;
+  static async remove (req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
-
-    await repository.remove(mediaToDelete);
-
+    const media = res.locals.data as Media;
+    await repository.remove(media);
+    emitter.emit('media.synchronized', res.locals.data as Media);
     res.status(NO_CONTENT);
-
   }
 }
 

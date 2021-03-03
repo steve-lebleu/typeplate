@@ -189,7 +189,7 @@ export class MediaRouter extends Router {
        * }
        *
        */
-      .post(Guard.authorize([ADMIN, LOGGED_USER]), Uploader.uploadMultiple(), Uploader.resize, Validator.validate(insertMedia), MediaController.create);
+      .post(Guard.authorize([ADMIN, LOGGED_USER]), Uploader.upload(), Uploader.resize, Validator.validate(insertMedia), MediaController.create);
 
     this.router.route('/:mediaId')
 

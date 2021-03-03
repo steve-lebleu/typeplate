@@ -92,4 +92,7 @@ enum UPLOAD_MIME_TYPE {
   'text/csv' = 'text/csv'
 }
 
-export { MIME_TYPE, IMAGE_MIME_TYPE, ARCHIVE_MIME_TYPE, DOCUMENT_MIME_TYPE, APPLICATION_MIME_TYPE, UPLOAD_MIME_TYPE }
+// TODO: sortir ce type d'ici
+type TYPE = 'application/vnd.ms-excel' | 'application/vnd.ms-powerpoint' | 'application/msword' | 'application/pdf' | 'application/vnd.oasis.opendocument.presentation' | 'application/vnd.oasis.opendocument.spreadsheet' | 'application/vnd.oasis.opendocument.text' | 'application/x-7z-compressed' | 'application/x-rar-compressed' | 'application/x-tar' | 'application/zip' | 'image/bmp' | 'image/gif' | 'image/jpg' | 'image/jpeg'| 'image/png' | 'text/csv';
+
+export { MIME_TYPE, IMAGE_MIME_TYPE, ARCHIVE_MIME_TYPE, DOCUMENT_MIME_TYPE, APPLICATION_MIME_TYPE, UPLOAD_MIME_TYPE, TYPE }

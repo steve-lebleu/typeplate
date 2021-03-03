@@ -1,4 +1,4 @@
-import { unauthorized, forbidden } from 'boom';
+import { unauthorized, forbidden, notFound } from 'boom';
 import { ROLE } from '@enums/role.enum';
 import { User } from '@models/user.model';
 
@@ -21,7 +21,11 @@ const can = ( property: 'id' | 'owner.id' | 'createdBy' ): any => {
             const { locals } = args[1] as { locals?: { data: Record<string, unknown> | Record<string, unknown>[] } }
 
             if (Array.isArray(locals.data)) {
-              next();
+              return next();
+            }
+
+            if (!locals.data) {
+              return next( notFound('Entity not found') );
             }
 
             const access = property
@@ -31,11 +35,11 @@ const can = ( property: 'id' | 'owner.id' | 'createdBy' ): any => {
               }, locals.data) as number;
 
             if (!access) {
-              next( unauthorized('You can\'t access to this ressource') );
+              return next( unauthorized('You can\'t access to this ressource') );
             }
 
             if (user?.role !== ROLE.admin && user?.id !== access) {
-              next( forbidden('You can\'t access to this ressource') );
+              return next( forbidden('You can\'t access to this ressource') );
             }
 
             next();

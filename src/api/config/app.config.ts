@@ -64,7 +64,6 @@ export class ExpressConfiguration {
 
     /**
      * First, before all : check headers validity
-     *
      */
     this.instance.use( Header.check(contentType) );
 
@@ -130,6 +129,11 @@ export class ExpressConfiguration {
      * @see https://www.npmjs.com/package/express-rate-limit
      */
     this.instance.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+
+    /**
+     * Define CDN static resources location
+     */
+    this.instance.use('/cdn', Express.static(__dirname + '/../../public'));
 
     /**
      * Set global middlewares on Express Application

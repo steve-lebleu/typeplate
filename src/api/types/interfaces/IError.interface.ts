@@ -4,6 +4,11 @@
 export interface IError {
 
   /**
+   * @description Error name
+   */
+  name: string;
+
+  /**
    * @description MySQL error status code
    */
   errno?: number;
@@ -14,11 +19,6 @@ export interface IError {
   sqlMessage?: string;
 
   /**
-   * @description Error name
-   */
-  name: string;
-
-  /**
    * @description Error message
    */
   message?: string;
@@ -27,4 +27,39 @@ export interface IError {
    * @description Error call stack
    */
   stack?: string;
+
+  /**
+   * @description Error status alias
+   */
+  httpStatusCode?: number;
+
+  /**
+   * @description Error status alias
+   */
+  status?: number;
+
+  /**
+   * @description Error status alias
+   */
+  statusCode?: number;
+
+  /**
+   * @description Boom error output
+   */
+  output?: { statusCode?: number, payload?: { error: string, message: string } };
+
+  /**
+   * @description Boom error descriptor
+   */
+  isBoom?: boolean;
+
+  /**
+   * @description Validation error message
+   */
+  statusText?: string;
+
+  /**
+   * @description Validation error details
+   */
+  errors?: { field, types, messages }[];
 }

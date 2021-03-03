@@ -1,5 +1,6 @@
 import { IHTTPError } from '@interfaces/IHTTPError.interface';
 import { IFieldError } from '@interfaces/IFieldError.interface';
+import { IError } from '@interfaces/IError.interface';
 
 /**
  * Type upload error
@@ -26,7 +27,7 @@ export class UploadError extends Error implements IHTTPError {
    * @param message
    * @param errors
    */
-  constructor(error: Error) {
+  constructor(error: IError) {
     super();
     this.statusCode = 400;
     this.statusText = error.name;

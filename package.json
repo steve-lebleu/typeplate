@@ -53,6 +53,7 @@
     "@enums": "dist/api/types/enums",
     "@errors": "dist/api/types/errors",
     "@events": "dist/api/events",
+    "@factories": "dist/api/factories",
     "@interfaces": "dist/api/types/interfaces",
     "@middlewares": "dist/api/middlewares",
     "@models": "dist/api/models",

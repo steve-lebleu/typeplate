@@ -1,4 +1,5 @@
 import { Controller } from '@bases/controller.class';
+import { ErrorFactory } from '@factories/error.factory';
 
 /**
  * @description Endpoint decorator which catch errors fired while endpoint execution
@@ -14,7 +15,7 @@ const safe = ( target: Controller, key: string ): any => {
     if (result && result instanceof Promise) {
       result
         .then(() => next())
-        .catch(e => next(e));
+        .catch(e => next(ErrorFactory.get(e)));
     }
   }
   return target[key] as (req, res, next) => void;

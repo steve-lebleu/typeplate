@@ -1,70 +1,22 @@
-import { badData, badImplementation, conflict, notFound } from 'boom';
+import { badImplementation } from 'boom';
 
 import { IError } from '@interfaces/IError.interface';
 import { IHTTPError } from '@interfaces/IHTTPError.interface';
 import { ValidationError } from 'express-validation';
 import { UploadError } from '@errors/upload-error';
 import { MySQLError } from '@errors/mysql-error';
+import { NotFoundError } from '@errors/not-found-error';
 
-/**
- * @description Get the error schema column name
- *
- * @param error
- */
-const getErrorColumnName = (error: MySQLError): string => {
-  const start = error.sqlMessage.indexOf('\'');
-  const restart = error.sqlMessage.substring(start + 1).indexOf('\'');
-  return error.sqlMessage.substring(start + 1, start + restart + 1);
-};
-
-/**
- * @description Fallback error function when creating / updating fail
- *
- * @param error
- *
- * @example 1052 ER_NON_UNIQ_ERROR
- * @example 1062 DUPLICATE_ENTRY
- * @example 1452 ER_NO_REFERENCED_ROW_2
- *
- * @example 1364 ER_NO_DEFAULT_FOR_FIELD
- * @example 1406 ER_DATA_TOO_LONG
- */
-const checkMySQLError = (error: any): Error => {
-  if (error.name === 'QueryFailedError') {
-    if( [1052, 1062, 1452].includes(error?.errno) ) {
-      return conflict( 'MySQL validation error', { // 409
-        errors: [{
-          field: getErrorColumnName(error),
-          location: 'body',
-          messages: [error?.sqlMessage],
-        }]
-      }) as Error;
-    }
-    if([1364, 1406].includes(error.errno)) {
-      return badData( 'MySQL validation error', { // 422
-        errors: [{
-          field: getErrorColumnName(error),
-          location: 'body',
-          messages: [error?.sqlMessage],
-        }]
-      }) as Error;
-    }
-  }
-  if (error.name === 'EntityNotFound') {
-    return notFound(error.message) as Error
-  }
-  return error;
-}
 
 /**
  * @description Get error status code
  * @param error Error object
  * @returns HTTP status code
  */
-const getErrorStatusCode = (error): number => {
+const getErrorStatusCode = (error: IError): number => {
   if(typeof(error.statusCode) !== 'undefined') return error.statusCode;
   if(typeof(error.status) !== 'undefined') return error.status;
-  if(error.isBoom) return error.output.statusCode;
+  if(typeof(error?.output?.statusCode) !== 'undefined') return error.output.statusCode;
   return 500;
 };
 
@@ -73,10 +25,10 @@ const getErrorStatusCode = (error): number => {
  * @param error Error object
  * @returns Formalized error object
  */
-const getErrorOutput = (error): IHTTPError => {
+const getErrorOutput = (error: IError): IHTTPError => {
 
   // JS native ( Error | EvalError | RangeError | SyntaxError | TypeError | URIError )
-  if (!error.httpStatusCode && !error.statusCode && !error.status && !error.isBoom) {
+  if (!error.httpStatusCode && !error.statusCode && !error.status && !error?.output?.statusCode) {
     switch(error.constructor.name) {
       case 'Error':
       case 'EvalError':
@@ -84,10 +36,10 @@ const getErrorOutput = (error): IHTTPError => {
       case 'SyntaxError':
       case 'RangeError':
       case 'URIError':
-        error = badImplementation(error.message);
+        error = badImplementation(error.message) as IError;
       break;
       default:
-        error = badImplementation(error.message);
+        error = badImplementation(error.message) as IError;
     }
   }
 
@@ -97,18 +49,20 @@ const getErrorOutput = (error): IHTTPError => {
       statusText: error.output.payload.error,
       errors: [error.output.payload.message]
     };
+  } else if (error instanceof NotFoundError) {
+    return error;
+  } else if (error instanceof MySQLError) {
+    return error;
   } else if (error instanceof UploadError) {
     return error;
   } else if (error instanceof ValidationError) {
     return {
       statusCode: getErrorStatusCode(error),
       statusText: error.statusText,
-      errors: error.errors.map( (err: any) => {
-        return { field: err.field.join('.'), types: err.types, messages: err.messages };
-      })
+      errors: error.errors.map( (err: { field: string, types, messages: string[] }) => err.messages.join(',').replace(/"/g, '\''))
     };
   }
 
 };
 
-export { checkMySQLError, getErrorColumnName, getErrorStatusCode, getErrorOutput };
+export { getErrorStatusCode, getErrorOutput };

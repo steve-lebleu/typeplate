@@ -5,12 +5,12 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 import { MIME_TYPE, VIDEO_TYPE, AUDIO_TYPE, ARCHIVE_TYPE, DOCUMENT_TYPE, IMAGE_TYPE } from '@enums/mime-type.enum';
 import { User } from '@models/user.model';
-import { IModelize } from '@interfaces/IModelize.interface';
+import { IModel } from '@interfaces/IModel.interface';
 import { whitelist } from '@serializers/whitelists/media.whitelist';
-import { filter } from '@utils/serializing.util';
+import { sanitize } from '@utils/serializing.util';
 
 @Entity()
-export class Media implements IModelize {
+export class Media implements IModel {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -77,7 +77,7 @@ export class Media implements IModelize {
   /**
    * @description Filter on allowed entity fields
    */
-  public whitelist(): IModelize {
-    return filter(whitelist, this);
+  public whitelist(): Record<string,unknown> {
+    return sanitize(whitelist, this);
   }
 }

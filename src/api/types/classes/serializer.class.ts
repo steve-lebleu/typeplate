@@ -26,12 +26,12 @@ export abstract class Serializer {
   /**
    *
    */
-  private serializes: Function;
+  private serializes: (record) => Record<string, unknown> | Record<string, unknown>[];
 
   /**
    *
    */
-  private deserializes: Function;
+  private deserializes: (record) => Record<string, unknown> | Record<string, unknown>[];
 
   /**
    * @param type Object instance type
@@ -39,7 +39,7 @@ export abstract class Serializer {
    * @param relations Description of embeded relations
    * @param relationships
    */
-  constructor(type: string, whitelist: Array<string>, relations: Object, relationships: Object) {
+  constructor(type: string, whitelist: Array<string>, relations: Record<string, unknown>, relationships: Record<string, unknown>) {
 
     this.type = type;
     this.withelist = whitelist;
@@ -54,7 +54,7 @@ export abstract class Serializer {
       serializerOptions[key] = relations[key];
     }
 
-    this.serializes = new JsonApiSerializer(type, serializerOptions).serialize;
+    this.serializes = new JsonApiSerializer(type, serializerOptions).serialize as (record) => Record<string, unknown> | Record<string, unknown>[];
 
     const deserializerOptions = {
       attributes: whitelist,
@@ -65,7 +65,7 @@ export abstract class Serializer {
       deserializerOptions[key] = relationships[key];
     }
 
-    this.deserializes = new JsonApiDeserializer(deserializerOptions).deserialize;
+    this.deserializes = new JsonApiDeserializer(deserializerOptions).deserialize as (record) => Record<string, unknown> | Record<string, unknown>[];
   }
 
   /**
@@ -74,12 +74,12 @@ export abstract class Serializer {
    * @param payload Data to serialize
    * @throws {Error} Expectation failed (417)
    */
-  public serialize = async (payload: any) => {
+  public serialize = (payload: any|any[]): Record<string, unknown> | Record<string, unknown>[] => {
     try {
       if(Array.isArray(payload)) {
         return payload.map( entry => this.serializes(entry));
       }
-      return await this.serializes(payload);
+      return this.serializes(payload);
     } catch(e) {
       throw expectationFailed(e.message)
     }
@@ -91,9 +91,9 @@ export abstract class Serializer {
    * @param req Current request object
    * @throws {Error} Expectation failed (417)
    */
-  public deserialize = async(req: Request) => {
+  public deserialize = (req: Request): Record<string,unknown>|Record<string, unknown>[] => {
     try {
-      return await this.deserializes(req.body);
+      return this.deserializes(req.body);
     } catch (e) {
       throw expectationFailed(e.message);
     }

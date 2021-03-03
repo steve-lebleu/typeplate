@@ -42,7 +42,7 @@ export class AuthController {
   @safe
   static async login(req: Request, res: IResponse): Promise<void> {
     const repository = getCustomRepository(UserRepository);
-    const { user, accessToken } = await repository.findAndGenerateToken(req.body, req.headers.from);
+    const { user, accessToken } = await repository.findAndGenerateToken(req.body);
     const token = await generateTokenResponse(user, accessToken);
     res.locals.data = { token, user: user.whitelist() as User };
   }
@@ -88,18 +88,18 @@ export class AuthController {
 
     const { token } = req.body as { token: { refreshToken?: string } };
 
-    const refreshObject = await refreshTokenRepository.findOne({
+    const refreshToken = await refreshTokenRepository.findOne({
       where : { token: token.refreshToken }
     });
 
-    if(typeof(refreshObject) === 'undefined') {
+    if(typeof(refreshToken) === 'undefined') {
       return next( notFound('RefreshObject not found') );
     }
 
-    await refreshTokenRepository.remove(refreshObject);
+    await refreshTokenRepository.remove(refreshToken);
 
     // Get owner user of the token
-    const { user, accessToken } = await userRepository.findAndGenerateToken({ email: refreshObject.user.email , refreshObject });
+    const { user, accessToken } = await userRepository.findAndGenerateToken({ email: refreshToken.user.email , refreshToken });
     const response = await generateTokenResponse(user, accessToken);
 
     res.locals.data = { token: response };

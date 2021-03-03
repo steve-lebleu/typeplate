@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import * as Joi from 'joi';
 import { ROLE } from '@enums/role.enum';
 import { list } from '@utils/enum.util';

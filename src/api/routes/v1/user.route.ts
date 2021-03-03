@@ -99,7 +99,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .get(/*Guard.authorize([ADMIN]),*/ Validator.validate(listUsers), UserController.list)
+      .get(Guard.authorize([ADMIN]), Validator.validate(listUsers), UserController.list)
 
       /**
        * @api {post} /users Create user
@@ -180,7 +180,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .post(/*Guard.authorize([ADMIN]),*/ Validator.validate(createUser), UserController.create);
+      .post(Guard.authorize([ADMIN]), Validator.validate(createUser), UserController.create);
 
     this.router
       .route('/profile')

@@ -3,19 +3,19 @@ require('module-alias/register');
 import * as Moment from 'moment-timezone';
 import * as Jwt from 'jwt-simple';
 import * as Bcrypt from 'bcrypt';
-import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, AfterLoad, BeforeInsert, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, AfterLoad, BeforeInsert, OneToMany } from 'typeorm';
 import { badImplementation } from 'boom';
 
 import { jwtSecret, jwtExpirationInterval } from '@config/environment.config';
 import { ROLE } from '@enums/role.enum';
 import { Media } from '@models/media.model';
-import { IModelize } from '@interfaces/IModelize.interface';
+import { IModel } from '@interfaces/IModel.interface';
 import { whitelist } from '@whitelists/user.whitelist';
-import { filter } from '@utils/serializing.util';
+import { sanitize } from '@utils/serializing.util';
 import { crypt } from '@utils/string.util';
 
 @Entity()
-export class User implements IModelize {
+export class User implements IModel {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -94,7 +94,7 @@ export class User implements IModelize {
       if (this.temporaryPassword === this.password) {
         return true;
       }
-      this.password = await Bcrypt.hash(this.password, 10);
+      this.password = await Bcrypt.hash(this.password, 10) as string;
       return true;
     } catch (error) {
       throw badImplementation(error.message);
@@ -103,7 +103,7 @@ export class User implements IModelize {
 
   @BeforeInsert()
   @BeforeUpdate()
-  async hashApiKey(): Promise<boolean> {
+  hashApiKey(): boolean {
     try {
       this.apikey = crypt(this.email + jwtSecret, 64);
       return true;
@@ -129,14 +129,14 @@ export class User implements IModelize {
    * @param password
    */
   async passwordMatches(password: string): Promise<boolean> {
-    return Bcrypt.compare(password, this.password);
+    return await Bcrypt.compare(password, this.password);
   }
 
   /**
    * @description Filter on allowed entity fields
    */
-  public whitelist(): IModelize {
-    return filter(whitelist, this);
+  public whitelist(): Record<string,unknown> {
+    return sanitize(whitelist, this);
   }
 
 }

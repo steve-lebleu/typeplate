@@ -11,7 +11,7 @@ export class ErrorFactory {
       case 'UploadFailedError':
         return new UploadError(error);
       case 'EntityNotFound':
-        return new NotFoundError();
+        return new NotFoundError(error);
     }
   }
 }

@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import { IRoute } from '@interfaces/IRoute.interface';
 
-import { RootRouter } from '@routes/root.route';
+import { MainRouter } from '@routes/main.route';
 import { AuthRouter } from '@routes/auth.route';
 import { MediaRouter } from '@routes/media.route';
 import { UserRouter } from '@routes/user.route';
@@ -23,7 +23,7 @@ export class ProxyRouter {
    * @description Routes descriptions
    */
   private static routes = [
-    { segment: '', provider: RootRouter, serializable: false },
+    { segment: '', provider: MainRouter, serializable: false },
     { segment: '/auth/', provider: AuthRouter, serializable: false },
     { segment: '/medias/', provider: MediaRouter, serializable: true },
     { segment: '/users/', provider: UserRouter, serializable: true }

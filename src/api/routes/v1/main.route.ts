@@ -1,7 +1,7 @@
 import { Router } from '@bases/router.class';
-import { RootController } from '@controllers/root.controller';
+import { MainController } from '@controllers/main.controller';
 
-export class RootRouter extends Router {
+export class MainRouter extends Router {
 
   constructor() {
     super()
@@ -24,7 +24,7 @@ export class RootRouter extends Router {
      *
      * @apiError (Internal server error 500) Internal API is down
      */
-    this.router.get('/status', RootController.status);
+    this.router.get('/status', MainController.status);
 
     /**
      * @ {post} /report-violation Log CSP
@@ -39,7 +39,7 @@ export class RootRouter extends Router {
      *
      * @Error (Internal server error 500) Internal server error while logging
      */
-    this.router.post('/report-violation', RootController.report);
+    this.router.post('/report-violation', MainController.report);
 
   }
 

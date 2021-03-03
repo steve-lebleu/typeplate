@@ -8,7 +8,7 @@ import { safe } from '@decorators/safe.decorator';
  * Manage incoming requests from api/{version}/.
  * End points of this router resolve response by itself.
  */
-export class RootController {
+export class MainController {
 
   constructor() {}
 

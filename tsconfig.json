@@ -5,7 +5,7 @@
     "baseUrl": "./src",
     "paths": {
       "@bases/*": ["api/types/classes/*"],
-      "@config/*": ["config/*"],
+      "@config/*": ["api/config/*"],
       "@controllers/*": ["api/controllers/*"],
       "@decorators/*": ["api/decorators/*"],
       "@enums/*": ["api/types/enums/*"],

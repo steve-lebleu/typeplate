@@ -30,6 +30,9 @@ export class Media implements IModelize {
   @Column()
   path: string;
 
+  @Column()
+  url: string;
+
   @Column({
     type: 'enum',
     enum: UPLOAD_MIME_TYPE

@@ -47,7 +47,7 @@
   },
   "_moduleAliases": {
     "@bases": "dist/api/types/classes",
-    "@config": "dist/config",
+    "@config": "dist/api/config",
     "@controllers": "dist/api/controllers",
     "@decorators": "dist/api/decorators",
     "@enums": "dist/api/types/enums",

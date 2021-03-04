@@ -4,9 +4,14 @@ import { IError } from '@interfaces/IError.interface';
 import { IHTTPError } from '@interfaces/IHTTPError.interface';
 import { IFieldError } from '@interfaces/IFieldError.interface';
 
-export class MySQLError extends Error implements IHTTPError {
+export class MySQLError implements Error, IHTTPError {
 
   readonly name = 'MySQL error';
+
+  /**
+   * @description Error.message implementation
+   */
+  message: string;
 
   /**
    * @description MySQL errno value
@@ -34,23 +39,12 @@ export class MySQLError extends Error implements IHTTPError {
   errors: Array<IFieldError|string>;
 
   constructor(error: IError) {
-    super();
-
+    const converted = this.convertError(error.errno, error.message);
     this.sqlMessage = error.sqlMessage;
     this.errno = error.errno;
-    this.statusCode = this.getErrorStatus();
-    this.statusText = 'Bad request';
-    this.errors = [error.message];
-
-  }
-
-  /**
-   * @description Get the error schema column name
-   */
-  private getErrorColumnName(): string {
-    const start = this.sqlMessage.indexOf('\'');
-    const restart = this.sqlMessage.substring(start + 1).indexOf('\'');
-    return this.sqlMessage.substring(start + 1, start + restart + 1);
+    this.statusCode = converted.statusCode;
+    this.statusText = converted.statusText;
+    this.errors = [converted.error];
   }
 
   /**
@@ -65,19 +59,18 @@ export class MySQLError extends Error implements IHTTPError {
    * @example 1364 ER_NO_DEFAULT_FOR_FIELD
    * @example 1406 ER_DATA_TOO_LONG
    */
-  private getErrorStatus(): number {
-
-    switch (this.errno) {
+  private convertError(errno: number, message: string): { statusCode: number, statusText: string, error: string } {
+    switch (errno) {
       case 1052:
+        return { statusCode: 409, statusText: HTTP_STATUS['409_NAME'], error: message }
       case 1062:
+        return { statusCode: 409, statusText: HTTP_STATUS['409_NAME'], error: `Duplicate entry for ${/\'[a-z]{1,}\./.exec(message)[0].slice(1, -1).trim()}` }
       case 1452:
-          return parseInt(HTTP_STATUS[409], 10);
-      break;
+        return { statusCode: 409, statusText: HTTP_STATUS['409_NAME'], error: message }
       case 1364:
+        return { statusCode: 422, statusText: HTTP_STATUS['422_NAME'], error: message }
       case 1406:
-          return parseInt(HTTP_STATUS[422], 10);
-      break;
+        return { statusCode: 422, statusText: HTTP_STATUS['422_NAME'], error: message }
     }
-
   }
 }

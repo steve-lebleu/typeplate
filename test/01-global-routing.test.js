@@ -1,7 +1,4 @@
-/* global describe,it */
-/* eslint-env node, mocha */
-
-const { server } = require(process.cwd() + '/dist/api/app.bootstrap');
+let { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 let request = require('supertest');
 
 describe('Routes resolving', () => {
@@ -9,7 +6,6 @@ describe('Routes resolving', () => {
   before( () => {});
 
   after( () => {
-    console.log('AFTER');
     server.close();
     server = undefined;
     delete server;

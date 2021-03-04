@@ -91,6 +91,7 @@ module.exports =  {
             "error",
             "single"
         ],
+        "@typescript-eslint/require-await": "off",
         "@typescript-eslint/triple-slash-reference": [
             "error",
             {

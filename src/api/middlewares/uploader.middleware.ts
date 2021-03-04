@@ -73,7 +73,7 @@ export class Uploader {
       req.body.files = req.files
         .slice(0, opts.maxFiles)
         .map( ( media: IMedia ) => {
-          const type = fieldname(media.mimetype);
+          const type = Pluralize(fieldname(media.mimetype)) as string;
           media.owner = req.user.id;
           media.url = `${type}/${type === 'image' ? 'master-copy/' : ''}${media.filename}`
           return media;

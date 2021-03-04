@@ -35,7 +35,7 @@ export class UserController {
    * @param res Express response object
    */
   @safe
-  static loggedIn (req: IUserRequest, res: IResponse): void {
+  static async loggedIn (req: IUserRequest, res: IResponse): Promise<void> {
     res.locals.data = new User(req.user);
   }
 

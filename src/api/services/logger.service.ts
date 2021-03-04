@@ -28,8 +28,12 @@ export class Logger {
 
   static get stream(): any {
     if ( !Logger.instance ) {
-      Logger.instance =  WinstonConfiguration.get()
+      Logger.instance = WinstonConfiguration.get()
     }
-    return Logger.instance.stream;
+    return {
+      write:(message) => {
+        Logger.instance.info(message);
+      }
+    }
   }
 }

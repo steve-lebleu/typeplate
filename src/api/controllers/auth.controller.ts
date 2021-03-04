@@ -30,7 +30,7 @@ export class AuthController {
     await repository.insert(user);
     const token = await generateTokenResponse(user, user.token());
     res.status(CREATED);
-    res.locals.data = { token, user: user.whitelist() as User };
+    res.locals.data = { token, user: user.whitelist() as unknown };
   }
 
   /**
@@ -44,7 +44,7 @@ export class AuthController {
     const repository = getCustomRepository(UserRepository);
     const { user, accessToken } = await repository.findAndGenerateToken(req.body);
     const token = await generateTokenResponse(user, accessToken);
-    res.locals.data = { token, user: user.whitelist() as User };
+    res.locals.data = { token, user: user.whitelist() as unknown };
   }
 
   /**
@@ -58,7 +58,7 @@ export class AuthController {
     const user = req.body as User;
     const accessToken = user.token();
     const token = await generateTokenResponse(user, accessToken);
-    res.locals.data = { token, user: user.whitelist() as User };
+    res.locals.data = { token, user: user.whitelist() as unknown };
   }
 
   /**
@@ -72,7 +72,7 @@ export class AuthController {
     const user = req.body as User;
     const accessToken = user.token();
     const token = await generateTokenResponse(user, accessToken);
-    res.locals.data = { token, user: user.whitelist() as User };
+    res.locals.data = { token, user: user.whitelist() as unknown };
   }
 
   /**
@@ -93,7 +93,7 @@ export class AuthController {
     });
 
     if(typeof(refreshToken) === 'undefined') {
-      return next( notFound('RefreshObject not found') );
+      return next( notFound('RefreshToken not found') );
     }
 
     await refreshTokenRepository.remove(refreshToken);

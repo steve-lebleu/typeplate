@@ -1,15 +1,18 @@
 # Typescript / Express.js / Typeorm RESTful API boilerplate
 
-[![Node](https://img.shields.io/badge/Node-14.16.0-green)](https://nodejs.org/docs/latest-v14.x/api/index.html)
-[![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-blue)](https://www.typescriptlang.org/)
+[![Node](https://img.shields.io/badge/Node-14.16.0-lightgrey)](https://nodejs.org/docs/latest-v14.x/api/index.html)
+[![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-lightgrey)](https://www.typescriptlang.org/)
 [![Express](https://img.shields.io/badge/Express-4.16.4-lightgrey)](https://expressjs.com/)
-[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-orange)](https://typeorm.io/#/)
-[![Mocha](https://img.shields.io/badge/Mocha-8.0.3-orange)](https://mochajs.org)
+[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-lightgrey)](https://typeorm.io/#/)
+[![Mocha](https://img.shields.io/badge/Mocha-8.0.3-lightgrey)](https://mochajs.org)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
 [![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
-[![Coverage](https://img.shields.io/badge/coverage-89.08%25-green)](https://github.com/konfer-be/ts-express-typeorm-boilerplate)
-[![Known Vulnerabilities](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?style=plastic)](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate)
+![Coveralls](https://img.shields.io/coveralls/github/konfer-be/ts-express-typerorm-boilerplate)
+![David](https://img.shields.io/david/konfer-be/ts-express-typeorm-boilerplate)
+[![Known Vulnerabilities](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?style=flat)](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate)
+
+![Discord](https://img.shields.io/discord/817108781291929641)
 
 Scalable RESTful API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based.
 

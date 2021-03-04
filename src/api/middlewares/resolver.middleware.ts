@@ -40,7 +40,7 @@ export class Resolver {
 
     // All of these methods can returns an empty result set, but a result set
     if ( ( cond && ['GET', 'POST', 'PUT', 'PATCH'].includes(req.method) ) || ( typeof res.statusCode !== 'undefined' && res.statusCode !== 404 ) ) {
-      res.statusCode = res.locals.data.statusCode || res.statusCode;
+      res.statusCode = res.statusCode;
       res.json(res.locals.data);
     }
 

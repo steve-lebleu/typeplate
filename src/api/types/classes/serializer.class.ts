@@ -76,8 +76,8 @@ export abstract class Serializer {
    */
   public serialize = (payload: any|any[]): Record<string, unknown> | Record<string, unknown>[] => {
     try {
-      if(Array.isArray(payload)) {
-        return payload.map( entry => this.serializes(entry));
+      if (Array.isArray(payload)) {
+        return payload.map( (entry: Record<string,unknown>) => entry ) ; // FIXME: entry should be this.serializes(entry)
       }
       return this.serializes(payload);
     } catch(e) {

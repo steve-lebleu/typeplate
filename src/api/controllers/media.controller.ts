@@ -12,6 +12,8 @@ import { MediaRepository } from '@repositories/media.repository';
 import { Media } from '@models/media.model';
 
 import { MEDIA_EVENT_EMITTER } from '@events/media.event';
+import { IMedia } from '@interfaces/IMedia.interface';
+import { User } from '@models/user.model';
 
 /**
  * Manage incoming requests for api/{version}/medias
@@ -65,9 +67,7 @@ class MediaController {
   @safe
   static async create(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
-    const medias = [].concat(req.files).map( (file) => {
-      return new Media(file);
-    });
+    const medias = [].concat(req.files).map( (file) => new Media(file));
     await repository.save(medias);
     res.status( CREATED );
     res.locals.data = medias;
@@ -86,7 +86,7 @@ class MediaController {
   static async update(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
     const media = clone(res.locals.data) as Media;
-    repository.merge(media, req.files[0]);
+    repository.merge(media, req.files[0] as unknown);
     await repository.save(media);
     MEDIA_EVENT_EMITTER.emit('media.synchronized', res.locals.data as Media);
     res.locals.data = media;
@@ -102,6 +102,7 @@ class MediaController {
    * @public
    */
   @safe
+  @can('owner.id')
   static async remove (req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
     const media = clone(res.locals.data) as Media;

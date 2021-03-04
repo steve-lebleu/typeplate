@@ -7,8 +7,7 @@ process.env.CONTENT_TYPE = 'application/json';
 var { server, application } = require(process.cwd() + '/dist/api/app.bootstrap');
 
 const pkgInfo = require(process.cwd() +  '/package.json');
-
-import { expect } from 'chai';
+const expect = require('chai').expect;
 
 describe('Express application', () => {
 

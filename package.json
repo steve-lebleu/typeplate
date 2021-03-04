@@ -1,11 +1,11 @@
 {
-  "name": "ts-express-typeorm-boilerplate",
+  "version": "1.0.5",
   "engines": {
     "node": ">=14.16"
   },
-  "version": "1.0.5",
   "author": "Steve Lebleu",
   "license": "MIT",
+  "name": "ts-express-typeorm-boilerplate",
   "description": "This repository contains REST API boilerplate Typescript / Express.js / TypeORM based.",
   "keywords": [
     "node",
@@ -43,7 +43,8 @@
     "todo-ci": "leasot -x --reporter markdown './src/**/*.ts' > TODO.md",
     "apidoc-ci": "apidoc -i src/ -o docs/apidoc/",
     "typedoc-ci": "typedoc --mode modules --name 'API documentation' --defaultCategory 'Root' --categorizeByGroup  --out ./docs/typedoc ./src",
-    "version": "auto-changelog -p && git add CHANGELOG.md"
+    "version": "auto-changelog -p && git add CHANGELOG.md",
+    "prepare": "husky install"
   },
   "_moduleAliases": {
     "@bases": "dist/api/types/classes",
@@ -115,6 +116,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsdoc": "^32.2.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
+    "husky": "^5.1.3",
     "leasot": "^8.0.0",
     "mocha": "^6.2.0",
     "nock": "^10.0.6",

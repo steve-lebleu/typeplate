@@ -1,6 +1,3 @@
-/* global describe,it,expect */
-/* eslint-env node, mocha */
-
 var { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 var { crypt } = require(process.cwd() + '/dist/api/utils/string.util');
 

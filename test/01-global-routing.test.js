@@ -1,6 +1,3 @@
-/* global describe,it,expect */
-/* eslint-env node, mocha */
-
 let { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 let request = require('supertest');
 

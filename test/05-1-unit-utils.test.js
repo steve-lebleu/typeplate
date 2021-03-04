@@ -1,6 +1,3 @@
-/* global describe,it,expect */
-/* eslint-env node, mocha */
-
 var expect = require('chai').expect;
 
 var UserSerializer = require(process.cwd() + '/dist/api/serializers/user.serializer');

@@ -1,5 +1,6 @@
 import { CREATED, NO_CONTENT } from 'http-status';
 import { getRepository, getCustomRepository } from 'typeorm';
+import { clone } from 'lodash';
 
 import { IMediaRequest } from '@interfaces/IMediaRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
@@ -84,8 +85,8 @@ class MediaController {
   @safe
   static async update(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
-    const media = res.locals.data as Media;
-    repository.merge(media, req.file);
+    const media = clone(res.locals.data) as Media;
+    repository.merge(media, req.files[0]);
     await repository.save(media);
     MEDIA_EVENT_EMITTER.emit('media.synchronized', res.locals.data as Media);
     res.locals.data = media;
@@ -103,7 +104,7 @@ class MediaController {
   @safe
   static async remove (req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
-    const media = res.locals.data as Media;
+    const media = clone(res.locals.data) as Media;
     await repository.remove(media);
     MEDIA_EVENT_EMITTER.emit('media.synchronized', res.locals.data as Media);
     res.status(NO_CONTENT);

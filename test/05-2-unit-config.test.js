@@ -1,6 +1,3 @@
-/* global describe,it,expect */
-/* eslint-env node, mocha */
-
 var { PassportConfiguration } = require(process.cwd() + '/dist/api/config/passport.config');
 var expect = require('chai').expect;
 

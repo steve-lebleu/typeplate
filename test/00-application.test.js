@@ -1,3 +1,6 @@
+/* global describe,it,expect */
+/* eslint-env node, mocha */
+
 process.env.NODE_ENV = 'test';
 process.env.ENVIRONMENT = 'test';
 process.env.ORIGIN = 'http://localhost:4200';

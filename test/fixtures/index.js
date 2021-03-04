@@ -1,2 +1,2 @@
 exports.user = require('./user');
-exports.document = require('./document');
+exports.media = require('./media');

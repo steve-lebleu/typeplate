@@ -1,3 +1,6 @@
+/* global describe,it,expect */
+/* eslint-env node, mocha */
+
 var { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 var { crypt } = require(process.cwd() + '/dist/api/utils/string.util');
 
@@ -9,7 +12,7 @@ var { clone } = require('lodash');
 var { expect } = require('chai');
 var { doRequest } = require(process.cwd() + '/test/utils');
 
-describe("Authentification routes", function () {
+describe('Authentification routes', function () {
   
   var agent, password, credentials, token, refreshToken, apikey;
   
@@ -45,7 +48,7 @@ describe("Authentification routes", function () {
     delete server;
   });
 
-  describe("Register", function() {
+  describe('Register', function() {
 
     it('POST /api/v1/auth/register 400 - empty payload', function (done) {
       doRequest(agent, 'post', '/api/v1/auth/register', null, null, {}, 400, function(err, res) {
@@ -98,7 +101,7 @@ describe("Authentification routes", function () {
 
   });
 
-  describe("Login", function() {
+  describe('Login', function() {
 
     it('POST /api/v1/auth/login 400 - empty payload', function (done) {
       doRequest(agent, 'post', '/api/v1/auth/login', null, null, {}, 400, function(err, res) {
@@ -116,8 +119,8 @@ describe("Authentification routes", function () {
       });
     });
 
-    it('POST /api/v1/auth/login 404 - API key not found', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { apikey: 'fake' + credentials.apikey }, 404, function(err, res) {
+    it('POST /api/v1/auth/login 401 - Bad API key', function (done) {
+      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { apikey: 'fake' + credentials.apikey }, 401, function(err, res) {
         expect(res.statusCode).to.eqls(404);
         done();
       });
@@ -168,7 +171,7 @@ describe("Authentification routes", function () {
     
   });
 
-  describe("Refresh token", function() {
+  describe('Refresh token', function() {
 
     it('POST /api/v1/auth/refresh-token 400 - empty payload', function (done) {
       doRequest(agent, 'post', '/api/v1/auth/refresh-token', null, null, {}, 400, function(err, res) {
@@ -202,7 +205,7 @@ describe("Authentification routes", function () {
     
   });
 
-  describe("Oauth Google", function() {
+  describe('Oauth Google', function() {
 
     it('POST /api/v1/auth/google 400 - empty payload', function (done) {
       doRequest(agent, 'post', '/api/v1/auth/google', null, null, {}, 400, function(err, res) {
@@ -213,7 +216,7 @@ describe("Authentification routes", function () {
 
   });
 
-  describe("Oauth Facebook", function() {
+  describe('Oauth Facebook', function() {
 
     it('POST /api/v1/auth/facebook 400 - empty payload', function (done) {
       doRequest(agent, 'post', '/api/v1/auth/facebook', null, null, {}, 400, function(err, res) {

@@ -2,6 +2,8 @@ var { expect } = require('chai');
 var { isDate } = require('util');
 var { existsSync }= require('fs');
 
+var Util = require('util');
+
 var prefix = 'api';
 var version = 'v1';
 
@@ -101,19 +103,19 @@ exports.dataOk = (res, entity, method) => {
         expect(res.body.role).to.be.oneOf(['admin', 'user'])
         expect(res.body.createdAt).to.be.a('string');
         expect(res.body.createdAt).satisfy(function(value) {
-          return isDate(new Date(value));
+          return Util.types.isDate(new Date(value));
         });
         if(method === 'update') {
           expect(res.body.updatedAt).satisfy(function(value) {
-            return isDate(new Date(value));
+            return Util.types.isDate(new Date(value));
           });
         }
       }
     },
     {
-      name: 'document',
+      name: 'media',
       expect: () => {
-        expect(res.body).to.have.all.keys(['id', 'fieldname', 'filename', 'path', 'mimetype', 'size', 'createdAt', 'updatedAt']);
+        expect(res.body).to.have.all.keys(['id', 'fieldname', 'filename', 'path', 'mimetype', 'size', 'url', 'createdAt', 'updatedAt']);
         expect(res.body.id).to.be.a('number');
         expect(res.body.fieldname).to.be.a('string');
         expect(res.body.filename).to.be.a('string');
@@ -123,11 +125,11 @@ exports.dataOk = (res, entity, method) => {
         expect(res.body.size).to.be.a('number');
         expect(res.body.createdAt).to.be.a('string');
         expect(res.body.createdAt).satisfy(function(value) {
-          return isDate(new Date(value));
+          return Util.types.isDate(new Date(value));
         });
         if(method === 'update') {
           expect(res.body.updatedAt).satisfy(function(value) {
-            return isDate(new Date(value));
+            return Util.types.isDate(new Date(value));
           });
         }  
       }

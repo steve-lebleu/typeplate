@@ -1,7 +1,10 @@
+/* global describe,it,expect */
+/* eslint-env node, mocha */
+
 var expect = require('chai').expect;
 
 var UserSerializer = require(process.cwd() + '/dist/api/serializers/user.serializer');
-var DocumentSerializer = require(process.cwd() + '/dist/api/serializers/document.serializer');
+var MediaSerializer = require(process.cwd() + '/dist/api/serializers/media.serializer');
 
 var error = {}; error.util = require(process.cwd() + '/dist/api/utils/error.util');
 var serializer = {}; serializer.util = require(process.cwd() + '/dist/api/utils/serializing.util');
@@ -20,37 +23,7 @@ describe("Units tests", function () {
   describe("Utils", function() {
 
     describe("Errors", function() {
-
-      it("checkMySQLError() returns Boom conflict", function(done) {
-        const err = { name: 'QueryFailedError', errno: 1052, sqlMessage: "Duplicate entry 'lambda' for key 'IDX_78a916df40e02a9deb1c4b75ed'" };
-        const result = error.util.checkMySQLError( err );
-        expect(result.isBoom).to.eqls(true);
-        expect(result.output.statusCode).to.eqls(409);
-        done();
-      });
-
-      it("checkMySQLError() returns Boom not found", function(done) {
-        const err = { name: 'EntityNotFound', sqlMessage: "Entity 'lambda' not found" };
-        const result = error.util.checkMySQLError( err );
-        expect(result.isBoom).to.eqls(true);
-        expect(result.output.statusCode).to.eqls(404);
-        done();
-      });
-
-      it("checkMySQLError() pass as is error", function(done) {
-        const err = new Error({ name: 'Error', message: "A simple error message" });
-        const result = error.util.checkMySQLError( err );
-        expect(result.name).to.eqls('Error');
-        done();
-      });
-
-      it("getErrorColumnName() returns a single word as the good column name", function(done) {
-        const err = { name: 'QueryFailedError', errno: 1052, sqlMessage: "Duplicate entry 'lambda' for key 'IDX_78a916df40e02a9deb1c4b75ed'" };
-        const result = error.util.getErrorColumnName(err);
-        expect(result).to.eqls('lambda');
-        done();
-      });
-
+      
       it("getErrorStatusCode() returns a 500 status if argument error don't match", function(done) {
         const err = { name: 'QueryFailedError', errno: 1052, sqlMessage: "Duplicate entry 'lambda' for key 'IDX_78a916df40e02a9deb1c4b75ed'" };
         const result = error.util.getErrorStatusCode(err);
@@ -79,10 +52,10 @@ describe("Units tests", function () {
         done();
       });
 
-      it("getSerializer() returns Document serializer", function(done) {
-        const serializerName = 'Document';
+      it("getSerializer() returns Media serializer", function(done) {
+        const serializerName = 'Media';
         const result = serializer.util.getSerializer( serializerName );
-        expect(result).to.be.instanceOf(DocumentSerializer.constructor);
+        expect(result).to.be.instanceOf(MediaSerializer.constructor);
         done();
       });
 

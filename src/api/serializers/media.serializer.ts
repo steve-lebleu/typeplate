@@ -1,5 +1,6 @@
 import { Serializer } from '@bases/serializer.class';
 import { whitelist as UserWhitelist } from '@whitelists/user.whitelist';
+import { whitelist as MediaWhitelist } from '@whitelists/media.whitelist';
 import { getRepository } from 'typeorm';
 import { User } from '@models/user.model';
 
@@ -9,16 +10,7 @@ import { User } from '@models/user.model';
 export class MediaSerializer extends Serializer {
 
   constructor() {
-    super('documents', [
-        'id',
-        'fieldname',
-        'filename',
-        'path',
-        'mimetype',
-        'size',
-        'owner',
-        'createdAt'
-      ],
+    super('medias', MediaWhitelist,
     {
       user: {
         ref: 'id',

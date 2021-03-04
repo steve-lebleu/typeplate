@@ -9,13 +9,13 @@ import { badImplementation } from 'boom';
 import { jwtSecret, jwtExpirationInterval } from '@config/environment.config';
 import { ROLE } from '@enums/role.enum';
 import { Media } from '@models/media.model';
-import { IModelize } from '@interfaces/IModelize.interface';
+import { IModel } from '@interfaces/IModel.interface';
 import { whitelist } from '@whitelists/user.whitelist';
-import { filter } from '@utils/serializing.util';
+import { sanitize } from '@utils/serializing.util';
 import { crypt } from '@utils/string.util';
 
 @Entity()
-export class User implements IModelize {
+export class User implements IModel {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -135,8 +135,8 @@ export class User implements IModelize {
   /**
    * @description Filter on allowed entity fields
    */
-  public whitelist(): IModelize {
-    return filter(whitelist, this);
+  public whitelist(): Record<string,unknown> {
+    return sanitize(whitelist, this);
   }
 
 }

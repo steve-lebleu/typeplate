@@ -4,6 +4,8 @@ import { badData, expectationFailed } from 'boom';
 import { getSerializer } from '@utils/serializing.util';
 import { APPLICATION_MIME_TYPE } from '@enums/mime-type.enum';
 import { IResponse } from '@interfaces/IResponse.interface';
+import { IJsonApiRequest } from '@interfaces/IJsonApiRequest.interface';
+import { IModel } from '@interfaces/IModel.interface';
 
 /**
  * Serializing middleware
@@ -34,7 +36,12 @@ export class Serializer {
 
       // If we are in mode application/json, we whitelist only as pseudo serializing
       if (process.env.CONTENT_TYPE === APPLICATION_MIME_TYPE['application/json']) {
-        res.locals.data = Array.isArray(res.locals.data) ? res.locals.data.map( (data: any) => data.whitelist() ) : res.locals.data.whitelist();
+        if (Array.isArray(res.locals.data)) {
+          res.locals.data = res.locals.data.map( (data: { whitelist: () => Record<string,unknown> } ) => data.whitelist() );
+        } else {
+          res.locals.data = res.locals.data as IModel;
+          res.locals.data = res.locals.data.whitelist();
+        }
         return next();
       }
 
@@ -45,7 +52,7 @@ export class Serializer {
       const serializer = getSerializer(typeOf.name);
 
       // Serialize and set the result on res.locals.data
-      res.locals.data = await serializer.serialize(res.locals.data);
+      res.locals.data = serializer.serialize(res.locals.data);
 
       next();
 
@@ -61,7 +68,7 @@ export class Serializer {
    * @param res Express Response instance
    * @param next Callback function
    */
-  static deserialize = async (req: Request, res: Response, next: (error?: Error) => void): Promise<void> => {
+  static deserialize = async (req: IJsonApiRequest, res: IResponse, next: (error?: Error) => void): Promise<void> => {
 
     // If we are in application/json, we next
     if ( process.env.CONTENT_TYPE === APPLICATION_MIME_TYPE['application/json'] ) {
@@ -75,12 +82,12 @@ export class Serializer {
 
     // If method need payload but payload is not found according to vnd.api+json format
     if ( !req.body.data ) {
-      return next( badData('Malformed payload: data attribute not found') )
+      return next( badData('Bad formed payload: data attribute not found') )
     }
 
     try {
       const serializer = getSerializer(req.body.data[0].type);
-      req.body = await serializer.deserialize(req);
+      req.body = serializer.deserialize(req) as unknown;
       next();
     } catch (e) {
       next( e );

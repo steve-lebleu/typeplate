@@ -19,18 +19,21 @@ import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
 import { MEDIA_EVENT_EMITTER } from '@events/media.event';
 
 interface IMulter {
-  diskStorage: ( { destination, filename } ) => void;
-  any: () => void;
-  single: () => void;
+  diskStorage: ( { destination, filename } ) => IStorage;
+  any: () => ( req, res, next ) => void;
 }
 
+interface IStorage {
+  getFilename: () => string;
+  getDestination: () => string;
+}
 
 /**
  * File upload middleware
  */
 export class Uploader {
 
-  static instance: IMulter = Multer as IMulter;
+  static instance: (options?) => IMulter;
 
   /**
    * @description Default options
@@ -55,6 +58,10 @@ export class Uploader {
    */
   static upload = ( options?: IUploadOptions ) => (req: IMediaRequest, res: IResponse, next: (error?: Error) => void): void => {
 
+    if (!Uploader.instance) {
+      Uploader.instance = Multer as (options?) => IMulter
+    }
+
     const opts = options ? Object.keys(options)
       .filter(key => Uploader.default[key])
       .reduce((acc: IUploadOptions, current: string) => {
@@ -62,7 +69,7 @@ export class Uploader {
         return acc;
       }, Uploader.default) : Uploader.default;
 
-    const middleware = Uploader.instance( Uploader.cfg(opts) ).any() as (req, res, err) => void;
+    const middleware = Uploader.instance( Uploader.configuration(opts) ).any();
 
     middleware(req, res, (err: Error) => {
       if(err) {
@@ -88,11 +95,34 @@ export class Uploader {
   }
 
   /**
+   * @description Set Multer instance
+   *
+   * @param destination Directory where file will be uploaded
+   * @param filesize Max file size authorized
+   * @param wildcards Array of accepted mime types
+   */
+  private static configuration( options?: IUploadOptions ): IUploadMulterOptions {
+    return {
+      storage: Uploader.storage(options.destination),
+      limits: {
+        fileSize: options.filesize
+      },
+      fileFilter: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
+        if(options.wildcards.filter( mime => file.mimetype === mime ).length === 0) {
+          return next( unsupportedMediaType('File mimetype not supported'), false );
+        }
+        return next(null, true);
+      }
+    };
+  }
+
+  /**
    * @description Set storage config
    * @param destination As main destination
    */
-  private static storage(destination?: string): void {
-    return Uploader.instance.diskStorage({
+   private static storage(destination?: string): IStorage {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return Multer.diskStorage({
       destination: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
         let towards = `${destination}/${Pluralize(fieldname(file.mimetype)) as string}`;
         if (typeof IMAGE_MIME_TYPE[file.mimetype] !== 'undefined') {
@@ -111,31 +141,7 @@ export class Uploader {
           .concat(extension(file.originalname).toLowerCase());
         next(null, name);
       }
-    });
+    }) as IStorage;
   }
 
-  /**
-   * @description Set Multer instance
-   *
-   * @param destination Directory where file will be uploaded
-   * @param filesize Max file size authorized
-   * @param wildcards Array of accepted mime types
-   */
-  private static cfg( options?: IUploadOptions ): IUploadMulterOptions {
-    return {
-      storage: Uploader.storage(options.destination),
-      limits: {
-        fileSize: options.filesize
-      },
-      fileFilter: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
-        if(options.wildcards.filter( mime => file.mimetype === mime ).length === 0) {
-          return next( unsupportedMediaType('File mimetype not supported'), false );
-        }
-        if (file.size > upload.maxFileSize) {
-          return next( entityTooLarge(`File too large : max file size is ${upload.maxFileSize} 'ko`), false );
-        }
-        return next(null, true);
-      }
-    };
-  }
 }

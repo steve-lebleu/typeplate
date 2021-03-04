@@ -100,14 +100,7 @@ export class WinstonConfiguration {
       logger.add( new Winston.transports.Console(WinstonConfiguration.options.console) );
     }
 
-    logger.stream = {
-      write: (message: string): void => {
-        logger.info( message.trim() );
-      }
-    }
-
     WinstonConfiguration.logger = logger;
   }
-
 
 }

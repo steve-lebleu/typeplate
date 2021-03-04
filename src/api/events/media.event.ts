@@ -14,7 +14,7 @@ const MEDIA_EVENT_EMITTER: EventEmitter = new EventEmitter();
 
 MEDIA_EVENT_EMITTER.on('media.synchronized', (media: Media) => {
   const ulink = promisify(unlink) as (path: string) => Promise<void|Error>;
-  if (!media.mimetype.includes('image')) { // TODO changer le test
+  if (!media.mimetype.includes('image')) { // TODO Change test
     void ulink(media.path.toString());
   } else {
     void Promise.all( [ulink(media.path.toString())].concat(SIZES.map(size => ulink(media.path.toString().replace('master-copy', `rescale/${size}`)) ) ) )

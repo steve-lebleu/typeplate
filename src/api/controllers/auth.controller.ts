@@ -25,15 +25,10 @@ export class AuthController {
    */
   @safe
   static async register(req: Request, res: IResponse): Promise<void> {
-    console.log('--- REGISTER');
     const repository = getRepository(User);
-    console.log('--- REPOSITORY')
     const user = new User(req.body);
-    console.log('--- USER')
     await repository.insert(user);
-    console.log('--- INSERT')
     const token = await generateTokenResponse(user, user.token());
-    console.log('--- TOKEN')
     res.status(CREATED);
     res.locals.data = { token, user: user.whitelist() as unknown };
   }

@@ -5,7 +5,6 @@ import { UploadError } from '@errors/upload-error';
 export class ErrorFactory {
   constructor() {}
   static get(error: Error): Error {
-    console.log('ERROR FIRED', error)
     switch (error.name) {
       case 'QueryFailedError':
         return new MySQLError(error);

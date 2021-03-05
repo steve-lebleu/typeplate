@@ -32,7 +32,7 @@ export class MainController {
    */
   @safe
   static report = (req: Request, res: Response): any => {
-    Logger.log('error', req.body ? `CSP Violation: ${JSON.stringify(req.body)}` : 'CSP Violation', { label: 'CSP violation' });
+    Logger.log('error', req.body ? `CSP Violation: ${JSON.stringify(req.body)}` : 'CSP Violation');
     res.status(OK);
     res.end();
   };

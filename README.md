@@ -25,6 +25,7 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
   * [File upload](#file-upload)
   * [Validation](#validation)
   * [Security](#security)
+  * [Logs](#logs)
   * [Entity generation](#entity-generation)
 * [Getting started](#getting-started)
   * [Install](#install)
@@ -69,6 +70,12 @@ You can define your own globals validation settings in dedicated [config file](h
 ### Security
 
 Some classic features are implemented with [CORS](https://expressjs.com/en/resources/middleware/cors.html), [Helmet](https://helmetjs.github.io/), [Hpp](https://www.npmjs.com/package/hpp) and [Express rate limit](https://www.npmjs.com/package/express-rate-limit).
+
+#### Logs
+
+Simple logs management is provided, principaly based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
+
+See dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/config/winston.config.ts).
 
 ### Entity generation
 
@@ -209,14 +216,6 @@ If you will use Typeorm as CLI, update also the *ormconfig.json* file and fill i
 ```
 
 More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeorm cli](https://typeorm.io/#/using-cli/installing-cli).
-
-
-
-#### Logs
-
-Simple logs management is provided, principaly based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
-
-You can configure main parameters in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/config/winston.config.ts).
 
 ### Compile
 

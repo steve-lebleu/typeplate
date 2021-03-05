@@ -64,7 +64,7 @@ export class MySQLError implements Error, IHTTPError {
       case 1052:
         return { statusCode: 409, statusText: HTTP_STATUS['409_NAME'], error: message }
       case 1062:
-        return { statusCode: 409, statusText: HTTP_STATUS['409_NAME'], error: message }
+        return { statusCode: 409, statusText: HTTP_STATUS['409_NAME'], error: message } // `Duplicate entry for ${/\'[a-z]{1,}\./.exec(message)[0].slice(1, -1).trim()}` not working in CI with MySQL < 8
       case 1452:
         return { statusCode: 409, statusText: HTTP_STATUS['409_NAME'], error: message }
       case 1364:

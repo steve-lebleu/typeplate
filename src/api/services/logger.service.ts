@@ -19,11 +19,11 @@ export class Logger {
    * @param message
    * @param scope
    */
-  static log(level: string, message: string, scope: { label: string } ): void {
+  static log(level: string, message: string ): void {
     if ( !Logger.instance ) {
-      Logger.instance =  WinstonConfiguration.get()
+      Logger.instance = WinstonConfiguration.get()
     }
-    Logger.instance[level](message, scope.label);
+    Logger.instance[level](message);
   }
 
   static get stream(): any {
@@ -31,8 +31,8 @@ export class Logger {
       Logger.instance = WinstonConfiguration.get()
     }
     return {
-      write:(message) => {
-        Logger.instance.info(message);
+      write:(message: string) => {
+        Logger.instance.info(message.substring(0, message.lastIndexOf('\n')));
       }
     }
   }

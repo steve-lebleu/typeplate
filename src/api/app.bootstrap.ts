@@ -7,7 +7,6 @@
 // TODO: Refactoring testing, prettier fixtures
 // TODO: Refactoring config files (especialy env), types files
 // TODO: Modular architecture
-// TODO: Better logs management. Adapt / add transports
 // TODO: Jimp features
 // TODO: Media fieldname management
 // TODO: Fallback on upload -> delete file when data is not saved
@@ -15,6 +14,10 @@
 // FIXME: Hooks husky
 // FIXME: Jimp config must be splitted however IsActive is created as directory
 // TODO: Manage changelog
+// TODO: Update coverage path, impact ci/cd path
+// TODO: Update doc api + typedoc. Set Api doc as link on Github ?
+// TODO: Update npm dependencies
+// TODO: readme explain env variables
 
 require('module-alias/register');
 
@@ -36,7 +39,7 @@ const application = new ExpressConfiguration( Express() ).get();
 const HTTPServer = ServerConfiguration.server(application);
 
 const server = HTTPServer.listen(port, () => {
-    Logger.log('info', `HTTP(S) server is now running on port ${port} (${env})`, { label: 'Server' } );
+    Logger.log('info', `HTTP(S) server is now running on port ${port} (${env})`);
 });
 
 export { application, server };

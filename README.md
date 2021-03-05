@@ -1,10 +1,10 @@
 # Typescript / Express.js / Typeorm RESTful API boilerplate
 
-[![Node](https://img.shields.io/badge/Node-14.16.0-lightgrey)](https://nodejs.org/docs/latest-v14.x/api/index.html)
-[![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-lightgrey)](https://www.typescriptlang.org/)
-[![Express](https://img.shields.io/badge/Express-4.16.4-lightgrey)](https://expressjs.com/)
-[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-lightgrey)](https://typeorm.io/#/)
-[![Mocha](https://img.shields.io/badge/Mocha-8.0.3-lightgrey)](https://mochajs.org)
+[![Node](https://img.shields.io/badge/Node-14.16.0-informational)](https://nodejs.org/docs/latest-v14.x/api/index.html)
+[![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-informational)](https://www.typescriptlang.org/)
+[![Express](https://img.shields.io/badge/Express-4.16.4-informational)](https://expressjs.com/)
+[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-informational)](https://typeorm.io/#/)
+[![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational)](https://mochajs.org)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
 [![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)

@@ -64,8 +64,6 @@ describe('Media routes', function () {
 
   it('POST /api/v1/medias 201 - image - file(s) exists + data ok', function (done) {
     doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'image', path: process.cwd() + '/test/fixtures/files/javascript.jpg' }, 201, function(err, res) {
-      console.log('ERROR', err);
-      console.log('RES', res.body)
       expect(res.statusCode).to.eqls(201);
       expect(res.body).to.be.an('array');
       expect(res.body).satisfy(function(value) {

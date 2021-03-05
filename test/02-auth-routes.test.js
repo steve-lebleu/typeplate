@@ -36,7 +36,6 @@ describe('Authentification routes', function () {
       done(e);
     }
     
-
   });
   
   after(function () {

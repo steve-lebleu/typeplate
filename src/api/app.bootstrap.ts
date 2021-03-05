@@ -1,3 +1,21 @@
+// TODO: Finalize ESLint compliance
+// TODO: Define roadmap
+// TODO: Git flow, tags
+// TODO: Email sending
+// TODO: Serializing and JSONAPI support. Implements or remove
+// TODO: Unit testing and coverage
+// TODO: Refactoring testing, prettier fixtures
+// TODO: Refactoring config files (especialy env), types files
+// TODO: Modular architecture
+// TODO: Better logs management. Adapt / add transports
+// TODO: Jimp features
+// TODO: Media fieldname management
+// TODO: Fallback on upload -> delete file when data is not saved
+// TODO: Media expose User critical data
+// FIXME: Hooks husky
+// FIXME: Jimp config must be splitted however IsActive is created as directory
+// TODO: Manage changelog
+
 require('module-alias/register');
 
 import * as Express from 'express';

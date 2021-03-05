@@ -58,8 +58,6 @@ export class Uploader {
    */
   static upload = ( options?: IUploadOptions ) => (req: IMediaRequest, res: IResponse, next: (error?: Error) => void): void => {
 
-    console.log('UPLOAD');
-
     if (!Uploader.instance) {
       Uploader.instance = Multer as (options?) => IMulter
     }
@@ -72,17 +70,13 @@ export class Uploader {
       }, Uploader.default) : Uploader.default;
 
     const middleware = Uploader.instance( Uploader.configuration(opts) ).any();
-      
-    console.log('MIDDLEWARE IS SET');
+
     middleware(req, res, (err: Error) => {
       if(err) {
-        console.log('UPLOADER MIDDLEWARE ERROR', err)
         return next(new UploadError(err));
       } else if (typeof req.files === 'undefined') {
-        console.log('BINARY DATA NOT FOUND')
         return next(new UploadError(new Error('Binary data cannot be found')));
       }
-      console.log('NO ERROR IN MIDDLEWARE UPLOAD')
       req.body.files = req.files
         .slice(0, opts.maxFiles)
         .map( ( media: IMedia ) => {

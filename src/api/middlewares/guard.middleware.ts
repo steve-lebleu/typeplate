@@ -29,7 +29,7 @@ export class Guard {
    *
    * @param roles
    */
-  static authorize = (roles = list(ROLE)) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void)  => authenticate( 'jwt', { session: false }, Guard.handleJWT(req, res, next, roles) ) (req, res, next);
+  static authorize = (roles = list(ROLE)) => (req, res, next) => authenticate( 'jwt', { session: false }, Guard.handleJWT(req, res, next, roles) ) (req, res, next);
 
   /**
    * @description Authorize user access according to service.access_token
@@ -45,7 +45,7 @@ export class Guard {
    * @param next Callback function
    * @param roles Authorized roles
    */
-  private static handleJWT = (req: IUserRequest, res: IResponse, next: (error?: Error) => void, roles: string|string[]) => async (err: Error, user: User, info: string) => {
+  private static handleJWT = (req: IUserRequest, res: Response, next: (error?: Error) => void, roles: string|string[]) => async (err: Error, user: User, info: string) => {
 
     const error = err || info;
     const logIn = promisify(req.logIn) as ( user, { session } ) => Promise<void>;

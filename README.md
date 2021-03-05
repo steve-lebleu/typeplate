@@ -50,21 +50,21 @@ Full authentication process is principaly based on [passport.js](http://www.pass
 
 ### File upload
 
-Files can be managed as [Documents](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/models/document.model.ts) entities, and uploaded
+Files can be managed as [Medias](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/models/media.model.ts) entities, and uploaded
 with [Uploader](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/middlewares/uploader.middleware.ts) middleware, on [Multer](https://www.npmjs.com/package/multer) and [Jimp](https://www.npmjs.com/package/jimp) based.
 
-* Document creation
+* Media creation
 * Single upload
 * Multiple uploads
 * Image resizing
 
-You can set options on each route, or by default in .env files. By default, upload middleware is only plugged on [document router](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/routes/v1/document.route.ts), but it can be used on other routes, with or without Document creation.
+You can set options on each route, or by default in .env files. By default, upload middleware is only plugged on [media router](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/routes/v1/media.route.ts), but it can be used on other routes, with or without Media creation.
 
 ### Validation
 
-Route validation is implemented with [express-validator](https://github.com/express-validator/express-validator), [express-validation](https://www.npmjs.com/package/express-validation) and [Joi](https://github.com/hapijs/joi).
+Route validation is implemented with [express-validation](https://www.npmjs.com/package/express-validation) and [Joi](https://github.com/hapijs/joi).
 
-You can define your own globals validation settings in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/validation.config.ts). This file wrap express-validator and provide it to the validation middleware, which is used on routes to validate.
+You can define your own globals validation settings in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/config/validation.config.ts). This file wrap express-validator and provide it to the validation middleware, which is used on routes to validate.
 
 ### Security
 
@@ -216,7 +216,7 @@ More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeo
 
 Simple logs management is provided, principaly based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
 
-You can configure main parameters in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/config/winston.config.ts).
+You can configure main parameters in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/config/winston.config.ts).
 
 ### Compile
 

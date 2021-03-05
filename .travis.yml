@@ -8,12 +8,13 @@ jobs:
   include:
     - script: COVERALLS_FLAG_NAME=test-1 make test-coveralls-1
     - script: COVERALLS_FLAG_NAME=test-2 make test-coveralls-2
-notifications:
-  webhooks: https://coveralls.io/webhook
 services: mysql
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS ts_express_boilerplate_test;'
-script: mkdir -p ./dist/logs ./dist/uploads/archives ./dist/uploads/documents ./dist/uploads/images/master-copy ./dist/uploads/images/rescale/extra-small ./dist/uploads/images/rescale/medium ./dist/uploads/images/rescale/extra-large && cp -r ./src/env ./dist/ && npm i typescript -g && npm i typeorm -g && npm i && tsc && typeorm schema:sync && env ENVIRONMENT=test env RUNNER=travis ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000
+script: mkdir -p ./dist/logs ./dist/public/archives ./dist/public/documents ./dist/public/audios ./dist/public/videos ./dist/public/images/master-copy ./dist/public/images/rescale/xs ./dist/public/images/rescale/sm ./dist/public/images/rescale/md ./dist/public/images/rescale/lg ./dist/public/images/rescale/xl && cp -r ./src/env ./dist/ && npm i typescript -g && npm i typeorm -g && npm i && tsc && typeorm schema:sync && env ENVIRONMENT=test env RUNNER=travis ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000
+after_success: npm run coverage
+notifications:
+  webhooks: https://coveralls.io/webhook
 cache:
   directories:
     - "node_modules"

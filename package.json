@@ -44,8 +44,7 @@
     "todo-ci": "leasot -x --reporter markdown './src/**/*.ts' > TODO.md",
     "apidoc-ci": "apidoc -i src/ -o docs/apidoc/",
     "typedoc-ci": "typedoc --mode modules --name 'API documentation' --defaultCategory 'Root' --categorizeByGroup  --out ./docs/typedoc ./src",
-    "version": "auto-changelog -p && git add CHANGELOG.md",
-    "prepare": "husky install"
+    "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "_moduleAliases": {
     "@bases": "dist/api/types/classes",

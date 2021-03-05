@@ -45,7 +45,7 @@ export class Catcher {
    * @param next Callback function
    */
   static log = (err: Error, req: Request, res: Response, next: (e: Error, req, res) => void): void => {
-    Logger.log('error', `${req.method} ${req.url} ${getErrorStatusCode(err)}: ${err.message} \n ${err.stack}`, { label: 'Application' });
+    Logger.log('error', `${req.headers['x-forwarded-for'] as string || req.connection.remoteAddress} HTTP/${req.httpVersion} ${getErrorStatusCode(err)} ${req.method} ${req.url} \n ${err.stack}`);
     next(err, req, res);
   };
 

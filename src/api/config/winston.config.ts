@@ -16,15 +16,10 @@ export class WinstonConfiguration {
   private static logger: WinstonLogger;
 
   /**
-   * @description Output directory
-   */
-  private static output = env === 'test' ? 'test' : 'dist';
-
-  /**
    * @description Output format
    */
   private static formater = format.printf( ( { level, message, label, timestamp } ) => {
-    return `${timestamp as string} [${level}] ${label as string} : ${message}`;
+    return `${timestamp as string} [${level}] ${message}`;
   });
 
   /**
@@ -37,7 +32,7 @@ export class WinstonConfiguration {
         format.timestamp(),
         WinstonConfiguration.formater
       ),
-      filename: `${process.cwd()}/${WinstonConfiguration.output}/logs/error.log`,
+      filename: `${process.cwd()}/dist/logs/error.log`,
       handleException: true,
       json: true,
       maxSize: 5242880, // 5MB
@@ -50,7 +45,7 @@ export class WinstonConfiguration {
         format.timestamp(),
         WinstonConfiguration.formater
       ),
-      filename: `${process.cwd()}/${WinstonConfiguration.output}/logs/combined.log`,
+      filename: `${process.cwd()}/dist/logs/combined.log`,
       handleException: false,
       json: true,
       maxSize: 5242880, // 5MB

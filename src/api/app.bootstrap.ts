@@ -39,7 +39,7 @@ const application = new ExpressConfiguration( Express() ).get();
 const HTTPServer = ServerConfiguration.server(application);
 
 const server = HTTPServer.listen(port, () => {
-    Logger.log('info', `HTTP(S) server is now running on port ${port} (${env})`, { label: 'Server' } );
+    Logger.log('info', `HTTP(S) server is now running on port ${port} (${env})`);
 });
 
 export { application, server };

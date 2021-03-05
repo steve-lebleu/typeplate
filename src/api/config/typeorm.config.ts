@@ -34,11 +34,11 @@ export class TypeormConfiguration {
         logging: false
       })
       .then( (connection: Connection) => {
-        Logger.log('info', `Connection to MySQL server established on port ${typeorm.port} (${env})`, { label: 'MySQL' });
+        Logger.log('info', `Connection to MySQL server established on port ${typeorm.port} (${env})`);
         resolve(connection);
       })
       .catch( (error: Error) => {
-        Logger.log('error', error.message, { label: 'MySQL' });
+        Logger.log('error', error.message);
         reject(error);
       });
     });

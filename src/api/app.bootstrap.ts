@@ -7,7 +7,7 @@
 // TODO: Refactoring testing, prettier fixtures
 // TODO: Refactoring config files (especialy env), types files
 // TODO: Modular architecture
-// TODO: Better logs management. Adapt / add transports
+// TODO: Better logs management. Adapt / add transports with Winston
 // TODO: Jimp features
 // TODO: Media fieldname management
 // TODO: Fallback on upload -> delete file when data is not saved
@@ -15,6 +15,9 @@
 // FIXME: Hooks husky
 // FIXME: Jimp config must be splitted however IsActive is created as directory
 // TODO: Manage changelog
+// TODO: Update coverage path, impact ci/cd path
+// TODO: Update doc api + typedoc. Set Api doc as link on Github ?
+// TODO: Update npm dependencies
 
 require('module-alias/register');
 

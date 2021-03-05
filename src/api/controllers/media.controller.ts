@@ -64,10 +64,15 @@ class MediaController {
    */
   @safe
   static async create(req: IMediaRequest, res: IResponse): Promise<void> {
+    console.log('--- CREATE')
     const repository = getRepository(Media);
+    console.log('--- REPOSITORY')
     const medias = [].concat(req.files).map( (file) => new Media(file));
+    console.log('--- MEDIAS')
     await repository.save(medias);
+    console.log('--- SAVED')
     res.status( CREATED );
+    console.log('--- STATUS SET')
     res.locals.data = medias;
   }
 

@@ -207,7 +207,7 @@ const typeorm = ((args: Record<string,unknown>, environment: string) => {
   if(!args.TYPEORM_USER) {
     throw new Error('TYPEORM_USER not found. Please fill it in your .env file to define the user of the database.');
   }
-  if(!args.TYPEORM_PWD && environment !== ENVIRONMENT.test) {
+  if(!args.TYPEORM_PWD && ![ENVIRONMENT.test, ENVIRONMENT.development].includes(environment as ENVIRONMENT)) {
     throw new Error('TYPEORM_PWD not found. Please fill it in your .env file to define the password of the database.');
   }
   return Object.freeze({

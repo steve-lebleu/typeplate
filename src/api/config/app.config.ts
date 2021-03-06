@@ -12,14 +12,14 @@ import { notAcceptable } from 'boom';
 
 import { ENVIRONMENT } from '@enums/environment.enum';
 
-import { httpLogs, authorized, version, env, contentType } from '@config/environment.config';
+import { logs, authorized, version, env, contentType } from '@config/environment.config';
 import { HelmetConfiguration } from '@config/helmet.config';
 import { PassportConfiguration } from '@config/passport.config';
 
 import { Logger } from '@services/logger.service';
 import { ProxyRouter } from '@services/proxy-router.service';
 
-import { Header } from '@middlewares/header.middleware';
+import { Cors as Kors } from '@middlewares/cors.middleware';
 import { Serializer } from '@middlewares/serializer.middleware';
 import { Resolver } from '@middlewares/resolver.middleware';
 import { Catcher } from '@middlewares/catcher.middleware';
@@ -65,7 +65,7 @@ export class ExpressConfiguration {
     /**
      * First, before all : check headers validity
      */
-    this.instance.use( Header.check(contentType) );
+    this.instance.use( Kors.check(contentType) );
 
     /**
      * Expose body on req.body
@@ -116,11 +116,10 @@ export class ExpressConfiguration {
 
     /**
      * Request logging with Morgan
-     * dev : console | production : file
      *
      * @see https://github.com/expressjs/morgan
      */
-    this.instance.use( Morgan(httpLogs, { stream: this.options.stream } ) );
+    this.instance.use( Morgan(logs.token, { stream: this.options.stream } ) );
 
     /**
      * Configure API Rate limit

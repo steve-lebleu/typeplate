@@ -48,8 +48,6 @@ const url                   = process.env.URL;
 const authorized            = process.env.AUTHORIZED;
 const jwtSecret             = process.env.JWT_SECRET;
 const jwtExpirationInterval = process.env.JWT_EXPIRATION_MINUTES;
-const logs                  = process.env.NODE_ENV === 'production' ? 'combined' : 'development';
-const httpLogs              = process.env.NODE_ENV === 'production' ? 'combined' : 'dev';
 const contentType           = process.env.CONTENT_TYPE;
 const typeorm               = {
   type: process.env.TYPEORM_TYPE,
@@ -63,7 +61,7 @@ const typeorm               = {
   log: !!process.env.TYPEORM_LOG,
 };
 const upload                = {
-  path: process.cwd() + '/dist/' + process.env.UPLOAD_PATH,
+  path: `${process.cwd()}/dist/${process.env.UPLOAD_PATH}`,
   maxFileSize: parseInt(process.env.UPLOAD_MAX_FILE_SIZE, 10),
   wildcards: MIME_TYPE as string[],
   maxFiles: parseInt(process.env.UPLOAD_MAX_FILES, 10)
@@ -81,5 +79,9 @@ const ssl                 = {
   key: process.env.HTTPS_KEY,
   cert: process.env.HTTPS_CERT
 };
+const logs                = {
+  token: process.env.NODE_ENV === 'production' ? 'combined' : process.env.LOGS_MORGAN_TOKEN,
+  path: `${process.cwd()}/dist/${process.env.LOGS_PATH}`
+};
 
-export { env, port, url, authorized, contentType, ssl, jwtSecret, jwtExpirationInterval, version, logs, httpLogs, typeorm, upload, jimp };
+export { env, port, url, authorized, contentType, ssl, jwtSecret, jwtExpirationInterval, version, logs, typeorm, upload, jimp };

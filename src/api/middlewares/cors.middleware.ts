@@ -3,9 +3,9 @@ import { Request, Response } from 'express';
 import { APPLICATION_MIME_TYPE } from '@enums/mime-type.enum';
 
 /**
- * Header validation middleware
+ * Cors validation middleware
  */
-export class Header {
+export class Cors {
 
   constructor() {}
 
@@ -19,7 +19,7 @@ export class Header {
    */
   static check = (contentType: string) => (req: Request, res: Response, next: (e?: Error) => void): void => {
     if (!req.headers['content-type']) {
-      return next( notAcceptable(`Content-Type headersssss must be ${contentType} or 'multipart/form-data, ${req.headers['content-type']} given`) );
+      return next( notAcceptable(`Content-Type headers must be ${contentType} or 'multipart/form-data', ${req.headers['content-type']} given`) );
     }
     if ( APPLICATION_MIME_TYPE[contentType] !== req.headers['content-type'] && req.headers['content-type'].lastIndexOf(APPLICATION_MIME_TYPE['multipart/form-data']) === -1 ) {
       return next( notAcceptable(`Content-Type head must be ${contentType} or 'multipart/form-data, ${req.headers['content-type']} given`) );

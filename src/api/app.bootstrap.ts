@@ -7,7 +7,6 @@
 // TODO: Refactoring testing, prettier fixtures
 // TODO: Refactoring config files (especialy env), types files
 // TODO: Modular architecture
-// TODO: Better logs management. Adapt / add transports with Winston
 // TODO: Jimp features
 // TODO: Media fieldname management
 // TODO: Fallback on upload -> delete file when data is not saved
@@ -18,6 +17,7 @@
 // TODO: Update coverage path, impact ci/cd path
 // TODO: Update doc api + typedoc. Set Api doc as link on Github ?
 // TODO: Update npm dependencies
+// TODO: readme explain env variables
 
 require('module-alias/register');
 

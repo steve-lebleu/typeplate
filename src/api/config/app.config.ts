@@ -12,7 +12,7 @@ import { notAcceptable } from 'boom';
 
 import { ENVIRONMENT } from '@enums/environment.enum';
 
-import { httpLogs, authorized, version, env, contentType } from '@config/environment.config';
+import { logs, authorized, version, env, contentType } from '@config/environment.config';
 import { HelmetConfiguration } from '@config/helmet.config';
 import { PassportConfiguration } from '@config/passport.config';
 
@@ -114,16 +114,12 @@ export class ExpressConfiguration {
     PassportUse('facebook', PassportConfiguration.factory('facebook'));
     PassportUse('google', PassportConfiguration.factory('google'));
 
-    Morgan.token('timed', ':remote-addr HTTP/:http-version :status :method :url :total-time[2]ms');
-
     /**
      * Request logging with Morgan
-     * dev : console | production : file
      *
      * @see https://github.com/expressjs/morgan
      */
-    // this.instance.use( Morgan(httpLogs, { stream: this.options.stream } ) );
-    this.instance.use( Morgan('timed', { stream: this.options.stream } ) );
+    this.instance.use( Morgan(logs.token, { stream: this.options.stream } ) );
 
     /**
      * Configure API Rate limit

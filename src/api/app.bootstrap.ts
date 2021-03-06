@@ -1,21 +1,21 @@
+// FIXME: Jimp config must be splitted however IsActive is created as directory
+// FIXME: Media expose User critical data
+
 // TODO: Finalize ESLint compliance
-// TODO: Define roadmap
-// TODO: Git flow, tags
 // TODO: Email sending
 // TODO: Serializing and JSONAPI support. Implements or remove
-// TODO: Unit testing and coverage
-// TODO: Refactoring testing, prettier fixtures
-// TODO: Refactoring config files (especialy env), types files
+// TODO: Unit testing, coverage (dest path lcov) and refactoring, prettify fixtures
 // TODO: Modular architecture
 // TODO: Jimp features
 // TODO: Media fieldname management
 // TODO: Fallback on upload -> delete file when data is not saved
-// TODO: Media expose User critical data
-// FIXME: Hooks husky
-// FIXME: Jimp config must be splitted however IsActive is created as directory
-// TODO: Manage changelog
-// TODO: Update coverage path, impact ci/cd path
 // TODO: Update doc api + typedoc. Set Api doc as link on Github ?
+// TODO: Refactoring typing for more simplicity and consistence
+
+// FIXME: Hooks husky
+// TODO: Refactoring config files (especialy env)
+// TODO: Define roadmap
+// TODO: Manage changelog
 // TODO: Update npm dependencies
 // TODO: readme explain env variables
 

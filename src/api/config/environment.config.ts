@@ -87,9 +87,6 @@ const authorized = ((value: string) => {
  * @description JWT exiration duration in minutes
  */
  const jwtExpirationInterval = ((value: string) => {
-  if (!value) {
-    throw new Error('JWT_EXPIRATION_MINUTES not found. Please fill this value in your .env file to indicate the life duration of JSON web token.');
-  }
   if (isNaN(parseInt(value, 10))) {
     throw new Error('JWT_EXPIRATION_MINUTES bad value. Expiration value must be a duration expressed as a number');
   }

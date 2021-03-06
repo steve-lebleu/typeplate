@@ -87,10 +87,10 @@ const authorized = ((value: string) => {
  * @description JWT exiration duration in minutes
  */
  const jwtExpirationInterval = ((value: string) => {
-  if (isNaN(parseInt(value, 10))) {
+  if (value && isNaN(parseInt(value, 10))) {
     throw new Error('JWT_EXPIRATION_MINUTES bad value. Expiration value must be a duration expressed as a number');
   }
-  return parseInt(value, 10);
+  return parseInt(value, 10) || 120960;
 })(process.env.JWT_EXPIRATION_MINUTES);
 
 /**

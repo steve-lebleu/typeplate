@@ -1,6 +1,7 @@
 import * as Winston from 'winston';
+
 import { format, Logger as WinstonLogger } from 'winston';
-import { logs } from '@config/environment.config';
+import { env, logs } from '@config/environment.config';
 
 /**
  * This logger implements Winston module for writing custom logs
@@ -90,7 +91,7 @@ export class WinstonConfiguration {
     });
 
     // If we're not in production||test then log to the `console`
-    if ( !['production', 'test'].includes(process.env.NODE_ENV) ) {
+    if ( !['production', 'test'].includes(env) ) {
       logger.add( new Winston.transports.Console(WinstonConfiguration.options.console) );
     }
 

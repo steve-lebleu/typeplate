@@ -4,7 +4,7 @@ import * as filenamify from 'filenamify';
 
 import { unsupportedMediaType, entityTooLarge } from 'boom';
 
-import { jimp as JimpConfiguration, upload } from '@config/environment.config';
+import { upload, resize } from '@config/environment.config';
 
 import { IMediaRequest } from '@interfaces/IMediaRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
@@ -38,12 +38,7 @@ export class Uploader {
   /**
    * @description Default options
    */
-  static default: IUploadOptions = {
-    destination: upload.path,
-    filesize: upload.maxFileSize, // 1000000 bytes = 0,95367 Mo
-    wildcards: upload.wildcards,
-    maxFiles: upload.maxFiles
-  };
+  static default: IUploadOptions = upload;
 
   constructor() { }
 
@@ -82,12 +77,12 @@ export class Uploader {
         .map( ( media: IMedia ) => {
           const type = Pluralize(fieldname(media.mimetype)) as string;
           media.owner = req.user.id;
-          media.url = `${type}/${type === 'image' ? 'master-copy/' : ''}${media.filename}`
+          media.url = `${type}/${type === 'image' ? `${resize.destinations.master}/` : ''}${media.filename}`
           return media;
         }) || [];
 
         const images = req.files.filter( ( file: IMedia ) => IMAGE_MIME_TYPE.hasOwnProperty(file.mimetype));
-        if ( JimpConfiguration.isActive === 1 && images.length > 0 ) {
+        if ( resize.isActive && images.length > 0 ) {
           MEDIA_EVENT_EMITTER.emit('media.resize', images);
         }
       next();
@@ -125,8 +120,8 @@ export class Uploader {
     return Multer.diskStorage({
       destination: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
         let towards = `${destination}/${Pluralize(fieldname(file.mimetype)) as string}`;
-        if (typeof IMAGE_MIME_TYPE[file.mimetype] !== 'undefined') {
-          towards += '/master-copy';
+        if (IMAGE_MIME_TYPE[file.mimetype]) {
+          towards += `/${resize.destinations.master}`;
         }
         next(null, towards);
       },

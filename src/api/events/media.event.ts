@@ -6,18 +6,20 @@ import * as Jimp from 'jimp';
 
 import { Media } from '@models/media.model';
 import { IMedia } from '@interfaces/IMedia.interface';
-import { jimp as JimpConfiguration } from '@config/environment.config';
+import { resize } from '@config/environment.config';
 
-const SIZES = Object.keys(JimpConfiguration).map(key => key);
+import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
+
+const SIZES = Object.keys(resize.sizes).map(key => key);
 
 const MEDIA_EVENT_EMITTER: EventEmitter = new EventEmitter();
 
 MEDIA_EVENT_EMITTER.on('media.synchronized', (media: Media) => {
   const ulink = promisify(unlink) as (path: string) => Promise<void|Error>;
-  if (!media.mimetype.includes('image')) { // TODO Change test
+  if (IMAGE_MIME_TYPE[media.mimetype]) {
     void ulink(media.path.toString());
   } else {
-    void Promise.all( [ulink(media.path.toString())].concat(SIZES.map(size => ulink(media.path.toString().replace('master-copy', `rescale/${size}`)) ) ) )
+    void Promise.all( [ulink(media.path.toString())].concat(SIZES.map(size => ulink(media.path.toString().replace(resize.destinations.master, `${resize.destinations.scale}/${size}`)) ) ) )
   }
 });
 
@@ -29,8 +31,8 @@ MEDIA_EVENT_EMITTER.on('media.resize', (medias: IMedia[]) => {
           .forEach( size => {
             image
               .clone()
-              .resize(JimpConfiguration[size], Jimp.AUTO)
-              .write( `${media.destination.replace('master-copy', 'rescale')}/${size}/${media.filename}`, (err: Error) => {
+              .resize(resize.sizes[size], Jimp.AUTO)
+              .write( `${media.destination.replace(resize.destinations.master, resize.destinations.scale)}/${size}/${media.filename}`, (err: Error) => {
                 if(err) throw expectationFailed(err.message);
               });
           });

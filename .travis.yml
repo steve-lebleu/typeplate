@@ -4,7 +4,7 @@ node_js:
 services: mysql
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS ts_express_boilerplate_test;'
-script: mkdir -p ./dist/logs ./dist/public/archives ./dist/public/documents ./dist/public/audios ./dist/public/videos ./dist/public/images/master-copy ./dist/public/images/rescale/xs ./dist/public/images/rescale/sm ./dist/public/images/rescale/md ./dist/public/images/rescale/lg ./dist/public/images/rescale/xl && cp -r ./src/env ./dist/ && npm i typescript -g && npm i typeorm -g && npm i && tsc && typeorm schema:sync && env ENVIRONMENT=test env RUNNER=travis ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000
+script: mkdir -p ./dist/logs ./dist/public/archives ./dist/public/documents ./dist/public/audios ./dist/public/videos ./dist/public/images/master-copy ./dist/public/images/rescale/xs ./dist/public/images/rescale/sm ./dist/public/images/rescale/md ./dist/public/images/rescale/lg ./dist/public/images/rescale/xl && cp -r ./src/env/template.env ./dist/env/test.env && npm i typescript -g && npm i typeorm -g && npm i && tsc && typeorm schema:sync && env ENVIRONMENT=test env RUNNER=travis ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000
 after_success: nyc --reporter=lcov --report-dir=./docs/coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000 && cat ./docs/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./docs/coverage
 cache:
   directories:

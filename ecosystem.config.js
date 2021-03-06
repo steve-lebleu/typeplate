@@ -2,7 +2,7 @@
 module.exports = {
   apps : [{
     name: 'API',
-    script: './dist/api/app.bootstrap.js',
+    script: './api/app.bootstrap.js',
     args: 'one two',
     instances: 1,
     autorestart: true,
@@ -24,7 +24,7 @@ module.exports = {
       host : '212.83.163.1',
       ref  : 'origin/master',
       repo : 'git@github.com:repo.git',
-      path : '/var/www/production',
+      path : '/var/www/staging',
       'post-deploy' : 'npm install && npm run distify && tsc && pm2 reload ecosystem.config.js --env staging'
     },
     production : {

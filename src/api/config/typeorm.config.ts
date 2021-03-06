@@ -29,7 +29,7 @@ export class TypeormConfiguration {
         username: typeorm.user,
         password: typeorm.pwd,
         database: typeorm.database,
-        entities: [ `${process.cwd()}/dist/api/models/**/*.js` ],
+        entities: [ typeorm.entities ],
         synchronize: true,
         logging: false
       })

@@ -12,7 +12,9 @@ export class MediaRepository extends Repository<Media>  {
   }
 
   /**
-   * @description Get a list of files according to current query parameters
+   * @description Get a list of files according to current query 
+   *
+   * FIXME: Media seems to expose User critical data
    */
   async list({ page = 1, perPage = 30, path, fieldname, filename, size, mimetype, owner }: IMediaQueryString): Promise<Media[]> {
 

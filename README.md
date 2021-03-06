@@ -387,6 +387,7 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
   - [ ] Refactoring UT, prettify fixtures
   - [ ] Dest path lcov (~~docs~~)
 - [ ] ESLint compliance
+- [ ] Update npm dependencies
 - [ ] Serializing and JSONAPI support. Implements or remove
 - [ ] Update doc api + typedoc. Set Api doc as link on Github ?
 - [ ] Implements oauth for twitter, github, linkedin

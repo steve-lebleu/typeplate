@@ -19,7 +19,7 @@ export class Media implements IModel {
     type: String,
     length: 32
   })
-  fieldname;
+  fieldname; // FIXME: Media fieldname management. Seems to be always 'media'. What do with that ?
 
   @Column({
     type: String,

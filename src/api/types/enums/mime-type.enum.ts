@@ -3,13 +3,13 @@ import { list } from '@utils/enum.util';
 /**
  * @description Define application supported mimes
  */
-enum APPLICATION_MIME_TYPE {
+enum CONTENT_MIME_TYPE {
   'application/json' = 'application/json',
   'application/vnd.api+json' = 'application/vnd.api+json',
   'multipart/form-data' = 'multipart/form-data'
 }
 
-type APPLICATION_TYPE = 'application/json' | 'application/vnd.api+json' | 'multipart/form-data';
+type CONTENT_TYPE = 'application/json' | 'application/vnd.api+json' | 'multipart/form-data';
 
 /**
  * @description Define supported archives mime-types
@@ -84,8 +84,8 @@ type VIDEO_TYPE = 'video/mp4' | 'application/x-mpegURL' | 'video/3gpp' | 'video/
 const MIME_TYPE = [].concat( ...[ AUDIO_MIME_TYPE, ARCHIVE_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE ].map( type => list(type) ) );
 
 export {
-  APPLICATION_MIME_TYPE,
-  APPLICATION_TYPE,
+  CONTENT_MIME_TYPE,
+  CONTENT_TYPE,
   ARCHIVE_MIME_TYPE,
   ARCHIVE_TYPE,
   AUDIO_MIME_TYPE,

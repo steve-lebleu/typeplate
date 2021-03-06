@@ -50,7 +50,7 @@ export class ExpressConfiguration {
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
       allowedHeaders: ['Accept', 'Content-Type', 'Authorization', 'Origin', 'From']
     },
-    stream: ( env === ENVIRONMENT.production ? createWriteStream(`${process.cwd()}/dist/logs/access.log`, { flags: 'a+' }) : Logger.stream ) as ReadableStream,
+    stream: ( env === ENVIRONMENT.production ? createWriteStream(`${logs.path}/access.log`, { flags: 'a+' }) : Logger.stream ) as ReadableStream,
     rate: {
       windowMs: 60 * 60 * 1000, // 1 hour
       max: 2500,

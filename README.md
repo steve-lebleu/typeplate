@@ -14,9 +14,9 @@
 
 ![Discord](https://img.shields.io/discord/817108781291929641)
 
-Scalable RESTful API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based.
+Small but badass scalable RESTful API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based. 🤘
 
-Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration with [Express REST 2017 boilerplate](https://github.com/danielfsousa/express-rest-es2017-boilerplate).
+Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration with [Express REST 2017 boilerplate](https://github.com/danielfsousa/express-rest-es2017-boilerplate). 🍺🍺🍺
 
 ## Table of contents
 
@@ -25,20 +25,22 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
   * [File upload](#file-upload)
   * [Validation](#validation)
   * [Security](#security)
-  * [Logs](#logs)
+  * [Logs management](#logs-management)
   * [Entity generation](#entity-generation)
 * [Getting started](#getting-started)
   * [Install](#install)
   * [Build](#build)
   * [Setup](#setup)
+    * [Environments](#environments)
     * [Typescript](#typescript)
     * [TypeORM](#typeorm)
   * [Compile](#compile)
   * [Run](#run)
-* [Tests](#tests)
 * [Documentation](#documentation)
+* [Tests](#tests)
 * [Continuous integration](#continuous-integration)
 * [Deployment](#deployment)
+* [Roadmap](#roadmap)
 
 ## Features
 
@@ -71,7 +73,7 @@ You can define your own globals validation settings in dedicated [config file](h
 
 Some classic features are implemented with [CORS](https://expressjs.com/en/resources/middleware/cors.html), [Helmet](https://helmetjs.github.io/), [Hpp](https://www.npmjs.com/package/hpp) and [Express rate limit](https://www.npmjs.com/package/express-rate-limit).
 
-#### Logs
+#### Logs management
 
 Simple logs management is provided, principaly based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
 
@@ -122,13 +124,58 @@ $ git clone https://github.com/konfer-be/ts-express-typeorm-boilerplate.git your
 $ npm run kickstart
 ```
 
-This will install Typescript, Typeorm and Kem (cli entity generator) globaly, NPM packages, create *dist* directory and sub-directories, and run a one shot compilation.
+- Install Typescript, Typeorm and Kem (cli entity generator) globaly
+- Install NPM packages
+- Generate .env files from template
+- Create *dist* directory and sub-directories (api, env, logs, public)
+- Finaly run a one shot compilation
 
 ### Setup
 
+#### Environments
+
+First, fill required env variables in *./dist/env/development.env* and *./dist/env/test.env* files. Mandatory fields are uncommented in the files. See env variables list above for more informations.
+
+| Key          | Description | Type    | Default     | Required |
+| ------------ | ----------- | ----------- | ----------- | ---------- |
+| API_VERSION  | Current version of your API | string | v1 | false
+| **AUTHORIZED**   | Allowed client hosts | string | / | true
+| CONTENT_TYPE | Supported Content-Type | string | application/json | false
+| HTTPS_IS_ACTIVE | SSL support activated | boolean | 0 | false
+| HTTPS_CERT | SSL certificate path | string | / | false
+| HTTPS_KEY | Private key path | string | / | false
+| JWT_EXPIRATION_MINUTES   | JWT lifetime (minutes) | number | 120960 | false
+| **JWT_SECRET**   | JWT secret passphrase | string | / | true
+| LOGS_MORGAN_TOKEN | Morgan logs format | string | dev | false
+| LOGS_PATH    | Logs directory path | string | logs | false
+| **PORT**         | Listened application port | number | / | true
+| RESIZE_IS_ACTIVE | Images resizing activated | boolean | 1 | false
+| RESIZE_PATH_MASTER | Images directory name | string | master-copy | false
+| RESIZE_PATH_SCALE | Resized images path | string | rescale | path
+| RESIZE_SIZE_XS | Extra-small size value (px) | number | 260 | false
+| RESIZE_SIZE_SM | Small size value (px) | number | 320 | false
+| RESIZE_SIZE_MD | Medium size value (px) | number | 768 | false
+| RESIZE_SIZE_LG | Large size value (px) | number | 1024 | false
+| RESIZE_SIZE_XL | Extra-large size value (px) | number | 1366 | false
+| **TYPEORM_TYPE** | Database engine | string | / | true
+| TYPEORM_NAME | Databse connection identifier | string | default | false
+| **TYPEORM_HOST** | Database server host | string | / | true
+| **TYPEORM_DB**   | Database name | string | / | true
+| **TYPEORM_USER** | Database user | string | / | true
+| **TYPEORM_PWD**  | Database password | string | / | true
+| **TYPEORM_PORT** | Database server port | number | / | true
+| TYPEORM_SYNC | Schema synchronization activated | boolean | 0 | false
+| TYPEORM_LOG  | Queries logs activated | boolean | 0 | false
+| UPLOAD_PATH  | Destination path for uploads | string | public | false
+| UPLOAD_MAX_FILE_SIZE | Max file size (bytes) | number | 1000000 | false
+| UPLOAD_MAX_FILES | Max number of files per request | number | 5 | false
+| UPLOAD_WILDCARDS | Accepted file types for upload | string | * | false
+
 #### Typescript
 
-You can adapt Typescript configuration in *./tsconfig.json* file :
+Working Typescript configuration is provided in *./tsconfig.json* file.
+
+If you don't wish specify particular settings, skip this step.
 
 ```javascript
 {
@@ -171,22 +218,9 @@ More info about [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsc
 
 #### TypeORM
 
-Update *.env* files (development, staging, production, test) with your own settings :
+If you will use Typeorm as CLI, update also the *ormconfig.json* file and fill it with your own configuration.
 
-```env
-# TypeORM
-TYPEORM_TYPE = "mysql"
-TYPEORM_NAME = "default"
-TYPEORM_HOST = "localhost"
-TYPEORM_DB = "your-database-name"
-TYPEORM_USER = "root"
-TYPEORM_PWD = "root"
-TYPEORM_PORT = "3306"
-TYPEORM_SYNC = 0
-TYPEORM_LOG = 0
-```
-
-If you will use Typeorm as CLI, update also the *ormconfig.json* file and fill it with your own configuration :
+If you don't wish to use Typeorm CLI, skip this step.
 
 ```javascript
 {
@@ -205,13 +239,14 @@ If you will use Typeorm as CLI, update also the *ormconfig.json* file and fill i
   "migrations": [
     "./dist/migrations/**/*.js"
   ],
-  "cli": {
-    "migrationsDir": "./dist/migrations",
-    "subscribersDir": "./dist/subscribers"
-  },
   "subscribers": [
-    "src/subscribers/**/*.ts"
-  ]
+    "dist/api/models/subscribers/**/*.subscriber.js"
+  ],
+  "cli": {
+    "entitiesDir": "./dist/api/models",
+    "migrationsDir": "./dist/migrations",
+    "subscribersDir": "./dist/api/models/subscribers"
+  }
 }
 ```
 
@@ -219,13 +254,13 @@ More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeo
 
 ### Compile
 
-Runtime compilation :
+Runtime compilation:
 
 ```bash
 $ tsc
 ```
 
-Watching compilation :
+Watching compilation:
 
 ```bash
 $ tsc --watch
@@ -233,26 +268,11 @@ $ tsc --watch
 
 ### Run
 
-Enjoy with :
+Enjoy with:
 
 ```bash
 $ nodemon
 ```
-
-
-## Tests
-
-Many packages are used to provide an useful test environment: [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [Supertest](https://github.com/visionmedia/supertest).
-
-Basic tests are already writted and are located in *test* directory.
-
-To run your tests, launch the following command :
-
-```bash
-$ npm run test --env test
-```
-
-A coverage report is automaticaly generated by [Istanbul](https://github.com/gotwarlost/istanbul) in *./docs/nyc-coverage*.
 
 ## Documentation
 
@@ -280,6 +300,20 @@ A code documentation website is generated into *./docs/typedoc/*.
 
 See [typedoc](https://typedoc.org/) for more informations about customization.
 
+## Tests
+
+Many packages are used to provide an useful test environment: [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [Supertest](https://github.com/visionmedia/supertest).
+
+Basic tests are already writted and are located in *test* directory.
+
+To run your tests, launch the following command :
+
+```bash
+$ npm run test --env test
+```
+
+An HTML coverage report is automaticaly generated by [Istanbul](https://github.com/gotwarlost/istanbul) in *./docs/nyc-coverage*.
+
 ## Continuous integration
 
 Basic Travis-CI configuration is provided in *./.travis.yml* file.
@@ -296,7 +330,7 @@ $ npm i pm2 -g
 
 Note that PM2 should also be installed on other server environments, and that your SSH public key must be granted by the destination server.
 
-#### Configuration
+### Configuration
 
 Configure the *ecosystem.config.js* file with your environments informations.
 
@@ -324,7 +358,7 @@ deploy : {
 ```
 More info about PM2 [ecosystem.config.js](https://pm2.io/doc/en/runtime/reference/ecosystem-file/) file.
 
-#### Deploy
+### Deploy
 
 ```bash
 # Setup deployment at remote location
@@ -343,3 +377,21 @@ $ pm2 deploy production exec "pm2 reload all"
 More info about [PM2 deploy](https://pm2.io/doc/en/runtime/guide/easy-deploy-with-ssh/).
 
 More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
+
+## Roadmap
+
+- [ ] Refactoring config files
+- [ ] Refactoring typing for more simplicity and consistence
+- [ ] Unit testing
+  - [ ] 85% coverage
+  - [ ] Refactoring UT, prettify fixtures
+  - [ ] Dest path lcov (~~docs~~)
+- [ ] ESLint compliance
+- [ ] Update npm dependencies
+- [ ] Serializing and JSONAPI support. Implements or remove
+- [ ] Update doc api + typedoc. Set Api doc as link on Github ?
+- [ ] Implements oauth for twitter, github, linkedin
+- [ ] Email sending
+- [ ] PM2 deploy
+- [ ] Graphql support
+- [ ] Jimp features

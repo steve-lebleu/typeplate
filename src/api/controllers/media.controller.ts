@@ -26,7 +26,6 @@ class MediaController {
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    *
    * @public
    */
@@ -43,7 +42,6 @@ class MediaController {
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    */
   @safe
   @can('owner.id')
@@ -58,9 +56,10 @@ class MediaController {
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    *
    * @public
+   *
+   * FIXME: Fallback on upload -> delete file when data is not saved
    */
   @safe
   static async create(req: IMediaRequest, res: IResponse): Promise<void> {
@@ -76,7 +75,6 @@ class MediaController {
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    *
    * @public
    */
@@ -95,9 +93,10 @@ class MediaController {
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
-   * @param next Callback function
    *
    * @public
+   *
+   * FIXME: set headers after response write error
    */
   @safe
   @can('owner.id')

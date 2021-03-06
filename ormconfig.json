@@ -9,16 +9,17 @@
   "synchronize": true,
   "logging": false,
   "entities": [
-    "dist/api/models/**/*.js"
+    "./dist/api/models/**/*.js"
   ],
   "migrations": [
-    "src/migration/**/*.ts"
+    "./dist/migrations/**/*.js"
   ],
   "subscribers": [
-    "src/subscribers/**/*.ts"
+    "dist/api/models/subscribers/**/*.subscriber.js"
   ],
   "cli": {
+    "entitiesDir": "./dist/api/models",
     "migrationsDir": "./dist/migrations",
-    "subscribersDir": "./dist/subscribers"
+    "subscribersDir": "./dist/api/models/subscribers"
   }
 }

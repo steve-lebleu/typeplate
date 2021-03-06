@@ -76,8 +76,10 @@ docs/
 reports/
 
 # .env files
+/**/env/development.env
 /**/env/production.env
 /**/env/staging.env
+/**/env/test.env
 
 # Husky configuration
 .husky/

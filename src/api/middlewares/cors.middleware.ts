@@ -1,6 +1,6 @@
 import { notAcceptable } from 'boom';
 import { Request, Response } from 'express';
-import { APPLICATION_MIME_TYPE } from '@enums/mime-type.enum';
+import { CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
 
 /**
  * Cors validation middleware
@@ -21,7 +21,7 @@ export class Cors {
     if (!req.headers['content-type']) {
       return next( notAcceptable(`Content-Type headers must be ${contentType} or 'multipart/form-data', ${req.headers['content-type']} given`) );
     }
-    if ( APPLICATION_MIME_TYPE[contentType] !== req.headers['content-type'] && req.headers['content-type'].lastIndexOf(APPLICATION_MIME_TYPE['multipart/form-data']) === -1 ) {
+    if ( CONTENT_MIME_TYPE[contentType] !== req.headers['content-type'] && req.headers['content-type'].lastIndexOf(CONTENT_MIME_TYPE['multipart/form-data']) === -1 ) {
       return next( notAcceptable(`Content-Type head must be ${contentType} or 'multipart/form-data, ${req.headers['content-type']} given`) );
     }
     if (!req.headers.origin) {

@@ -37,9 +37,9 @@
   "scripts": {
     "kickstart": "npm i typescript -g && npm i typeorm -g && npm i kfr-kem -g && npm i && npm-run-all -s kick:*",
     "kick:directories": "mkdir -p ./dist/logs ./dist/public/archives ./dist/public/documents ./dist/public/images/master-copy ./dist/public/images/rescale/xs ./dist/public/images/rescale/sm ./dist/public/images/rescale/md ./dist/public/images/rescale/lg ./dist/public/images/rescale/xl ./dist/public/audios ./dist/public/videos",
-    "kick:env": "cp -r ./src/env ./dist/",
+    "kick:env": "cp -r ./src/env/template.env ./dist/env/development.env && cp -r ./src/env/template.env ./dist/env/test.env && cp -r ./src/env/template.env ./dist/env/stagin.env && cp -r ./src/env/template.env ./dist/env/production.env",
     "lint": "eslint ./src/**/*.ts",
-    "test": "nyc --reporter=html --report-dir=./docs/nyc-coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000",
+    "test": "nyc --reporter=html --report-dir=./docs/nyc-coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000 --env test",
     "coverage": "nyc --reporter=lcov --report-dir=./docs/coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000 && cat ./docs/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./docs/coverage",
     "todo-ci": "leasot -x --reporter markdown './src/**/*.ts' > TODO.md",
     "apidoc-ci": "apidoc -i src/ -o docs/apidoc/",

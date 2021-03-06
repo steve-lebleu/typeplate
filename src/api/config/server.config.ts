@@ -11,8 +11,8 @@ export class ServerConfiguration {
      */
     static options = {
         credentials: {
-            key: ssl.isActive === 1 ? readFileSync(ssl.key, 'utf8') : null,
-            cert: ssl.isActive === 1 ? readFileSync(ssl.cert, 'utf8') : null,
+            key: ssl.isActive ? readFileSync(ssl.key, 'utf8') : null,
+            cert: ssl.isActive ? readFileSync(ssl.cert, 'utf8') : null,
         },
         port
     }
@@ -20,6 +20,6 @@ export class ServerConfiguration {
     constructor() {}
 
     static server(app: Express.Application): Express.Application|HttpsServer {
-        return ssl.isActive === 1 ? createServer(ServerConfiguration.options.credentials, app) : app
+        return ssl.isActive ? createServer(ServerConfiguration.options.credentials, app) : app
     }
 }

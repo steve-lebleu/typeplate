@@ -1,8 +1,9 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { badData, expectationFailed } from 'boom';
 
+import { contentType } from '@config/environment.config';
 import { getSerializer } from '@utils/serializing.util';
-import { APPLICATION_MIME_TYPE } from '@enums/mime-type.enum';
+import { CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
 import { IResponse } from '@interfaces/IResponse.interface';
 import { IJsonApiRequest } from '@interfaces/IJsonApiRequest.interface';
 import { IModel } from '@interfaces/IModel.interface';
@@ -35,7 +36,7 @@ export class Serializer {
       }
 
       // If we are in mode application/json, we whitelist only as pseudo serializing
-      if (process.env.CONTENT_TYPE === APPLICATION_MIME_TYPE['application/json']) {
+      if (contentType === CONTENT_MIME_TYPE['application/json']) {
         if (Array.isArray(res.locals.data)) {
           res.locals.data = res.locals.data.map( (data: { whitelist: () => Record<string,unknown> } ) => data.whitelist() );
         } else {
@@ -71,12 +72,12 @@ export class Serializer {
   static deserialize = async (req: IJsonApiRequest, res: IResponse, next: (error?: Error) => void): Promise<void> => {
 
     // If we are in application/json, we next
-    if ( process.env.CONTENT_TYPE === APPLICATION_MIME_TYPE['application/json'] ) {
+    if (contentType === CONTENT_MIME_TYPE['application/json']) {
       return next();
     }
 
     // If method don't have payload, we next
-    if ( ['GET', 'DELETE'].includes(req.method) ) {
+    if (['GET', 'DELETE'].includes(req.method)) {
       return next();
     }
 

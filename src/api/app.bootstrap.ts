@@ -1,24 +1,3 @@
-// TODO: Finalize ESLint compliance
-// TODO: Define roadmap
-// TODO: Git flow, tags
-// TODO: Email sending
-// TODO: Serializing and JSONAPI support. Implements or remove
-// TODO: Unit testing and coverage
-// TODO: Refactoring testing, prettier fixtures
-// TODO: Refactoring config files (especialy env), types files
-// TODO: Modular architecture
-// TODO: Jimp features
-// TODO: Media fieldname management
-// TODO: Fallback on upload -> delete file when data is not saved
-// TODO: Media expose User critical data
-// FIXME: Hooks husky
-// FIXME: Jimp config must be splitted however IsActive is created as directory
-// TODO: Manage changelog
-// TODO: Update coverage path, impact ci/cd path
-// TODO: Update doc api + typedoc. Set Api doc as link on Github ?
-// TODO: Update npm dependencies
-// TODO: readme explain env variables
-
 require('module-alias/register');
 
 import * as Express from 'express';
@@ -31,15 +10,15 @@ import { ExpressConfiguration } from '@config/app.config';
 import { Logger } from '@services/logger.service';
 
 TypeormConfiguration.connect()
-    .catch( (e: Error) => {
-        throw new Error(e.message);
-    } );
+  .catch( (e: Error) => {
+    throw new Error(e.message);
+  });
 
 const application = new ExpressConfiguration( Express() ).get();
 const HTTPServer = ServerConfiguration.server(application);
 
 const server = HTTPServer.listen(port, () => {
-    Logger.log('info', `HTTP(S) server is now running on port ${port} (${env})`);
+  Logger.log('info', `HTTP(S) server is now running on port ${port} (${env})`);
 });
 
 export { application, server };

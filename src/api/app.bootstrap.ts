@@ -12,11 +12,12 @@
 // TODO: Update doc api + typedoc. Set Api doc as link on Github ?
 // TODO: Refactoring typing for more simplicity and consistence
 
+// TODO: Update npm dependencies
+
 // FIXME: Hooks husky
 // TODO: Refactoring config files (especialy env)
 // TODO: Define roadmap
 // TODO: Manage changelog
-// TODO: Update npm dependencies
 // TODO: readme explain env variables
 
 require('module-alias/register');

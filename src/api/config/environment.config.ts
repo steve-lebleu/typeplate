@@ -277,5 +277,4 @@ const upload = ((args: Record<string, unknown>) => {
  */
 const version = process.env.API_VERSION || 'v1';
 
-console.log({ domain, env, port, authorized, contentType, ssl, jwtSecret, jwtExpirationInterval, version, logs, typeorm, upload, resize });
 export { domain, env, port, authorized, contentType, ssl, jwtSecret, jwtExpirationInterval, version, logs, typeorm, upload, resize };

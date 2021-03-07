@@ -101,6 +101,7 @@ First, fill required env variables in *./dist/env/development.env* and *./dist/e
 | API_VERSION  | Current version of your API | string | v1 | false
 | **AUTHORIZED**   | Allowed client hosts | string | / | true
 | CONTENT_TYPE | Supported Content-Type | string | application/json | false
+| **DOMAIN** | API domain | string | localhost | true
 | HTTPS_IS_ACTIVE | SSL support activated | boolean | 0 | false
 | HTTPS_CERT | SSL certificate path | string | / | false
 | HTTPS_KEY | Private key path | string | / | false
@@ -331,7 +332,7 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 ## Roadmap
 
 - [x] Repository image header
-- [ ] Config refactoring vs simplicity & consistence
+- [x] Config refactoring vs simplicity & consistence
 - [ ] Typing refactoring vs simplicity & consistence
   - [ ] Errors
   - [ ] Requests

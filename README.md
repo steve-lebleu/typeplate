@@ -1,17 +1,17 @@
-# Typescript / Express.js / Typeorm RESTful API boilerplate
+# Typescript / Express.js / Typeorm REST API boilerplate
 
 [![Node](https://img.shields.io/badge/Node-14.16.0-informational)](https://nodejs.org/docs/latest-v14.x/api/index.html)
 [![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-informational)](https://www.typescriptlang.org/)
 [![Express](https://img.shields.io/badge/Express-4.16.4-informational)](https://expressjs.com/)
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-informational)](https://typeorm.io/#/)
 [![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational)](https://mochajs.org)
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
 [![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
 [![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm-boilerplate?branch=master)
 ![David](https://img.shields.io/david/konfer-be/ts-express-typeorm-boilerplate)
 [![Known Vulnerabilities](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?style=flat)](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate)
 
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 ![Discord](https://img.shields.io/discord/817108781291929641)
 
 Small but badass RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript)  [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘
@@ -330,7 +330,7 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
 ## Roadmap
 
-- [ ] Repository image header
+- [x] Repository image header
 - [ ] Config refactoring vs simplicity & consistence
 - [ ] Typing refactoring vs simplicity & consistence
   - [ ] Errors

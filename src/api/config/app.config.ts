@@ -12,7 +12,7 @@ import { notAcceptable } from 'boom';
 
 import { ENVIRONMENT } from '@enums/environment.enum';
 
-import { logs, authorized, version, env, contentType } from '@config/environment.config';
+import { logs, authorized, version, env, contentType, upload } from '@config/environment.config';
 import { HelmetConfiguration } from '@config/helmet.config';
 import { PassportConfiguration } from '@config/passport.config';
 
@@ -132,7 +132,7 @@ export class ExpressConfiguration {
     /**
      * Define CDN static resources location
      */
-    this.instance.use('/cdn', Express.static(__dirname + '/../../public'));
+    this.instance.use('/cdn', RateLimit(this.options.rate), Express.static(`${__dirname}/../../${upload.destination}`));
 
     /**
      * Set global middlewares on Express Application
@@ -153,7 +153,7 @@ export class ExpressConfiguration {
      * Errors handlers
      */
     if( [ENVIRONMENT.development].includes(env as ENVIRONMENT) ) {
-      this.instance.use( Catcher.notification ); // Notify in dev
+      this.instance.use( Catcher.notification );
     }
 
     this.instance.use( Catcher.log, Catcher.exit, Catcher.notFound ); // Log, exit with error, exit with 404

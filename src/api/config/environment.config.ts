@@ -1,5 +1,6 @@
+import { DATABASE_ENGINE } from '@enums/database-engine.enum';
 import { ENVIRONMENT } from '@enums/environment.enum';
-import { ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE, CONTENT_MIME_TYPE, MIME_TYPE } from '@enums/mime-type.enum';
+import { ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE, CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
 import { list } from '@utils/enum.util';
 import { existsSync } from 'fs';
 
@@ -77,6 +78,16 @@ const authorized = ((value: string) => {
   }
   return value || CONTENT_MIME_TYPE['application/json'];
 })(process.env.CONTENT_TYPE);
+
+/**
+ * @description API domain
+ */
+ const domain = ((value: string) => {
+  if (!value) {
+    throw new Error('DOMAIN not found. Please fill this value in your .env file to indicate domain of your API.');
+  }
+  return value;
+})(process.env.DOMAIN);
 
 /**
  * @description Current runtime environment as development | staging | production | test
@@ -195,6 +206,9 @@ const typeorm = ((args: Record<string,unknown>, environment: string) => {
   if(!args.TYPEORM_TYPE) {
     throw new Error('TYPEORM_TYPE not found. Please fill it in your .env file to define the database engine type.');
   }
+  if(args.TYPEORM_TYPE && !DATABASE_ENGINE[args.TYPEORM_TYPE as string]) {
+    throw new Error(`TYPEORM_TYPE bad value. Database engine must be one of following: ${list(DATABASE_ENGINE).join(',')}.`);
+  }
   if(!args.TYPEORM_PORT) {
     throw new Error('TYPEORM_PORT not found. Please fill it in your .env file to define the database server port.');
   }
@@ -211,9 +225,9 @@ const typeorm = ((args: Record<string,unknown>, environment: string) => {
     throw new Error('TYPEORM_PWD not found. Please fill it in your .env file to define the password of the database.');
   }
   return Object.freeze({
-    type: process.env.TYPEORM_TYPE,
+    type: process.env.TYPEORM_TYPE || 'mysql',
     name: process.env.TYPEORM_NAME || 'default',
-    port: process.env.TYPEORM_PORT,
+    port: parseInt(process.env.TYPEORM_PORT, 10),
     host: process.env.TYPEORM_HOST,
     database: process.env.TYPEORM_DB,
     user: process.env.TYPEORM_USER,
@@ -263,4 +277,4 @@ const upload = ((args: Record<string, unknown>) => {
  */
 const version = process.env.API_VERSION || 'v1';
 
-export { env, port, authorized, contentType, ssl, jwtSecret, jwtExpirationInterval, version, logs, typeorm, upload, resize };
+export { domain, env, port, authorized, contentType, ssl, jwtSecret, jwtExpirationInterval, version, logs, typeorm, upload, resize };

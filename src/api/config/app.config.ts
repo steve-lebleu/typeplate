@@ -5,6 +5,7 @@ import * as Cors from 'cors';
 import * as Compression from 'compression';
 import * as RateLimit from 'express-rate-limit';
 import * as Morgan from 'morgan';
+import * as Helmet from 'helmet';
 
 import { createWriteStream } from 'fs';
 import { initialize as PassportInitialize, use as PassportUse } from 'passport';
@@ -12,8 +13,8 @@ import { notAcceptable } from 'boom';
 
 import { ENVIRONMENT } from '@enums/environment.enum';
 
-import { logs, authorized, version, env, contentType, upload } from '@config/environment.config';
-import { HelmetConfiguration } from '@config/helmet.config';
+import { domain, logs, authorized, version, env, contentType, upload } from '@config/environment.config';
+
 import { PassportConfiguration } from '@config/passport.config';
 
 import { Logger } from '@services/logger.service';
@@ -49,6 +50,20 @@ export class ExpressConfiguration {
       },
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
       allowedHeaders: ['Accept', 'Content-Type', 'Authorization', 'Origin', 'From']
+    },
+    helmet: {
+      contentSecurityPolicy: {
+        defaultSrc: ['\'self\'', `'${domain}'`],
+        scriptSrc: ['\'self\'', '\'unsafe-inline\''],
+        sandbox: ['allow-forms', 'allow-scripts'],
+        reportUri: '/report-violation',
+        objectSrc: ['\'none\''],
+        upgradeInsecureRequests: true,
+        workerSrc: false  // This is not set.
+      },
+      hidePoweredBy: true,
+      noSniff: true,
+      referrerPolicy: { policy: 'no-referrer' }
     },
     stream: ( env === ENVIRONMENT.production ? createWriteStream(`${logs.path}/access.log`, { flags: 'a+' }) : Logger.stream ) as ReadableStream,
     rate: {
@@ -94,7 +109,9 @@ export class ExpressConfiguration {
      *
      * @see https://github.com/helmetjs/helmet
      */
-    this.instance.use( HelmetConfiguration.get()() );
+     Object.keys(this.options.helmet).forEach( key => {
+      this.instance.use( typeof this.options.helmet[key] === 'boolean' && this.options.helmet[key] ? Helmet[key]() : Helmet[key](this.options.helmet[key]) )
+    });
 
     /**
      * Enable CORS - Cross Origin Resource Sharing

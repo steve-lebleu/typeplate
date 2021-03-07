@@ -1,5 +1,5 @@
 import { unauthorized, forbidden, notFound } from 'boom';
-import { ROLE } from '@enums/role.enum';
+import { ROLES } from '@enums/role.enum';
 import { User } from '@models/user.model';
 
 /**
@@ -23,7 +23,7 @@ const can = ( property: 'id' | 'owner.id' | 'createdBy' ): any => {
             if (Array.isArray(locals.data)) {
               locals.data.filter( ( entity: { id?: number, owner?: { id?: number }, createdBy?: number } ) => {
                 const checkOn = entity.owner.id || entity.createdBy;
-                if ( user?.role === ROLE.admin || checkOn === user.id ) {
+                if ( user?.role === ROLES.admin || checkOn === user.id ) {
                   return entity;
                 }
               });
@@ -44,7 +44,7 @@ const can = ( property: 'id' | 'owner.id' | 'createdBy' ): any => {
               return next( unauthorized('You can\'t access to this ressource') );
             }
 
-            if (user?.role !== ROLE.admin && user?.id !== access) {
+            if (user?.role !== ROLES.admin && user?.id !== access) {
               return next( forbidden('You can\'t access to this ressource') );
             }
 

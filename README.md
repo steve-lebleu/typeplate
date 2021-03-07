@@ -340,7 +340,6 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 - [ ] Update npm dependencies
 - [ ] Force LTS node version
 - [ ] Serializing and JSONAPI support. Implements or remove
-- [ ] Upgrade kem templates for support of new features (update readme)
 - [ ] Create ./dist/* directories on the fly if custom env variables are set
 - [ ] Caching / performances
 - [ ] Unit testing
@@ -348,13 +347,16 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
   - [ ] Refactoring UT, split e2e testing, prettify fixtures
   - [ ] Dest path lcov (~~docs~~)
 - [ ] ESLint compliance
-- [ ] Update doc api + typedoc (hard). Set Api doc as link on Github ?
+- [ ] Update doc api + typedoc. Set Api doc as link on Github ?
 - [ ] Implements oauth for twitter, github, linkedin
 - [ ] Email sending
 - [ ] PM2 deploy
 - [ ] CI providers (circle-ci at least)
 - [ ] CD providers
 - [ ] SSL generating
+- [ ] e2e tests generating
+- [ ] Upgrade kem templates for support of new features (update readme)
 - [ ] API monitoring
 - [ ] Graphql support
 - [ ] Jimp features
+- [ ] I18n

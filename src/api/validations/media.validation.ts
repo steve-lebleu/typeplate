@@ -4,7 +4,7 @@
 
 import * as Joi from 'joi';
 import * as schemas from '@validations/schemas';
-import { MIME_TYPE } from '@enums/mime-type.enum';
+import { MIME_TYPE_LIST } from '@enums/mime-type.enum';
 
 const schemaMedias = () => {
   return Joi.array().items(
@@ -12,7 +12,7 @@ const schemaMedias = () => {
       fieldname: schemas.fieldname().required(),
       filename: schemas.filename().required(),
       path: schemas.path().required(),
-      mimetype: schemas.mimetype(MIME_TYPE).required(),
+      mimetype: schemas.mimetype(MIME_TYPE_LIST).required(),
       size: Joi.number().required(),
       owner: Joi.number().required()
     })
@@ -27,7 +27,7 @@ const listMedias = {
     fieldname: schemas.fieldname(),
     filename: Joi.string().regex(/^[a-z-A-Z-0-9\-\_\w]{1,123}$/i),
     path: schemas.path(),
-    mimetype: schemas.mimetype(MIME_TYPE),
+    mimetype: schemas.mimetype(MIME_TYPE_LIST),
     size: Joi.number(),
     owner: Joi.number()
   }
@@ -57,7 +57,7 @@ const replaceMedia = {
       fieldname: schemas.fieldname().required(),
       filename: schemas.filename().required(),
       path: schemas.path().required(),
-      mimetype: schemas.mimetype(MIME_TYPE).required(),
+      mimetype: schemas.mimetype(MIME_TYPE_LIST).required(),
       size: Joi.number().required(),
       owner: Joi.number().required()
     }
@@ -74,7 +74,7 @@ const updateMedia = {
       fieldname: schemas.fieldname(),
       filename: schemas.filename(),
       path: schemas.path(),
-      mimetype: schemas.mimetype(MIME_TYPE),
+      mimetype: schemas.mimetype(MIME_TYPE_LIST),
       size: Joi.number(),
       owner: Joi.number()
     }

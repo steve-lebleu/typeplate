@@ -7,7 +7,7 @@ import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, AfterLoad, Before
 import { badImplementation } from 'boom';
 
 import { jwtSecret, jwtExpirationInterval } from '@config/environment.config';
-import { ROLE } from '@enums/role.enum';
+import { ROLE, ROLES } from '@enums/role.enum';
 import { Media } from '@models/media.model';
 import { IModel } from '@interfaces/IModel.interface';
 import { whitelist } from '@whitelists/user.whitelist';
@@ -45,10 +45,10 @@ export class User implements IModel {
 
   @Column({
     type: 'enum',
-    enum: ROLE,
-    default: ROLE.user
+    enum: ROLES,
+    default: ROLES.user
   })
-  role: 'admin' | 'user' | 'ghost'
+  role: ROLE
 
   @OneToMany( () => Media, media => media.owner, {
     eager: true

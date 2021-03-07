@@ -14,28 +14,14 @@
 
 ![Discord](https://img.shields.io/discord/817108781291929641)
 
-Small but badass scalable RESTful API boilerplate [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript) and [TypeORM](https://github.com/typeorm/typeorm) based. 🤘
+Small but badass RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript)  [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘
 
 Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration with [Express REST 2017 boilerplate](https://github.com/danielfsousa/express-rest-es2017-boilerplate). 🍺🍺🍺
 
 ## Table of contents
 
 * [Features](#features)
-  * [Authentication](#authentication)
-  * [File upload](#file-upload)
-  * [Validation](#validation)
-  * [Security](#security)
-  * [Logs management](#logs-management)
-  * [Entity generation](#entity-generation)
 * [Getting started](#getting-started)
-  * [Install](#install)
-  * [Build](#build)
-  * [Setup](#setup)
-    * [Environments](#environments)
-    * [Typescript](#typescript)
-    * [TypeORM](#typeorm)
-  * [Compile](#compile)
-  * [Run](#run)
 * [Documentation](#documentation)
 * [Tests](#tests)
 * [Continuous integration](#continuous-integration)
@@ -44,71 +30,51 @@ Thanks to [Daniel F. Sousa](https://github.com/danielfsousa) for the inspiration
 
 ## Features
 
-### Authentication
+### ORM
 
-Full authentication process is principaly based on [passport.js](http://www.passportjs.org/).
-
-* **Implemented strategies**: Bearer, oauth Facebook, oauth Google
-* **Token lifetime/secret**: see .env files
-
-### File upload
-
-Files can be managed as [Medias](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/models/media.model.ts) entities, and uploaded
-with [Uploader](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/middlewares/uploader.middleware.ts) middleware, on [Multer](https://www.npmjs.com/package/multer) and [Jimp](https://www.npmjs.com/package/jimp) based.
-
-* Media creation
-* Single upload
-* Multiple uploads
-* Image resizing
-
-You can set options on each route, or by default in .env files. By default, upload middleware is only plugged on [media router](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/routes/v1/media.route.ts), but it can be used on other routes, with or without Media creation.
-
-### Validation
-
-Route validation is implemented with [express-validation](https://www.npmjs.com/package/express-validation) and [Joi](https://github.com/hapijs/joi).
-
-You can define your own globals validation settings in dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/config/validation.config.ts). This file wrap express-validator and provide it to the validation middleware, which is used on routes to validate.
+Object Relational Mapping with [Typeorm](https://typeorm.io/#/).
 
 ### Security
 
-Some classic features are implemented with [CORS](https://expressjs.com/en/resources/middleware/cors.html), [Helmet](https://helmetjs.github.io/), [Hpp](https://www.npmjs.com/package/hpp) and [Express rate limit](https://www.npmjs.com/package/express-rate-limit).
+SSL secure connection support with native [HTTPS node module](https://nodejs.org/docs/latest-v14.x/api/https.html).
 
-#### Logs management
+Classic security features with [CORS](https://expressjs.com/en/resources/middleware/cors.html), [Helmet](https://helmetjs.github.io/), [Hpp](https://www.npmjs.com/package/hpp) and [Express rate limit](https://www.npmjs.com/package/express-rate-limit).
 
-Simple logs management is provided, principaly based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
+### HTTP friendly errors
 
-See dedicated [config file](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/config/winston.config.ts).
+Customized error handling for clean and consistent HTTP friendly errors with [boom]() and [http-status](https://www.npmjs.com/package/http-status).
 
-### Entity generation
+### Logging
 
-The boilerplate provides a basic entity generator (kfr-kem), which be used as cli tool. This generate following files :
+Simple logs management based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
 
-* Controller
-* Model 
-* Repository
-* Validation 
-* Route
-* Test
-* Serializer
-* Whitelist
+### Authentication
 
-To use the file generation, run the following command :
+Full authentication process based on [passport.js](http://www.passportjs.org/) (Bearer, oauth Facebook, oauth Google).
 
-```bash
-$ kem
-```
+### Validation
 
-First, the prompt ask your local folder destination, and check if the directory exists. Please, provide absolute root path of the project (ie /var/www/my-project).
+Route validation with [express-validation](https://www.npmjs.com/package/express-validation) and [Joi](https://github.com/hapijs/joi).
 
-Next, enter the name of the entity to generate. You can provide one or many words separated by spaces, generator will use hyphens for filename, and PascalCase for entity name.
+### File upload
 
-Generated files contains only basic features and some parts must be filled by yourself :
+Configurable file upload with [uploader middleware](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/middlewares/uploader.middleware.ts) - based on [Multer](https://www.npmjs.com/package/multer). Uploaded files are managed as [Medias](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/models/media.model.ts) entities.
 
-* **Container**: The dependencies container must be updated with the controller. At least one.
-* **Proxy-router**: The proxy-router service must be updated with the created router. 
-* **Model**: model is filled with a primary auto-incremented id, and date system columns. Fill it with your columns and relations.
-* **Serializer**: attributes as empty by default. Fill it with your entity attributes.
-* **Validation rules**: body rules are created but empty by default. Fill it with your rules.
+### Image resizing
+
+Automatic and configurable image resizing designed for front-end requirements with [Jimp](https://www.npmjs.com/package/jimp).
+
+### Changelog management
+
+Automatic completion of the changelog with [auto-changelog](https://www.npmjs.com/package/auto-changelog).
+
+### Testing
+
+Unit and e2e tests with [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [Supertest](https://github.com/visionmedia/supertest).
+
+### Documentation
+
+Easy generation of documentation with [api-doc](https://apidocjs.com/) and [typedoc](https://typedoc.org/).
 
 ## Getting started
 
@@ -123,12 +89,6 @@ $ git clone https://github.com/konfer-be/ts-express-typeorm-boilerplate.git your
 ```bash
 $ npm run kickstart
 ```
-
-- Install Typescript, Typeorm and Kem (cli entity generator) globaly
-- Install NPM packages
-- Generate .env files from template
-- Create *dist* directory and sub-directories (api, env, logs, public)
-- Finaly run a one shot compilation
 
 ### Setup
 
@@ -173,35 +133,37 @@ First, fill required env variables in *./dist/env/development.env* and *./dist/e
 
 #### Typescript
 
-Working Typescript configuration is provided in *./tsconfig.json* file.
-
-If you don't wish specify particular settings, skip this step.
+Typescript configuration is provided in *./tsconfig.json* file:
 
 ```javascript
 {
   "compilerOptions": {
-    "outDir": "./dist/",
+    "outDir": "./dist/api",
     "sourceMap": false,
     "baseUrl": "./src",
     "paths": {
       "@bases/*": ["api/types/classes/*"],
-      "@config/*": ["config/*"],
+      "@config/*": ["api/config/*"],
       "@controllers/*": ["api/controllers/*"],
+      "@decorators/*": ["api/decorators/*"],
       "@enums/*": ["api/types/enums/*"],
       "@errors/*": ["api/types/errors/*"],
+      "@events/*": ["api/events/*"],
+      "@factories/*": ["api/factories/*"],
       "@interfaces/*": ["api/types/interfaces/*"],
       "@middlewares/*": ["api/middlewares/*"],
       "@models/*": ["api/models/*"],
       "@repositories/*": ["api/repositories/*"],
       "@routes/*": ["api/routes/v1/*"],
       "@serializers/*": ["api/serializers/*"],
+      "@servers/*": ["servers/*"],
       "@services/*": ["api/services/*"],
       "@utils/*": ["api/utils/*"],
       "@validations/*": ["api/validations/*"],
       "@whitelists/*": ["api/serializers/whitelists/*"]
     },
     "lib": ["dom", "es5", "es6", "es7"],
-    "target": "es2017",
+    "target": "es5",
     "module": "commonjs",
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
@@ -214,13 +176,13 @@ If you don't wish specify particular settings, skip this step.
 }
 ```
 
+If you don't wish specify particular Typescript settings, skip this step.
+
 More info about [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html).
 
 #### TypeORM
 
-If you will use Typeorm as CLI, update also the *ormconfig.json* file and fill it with your own configuration.
-
-If you don't wish to use Typeorm CLI, skip this step.
+If you will use Typeorm as CLI, you must update *ormconfig.json* file, and fill it with the same parameters as in your environment file.
 
 ```javascript
 {
@@ -250,20 +212,14 @@ If you don't wish to use Typeorm CLI, skip this step.
 }
 ```
 
+If you don't wish to use Typeorm with CLI, skip this step.
+
 More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeorm cli](https://typeorm.io/#/using-cli/installing-cli).
 
 ### Compile
 
-Runtime compilation:
-
 ```bash
 $ tsc
-```
-
-Watching compilation:
-
-```bash
-$ tsc --watch
 ```
 
 ### Run
@@ -276,43 +232,37 @@ $ nodemon
 
 ## Documentation
 
-### API documentation
-
-This way provides documentation for **consumers**.
-
 ```bash
-$ npm run apidoc-ci
+$ npm run doc:apidoc
 ```
 
-An API documentation website is generated into *./docs/apidoc/*.
+Generate API documentation website into *./docs/apidoc/*.
 
 See [apidoc](http://apidocjs.com/) for more informations about customization.
 
-### Code documentation
-
-This way provides documentation for **developers**.
-
 ```bash
-$ npm run typedoc-ci
+$ npm run doc:typedoc
 ```
 
-A code documentation website is generated into *./docs/typedoc/*.
+Generate code documentation website into *./docs/typedoc/*.
 
 See [typedoc](https://typedoc.org/) for more informations about customization.
 
+```bash
+$ npm run doc
+```
+
+Generate api and code documentation websites into *./docs/*.
+
 ## Tests
-
-Many packages are used to provide an useful test environment: [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [Supertest](https://github.com/visionmedia/supertest).
-
-Basic tests are already writted and are located in *test* directory.
-
-To run your tests, launch the following command :
 
 ```bash
 $ npm run test --env test
 ```
 
-An HTML coverage report is automaticaly generated by [Istanbul](https://github.com/gotwarlost/istanbul) in *./docs/nyc-coverage*.
+HTML coverage report is generated by [Istanbul](https://github.com/gotwarlost/istanbul) in *./reports/nyc-coverage*.
+
+Bonus with *./insomnia.workspace.json* if you wish run manual e2e tests without create the config.
 
 ## Continuous integration
 
@@ -380,18 +330,30 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
 ## Roadmap
 
-- [ ] Refactoring config files
-- [ ] Refactoring typing for more simplicity and consistence
+- [ ] Repository image header
+- [ ] Config refactoring vs simplicity & consistence
+- [ ] Typing refactoring vs simplicity & consistence
+  - [ ] Errors
+  - [ ] Requests
+  - [ ] Responses
+- [ ] Update npm dependencies
+- [ ] Force LTS node version
+- [ ] Serializing and JSONAPI support. Implements or remove
+- [ ] Upgrade kem templates for support of new features (update readme)
+- [ ] Create ./dist/* directories on the fly if custom env variables are set
+- [ ] Caching / performances
 - [ ] Unit testing
   - [ ] 85% coverage
-  - [ ] Refactoring UT, prettify fixtures
+  - [ ] Refactoring UT, split e2e testing, prettify fixtures
   - [ ] Dest path lcov (~~docs~~)
 - [ ] ESLint compliance
-- [ ] Update npm dependencies
-- [ ] Serializing and JSONAPI support. Implements or remove
-- [ ] Update doc api + typedoc. Set Api doc as link on Github ?
+- [ ] Update doc api + typedoc (hard). Set Api doc as link on Github ?
 - [ ] Implements oauth for twitter, github, linkedin
 - [ ] Email sending
 - [ ] PM2 deploy
+- [ ] CI providers (circle-ci at least)
+- [ ] CD providers
+- [ ] SSL generating
+- [ ] API monitoring
 - [ ] Graphql support
 - [ ] Jimp features

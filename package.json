@@ -1,12 +1,12 @@
 {
-  "version": "1.0.10",
+  "version": "1.0.11",
   "engines": {
     "node": ">=14.16"
   },
   "author": "Steve Lebleu",
   "license": "MIT",
   "name": "ts-express-typeorm-boilerplate",
-  "description": "This repository contains REST API boilerplate Typescript / Express.js / TypeORM based.",
+  "description": "REST API boilerplate builded with Typescript, Express.js, TypeORM and Mocha.",
   "keywords": [
     "node",
     "express.js",
@@ -17,7 +17,8 @@
     "api",
     "rest",
     "restful",
-    "es2017"
+    "es2017",
+    "mocha"
   ],
   "homepage": "https://github.com/konfer-be/ts-express-typeorm-boilerplate#readme",
   "repository": {
@@ -35,16 +36,17 @@
     "commitLimit": false
   },
   "scripts": {
-    "kickstart": "npm i typescript -g && npm i typeorm -g && npm i kfr-kem -g && npm i && npm-run-all -s kick:*",
-    "kick:directories": "mkdir -p ./dist/logs ./dist/public/archives ./dist/public/documents ./dist/public/images/master-copy ./dist/public/images/rescale/xs ./dist/public/images/rescale/sm ./dist/public/images/rescale/md ./dist/public/images/rescale/lg ./dist/public/images/rescale/xl ./dist/public/audios ./dist/public/videos",
-    "kick:env": "cp -r ./src/env/template.env ./dist/env/development.env && cp -r ./src/env/template.env ./dist/env/test.env && cp -r ./src/env/template.env ./dist/env/stagin.env && cp -r ./src/env/template.env ./dist/env/production.env",
-    "lint": "eslint ./src/**/*.ts",
-    "test": "nyc --reporter=html --report-dir=./docs/nyc-coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000 --env test",
-    "coverage": "nyc --reporter=lcov --report-dir=./docs/coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000 && cat ./docs/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./docs/coverage",
-    "todo-ci": "leasot -x --reporter markdown './src/**/*.ts' > TODO.md",
-    "apidoc-ci": "apidoc -i src/ -o docs/apidoc/",
-    "typedoc-ci": "typedoc --mode modules --name 'API documentation' --defaultCategory 'Root' --categorizeByGroup  --out ./docs/typedoc ./src",
-    "version": "auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\" "
+    "build": "npm-run-all -s build:*",
+    "build:directories": "mkdir -p ./dist/logs ./dist/public/archives ./dist/public/documents ./dist/public/images/master-copy ./dist/public/images/rescale/xs ./dist/public/images/rescale/sm ./dist/public/images/rescale/md ./dist/public/images/rescale/lg ./dist/public/images/rescale/xl ./dist/public/audios ./dist/public/videos",
+    "build:env": "cp -r ./src/env/template.env ./dist/env/development.env && cp -r ./src/env/template.env ./dist/env/test.env && cp -r ./src/env/template.env ./dist/env/stagin.env && cp -r ./src/env/template.env ./dist/env/production.env",
+    "ci-coverage": "nyc --reporter=lcov --report-dir=./reports/coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000 && cat ./reports/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./reports/coverage",
+    "doc": "npm-run-all -s doc:*",
+    "doc:apidoc": "apidoc -i src/ -o docs/apidoc/",
+    "doc:typedoc": "typedoc --name 'API documentation' --defaultCategory 'Root' --categorizeByGroup  --out ./docs/typedoc ./src",
+    "kickstart": "npm i typescript@4.2.2 -g && npm i typeorm@0.2.31 -g && npm i kfr-kem -g && npm i && npm run build && npm run doc",
+    "test": "nyc --reporter=html --report-dir=./reports/nyc-coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000 --env test",
+    "todo": "leasot -x --reporter markdown './src/**/*.ts' > TODO.md && git add TODO.md",
+    "version": "auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\""
   },
   "_moduleAliases": {
     "@bases": "dist/api/types/classes",
@@ -126,7 +128,7 @@
     "npm-run-all": "^4.1.5",
     "nyc": "^14.1.1",
     "supertest": "^4.0.2",
-    "typedoc": "^0.15.0",
+    "typedoc": "^0.20.30",
     "typescript": "^4.2.2",
     "typescript-eslint": "0.0.1-alpha.0"
   }

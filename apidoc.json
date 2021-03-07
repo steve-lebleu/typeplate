@@ -8,7 +8,7 @@
     "Info",
     "Auth",
     "User",
-    "Document"
+    "Media"
   ],
   "template": {
     "withGenerator": false

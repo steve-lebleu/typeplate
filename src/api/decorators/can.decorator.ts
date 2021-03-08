@@ -1,4 +1,4 @@
-import { unauthorized, forbidden, notFound } from 'boom';
+import { unauthorized, forbidden, notFound } from '@hapi/boom';
 import { ROLES } from '@enums/role.enum';
 import { User } from '@models/user.model';
 

@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { getRepository, getCustomRepository } from 'typeorm';
 import { CREATED } from 'http-status';
-import { notFound } from 'boom';
+import { notFound } from '@hapi/boom';
 
 import { IResponse } from '@interfaces/IResponse.interface';
 import { User } from '@models/user.model';

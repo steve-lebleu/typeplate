@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { badData, expectationFailed } from 'boom';
+import { badData, expectationFailed } from '@hapi/boom';
 
 import { contentType } from '@config/environment.config';
 import { getSerializer } from '@utils/serializing.util';

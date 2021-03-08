@@ -333,27 +333,32 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
 - [x] Repository image header
 - [x] Config refactoring vs simplicity & consistence
-- [ ] Typing refactoring vs simplicity & consistence
-  - [ ] Errors
-  - [ ] Requests
-  - [ ] Responses
 - [ ] Update npm dependencies
 - [ ] Force LTS node version
 - [ ] Serializing and JSONAPI support. Implements or remove
 - [ ] Create ./dist/* directories on the fly if custom env variables are set
-- [ ] Caching / performances
 - [ ] Unit testing
   - [ ] 85% coverage
   - [ ] Refactoring UT, split e2e testing, prettify fixtures
   - [ ] Dest path lcov (~~docs~~)
+- [ ] Modular architecture
+- [ ] Typing refactoring vs simplicity & consistence
+  - [ ] Errors
+  - [ ] Requests
+  - [ ] Responses
+- [ ] Validation refactoring vs simplicity & consistence
+  - [ ] Errors
+  - [ ] Requests
+  - [ ] Responses
 - [ ] ESLint compliance
-- [ ] Update doc api + typedoc. Set Api doc as link on Github ?
+- [ ] Caching / performances
+- [ ] SSL generating
+- [ ] Update doc api + typedoc. Set Api doc as public link on Github ?
 - [ ] Implements oauth for twitter, github, linkedin
 - [ ] Email sending
-- [ ] PM2 deploy
+- [ ] PM2 deployment and configuration
 - [ ] CI providers (circle-ci at least)
 - [ ] CD providers
-- [ ] SSL generating
 - [ ] e2e tests generating
 - [ ] Upgrade kem templates for support of new features (update readme)
 - [ ] API monitoring

@@ -8,60 +8,60 @@ import { list } from '@utils/enum.util';
 
 // GET api/v1/users
 const listUsers = {
-  query: {
+  query: Joi.object({
     page: Joi.number().min(1),
     perPage: Joi.number().min(1).max(100),
     username: Joi.string().max(32),
-    email: Joi.string().email({ minDomainAtoms: 2 }),
-    role: Joi.string().valid(list(ROLES))
-  }
+    email: Joi.string().email(),
+    role: Joi.any().valid(...list(ROLES))
+  })
 };
 
 // GET api/v1/users/userId
 const getUser = {
-  params: {
+  params: Joi.object({
     userId: Joi.string().regex(/^[0-9]{1,4}$/).required()
-  }
+  })
 };
 
 // POST api/v1/users
 const createUser = {
-  body: {
+  body: Joi.object({
     username: Joi.string().max(32).required(),
-    email: Joi.string().email({ minDomainAtoms: 2 }).required(),
+    email: Joi.string().email().required(),
     password: Joi.string().min(8).max(16).required()
-  }
+  })
 };
 
 // PUT api/v1/users/:userId
 const replaceUser = {
-  params: {
+  params: Joi.object({
     userId: Joi.string().regex(/^[0-9]{1,4}$/).required()
-  },
-  body: {
+  }),
+  body: Joi.object({
     username: Joi.string().max(32).required(),
-    email: Joi.string().email({ minDomainAtoms: 2 }).required(),
+    email: Joi.string().email().required(),
     password: Joi.string().min(8).max(16).required(),
-  }
+  })
 };
 
 // PATCH api/v1/users/:userId
 const updateUser = {
-  params: {
+  params: Joi.object({
     userId: Joi.string().regex(/^[0-9]{1,4}$/).required(),
-  },
-  body: {
+  }),
+  body: Joi.object({
     username: Joi.string().max(32),
-    email: Joi.string().email({ minDomainAtoms: 2 }),
+    email: Joi.string().email(),
     password: Joi.string().min(8).max(16),
-  }
+  })
 };
 
 // DELETE api/v1/users/:userId
 const removeUser = {
-  params: {
+  params: Joi.object({
     userId: Joi.string().regex(/^[0-9]{1,4}$/).required()
-  }
+  })
 };
 
 export { listUsers, getUser, createUser, replaceUser, updateUser, removeUser };

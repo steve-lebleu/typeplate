@@ -1,18 +1,14 @@
-import * as ExpressValidation from 'express-validation';
+import { Request, Response } from 'express';
+import { ObjectSchema } from 'joi';
 
 /**
- * ExpressValidation wrapper as configured middleware
+ * Custom validator using Joi
  */
 export class Validator {
 
   /**
-   * @description Validation configuration instance
+   * @description Default options
    */
-  private static instance: ExpressValidation = null;
-
-  /**
-  * @description Default options
-  */
   private static options = Object.freeze({
     allowUnknownBody: true,
     allowUnknownHeaders: false,
@@ -24,17 +20,27 @@ export class Validator {
     contextRequest: false
   });
 
-  /**
-   * @description ExpressValidation instance
-   * @alias ExpressValidation
-   */
-  static get validate(): ExpressValidation {
-    if (!Validator.instance) {
-      Validator.instance = ExpressValidation;
-      Validator.instance.options(Validator.options);
-    }
-    return Validator.instance;
-  }
-
   constructor() {}
+
+  /**
+   * @description Validate schema
+   *
+   * @param schema
+   */
+  static validate = ( schema: Record<string, ObjectSchema> ) => ( req: Request, res: Response, next: (e?: Error) => void ) : void => {
+
+    const error = ['query', 'body', 'params']
+      .filter( (property: string) => schema[property] && req[property])
+      .map( (property: string): { error: any } => schema[property].validate(req[property], { allowUnknown: true } ) as { error: any })
+      .filter(result => result.error)
+      .map(result => result.error as Error)
+      .slice()
+      .shift();
+
+    if (error) {
+      return next(error)
+    }
+
+    next()
+  };
 }

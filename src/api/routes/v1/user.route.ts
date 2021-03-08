@@ -3,7 +3,6 @@ import { UserController } from '@controllers/user.controller';
 import { Guard } from '@middlewares/guard.middleware';
 import { Validator } from '@middlewares/validator.middleware';
 import { ROLES } from '@enums/role.enum';
-
 import { listUsers, getUser, createUser, replaceUser, updateUser, removeUser } from '@validations/user.validation';
 
 export class UserRouter extends Router {

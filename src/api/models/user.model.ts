@@ -4,7 +4,7 @@ import * as Moment from 'moment-timezone';
 import * as Jwt from 'jwt-simple';
 import * as Bcrypt from 'bcrypt';
 import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, AfterLoad, BeforeInsert, OneToMany } from 'typeorm';
-import { badImplementation } from 'boom';
+import { badImplementation } from '@hapi/boom';
 
 import { jwtSecret, jwtExpirationInterval } from '@config/environment.config';
 import { ROLE, ROLES } from '@enums/role.enum';

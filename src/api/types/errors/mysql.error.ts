@@ -2,26 +2,18 @@ import * as HTTP_STATUS from 'http-status';
 
 import { IError } from '@interfaces/IError.interface';
 import { IHTTPError } from '@interfaces/IHTTPError.interface';
-import { IFieldError } from '@interfaces/IFieldError.interface';
 
+/**
+ * @description Custom type MySQL error
+ */
 export class MySQLError implements Error, IHTTPError {
 
-  readonly name = 'MySQL error';
+  readonly name = 'MySQLError';
 
   /**
    * @description Error.message implementation
    */
   message: string;
-
-  /**
-   * @description MySQL errno value
-   */
-  errno: number;
-
-  /**
-   * @description MySQL error message
-   */
-  sqlMessage: string;
 
   /**
    * @description IError HTTP response status code
@@ -36,15 +28,19 @@ export class MySQLError implements Error, IHTTPError {
   /**
    * @description Ierror HTTP response errors
    */
-  errors: Array<IFieldError|string>;
+  errors: Array<string>;
+
+  /**
+   * @description Error stack
+   */
+   stack: string;
 
   constructor(error: IError) {
     const converted = this.convertError(error.errno, error.message);
-    this.sqlMessage = error.sqlMessage;
-    this.errno = error.errno;
     this.statusCode = converted.statusCode;
-    this.statusText = converted.statusText;
+    this.statusText = 'MySQL error';
     this.errors = [converted.error];
+    this.stack = error?.stack;
   }
 
   /**

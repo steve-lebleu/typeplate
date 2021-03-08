@@ -1,3 +1,5 @@
+import { ValidationErrorItem } from 'joi';
+
 /**
  * Define generic Error interface
  */
@@ -54,12 +56,22 @@ export interface IError {
   isBoom?: boolean;
 
   /**
+   * @description Joi error descriptor
+   */
+   isJoi?: boolean;
+
+  /**
    * @description Validation error message
    */
   statusText?: string;
 
   /**
-   * @description Validation error details
+   * @description Error details
    */
   errors?: { field, types, messages }[];
+
+  /**
+   * @description Validation error details
+   */
+  details?: ValidationErrorItem[]
 }

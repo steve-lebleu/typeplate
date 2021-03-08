@@ -7,6 +7,6 @@ export interface IMediaRequest extends Request {
   files?: IMedia[];
   file?: IMedia;
   doc?: any;
-  params: { mediaId?: number };
+  params: { mediaId?: number } | any;
   body: { files?: IMedia[], file?: IMedia }
 }

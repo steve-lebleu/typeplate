@@ -1,5 +1,3 @@
-import { IFieldError } from '@interfaces/IFieldError.interface';
-
 /**
  * Define error output format
  */
@@ -18,5 +16,10 @@ export interface IHTTPError {
   /**
    * @description HTTP response errors
    */
-  errors: Array<IFieldError|string>;
+  errors: Array<string>;
+
+  /**
+   *
+   */
+  stack?: string;
 }

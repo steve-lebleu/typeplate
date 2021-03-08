@@ -6,7 +6,6 @@ import { MediaController } from '@controllers/media.controller';
 import { ROLES } from '@enums/role.enum';
 
 import { listMedias, insertMedia, getMedia, replaceMedia, updateMedia, removeMedia } from '@validations/media.validation';
-
 export class MediaRouter extends Router {
 
   constructor(){

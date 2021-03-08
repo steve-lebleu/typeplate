@@ -21,7 +21,7 @@ const schemaMedias = () => {
 
 // GET /v1/medias
 const listMedias = {
-  query: {
+  query: Joi.object({
     page: schemas.pagination('page'),
     perPage: schemas.pagination('perPage'),
     fieldname: schemas.fieldname(),
@@ -30,29 +30,29 @@ const listMedias = {
     mimetype: schemas.mimetype(MIME_TYPE_LIST),
     size: Joi.number(),
     owner: Joi.number()
-  }
+  })
 };
 
 // POST /v1/medias
 const insertMedia = {
-  body: {
+  body: Joi.object({
     files: schemaMedias()
-  }
+  })
 };
 
 // GET /v1/medias/:mediaId
 const getMedia = {
-  params: {
+  params: Joi.object({
     mediaId: schemas.id()
-  }
+  })
 };
 
 // PUT /v1/medias/:mediaId
 const replaceMedia = {
-  params: {
+  params: Joi.object({
     mediaId: schemas.id()
-  },
-  body: {
+  }),
+  body: Joi.object({
     file: {
       fieldname: schemas.fieldname().required(),
       filename: schemas.filename().required(),
@@ -61,15 +61,15 @@ const replaceMedia = {
       size: Joi.number().required(),
       owner: Joi.number().required()
     }
-  }
+  })
 };
 
 // PATCH /v1/medias/:mediaId
 const updateMedia = {
-  params: {
+  params: Joi.object({
     mediaId: schemas.id()
-  },
-  body: {
+  }),
+  body: Joi.object({
     file: {
       fieldname: schemas.fieldname(),
       filename: schemas.filename(),
@@ -78,14 +78,14 @@ const updateMedia = {
       size: Joi.number(),
       owner: Joi.number()
     }
-  }
+  })
 };
 
 // DELETE /v1/medias/:mediaId
 const removeMedia = {
-  params: {
+  params: Joi.object({
     mediaId: schemas.id()
-  }
+  })
 };
 
 export { listMedias, insertMedia, getMedia, replaceMedia, updateMedia, removeMedia };

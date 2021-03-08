@@ -28,16 +28,6 @@ describe("Units tests", function () {
         done();
       });
 
-      [Error,TypeError,EvalError,RangeError,SyntaxError,URIError,UnknownError].forEach( (e) => {
-        it(`getErrorOutput() boomify ${e} and get 500 with masked details`, function(done) {
-          const err = new e('This error will be boomified');
-          const result = error.util.getErrorOutput(err);
-          expect(result.statusCode).to.eqls(500);
-          result.errors.map( e => expect(e).to.eqls('An internal server error occurred'));
-          done();
-        });
-      });
-
     });
 
     describe("Serializer", function() {

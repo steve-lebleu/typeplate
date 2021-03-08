@@ -68,5 +68,5 @@ export const path = (): AnySchema => {
 };
 
 export const mimetype = (mimetypes: string[]): AnySchema => {
-  return Joi.string().valid(mimetypes);
+  return Joi.any().valid(...mimetypes);
 };

@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { NO_CONTENT } from 'http-status';
-import { expectationFailed } from 'boom';
+import { expectationFailed } from '@hapi/boom';
 import { IResponse } from '@interfaces/IResponse.interface';
 
 /**

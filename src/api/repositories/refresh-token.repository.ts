@@ -2,7 +2,7 @@ import * as Moment from 'moment-timezone';
 
 import { Repository, EntityRepository } from 'typeorm';
 import { randomBytes } from 'crypto';
-import { expectationFailed } from 'boom';
+import { expectationFailed } from '@hapi/boom';
 import { User } from '@models/user.model';
 import { RefreshToken } from '@models/refresh-token.model';
 

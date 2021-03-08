@@ -1,6 +1,6 @@
 import { authenticate } from 'passport';
 import { promisify } from 'es6-promisify';
-import { forbidden, badRequest } from 'boom';
+import { forbidden, badRequest } from '@hapi/boom';
 
 import { User } from '@models/user.model';
 import { ROLES } from '@enums/role.enum';
@@ -56,7 +56,7 @@ export class Guard {
     } else if (!roles.includes(user.role)) {
       return next( forbidden('Forbidden area') );
     } else if (err || !user) {
-      return next( badRequest(err) );
+      return next( badRequest(err?.message) );
     }
 
     req.user = user;

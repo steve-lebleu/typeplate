@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { Serializer as JsonApiSerializer } from 'jsonapi-serializer';
 import { Deserializer as JsonApiDeserializer } from 'jsonapi-serializer';
-import { expectationFailed } from 'boom';
+import { expectationFailed } from '@hapi/boom';
 
 /**
  * Implements json-api serializing / unserializing process

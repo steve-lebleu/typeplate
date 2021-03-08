@@ -9,7 +9,7 @@ import * as Helmet from 'helmet';
 
 import { createWriteStream } from 'fs';
 import { initialize as PassportInitialize, use as PassportUse } from 'passport';
-import { notAcceptable } from 'boom';
+import { notAcceptable } from '@hapi/boom';
 
 import { ENVIRONMENT } from '@enums/environment.enum';
 
@@ -173,7 +173,7 @@ export class ExpressConfiguration {
       this.instance.use( Catcher.notification );
     }
 
-    this.instance.use( Catcher.log, Catcher.exit, Catcher.notFound ); // Log, exit with error, exit with 404
+    this.instance.use( Catcher.factory, Catcher.log, Catcher.exit, Catcher.notFound ); // Log, exit with error, exit with 404
   }
 
   /**

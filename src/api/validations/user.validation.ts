@@ -6,13 +6,15 @@ import * as Joi from 'joi';
 import { ROLES } from '@enums/role.enum';
 import { list } from '@utils/enum.util';
 
+import { email, id, pagination, username, password } from '@schemas';
+
 // GET api/v1/users
 const listUsers = {
   query: Joi.object({
-    page: Joi.number().min(1),
-    perPage: Joi.number().min(1).max(100),
-    username: Joi.string().max(32),
-    email: Joi.string().email(),
+    page: pagination('page'),
+    perPage: pagination('perPage'),
+    username: username(),
+    email: email(),
     role: Joi.any().valid(...list(ROLES))
   })
 };
@@ -20,47 +22,47 @@ const listUsers = {
 // GET api/v1/users/userId
 const getUser = {
   params: Joi.object({
-    userId: Joi.string().regex(/^[0-9]{1,4}$/).required()
+    userId: id()
   })
 };
 
 // POST api/v1/users
 const createUser = {
   body: Joi.object({
-    username: Joi.string().max(32).required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().min(8).max(16).required()
+    username: username().required(),
+    email: email().required(),
+    password: password('user').required()
   })
 };
 
 // PUT api/v1/users/:userId
 const replaceUser = {
   params: Joi.object({
-    userId: Joi.string().regex(/^[0-9]{1,4}$/).required()
+    userId: id()
   }),
   body: Joi.object({
-    username: Joi.string().max(32).required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().min(8).max(16).required(),
+    username: username().required(),
+    email: email().required(),
+    password: password('user').required()
   })
 };
 
 // PATCH api/v1/users/:userId
 const updateUser = {
   params: Joi.object({
-    userId: Joi.string().regex(/^[0-9]{1,4}$/).required(),
+    userId: id(),
   }),
   body: Joi.object({
-    username: Joi.string().max(32),
-    email: Joi.string().email(),
-    password: Joi.string().min(8).max(16),
+    username: username().required(),
+    email: email().required(),
+    password: password('user').required()
   })
 };
 
 // DELETE api/v1/users/:userId
 const removeUser = {
   params: Joi.object({
-    userId: Joi.string().regex(/^[0-9]{1,4}$/).required()
+    userId: id()
   })
 };
 

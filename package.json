@@ -62,6 +62,7 @@
     "@models": "dist/api/models",
     "@repositories": "dist/api/repositories",
     "@routes": "dist/api/routes/v1",
+    "@schemas": "dist/api/validations/schemas",
     "@serializers": "dist/api/serializers",
     "@services": "dist/api/services",
     "@utils": "dist/api/utils",

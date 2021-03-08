@@ -333,35 +333,33 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
 - [x] Repository image header
 - [x] Config refactoring vs simplicity & consistence
-- [ ] Update npm dependencies
+- [x] Update npm dependencies
+- [x] Validation refactoring vs simplicity & consistence
+  - [x] Errors
+  - [x] Schemas
 - [ ] Force LTS node version
 - [ ] Serializing and JSONAPI support. Implements or remove
 - [ ] Create ./dist/* directories on the fly if custom env variables are set
 - [ ] Unit testing
   - [ ] 85% coverage
   - [ ] Refactoring UT, split e2e testing, prettify fixtures
-  - [ ] Dest path lcov (~~docs~~)
-- [ ] Modular architecture
+  - [x] Dest path lcov (~~docs~~)
 - [ ] Typing refactoring vs simplicity & consistence
-  - [ ] Errors
-  - [ ] Requests
-  - [ ] Responses
-- [ ] Validation refactoring vs simplicity & consistence
-  - [ ] Errors
+  - [x] Errors
   - [ ] Requests
   - [ ] Responses
 - [ ] ESLint compliance
+- [ ] Modular architecture
 - [ ] Caching / performances
 - [ ] SSL generating
-- [ ] Update doc api + typedoc. Set Api doc as public link on Github ?
-- [ ] Implements oauth for twitter, github, linkedin
+- [ ] Clean documentation generation api + typedoc. Set Api doc as public link on Github ?
+- [ ] Oauth for twitter, github, linkedin
 - [ ] Email sending
-- [ ] PM2 deployment and configuration
 - [ ] CI providers (circle-ci at least)
-- [ ] CD providers
-- [ ] e2e tests generating
-- [ ] Upgrade kem templates for support of new features (update readme)
+- [ ] PM2 deployment and configuration
 - [ ] API monitoring
+- [ ] e2e tests generating
+- [ ] Upgrade kem templates for support of new templates
 - [ ] Graphql support
 - [ ] Jimp features
 - [ ] I18n

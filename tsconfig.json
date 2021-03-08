@@ -18,6 +18,8 @@
       "@models/*": ["api/models/*"],
       "@repositories/*": ["api/repositories/*"],
       "@routes/*": ["api/routes/v1/*"],
+      "@schemas": ["api/validations/schemas/"],
+      "@schemas/*": ["api/validations/schemas/*"],
       "@serializers/*": ["api/serializers/*"],
       "@servers/*": ["servers/*"],
       "@services/*": ["api/services/*"],

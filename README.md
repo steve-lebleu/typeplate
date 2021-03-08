@@ -339,20 +339,23 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
   - [x] Schemas
 - [x] Force LTS node version
 - [x] End of JSON API support
-- [ ] Create ./dist/* directories on the fly if custom env variables are set
-- [ ] Unit testing
-  - [ ] 85% coverage
-  - [ ] Refactoring UT, split e2e testing, prettify fixtures
-  - [x] Dest path lcov (~~docs~~)
 - [ ] Typing refactoring vs simplicity & consistence
   - [x] Errors
   - [ ] Requests
   - [ ] Responses
-  - [ ] Serializer / resolver
+  - [x] Serializer
+  - [x] Resolver
 - [ ] ESLint compliance
-- [ ] Modular architecture
+- [ ] Unit testing
+  - [ ] 85% coverage
+  - [ ] Refactoring UT, split e2e testing
+  - [ ] Pretty fixtures
+  - [x] Dest path lcov (~~docs~~)
 - [ ] Caching / performances
-- [ ] SSL generating
+- [ ] Events vs TyperORM subscribers / hooks decorators
+- [ ] Permission services
+- [ ] Business services
+- [ ] Modular architecture
 - [ ] Clean documentation generation api + typedoc. Set Api doc as public link on Github ?
 - [ ] Oauth for twitter, github, linkedin
 - [ ] Email sending

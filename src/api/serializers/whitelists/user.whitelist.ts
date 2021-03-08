@@ -3,8 +3,6 @@ const whitelist = [
   'username',
   'email',
   'role',
-  'providers',
-  'smtps',
   'createdAt' ,
   'updatedAt'
 ];

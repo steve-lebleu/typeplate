@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { OK } from 'http-status';
 
 import { Logger } from '@services/logger.service';
 import { safe } from '@decorators/safe.decorator';
@@ -18,11 +17,10 @@ export class MainController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
-  static status = (req: Request, res: Response): any => {
-    res.status(OK);
+  static async status(req: Request, res: Response, next: () => void): Promise<void> {
+    res.status(200);
     res.end();
-  };
+  }
 
   /**
    * @description Log CSP report violation. This endpoint is called programmaticaly by helmet.
@@ -30,11 +28,10 @@ export class MainController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
-  static report = (req: Request, res: Response): any => {
+  static async report(req: Request, res: Response, next: () => void): Promise<void> {
     Logger.log('error', req.body ? `CSP Violation: ${JSON.stringify(req.body)}` : 'CSP Violation');
-    res.status(OK);
+    res.status(204);
     res.end();
-  };
+  }
 
 }

@@ -94,7 +94,7 @@ export class User implements IModel {
       if (this.temporaryPassword === this.password) {
         return true;
       }
-      this.password = await Bcrypt.hash(this.password, 10) as string;
+      this.password = await Bcrypt.hash(this.password, 10);
       return true;
     } catch (error) {
       throw badImplementation(error.message);

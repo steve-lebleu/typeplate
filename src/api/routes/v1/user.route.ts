@@ -307,7 +307,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .get(Guard.authorize([ROLES.admin]), Validator.validate(getUser),UserController.get)
+      .get(Guard.authorize([ROLES.admin]), Validator.validate(getUser), UserController.get)
 
       /**
        * @api {put} /users/:id Replace user

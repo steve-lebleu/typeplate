@@ -81,7 +81,7 @@ export class Catcher {
    */
   static notFound = (req: Request, res: Response): void => {
     res.status( 404 );
-    res.json( { statusCode: 404, statusText: 'End point not found', errors: [] } );
+    res.json( { statusCode: 404, statusText: 'Ooops... end point was not found', errors: ['Looks like someone\'s gone mushroom picking\''] } );
   };
 
 }

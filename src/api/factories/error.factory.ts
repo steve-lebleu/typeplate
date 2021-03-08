@@ -1,4 +1,4 @@
-import { MySQLError, NotFoundError, UploadError, ValidationError } from '@errors';
+import { MySQLError, NotFoundError, UploadError, ValidationError, ServerError } from '@errors';
 import { IError } from '@interfaces/IError.interface';
 import { badImplementation } from '@hapi/boom';
 import { getErrorStatusCode } from '@utils/error.util';
@@ -22,6 +22,7 @@ export class ErrorFactory {
       case 'MulterError':
         return new UploadError(error);
       case 'EntityNotFound':
+      case 'MustBeEntityError':
         return new NotFoundError(error);
       case 'ValidationError':
         return new ValidationError(error);
@@ -36,8 +37,7 @@ export class ErrorFactory {
         case 'SyntaxError':
         case 'RangeError':
         case 'URIError':
-          error = badImplementation(error.message) as IError;
-        break;
+          return new ServerError(error);
         default:
           error = badImplementation(error.message) as IError;
       }

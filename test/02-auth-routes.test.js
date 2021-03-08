@@ -131,16 +131,16 @@ describe('Authentification routes', function () {
       });
     });
 
-    it('POST /api/v1/auth/login 200 - with credentials', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { email: credentials.email, password: password }, 200, function(err, res) {
-        expect(res.statusCode).to.eqls(200);
+    it('POST /api/v1/auth/login 201 - with credentials', function (done) {
+      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { email: credentials.email, password: password }, 201, function(err, res) {
+        expect(res.statusCode).to.eqls(201);
         done();
       });
     });
 
-    it('POST /api/v1/auth/login 200 - with credentials + data ok', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { email: credentials.email, password: password }, 200, function(err, res) {
-        expect(res.statusCode).to.eqls(200);
+    it('POST /api/v1/auth/login 201 - with credentials + data ok', function (done) {
+      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { email: credentials.email, password: password }, 201, function(err, res) {
+        expect(res.statusCode).to.eqls(201);
         expect(res.body).to.have.all.keys(['token', 'user']);
         expect(res.body.token).to.have.all.keys(['tokenType', 'accessToken', 'refreshToken', 'expiresIn']);
         refreshToken = res.body.token.refreshToken;
@@ -148,16 +148,16 @@ describe('Authentification routes', function () {
       });
     });
 
-    it('POST /api/v1/auth/login 200 - with api key', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { apikey }, 200, function(err, res) {
-        expect(res.statusCode).to.eqls(200);
+    it('POST /api/v1/auth/login 201 - with api key', function (done) {
+      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { apikey }, 201, function(err, res) {
+        expect(res.statusCode).to.eqls(201);
         done();
       });
     });
 
-    it('POST /api/v1/auth/login 200 - with api key + data ok', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { apikey }, 200, function(err, res) {
-        expect(res.statusCode).to.eqls(200);
+    it('POST /api/v1/auth/login 201 - with api key + data ok', function (done) {
+      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { apikey }, 201, function(err, res) {
+        expect(res.statusCode).to.eqls(201);
         expect(res.body).to.have.all.keys(['token', 'user']);
         expect(res.body.token).to.have.all.keys(['tokenType', 'accessToken', 'refreshToken', 'expiresIn']);
         refreshToken = res.body.token.refreshToken;
@@ -190,9 +190,9 @@ describe('Authentification routes', function () {
       });
     });
 
-    it('POST api/v1/auth/refresh-token 200 - data ok', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/refresh-token', null, token, { token: { refreshToken: refreshToken } }, 200, function(err, res) {
-        expect(res.statusCode).to.eqls(200);
+    it('POST api/v1/auth/refresh-token 201 - data ok', function (done) {
+      doRequest(agent, 'post', '/api/v1/auth/refresh-token', null, token, { token: { refreshToken: refreshToken } }, 201, function(err, res) {
+        expect(res.statusCode).to.eqls(201);
         expect(res.body).to.have.all.keys(['token']);
         expect(res.body.token).to.have.all.keys(['tokenType', 'accessToken', 'refreshToken', 'expiresIn']);
         done();

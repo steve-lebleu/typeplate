@@ -21,7 +21,6 @@ import { Logger } from '@services/logger.service';
 import { ProxyRouter } from '@services/proxy-router.service';
 
 import { Cors as Kors } from '@middlewares/cors.middleware';
-import { Serializer } from '@middlewares/serializer.middleware';
 import { Resolver } from '@middlewares/resolver.middleware';
 import { Catcher } from '@middlewares/catcher.middleware';
 
@@ -164,7 +163,7 @@ export class ExpressConfiguration {
      * - Router(s)
      * - Resolver
      */
-    this.instance.use(`/api/${version}`, RateLimit(this.options.rate), Serializer.deserialize, ProxyRouter.get(), Resolver.resolve);
+    this.instance.use(`/api/${version}`, RateLimit(this.options.rate), ProxyRouter.get(), Resolver.resolve);
 
     /**
      * Errors handlers
@@ -173,7 +172,7 @@ export class ExpressConfiguration {
       this.instance.use( Catcher.notification );
     }
 
-    this.instance.use( Catcher.factory, Catcher.log, Catcher.exit, Catcher.notFound ); // Log, exit with error, exit with 404
+    this.instance.use( Catcher.factory, Catcher.log, Catcher.exit, Catcher.notFound ); // Factorize error, log it, exit with clean HTTP error | clean 404
   }
 
   /**

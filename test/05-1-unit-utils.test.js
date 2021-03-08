@@ -1,8 +1,5 @@
 var expect = require('chai').expect;
 
-var UserSerializer = require(process.cwd() + '/dist/api/serializers/user.serializer');
-var MediaSerializer = require(process.cwd() + '/dist/api/serializers/media.serializer');
-
 var error = {}; error.util = require(process.cwd() + '/dist/api/utils/error.util');
 var serializer = {}; serializer.util = require(process.cwd() + '/dist/api/utils/serializing.util');
 var str = {}; str.util = require(process.cwd() + '/dist/api/utils/string.util');
@@ -25,34 +22,6 @@ describe("Units tests", function () {
         const err = { name: 'QueryFailedError', errno: 1052, sqlMessage: "Duplicate entry 'lambda' for key 'IDX_78a916df40e02a9deb1c4b75ed'" };
         const result = error.util.getErrorStatusCode(err);
         expect(result).to.eqls(500);
-        done();
-      });
-
-    });
-
-    describe("Serializer", function() {
-
-      it("getSerializer() returns User serializer", function(done) {
-        const serializerName = 'User';
-        const result = serializer.util.getSerializer( serializerName );
-        expect(result).to.be.instanceOf(UserSerializer.constructor);
-        done();
-      });
-
-      it("getSerializer() returns Media serializer", function(done) {
-        const serializerName = 'Media';
-        const result = serializer.util.getSerializer( serializerName );
-        expect(result).to.be.instanceOf(MediaSerializer.constructor);
-        done();
-      });
-
-      it("getSerializer() throws TypeError if unknown entity", function(done) {
-        const serializerName = 'Trucmuche';
-        try {
-          serializer.util.getSerializer( serializerName );
-        } catch (e) {
-          expect(e).to.be.instanceOf(TypeError);
-        }    
         done();
       });
 

@@ -1,11 +1,11 @@
 import { Request } from 'express';
-import { badData, expectationFailed } from '@hapi/boom';
+import { expectationFailed } from '@hapi/boom';
 
 import { contentType } from '@config/environment.config';
-import { getSerializer } from '@utils/serializing.util';
+
 import { CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
 import { IResponse } from '@interfaces/IResponse.interface';
-import { IJsonApiRequest } from '@interfaces/IJsonApiRequest.interface';
+
 import { IModel } from '@interfaces/IModel.interface';
 
 /**
@@ -21,8 +21,10 @@ export class Serializer {
    * @param req Express Request instance
    * @param res Express Response instance
    * @param next Callback function
+   *
+   * TDOD: use safe decorator
    */
-  static serialize = async (req: Request, res: IResponse, next: (error?: Error) => void): Promise<void> => {
+  static async serialize (req: Request, res: IResponse, next: (error?: Error) => void): Promise<void> {
 
     try {
 
@@ -46,15 +48,6 @@ export class Serializer {
         return next();
       }
 
-      // Retrieve type of entity to serialize
-      const typeOf = Array.isArray(res.locals.data) ? res.locals.data[0].constructor : res.locals.data.constructor;
-
-      // Retrieve serializer for current request
-      const serializer = getSerializer(typeOf.name);
-
-      // Serialize and set the result on res.locals.data
-      res.locals.data = serializer.serialize(res.locals.data);
-
       next();
 
     } catch (e) {
@@ -62,36 +55,4 @@ export class Serializer {
     }
   }
 
-  /**
-   * @description Deserialize current payload if the context requires it
-   *
-   * @param req Express Request instance
-   * @param res Express Response instance
-   * @param next Callback function
-   */
-  static deserialize = async (req: IJsonApiRequest, res: IResponse, next: (error?: Error) => void): Promise<void> => {
-
-    // If we are in application/json, we next
-    if (contentType === CONTENT_MIME_TYPE['application/json']) {
-      return next();
-    }
-
-    // If method don't have payload, we next
-    if (['GET', 'DELETE'].includes(req.method)) {
-      return next();
-    }
-
-    // If method need payload but payload is not found according to vnd.api+json format
-    if ( !req.body.data ) {
-      return next( badData('Bad formed payload: data attribute not found') )
-    }
-
-    try {
-      const serializer = getSerializer(req.body.data[0].type);
-      req.body = serializer.deserialize(req) as unknown;
-      next();
-    } catch (e) {
-      next( e );
-    }
-  }
 }

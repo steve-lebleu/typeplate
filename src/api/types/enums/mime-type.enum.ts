@@ -5,11 +5,10 @@ import { list } from '@utils/enum.util';
  */
 enum CONTENT_MIME_TYPE {
   'application/json' = 'application/json',
-  'application/vnd.api+json' = 'application/vnd.api+json',
   'multipart/form-data' = 'multipart/form-data'
 }
 
-type CONTENT_TYPE = 'application/json' | 'application/vnd.api+json' | 'multipart/form-data';
+type CONTENT_TYPE = 'application/json' | 'multipart/form-data';
 
 /**
  * @description Define supported archives mime-types

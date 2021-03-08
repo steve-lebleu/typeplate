@@ -338,7 +338,7 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
   - [x] Errors
   - [x] Schemas
 - [x] Force LTS node version
-- [ ] Serializing and JSONAPI support. Implements or remove
+- [x] End of JSON API support
 - [ ] Create ./dist/* directories on the fly if custom env variables are set
 - [ ] Unit testing
   - [ ] 85% coverage
@@ -348,6 +348,7 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
   - [x] Errors
   - [ ] Requests
   - [ ] Responses
+  - [ ] Serializer / resolver
 - [ ] ESLint compliance
 - [ ] Modular architecture
 - [ ] Caching / performances

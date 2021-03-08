@@ -337,7 +337,7 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 - [x] Validation refactoring vs simplicity & consistence
   - [x] Errors
   - [x] Schemas
-- [ ] Force LTS node version
+- [x] Force LTS node version
 - [ ] Serializing and JSONAPI support. Implements or remove
 - [ ] Create ./dist/* directories on the fly if custom env variables are set
 - [ ] Unit testing

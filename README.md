@@ -1,4 +1,4 @@
-# Typescript / Express.js / Typeorm REST API boilerplate
+![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/sCpPzpy/header-ts-boilerplate-2.png)
 
 [![Node](https://img.shields.io/badge/Node-14.16.0-informational)](https://nodejs.org/docs/latest-v14.x/api/index.html)
 [![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-informational)](https://www.typescriptlang.org/)

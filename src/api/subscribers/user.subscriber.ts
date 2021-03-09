@@ -1,3 +1,5 @@
+require('module-alias/register');
+
 import * as Moment from 'moment-timezone';
 import { EventSubscriber, EntitySubscriberInterface, UpdateEvent } from 'typeorm';
 import { User } from '@models/user.model';

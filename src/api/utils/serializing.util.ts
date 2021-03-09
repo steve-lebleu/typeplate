@@ -6,10 +6,10 @@ import { IModel } from '@interfaces/IModel.interface';
  * @description Say if a value can be serialized
  * @param value Value to check as serializable
  */
-const isSanitizable = (value: any): boolean => {
+const isSanitizable = (value: Record<string,unknown>): boolean => {
   const isTypedObject = value !== null && !Util.types.isDate(value) && typeof value !== 'string' && typeof value === 'object' && value.constructor !== Object;
-  const cond1 = isTypedObject && value.constructor !== Array;
-  const cond2 = isTypedObject && value.constructor === Array && value.filter( (entry: any) => typeof entry !== 'string' ).length > 0;
+  const cond1 = isTypedObject && value?.constructor !== Array;
+  const cond2 = isTypedObject && value?.constructor === Array && value?.filter( (entry: any) => typeof entry !== 'string' ).length > 0;
   return cond1 || cond2;
 };
 

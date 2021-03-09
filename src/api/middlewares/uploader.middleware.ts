@@ -19,6 +19,7 @@ import { MEDIA_EVENT_EMITTER } from '@events/media.event';
 
 interface IMulter {
   diskStorage: ( { destination, filename } ) => IStorage;
+  // eslint-disable-next-line id-blacklist
   any: () => ( req, res, next ) => void;
 }
 

@@ -339,10 +339,8 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
   - [x] Schemas
 - [x] Force LTS node version
 - [x] End of JSON API support
-- [ ] Typing refactoring vs simplicity & consistence
+- [x] Typing refactoring vs simplicity & consistence
   - [x] Errors
-  - [ ] Requests
-  - [ ] Responses
   - [x] Serializer
   - [x] Resolver
 - [ ] ESLint compliance

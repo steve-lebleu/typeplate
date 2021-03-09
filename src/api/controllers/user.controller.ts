@@ -7,7 +7,7 @@ import { UserRepository } from '@repositories/user.repository';
 import { IUserRequest } from '@interfaces/IUserRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
 import { safe } from '@decorators/safe.decorator';
-import { expectationFailed } from '@hapi/boom';
+
 /**
  * Manage incoming requests for api/{version}/users
  */
@@ -24,7 +24,7 @@ export class UserController {
   @safe
   static async get(req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(UserRepository);
-    res.locals.data = await repository.one(req.params.userId);
+    res.locals.data = await repository.one(parseInt(req.params.userId, 10));
   }
 
   /**

@@ -1,11 +1,19 @@
-var { server } = require(process.cwd() + '/dist/api/app.bootstrap');
+// --- Test modules
 
 var request = require('supertest');
-var fixtures = require('./fixtures');
-var expect = require('chai').expect;
-var { doRequest, doQueryRequest, doFormRequest, expectations, dataOk, pools } = require('./utils');
+var { expect } = require('chai');
+
+// --- API server
+
+var { server } = require(process.cwd() + '/dist/api/app.bootstrap');
+
+// --- Test utils
+
+var fixtures = require(process.cwd() + '/test/utils/fixtures');
+var { doRequest, doQueryRequest, doFormRequest, expectations, dataOk, pools } = require(process.cwd() + '/test/utils');
 
 describe('Media routes', function () {
+  
   
   var agent, password, credentials, token, unauthorizedToken, user, images, documents, archives;
 
@@ -34,6 +42,8 @@ describe('Media routes', function () {
     delete server;
   });
 
+
+
   it('POST /api/v1/medias 400 - empty payload', function (done) {
     doFormRequest(agent, 'post', '/api/v1/medias/', null, token, {}, 400, function(err, res) {
       expect(res.statusCode).to.eqls(400);
@@ -42,14 +52,14 @@ describe('Media routes', function () {
   });
 
   it('POST /api/v1/medias 400 - file too large', function (done) {
-    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'document', path: process.cwd() + '/test/fixtures/files/Vue-Handbook.pdf' }, 400, function(err, res) {
+    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'document', path: process.cwd() + '/test/utils/fixtures/files/Vue-Handbook.pdf' }, 400, function(err, res) {
       expect(res.statusCode).to.eqls(400);
       done();
     });
   });
 
   it('POST /api/v1/medias 400 - not supported mimetype', function (done) {
-    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'audio', path: process.cwd() + '/test/fixtures/files/electric-bulb.mp4' }, 400, function(err, res) {
+    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'audio', path: process.cwd() + '/test/utils/fixtures/files/electric-bulb.mp4' }, 400, function(err, res) {
       expect(res.statusCode).to.eqls(400);
       done();
     });
@@ -63,7 +73,7 @@ describe('Media routes', function () {
   });
 
   it('POST /api/v1/medias 201 - image - file(s) exists + data ok', function (done) {
-    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'image', path: process.cwd() + '/test/fixtures/files/javascript.jpg' }, 201, function(err, res) {
+    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'image', path: process.cwd() + '/test/utils/fixtures/files/javascript.jpg' }, 201, function(err, res) {
       expect(res.statusCode).to.eqls(201);
       expect(res.body).to.be.an('array');
       expect(res.body).satisfy(function(value) {
@@ -75,7 +85,7 @@ describe('Media routes', function () {
   });
 
   it('POST /api/v1/medias 201 - document - file(s) exists + data ok', function (done) {
-    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'document', path: process.cwd() + '/test/fixtures/files/Responsive_Webdesign.pdf' }, 201, function(err, res) {
+    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'document', path: process.cwd() + '/test/utils/fixtures/files/Responsive_Webdesign.pdf' }, 201, function(err, res) {
       expect(res.statusCode).to.eqls(201);
       expect(res.body).to.be.an('array');
       expect(res.body).satisfy(function(value) {
@@ -87,7 +97,7 @@ describe('Media routes', function () {
   });
 
   it('POST /api/v1/medias 201 - archive - file(s) exists + data ok', function (done) {
-    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'archive', path: process.cwd() + '/test/fixtures/files/Documents.rar' }, 201, function(err, res) {
+    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'archive', path: process.cwd() + '/test/utils/fixtures/files/documents.rar' }, 201, function(err, res) {
       expect(res.statusCode).to.eqls(201);
       expect(res.body).to.be.an('array');
       expect(res.body).satisfy(function(value) {
@@ -251,14 +261,14 @@ describe('Media routes', function () {
   });
 
   it('PUT /api/v1/medias 400 - file too large', function (done) {
-    doFormRequest(agent, 'put', '/api/v1/medias/', documents[0].id, token, { name: 'document', path: process.cwd() + '/test/fixtures/files/Vue-Handbook.pdf' }, 400, function(err, res) {
+    doFormRequest(agent, 'put', '/api/v1/medias/', documents[0].id, token, { name: 'document', path: process.cwd() + '/test/utils/fixtures/files/Vue-Handbook.pdf' }, 400, function(err, res) {
       expect(res.statusCode).to.eqls(400);
       done();
     });
   });
 
   it('PUT /api/v1/medias 400 - not supported mimetype', function (done) {
-    doFormRequest(agent, 'put', '/api/v1/medias/', documents[0].id, token, { name: 'audio', path: process.cwd() + '/test/fixtures/files/electric-bulb.mp4' }, 400, function(err, res) {
+    doFormRequest(agent, 'put', '/api/v1/medias/', documents[0].id, token, { name: 'audio', path: process.cwd() + '/test/utils/fixtures/files/electric-bulb.mp4' }, 400, function(err, res) {
       expect(res.statusCode).to.eqls(400);
       done();
     });
@@ -272,7 +282,7 @@ describe('Media routes', function () {
   });
 
   it('PUT /api/v1/medias 200 - file(s) exists + data ok', function (done) {
-    doFormRequest(agent, 'put', '/api/v1/medias/', documents[0].id, token, { name: 'document', path: process.cwd() + '/test/fixtures/files/Documents.rar' }, 200, function(err, res) {
+    doFormRequest(agent, 'put', '/api/v1/medias/', documents[0].id, token, { name: 'document', path: process.cwd() + '/test/utils/fixtures/files/documents.rar' }, 200, function(err, res) {
       expect(res.statusCode).to.eqls(200);
       dataOk( res, 'media', 'update')
       done();
@@ -287,14 +297,14 @@ describe('Media routes', function () {
   });
 
   it('PATCH /api/v1/medias 400 - file too large', function (done) {
-    doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'document', path: process.cwd() + '/test/fixtures/files/Vue-Handbook.pdf' }, 400, function(err, res) {
+    doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'document', path: process.cwd() + '/test/utils/fixtures/files/Vue-Handbook.pdf' }, 400, function(err, res) {
       expect(res.statusCode).to.eqls(400);
       done();
     });
   });
 
   it('PATCH /api/v1/medias 400 - not supported mimetype', function (done) {
-    doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'audio', path: process.cwd() + '/test/fixtures/files/electric-bulb.mp4' }, 400, function(err, res) {
+    doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'audio', path: process.cwd() + '/test/utils/fixtures/files/electric-bulb.mp4' }, 400, function(err, res) {
       expect(res.statusCode).to.eqls(400);
       done();
     });
@@ -308,7 +318,7 @@ describe('Media routes', function () {
   });
 
   it('PATCH /api/v1/medias 200 - file(s) exists + data ok', function (done) {
-    doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'document', path: process.cwd() + '/test/fixtures/files/Documents.rar' }, 200, function(err, res) {
+    doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'document', path: process.cwd() + '/test/utils/fixtures/files/documents.rar' }, 200, function(err, res) {
       expect(res.statusCode).to.eqls(200);
       dataOk( res, 'media', 'update')
       done();

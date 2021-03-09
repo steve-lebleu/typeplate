@@ -331,29 +331,18 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
 ## Roadmap
 
-- [x] Repository image header
-- [x] Config refactoring vs simplicity & consistence
-- [x] Update npm dependencies
-- [x] Validation refactoring vs simplicity & consistence
-  - [x] Errors
-  - [x] Schemas
-- [x] Force LTS node version
-- [x] End of JSON API support
-- [x] Typing refactoring vs simplicity & consistence
-  - [x] Errors
-  - [x] Serializer
-  - [x] Resolver
 - [ ] ESLint compliance
 - [ ] Unit testing
-  - [ ] 85% coverage
-  - [ ] Refactoring UT, split e2e testing
-  - [ ] Pretty fixtures
+  - [ ] 95% coverage
+  - [x] Refactoring UT, split e2e testing
+  - [x] Pretty fixtures
   - [x] Dest path lcov (~~docs~~)
 - [ ] Caching / performances
 - [ ] Events vs TyperORM subscribers / hooks decorators
 - [ ] Permission services
 - [ ] Business services
 - [ ] Modular architecture
+- [ ] Integrate Typeorm cli into the game
 - [ ] Clean documentation generation api + typedoc. Set Api doc as public link on Github ?
 - [ ] Oauth for twitter, github, linkedin
 - [ ] Email sending
@@ -361,7 +350,6 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 - [ ] PM2 deployment and configuration
 - [ ] API monitoring
 - [ ] e2e tests generating
-- [ ] Upgrade kem templates for support of new templates
 - [ ] Graphql support
 - [ ] Jimp features
 - [ ] I18n

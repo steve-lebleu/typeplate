@@ -3,14 +3,6 @@ let request = require('supertest');
 
 describe('Routes resolving', () => {
 
-  before( () => {});
-
-  after( () => {
-    server.close();
-    server = undefined;
-    delete server;
-  });
-
   it('API status is OK 200', (done) => {
     request(server)
       .get('/api/v1/status')

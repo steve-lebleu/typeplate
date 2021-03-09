@@ -1,18 +1,12 @@
 import { authenticate } from 'passport';
 import { promisify } from 'es6-promisify';
-import { forbidden, badRequest } from 'boom';
+import { forbidden, badRequest } from '@hapi/boom';
 
 import { User } from '@models/user.model';
-import { ROLE } from '@enums/role.enum';
+import { ROLES } from '@enums/role.enum';
 import { list } from '@utils/enum.util';
 import { IUserRequest } from '@interfaces/IUserRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
-
-const ADMIN = ROLE.admin;
-const LOGGED_USER = ROLE.user;
-const GHOST = ROLE.ghost;
-
-export { ADMIN, LOGGED_USER, GHOST };
 
 /**
  * Authentication middleware
@@ -29,13 +23,13 @@ export class Guard {
    *
    * @param roles
    */
-  static authorize = (roles = list(ROLE)) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void)  => authenticate( 'jwt', { session: false }, Guard.handleJWT(req, res, next, roles) ) (req, res, next);
+  static authorize = (roles = list(ROLES)) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => authenticate( 'jwt', { session: false }, Guard.handleJWT(req, res, next, roles) )(req, res, next);
 
   /**
    * @description Authorize user access according to service.access_token
    * @param service Service to use for authentication
    */
-  static oauth = (service: string) => authenticate(service, { session: false });
+  static oauth = (service: string): { service: string } => authenticate(service, { session: false });
 
   /**
    * @description Callback function provided to passport.authenticate when authentication strategy is JWT
@@ -57,12 +51,12 @@ export class Guard {
       return next( forbidden(e) );
     }
 
-    if (roles === LOGGED_USER && user.role !== 'admin' && req.params.userId !== user.id ) {
+    if (roles === ROLES.user && user.role !== ROLES.admin && parseInt(req.params.userId, 10) !== user.id ) {
       return next( forbidden('Forbidden area') );
     } else if (!roles.includes(user.role)) {
       return next( forbidden('Forbidden area') );
     } else if (err || !user) {
-      return next( badRequest(err) );
+      return next( badRequest(err?.message) );
     }
 
     req.user = user;

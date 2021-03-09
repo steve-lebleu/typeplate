@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { notify } from 'node-notifier';
-import { notFound } from 'boom';
 
 import { Logger } from '@services/logger.service';
-import { getErrorStatusCode, getErrorOutput } from '@utils/error.util';
+import { ErrorFactory } from '@factories/error.factory';
+import { IHTTPError } from '@interfaces/IHTTPError.interface';
 
 /**
  * Error catch/output middleware
@@ -16,6 +16,18 @@ import { getErrorStatusCode, getErrorOutput } from '@utils/error.util';
 export class Catcher {
 
   constructor() {}
+
+  /**
+   * @description
+   *
+   * @param err
+   * @param req
+   * @param res
+   * @param next
+   */
+  static factory = (err: Error, req: Request, res: Response, next: (e: IHTTPError, req, res) => void): void => {
+    next(ErrorFactory.get(err), req, res);
+  }
 
   /**
    * @description Display error in desktop notification
@@ -31,7 +43,7 @@ export class Catcher {
   static notification = (err: Error, req: Request, res: Response, next: (e: Error, req, res, next) => void): void => {
     notify({
       title: `Error in ${req.method} ${req.url}`,
-      message : err.message + '\n' + err.stack ? err.stack : ''
+      message : err.name + '\n' + err.stack ? err.stack : err.message
     });
     next(err, req, res, next);
   };
@@ -44,8 +56,8 @@ export class Catcher {
    * @param res Express response object
    * @param next Callback function
    */
-  static log = (err: Error, req: Request, res: Response, next: (e: Error, req, res) => void): void => {
-    Logger.log('error', `${req.headers['x-forwarded-for'] as string || req.connection.remoteAddress} HTTP/${req.httpVersion} ${getErrorStatusCode(err)} ${req.method} ${req.url} ${ err.stack ? '\n' + err.stack : getErrorOutput(err).errors.slice().shift() as string }`);
+  static log = (err: IHTTPError, req: Request, res: Response, next: (e: IHTTPError, req, res) => void): void => {
+    Logger.log('error', `${req.headers['x-forwarded-for'] as string || req.connection.remoteAddress} HTTP/${req.httpVersion} ${err.statusCode} ${req.method} ${req.url} ${err.stack ? '\n' + err.stack : err.errors.slice().shift()}`);
     next(err, req, res);
   };
 
@@ -56,9 +68,9 @@ export class Catcher {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  static exit = (err: Error, req: Request, res: Response, next: (e: Error, req, res) => void): void => {
-    res.status( getErrorStatusCode(err) );
-    res.json( getErrorOutput(err) );
+  static exit = (err: IHTTPError, req: Request, res: Response, next: (e: Error, req, res) => void): void => {
+    res.status( err.statusCode );
+    res.json( { statusCode: err.statusCode, statusText: err.statusText, errors: err.errors } );
   };
 
   /**
@@ -69,7 +81,7 @@ export class Catcher {
    */
   static notFound = (req: Request, res: Response): void => {
     res.status( 404 );
-    res.json( getErrorOutput( notFound('End point not found') ) );
+    res.json( { statusCode: 404, statusText: 'Ooops... end point was not found', errors: ['Looks like someone\'s gone mushroom picking\''] } );
   };
 
 }

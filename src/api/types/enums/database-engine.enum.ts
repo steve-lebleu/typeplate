@@ -1,4 +1,7 @@
-enum DATABASE_ENGINE {
+/**
+ * @description Define supported database engines
+ */
+export enum DATABASE_ENGINE {
   'mysql' = 'mysql',
   'mariadb' = 'mariadb',
   'postgres' = 'postgres',
@@ -17,5 +20,3 @@ enum DATABASE_ENGINE {
   'expo' = 'expo',
   'better-sqlite3' = 'better-sqlite3'
 }
-
-export { DATABASE_ENGINE }

@@ -10,6 +10,8 @@ import { AuthProvider } from '@services/auth-provider.service';
 import { UserRepository } from '@repositories/user.repository';
 import { User } from '@models/user.model';
 
+const ExtractJwtAlias = ExtractJwt as { fromAuthHeaderWithScheme: (type: string) => string };
+
 /**
  * Passport configuration
  */
@@ -21,7 +23,7 @@ export class PassportConfiguration {
   private static options = {
     jwt: {
       secretOrKey: jwtSecret,
-      jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer') as string
+      jwtFromRequest: ExtractJwtAlias.fromAuthHeaderWithScheme('Bearer')
     }
   };
 

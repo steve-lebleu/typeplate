@@ -30,9 +30,18 @@ class EnvironmentConfiguration {
    * @description Set env according to args, and load .env file
    */
   static load() {
+
+    const [major, minor] = process.versions.node.split('.').map( parseFloat )
+
+    if(major < 14  || major === 14 && minor < 16) {
+        process.stdout.write('--- The node version of the server is too low for modern node programming');
+        process.exit(1);
+    }
+
     if (process.argv && process.argv.indexOf('--env') !== -1 ) {
       EnvironmentConfiguration.environment = ENVIRONMENT[process.argv[process.argv.indexOf('--env') + 1]] as string || ENVIRONMENT.development;
     }
+
     switch (EnvironmentConfiguration.environment) {
       case ENVIRONMENT.development:
         EnvironmentConfiguration.base = 'dist';
@@ -47,10 +56,14 @@ class EnvironmentConfiguration {
         EnvironmentConfiguration.base = 'dist';
       break;
     }
+
     const path = `${process.cwd()}/${EnvironmentConfiguration.base}/env/${EnvironmentConfiguration.environment}.env`;
+
     if (!existsSync(path)) {
-      throw new Error(`.env file not found on ${path}`);
+        process.stdout.write(`.env file not found on ${path}`);
+        process.exit(1);
     }
+
     const dtv: { config: (options) => void, parse: () => void } = require('dotenv') as { config: () => void, parse: () => void };
     dtv.config( { path} );
   }

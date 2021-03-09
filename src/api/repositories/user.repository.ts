@@ -2,8 +2,8 @@ import * as Moment from 'moment-timezone';
 
 import { Repository, EntityRepository, getRepository } from 'typeorm';
 import { omitBy, isNil } from 'lodash';
-import { uuidv4 } from 'uuid/v4';
-import { badRequest, notFound, unauthorized } from 'boom';
+import { v4 as uuidv4 } from 'uuid';
+import { badRequest, notFound, unauthorized } from '@hapi/boom';
 
 import { User } from '@models/user.model';
 import { IUserQueryString } from '@interfaces/IUserQueryString.interface';
@@ -123,7 +123,7 @@ export class UserRepository extends Repository<User>  {
       return userRepository.save(user);
     }
 
-    const password = uuidv4() as string;
+    const password = uuidv4();
 
     return userRepository.create({ email, password, username: name });
 

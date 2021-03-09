@@ -7,8 +7,6 @@ import { AuthRouter } from '@routes/auth.route';
 import { MediaRouter } from '@routes/media.route';
 import { UserRouter } from '@routes/user.route';
 
-import { Serializer } from '@middlewares/serializer.middleware';
-
 /**
  * Load all application routes and plug it on main router
  */
@@ -23,10 +21,10 @@ export class ProxyRouter {
    * @description Routes descriptions
    */
   private static routes = [
-    { segment: '', provider: MainRouter, serializable: false },
-    { segment: '/auth/', provider: AuthRouter, serializable: false },
-    { segment: '/medias/', provider: MediaRouter, serializable: true },
-    { segment: '/users/', provider: UserRouter, serializable: true }
+    { segment: '', provider: MainRouter },
+    { segment: '/auth/', provider: AuthRouter },
+    { segment: '/medias/', provider: MediaRouter },
+    { segment: '/users/', provider: UserRouter }
   ];
 
   constructor() {}
@@ -34,12 +32,12 @@ export class ProxyRouter {
   /**
    * @description Plug sub routes on main router
    */
-  static get(): Router {
+   static map(): Router {
     if ( !ProxyRouter.instance ) {
       ProxyRouter.instance = Router();
       ProxyRouter.routes.forEach( (route: IRoute) => {
-        const router = new route.provider().router;
-        ProxyRouter.instance.use( route.segment, route.serializable ? [ router, Serializer.serialize ] : router );
+        const instance = new route.provider() as { router: Router };
+        ProxyRouter.instance.use( route.segment, instance.router );
       });
     }
     return ProxyRouter.instance;

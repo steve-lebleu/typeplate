@@ -1,6 +1,6 @@
 import { unlink } from 'fs';
 import { EventEmitter } from 'events';
-import { expectationFailed } from 'boom';
+import { expectationFailed } from '@hapi/boom';
 import { promisify } from 'es6-promisify';
 import * as Jimp from 'jimp';
 

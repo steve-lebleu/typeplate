@@ -1,7 +1,7 @@
 import { Request } from 'express';
-import { NO_CONTENT } from 'http-status';
-import { expectationFailed } from 'boom';
+import { CREATED, OK, NO_CONTENT, NOT_FOUND } from 'http-status';
 import { IResponse } from '@interfaces/IResponse.interface';
+import { expectationFailed } from '@hapi/boom';
 
 /**
  * Resolver middleware that close all requests by response sending (404 except)
@@ -11,39 +11,56 @@ export class Resolver {
   constructor() {}
 
   /**
-   * @description Resolve the current request and get output
+   * @description Resolve the current request and get output. The princip is that we becomes here, it means that none error has been encountered except a potential and non declared as is 404 error
    *
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    * @param next Callback function
-   *
-   * FIXME: The check on id parameter should be on validation -> change doRequest by doQueryRequest allow 400, by validation error.
-   * For other methods (PUT, PATCH, DELETE), find other solution
    */
-  static resolve = (req: Request, res: IResponse, next: (error?: Error) => void): void => {
+  static async resolve(req: Request, res: IResponse, next: (e?: Error) => void): Promise<void> {
 
-    const cond = typeof res.locals.data !== 'undefined' && res.locals.data.hasOwnProperty('statusCode') ;
+    const hasContent = typeof res.locals?.data !== 'undefined';
+    const hasStatusCodeOnResponse = typeof res.statusCode !== 'undefined';
 
-    // Success DELETE request which have 204 statusCode : we get out
-    if (req.method === 'DELETE') {
-      if (res.statusCode === NO_CONTENT) {
-        res.end();
-      } else if ( isNaN( parseInt(req.url.split('/').pop(), 10) )) {
+    if ( req.method === 'DELETE' ) {
+      // As trick but necessary because if express don't match route we can't give a 204/404 on DELETE
+      if ( isNaN( parseInt(req.url.split('/').pop(), 10) )) {
         return next( expectationFailed('ID parameter must be a number') );
       }
+      res.status( Resolver.getStatusCode(req.method, hasContent) )
+      res.end();
     }
 
-    // If the current request don't match with previous conditions,  next to 404
-    if (typeof(res.locals.data) === 'undefined') {
+    // FIXME Should be reviewed because it can be at origin of non-blocking error HEADER_CANNOT_BE_SET_AFTER_RESPONSE_SENDING
+    if ( !hasContent ) {
       next();
     }
 
-    // All of these methods can returns an empty result set, but a result set
-    if ( ( cond && ['GET', 'POST', 'PUT', 'PATCH'].includes(req.method) ) || ( typeof res.statusCode !== 'undefined' && res.statusCode !== 404 ) ) {
-      res.statusCode = res.statusCode;
+    if ( ( hasContent && ['GET', 'POST', 'PUT', 'PATCH'].includes(req.method) ) || ( hasStatusCodeOnResponse && res.statusCode !== NOT_FOUND ) ) {
+      res.status( Resolver.getStatusCode(req.method, hasContent) );
       res.json(res.locals.data);
     }
 
+  }
+
+  /**
+   * @description Get the HTTP status code to output for current request
+   *
+   * @param method
+   * @param hasContent
+   */
+  private static getStatusCode(method: string, hasContent: boolean): number {
+    switch (method) {
+      case 'GET':
+        return OK;
+      case 'POST':
+        return hasContent ? CREATED : NO_CONTENT;
+      case 'PUT':
+      case 'PATCH':
+        return hasContent ? OK : NO_CONTENT;
+      case 'DELETE':
+        return NO_CONTENT
+    }
   }
 
 }

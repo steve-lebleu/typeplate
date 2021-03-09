@@ -1,4 +1,4 @@
-import { notAcceptable } from 'boom';
+import { notAcceptable } from '@hapi/boom';
 import { Request, Response } from 'express';
 import { CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
 

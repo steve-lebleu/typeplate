@@ -1,11 +1,17 @@
 import { IHTTPError } from '@interfaces/IHTTPError.interface';
-import { IFieldError } from '@interfaces/IFieldError.interface';
 import { IError } from '@interfaces/IError.interface';
 
 /**
- * Type upload error
+ * @description Type upload error
  */
-export class UploadError extends Error implements IHTTPError {
+export class UploadError implements Error, IHTTPError {
+
+  readonly name = 'UploadError';
+
+  /**
+   * @description Error.message implementation
+   */
+   message: string;
 
   /**
    * @description HTTP response status code
@@ -20,18 +26,18 @@ export class UploadError extends Error implements IHTTPError {
   /**
    * @description HTTP response errors
    */
-  errors: Array<IFieldError|string>;
+  errors: Array<string>;
 
   /**
-   * @param status
-   * @param message
-   * @param errors
+   * @description Error stack
    */
+  stack: string;
+
   constructor(error: IError) {
-    super();
     this.statusCode = 400;
     this.statusText = error.name;
     this.errors = [error.message];
+    this.stack = error?.stack;
   }
 
 }

@@ -1,4 +1,3 @@
-import { CREATED, NO_CONTENT } from 'http-status';
 import { getRepository, getCustomRepository } from 'typeorm';
 import { clone } from 'lodash';
 
@@ -6,7 +5,6 @@ import { IMediaRequest } from '@interfaces/IMediaRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
 
 import { safe } from '@decorators/safe.decorator';
-import { can } from '@decorators/can.decorator';
 
 import { MediaRepository } from '@repositories/media.repository';
 import { Media } from '@models/media.model';
@@ -30,10 +28,9 @@ class MediaController {
    * @public
    */
   @safe
-  @can('owner.id')
   static async get(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
-    const media = await repository.findOne(req.params.mediaId, { relations: ['owner'] });
+    const media = await repository.findOneOrFail(req.params.mediaId, { relations: ['owner'] });
     res.locals.data = media;
   }
 
@@ -44,7 +41,6 @@ class MediaController {
    * @param res Express response object
    */
   @safe
-  @can('owner.id')
   static async list (req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(MediaRepository);
     const medias = await repository.list(req.query);
@@ -66,7 +62,6 @@ class MediaController {
     const repository = getRepository(Media);
     const medias = [].concat(req.files).map( (file) => new Media(file));
     await repository.save(medias);
-    res.status( CREATED );
     res.locals.data = medias;
   }
 
@@ -99,13 +94,11 @@ class MediaController {
    * FIXME: set headers after response write error
    */
   @safe
-  @can('owner.id')
   static async remove (req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
     const media = clone(res.locals.data) as Media;
     await repository.remove(media);
     MEDIA_EVENT_EMITTER.emit('media.synchronized', res.locals.data as Media);
-    res.status(NO_CONTENT);
   }
 }
 

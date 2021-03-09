@@ -4,25 +4,27 @@
 
 import * as Joi from 'joi';
 
+import { email, password } from '@schemas';
+
 // POST api/v1/auth/register
 const register = {
-  body: {
-    email: Joi.string().email({ minDomainAtoms: 2 }).required(),
-    password: Joi.string().min(8).max(16).required()
-  }
+  body: Joi.object({
+    email: email().required(),
+    password: password('user').required()
+  })
 };
 
 // POST api/v1/auth/login
 const login = {
-  body: Joi.object().keys({
+  body: Joi.object({
     email: Joi.when('context.apikey', {
       is: null,
-      then: Joi.string().email({ minDomainAtoms: 2 }).required(),
+      then: email().required(),
       otherwise: Joi.optional()
     }),
     password: Joi.when('context.apikey', {
       is: null,
-      then: Joi.string().min(8).max(16).required(),
+      then: password('user').required(),
       otherwise: Joi.optional()
     }),
     apikey: Joi.when('context.password', {
@@ -36,18 +38,18 @@ const login = {
 // POST api/v1/auth/facebook
 // POST api/v1/auth/google
 const oAuth = {
-  body: {
+  body: Joi.object({
     access_token: Joi.string().required(),
-  }
+  })
 };
 
 // POST api/v1/auth/refresh
 const refresh = {
-  body: {
+  body: Joi.object({
     token: Joi.object().keys({
       refreshToken: Joi.string().min(82).max(88).required(),
     }).required()
-  }
+  })
 };
 
 export { register, login, oAuth, refresh };

@@ -1,6 +1,3 @@
-import { Serializer } from '@bases/serializer.class';
-import { UserSerializer } from '@serializers/user.serializer';
-import { MediaSerializer } from '@serializers/media.serializer';
 import * as Util from 'util';
 import * as Pluralize from 'pluralize';
 import { IModel } from '@interfaces/IModel.interface';
@@ -11,8 +8,8 @@ import { IModel } from '@interfaces/IModel.interface';
  */
 const isSanitizable = (value: any): boolean => {
   const isTypedObject = value !== null && !Util.types.isDate(value) && typeof value !== 'string' && typeof value === 'object' && value.constructor !== Object;
-  const cond1 = isTypedObject && value.constructor !== Array;
-  const cond2 = isTypedObject && value.constructor === Array && value.filter( (entry: any) => typeof entry !== 'string' ).length > 0;
+  const cond1 = isTypedObject && value?.constructor !== Array;
+  const cond2 = isTypedObject && value?.constructor === Array && value.filter( (entry: any) => typeof entry !== 'string' ).length > 0;
   return cond1 || cond2;
 };
 
@@ -37,27 +34,6 @@ const sanitize = (whitelist: string[], entity: IModel): Record<string, unknown> 
   return output;
 };
 
-/**
- * @description Get a serializer according to current request
- * @param name
- * TODO: no hardcode
- */
-const getSerializer = (name: string): Serializer => {
-  let serializer = null;
-  switch(name) {
-    case 'User':
-    case 'users':
-      serializer = new UserSerializer();
-    break;
-    case 'Media':
-    case 'medias':
-      serializer = new MediaSerializer();
-    break;
-  }
-  if (serializer === null) {
-    throw new TypeError(`Serializer for ${name} cannot be instancied`);
-  }
-  return serializer;
-};
 
-export { getSerializer, sanitize }
+
+export { sanitize }

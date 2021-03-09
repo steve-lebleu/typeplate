@@ -19,13 +19,13 @@ describe('Routes resolving', () => {
       .expect(200, done);
   });
 
-  it('API report violation is OK 200', (done) => {
+  it('API report violation is OK 204', (done) => {
     request(server)
       .post('/api/v1/report-violation')
       .set('Content-Type', process.env.CONTENT_TYPE)
       .set('Origin', process.env.ORIGIN)
       .send({ data: 'report-violation' })
-      .expect(200, done);
+      .expect(204, done);
   });
 
   it('404 on everything else', (done) => {

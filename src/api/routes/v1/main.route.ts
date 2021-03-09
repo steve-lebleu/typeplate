@@ -24,7 +24,7 @@ export class MainRouter extends Router {
      *
      * @apiError (Internal server error 500) Internal API is down
      */
-    this.router.get('/status', MainController.status);
+    this.router.route('/status').get(MainController.status);
 
     /**
      * @ {post} /report-violation Log CSP
@@ -39,7 +39,7 @@ export class MainRouter extends Router {
      *
      * @Error (Internal server error 500) Internal server error while logging
      */
-    this.router.post('/report-violation', MainController.report);
+    this.router.route('/report-violation').post(MainController.report);
 
   }
 

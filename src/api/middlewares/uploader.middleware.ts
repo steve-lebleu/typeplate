@@ -2,7 +2,7 @@ import * as Multer from 'multer';
 import * as Pluralize from 'pluralize';
 import * as filenamify from 'filenamify';
 
-import { unsupportedMediaType, entityTooLarge } from 'boom';
+import { unsupportedMediaType } from '@hapi/boom';
 
 import { upload, resize } from '@config/environment.config';
 
@@ -12,7 +12,6 @@ import { IUploadMulterOptions } from '@interfaces/IUploadMulterOptions.interface
 import { IUploadOptions } from '@interfaces/IUploadOptions.interface';
 import { IMedia } from '@interfaces/IMedia.interface';
 
-import { UploadError } from '@errors/upload-error';
 import { foldername, extension, fieldname } from '@utils/string.util';
 import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
 
@@ -20,6 +19,7 @@ import { MEDIA_EVENT_EMITTER } from '@events/media.event';
 
 interface IMulter {
   diskStorage: ( { destination, filename } ) => IStorage;
+  // eslint-disable-next-line id-blacklist
   any: () => ( req, res, next ) => void;
 }
 
@@ -68,9 +68,9 @@ export class Uploader {
 
     middleware(req, res, (err: Error) => {
       if(err) {
-        return next(new UploadError(err));
+        return next(err instanceof Multer.MulterError ? err : new Multer.MulterError(err.message) );
       } else if (typeof req.files === 'undefined') {
-        return next(new UploadError(new Error('Binary data cannot be found')));
+        return next(new Error('Binary data cannot be found'));
       }
       req.body.files = req.files
         .slice(0, opts.maxFiles)
@@ -80,7 +80,6 @@ export class Uploader {
           media.url = `${type}/${type === 'image' ? `${resize.destinations.master}/` : ''}${media.filename}`
           return media;
         }) || [];
-
         const images = req.files.filter( ( file: IMedia ) => IMAGE_MIME_TYPE.hasOwnProperty(file.mimetype));
         if ( resize.isActive && images.length > 0 ) {
           MEDIA_EVENT_EMITTER.emit('media.resize', images);

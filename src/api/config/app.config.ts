@@ -9,7 +9,7 @@ import * as Helmet from 'helmet';
 
 import { createWriteStream } from 'fs';
 import { initialize as PassportInitialize, use as PassportUse } from 'passport';
-import { notAcceptable } from 'boom';
+import { notAcceptable } from '@hapi/boom';
 
 import { ENVIRONMENT } from '@enums/environment.enum';
 
@@ -21,9 +21,9 @@ import { Logger } from '@services/logger.service';
 import { ProxyRouter } from '@services/proxy-router.service';
 
 import { Cors as Kors } from '@middlewares/cors.middleware';
-import { Serializer } from '@middlewares/serializer.middleware';
 import { Resolver } from '@middlewares/resolver.middleware';
 import { Catcher } from '@middlewares/catcher.middleware';
+import { Sanitizer } from '@middlewares/sanitizer.middleware';
 
 /**
  * Instanciate and set Express application.
@@ -154,17 +154,11 @@ export class ExpressConfiguration {
     /**
      * Set global middlewares on Express Application
      *
-     * Note that after router, and before resolver, some routes pass by the Serializer middleware
-     * See services/proxy-router.service.ts to check which route serializes her data before exiting
-     *
-     * Note also that middlewares are implemented in each route file (Guard, Validation, Upload, ...)
-     *
      * - RateLimit
-     * - Deserializer (if Content-Type is application/vnd.api+json)
      * - Router(s)
      * - Resolver
      */
-    this.instance.use(`/api/${version}`, RateLimit(this.options.rate), Serializer.deserialize, ProxyRouter.get(), Resolver.resolve);
+    this.instance.use(`/api/${version}`, RateLimit(this.options.rate), ProxyRouter.map(), Sanitizer.whitelist, Resolver.resolve);
 
     /**
      * Errors handlers
@@ -173,7 +167,7 @@ export class ExpressConfiguration {
       this.instance.use( Catcher.notification );
     }
 
-    this.instance.use( Catcher.log, Catcher.exit, Catcher.notFound ); // Log, exit with error, exit with 404
+    this.instance.use( Catcher.factory, Catcher.log, Catcher.exit, Catcher.notFound ); // Factorize error, log it, exit with clean HTTP error | clean 404
   }
 
   /**

@@ -3,89 +3,89 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import * as Joi from 'joi';
-import * as schemas from '@validations/schemas';
-import { MIME_TYPE } from '@enums/mime-type.enum';
 
-const schemaMedias = () => {
-  return Joi.array().items(
-    Joi.object().keys({
-      fieldname: schemas.fieldname().required(),
-      filename: schemas.filename().required(),
-      path: schemas.path().required(),
-      mimetype: schemas.mimetype(MIME_TYPE).required(),
-      size: Joi.number().required(),
-      owner: Joi.number().required()
-    })
-  )
-};
+import { MIME_TYPE_LIST } from '@enums/mime-type.enum';
+import { id, pagination, fieldname, filename, path, mimetype } from '@schemas';
 
 // GET /v1/medias
 const listMedias = {
-  query: {
-    page: schemas.pagination('page'),
-    perPage: schemas.pagination('perPage'),
-    fieldname: schemas.fieldname(),
-    filename: Joi.string().regex(/^[a-z-A-Z-0-9\-\_\w]{1,123}$/i),
-    path: schemas.path(),
-    mimetype: schemas.mimetype(MIME_TYPE),
+  query: Joi.object({
+    page: pagination('page'),
+    perPage: pagination('perPage'),
+    fieldname: fieldname(),
+    filename: filename(false),
+    path: path(),
+    mimetype: mimetype(MIME_TYPE_LIST),
     size: Joi.number(),
     owner: Joi.number()
-  }
+  })
 };
 
 // POST /v1/medias
 const insertMedia = {
-  body: {
-    files: schemaMedias()
-  }
+  body: Joi.object({
+    files: Joi.array().items(
+      Joi.object().keys({
+        fieldname: fieldname().required(),
+        filename: filename().required(),
+        path: path().required(),
+        mimetype: mimetype(MIME_TYPE_LIST).required(),
+        size: Joi.number().required(),
+        owner: Joi.number().required(),
+        url: Joi.string().required()
+      })
+    )
+  })
 };
 
 // GET /v1/medias/:mediaId
 const getMedia = {
-  params: {
-    mediaId: schemas.id()
-  }
+  params: Joi.object({
+    mediaId: id()
+  })
 };
 
 // PUT /v1/medias/:mediaId
 const replaceMedia = {
-  params: {
-    mediaId: schemas.id()
-  },
-  body: {
+  params: Joi.object({
+    mediaId: id()
+  }),
+  body: Joi.object({
     file: {
-      fieldname: schemas.fieldname().required(),
-      filename: schemas.filename().required(),
-      path: schemas.path().required(),
-      mimetype: schemas.mimetype(MIME_TYPE).required(),
+      fieldname: fieldname().required(),
+      filename: filename().required(),
+      path: path().required(),
+      mimetype: mimetype(MIME_TYPE_LIST).required(),
       size: Joi.number().required(),
-      owner: Joi.number().required()
+      owner: Joi.number().required(),
+      url: Joi.string().required()
     }
-  }
+  })
 };
 
 // PATCH /v1/medias/:mediaId
 const updateMedia = {
-  params: {
-    mediaId: schemas.id()
-  },
-  body: {
+  params: Joi.object({
+    mediaId: id()
+  }),
+  body: Joi.object({
     file: {
-      fieldname: schemas.fieldname(),
-      filename: schemas.filename(),
-      path: schemas.path(),
-      mimetype: schemas.mimetype(MIME_TYPE),
+      fieldname:  fieldname(),
+      filename: filename(),
+      path: path(),
+      mimetype: mimetype(MIME_TYPE_LIST),
       size: Joi.number(),
-      owner: Joi.number()
+      owner: Joi.number(),
+      url: Joi.string()
     }
-  }
+  })
 };
 
 // DELETE /v1/medias/:mediaId
 const removeMedia = {
-  params: {
-    mediaId: schemas.id()
-  }
+  params: Joi.object({
+    mediaId: id()
+  })
 };
 
 export { listMedias, insertMedia, getMedia, replaceMedia, updateMedia, removeMedia };

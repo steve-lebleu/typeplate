@@ -1,7 +1,7 @@
 /**
  * Describe supported media types
  */
-export enum MEDIA_TYPE {
+export enum MEDIA {
   audio = 'audio',
   archive = 'archive',
   document = 'document',

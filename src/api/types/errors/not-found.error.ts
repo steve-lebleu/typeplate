@@ -1,10 +1,17 @@
 import { IHTTPError } from '@interfaces/IHTTPError.interface';
-import { IFieldError } from '@interfaces/IFieldError.interface';
 import { IError } from '@interfaces/IError.interface';
 
-export class NotFoundError extends Error implements IHTTPError {
+/**
+ * @description Custom NotFoundError
+ */
+export class NotFoundError implements Error, IHTTPError {
 
-  readonly name = 'Entity not found error';
+  readonly name = 'NotFoundError';
+
+  /**
+   * @description Error.message implementation
+   */
+   message: string;
 
   /**
    * @description IError HTTP response status code
@@ -19,13 +26,17 @@ export class NotFoundError extends Error implements IHTTPError {
   /**
    * @description Ierror HTTP response errors
    */
-  errors: Array<IFieldError|string>;
+  errors: Array<string>;
+
+  /**
+   * @description Error stack
+   */
+  stack: string;
 
   constructor(error: IError) {
-    super();
-
     this.statusCode = 404;
     this.statusText = 'Bad request';
     this.errors = [error.message];
+    this.stack = error?.stack;
   }
 }

@@ -1,4 +1,4 @@
-# Typescript / Express.js / Typeorm REST API boilerplate
+![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/sCpPzpy/header-ts-boilerplate-2.png)
 
 [![Node](https://img.shields.io/badge/Node-14.16.0-informational)](https://nodejs.org/docs/latest-v14.x/api/index.html)
 [![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-informational)](https://www.typescriptlang.org/)
@@ -333,28 +333,35 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
 - [x] Repository image header
 - [x] Config refactoring vs simplicity & consistence
-- [ ] Typing refactoring vs simplicity & consistence
-  - [ ] Errors
-  - [ ] Requests
-  - [ ] Responses
-- [ ] Update npm dependencies
-- [ ] Force LTS node version
-- [ ] Serializing and JSONAPI support. Implements or remove
-- [ ] Upgrade kem templates for support of new features (update readme)
-- [ ] Create ./dist/* directories on the fly if custom env variables are set
-- [ ] Caching / performances
+- [x] Update npm dependencies
+- [x] Validation refactoring vs simplicity & consistence
+  - [x] Errors
+  - [x] Schemas
+- [x] Force LTS node version
+- [x] End of JSON API support
+- [x] Typing refactoring vs simplicity & consistence
+  - [x] Errors
+  - [x] Serializer
+  - [x] Resolver
+- [ ] ESLint compliance
 - [ ] Unit testing
   - [ ] 85% coverage
-  - [ ] Refactoring UT, split e2e testing, prettify fixtures
-  - [ ] Dest path lcov (~~docs~~)
-- [ ] ESLint compliance
-- [ ] Update doc api + typedoc (hard). Set Api doc as link on Github ?
-- [ ] Implements oauth for twitter, github, linkedin
+  - [ ] Refactoring UT, split e2e testing
+  - [ ] Pretty fixtures
+  - [x] Dest path lcov (~~docs~~)
+- [ ] Caching / performances
+- [ ] Events vs TyperORM subscribers / hooks decorators
+- [ ] Permission services
+- [ ] Business services
+- [ ] Modular architecture
+- [ ] Clean documentation generation api + typedoc. Set Api doc as public link on Github ?
+- [ ] Oauth for twitter, github, linkedin
 - [ ] Email sending
-- [ ] PM2 deploy
 - [ ] CI providers (circle-ci at least)
-- [ ] CD providers
-- [ ] SSL generating
+- [ ] PM2 deployment and configuration
 - [ ] API monitoring
+- [ ] e2e tests generating
+- [ ] Upgrade kem templates for support of new templates
 - [ ] Graphql support
 - [ ] Jimp features
+- [ ] I18n

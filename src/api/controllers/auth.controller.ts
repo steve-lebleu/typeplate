@@ -1,7 +1,6 @@
 import { Request } from 'express';
 import { getRepository, getCustomRepository } from 'typeorm';
-import { CREATED } from 'http-status';
-import { notFound } from 'boom';
+import { notFound } from '@hapi/boom';
 
 import { IResponse } from '@interfaces/IResponse.interface';
 import { User } from '@models/user.model';
@@ -29,7 +28,6 @@ export class AuthController {
     const user = new User(req.body);
     await repository.insert(user);
     const token = await generateTokenResponse(user, user.token());
-    res.status(CREATED);
     res.locals.data = { token, user: user.whitelist() as unknown };
   }
 

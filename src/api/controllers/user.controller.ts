@@ -1,7 +1,6 @@
 import * as Moment from 'moment'
 
 import { getRepository, getCustomRepository } from 'typeorm';
-import { CREATED, NO_CONTENT } from 'http-status';
 
 import { User } from '@models/user.model';
 import { UserRepository } from '@repositories/user.repository';
@@ -25,7 +24,7 @@ export class UserController {
   @safe
   static async get(req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(UserRepository);
-    res.locals.data = await repository.one(req.params.userId);
+    res.locals.data = await repository.one(parseInt(req.params.userId, 10));
   }
 
   /**
@@ -50,7 +49,6 @@ export class UserController {
     const repository = getRepository(User);
     const user = new User(req.body);
     const savedUser = await repository.save(user);
-    res.status( CREATED );
     res.locals.data = savedUser;
   }
 
@@ -93,7 +91,6 @@ export class UserController {
   static async remove (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = await repository.findOneOrFail(req.params.userId);
-    await repository.remove(user);
-    res.status(NO_CONTENT);
+    void repository.remove(user);
   }
 }

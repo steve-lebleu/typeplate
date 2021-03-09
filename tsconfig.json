@@ -9,6 +9,7 @@
       "@controllers/*": ["api/controllers/*"],
       "@decorators/*": ["api/decorators/*"],
       "@enums/*": ["api/types/enums/*"],
+      "@errors": ["api/types/errors/"],
       "@errors/*": ["api/types/errors/*"],
       "@events/*": ["api/events/*"],
       "@factories/*": ["api/factories/*"],
@@ -17,6 +18,8 @@
       "@models/*": ["api/models/*"],
       "@repositories/*": ["api/repositories/*"],
       "@routes/*": ["api/routes/v1/*"],
+      "@schemas": ["api/validations/schemas/"],
+      "@schemas/*": ["api/validations/schemas/*"],
       "@serializers/*": ["api/serializers/*"],
       "@servers/*": ["servers/*"],
       "@services/*": ["api/services/*"],
@@ -24,12 +27,12 @@
       "@validations/*": ["api/validations/*"],
       "@whitelists/*": ["api/serializers/whitelists/*"]
     },
-    "lib": ["dom", "es5", "es6", "es7"],
-    "target": "es5",
-    "module": "commonjs",
+    "lib": ["dom", "ES2020"],
+    "target": "ES2020",
+    "module": "CommonJS",
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "experimentalDecorators": true
   },
   "exclude" : [
     "**/**/node_modules",

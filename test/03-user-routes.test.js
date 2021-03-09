@@ -142,13 +142,13 @@ describe('User routes', function () {
     });
   });
 
-  it('GET /api/v1/users/:id 417 - userId param is not a number', function (done) {
-    doQueryRequest(agent, '/api/v1/users/a', null, token, {}, 417, function(err, res) {
-      expect(res.statusCode).to.eqls(417);
+  it('GET /api/v1/users/:id 404 - user not found because userId is not a number', function (done) {
+    doQueryRequest(agent, '/api/v1/users/a', null, token, {}, 404, function(err, res) {
+      expect(res.statusCode).to.eqls(404);
       done();
     });
   });
-
+  
   it('GET /api/v1/users/:id 200 - data ok', function (done) {
     doQueryRequest(agent, '/api/v1/users/1', null, token, {}, 200, function(err, res) {
       expect(res.statusCode).to.eqls(200);
@@ -320,10 +320,10 @@ describe('User routes', function () {
     });
   });
 
-  it('PUT /api/v1/users/:id 417 - userId param is not a number', function (done) {
+  it('PUT /api/v1/users/:id 404 - user not found because userId is not a number', function (done) {
     const user = fixtures.user.entity('user');
-    doRequest(agent, 'put', '/api/v1/users/a', null, token, user, 417, function(err, res) {
-      expect(res.statusCode).to.eqls(417);
+    doRequest(agent, 'put', '/api/v1/users/a', null, token, user, 404, function(err, res) {
+      expect(res.statusCode).to.eqls(404);
       done();
     });
   });
@@ -399,10 +399,10 @@ describe('User routes', function () {
     });
   });
 
-  it('PATCH /api/v1/users/:id 417 - userId param is not a number', function (done) {
+  it('PATCH /api/v1/users/:id 404 - user not found because userId is not a number', function (done) {
     const user = fixtures.user.entity('admin');
-    doRequest(agent, 'patch', '/api/v1/users/a', null, token, user, 417, function(err, res) {
-      expect(res.statusCode).to.eqls(417);
+    doRequest(agent, 'patch', '/api/v1/users/a', null, token, user, 404, function(err, res) {
+      expect(res.statusCode).to.eqls(404);
       done();
     });
   });
@@ -445,7 +445,7 @@ describe('User routes', function () {
       .expect(404, done);
   });
 
-  it('DELETE /api/v1/users/:id 417 - userId param is not a number', function (done) {
+  it('DELETE /api/v1/users/:id 417 - userId is not a number', function (done) {
     agent
       .delete('/api/v1/users/a')
       .set('Accept', process.env.CONTENT_TYPE)

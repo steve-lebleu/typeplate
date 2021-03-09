@@ -12,7 +12,7 @@ export class MediaRepository extends Repository<Media>  {
   }
 
   /**
-   * @description Get a list of files according to current query 
+   * @description Get a list of files according to current query
    *
    * FIXME: Media seems to expose User critical data
    */
@@ -42,11 +42,9 @@ export class MediaRepository extends Repository<Media>  {
       query.andWhere('size >= :size', { size: `%${options.size}%` });
     }
 
-    const medias = await query
+    return query
       .skip( ( page - 1 ) * perPage )
       .take( perPage )
       .getMany();
-
-    return medias;
   }
 }

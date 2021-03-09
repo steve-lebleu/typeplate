@@ -8,8 +8,9 @@
 
 [![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
 [![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm-boilerplate?branch=master)
-![David](https://img.shields.io/david/konfer-be/ts-express-typeorm-boilerplate)
-[![Known Vulnerabilities](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?style=flat)](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate)
+![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/konfer-be/ts-express-typeorm-boilerplate/master)
+![Requires.io (branch)](https://img.shields.io/requires/github/konfer-be/ts-express-typeorm-boilerplate/master)
+![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/konfer-be/ts-express-typeorm-boilerplate)
 
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 ![Discord](https://img.shields.io/discord/817108781291929641)
@@ -338,7 +339,7 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
   - [x] Pretty fixtures
   - [x] Dest path lcov (~~docs~~)
 - [ ] Caching / performances
-- [ ] Events vs TyperORM subscribers / hooks decorators
+- [x] Events vs TyperORM subscribers / hooks decorators
 - [ ] Permission services
 - [ ] Business services
 - [ ] Modular architecture

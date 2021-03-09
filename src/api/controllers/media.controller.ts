@@ -9,8 +9,6 @@ import { safe } from '@decorators/safe.decorator';
 import { MediaRepository } from '@repositories/media.repository';
 import { Media } from '@models/media.model';
 
-import { MEDIA_EVENT_EMITTER } from '@events/media.event';
-
 /**
  * Manage incoming requests for api/{version}/medias
  */
@@ -79,7 +77,6 @@ class MediaController {
     const media = clone(res.locals.data) as Media;
     repository.merge(media, req.files[0] as unknown);
     await repository.save(media);
-    MEDIA_EVENT_EMITTER.emit('media.synchronized', res.locals.data as Media);
     res.locals.data = media;
   }
 
@@ -98,7 +95,6 @@ class MediaController {
     const repository = getRepository(Media);
     const media = clone(res.locals.data) as Media;
     await repository.remove(media);
-    MEDIA_EVENT_EMITTER.emit('media.synchronized', res.locals.data as Media);
   }
 }
 

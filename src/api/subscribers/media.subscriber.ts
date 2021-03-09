@@ -1,7 +1,11 @@
-import { unlink, existsSync } from 'fs';
-import { promisify } from 'es6-promisify';
+require('module-alias/register');
+
 import * as Jimp from 'jimp';
 import * as Moment from 'moment-timezone';
+
+import { unlink, existsSync } from 'fs';
+import { promisify } from 'es6-promisify';
+
 import { expectationFailed } from '@hapi/boom';
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, RemoveEvent } from 'typeorm';
 

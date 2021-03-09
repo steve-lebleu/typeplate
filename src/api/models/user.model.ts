@@ -11,7 +11,7 @@ import { ROLE, ROLES } from '@enums/role.enum';
 import { Media } from '@models/media.model';
 import { IModel } from '@interfaces/IModel.interface';
 import { whitelist } from '@whitelists/user.whitelist';
-import { sanitize } from '@utils/serializing.util';
+import { sanitize } from '@utils/sanitize.util';
 import { crypt } from '@utils/string.util';
 
 @Entity()

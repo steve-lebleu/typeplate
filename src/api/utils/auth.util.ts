@@ -11,6 +11,8 @@ import * as Moment from 'moment-timezone';
  *
  * @param user
  * @param accessToken
+ *
+ * TODO: move it in technical or business service
  */
 const generateTokenResponse = async (user : User, accessToken : string): Promise<{ tokenType, accessToken, refreshToken, expiresIn }> => {
   const tokenType = 'Bearer';

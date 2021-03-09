@@ -1,13 +1,24 @@
-var { server } = require(process.cwd() + '/dist/api/app.bootstrap');
-var { crypt } = require(process.cwd() + '/dist/api/utils/string.util');
+// --- Test modules
 
 var request = require('supertest');
 var chance = require('chance').Chance();
-var fixtures = require(process.cwd() + '/test/fixtures');
 
 var { clone } = require('lodash');
 var { expect } = require('chai');
+
+// --- API server
+
+var { server } = require(process.cwd() + '/dist/api/app.bootstrap');
+
+// --- API utils
+
+var { crypt } = require(process.cwd() + '/dist/api/utils/string.util');
+
+// --- Test utils
+
+var fixtures = require(process.cwd() + '/test/utils/fixtures');
 var { doRequest } = require(process.cwd() + '/test/utils');
+
 
 describe('Authentification routes', function () {
   

@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.1.1",
   "engines": {
     "node": ">=14.16"
   },
@@ -39,12 +39,16 @@
     "build": "npm-run-all -s build:*",
     "build:directories": "mkdir -p ./dist/logs ./dist/public/archives ./dist/public/documents ./dist/public/images/master-copy ./dist/public/images/rescale/xs ./dist/public/images/rescale/sm ./dist/public/images/rescale/md ./dist/public/images/rescale/lg ./dist/public/images/rescale/xl ./dist/public/audios ./dist/public/videos",
     "build:env": "cp -r ./src/env/template.env ./dist/env/development.env && cp -r ./src/env/template.env ./dist/env/test.env && cp -r ./src/env/template.env ./dist/env/stagin.env && cp -r ./src/env/template.env ./dist/env/production.env",
-    "ci-coverage": "nyc --reporter=lcov --report-dir=./reports/coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000 && cat ./reports/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./reports/coverage",
+    "ci:coverage": "nyc --reporter=lcov --report-dir=./reports/coverage npm-run-all -s test:* && cat ./reports/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./reports/coverage",
+    "ci:coverage-old": "nyc --reporter=lcov --report-dir=./reports/coverage npm-run-all -s test:* && cat ./reports/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./reports/coverage",
+    "ci:test": "npm-run-all -s test:*",
     "doc": "npm-run-all -s doc:*",
     "doc:apidoc": "apidoc -i src/ -o docs/apidoc/",
     "doc:typedoc": "typedoc --name 'API documentation' --defaultCategory 'Root' --categorizeByGroup  --out ./docs/typedoc ./src",
     "kickstart": "npm i typescript@4.2.2 -g && npm i typeorm@0.2.31 -g && npm i kfr-kem -g && npm i && npm run build && npm run doc",
-    "test": "nyc --reporter=html --report-dir=./reports/nyc-coverage ./node_modules/.bin/mocha --exit --reporter spec --timeout 10000 --env test",
+    "test": "nyc --reporter=html --report-dir=./reports/nyc-coverage npm-run-all -s test:*",
+    "test:unit": "./node_modules/.bin/mocha ./test/units/00-application.unit.test.js --exit --reporter spec --timeout 10000 --env test",
+    "test:e2e": "./node_modules/.bin/mocha ./test/e2e/00-api.e2e.test.js --exit --reporter spec --timeout 10000 --env test",
     "todo": "leasot -x --reporter markdown './src/**/*.ts' > TODO.md && git add TODO.md",
     "version": "auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\""
   },

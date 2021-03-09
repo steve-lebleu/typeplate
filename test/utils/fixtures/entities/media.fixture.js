@@ -23,8 +23,8 @@ exports.document = (owner) => {
 exports.archive = (owner) => {
   return {
     fieldname: 'archive',
-    filename: 'Documents.rar',
-    path: process.cwd() + '/dist/public/archives/Documents.rar',
+    filename: 'documents.rar',
+    path: process.cwd() + '/dist/public/archives/documents.rar',
     mimetype: 'archive/rar',
     size: '',
     owner: owner.id

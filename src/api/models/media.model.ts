@@ -7,8 +7,9 @@ import { MIME_TYPE, MIME_TYPE_ENUM } from '@enums/mime-type.enum';
 import { User } from '@models/user.model';
 import { IModel } from '@interfaces/IModel.interface';
 import { whitelist } from '@serializers/whitelists/media.whitelist';
-import { sanitize } from '@utils/serializing.util';
+import { sanitize } from '@utils/sanitize.util';
 
+/** FIXME Media fieldname management. Seems to be always 'media'. Check and add e2e tests */
 @Entity()
 export class Media implements IModel {
 
@@ -19,7 +20,7 @@ export class Media implements IModel {
     type: String,
     length: 32
   })
-  fieldname; // FIXME: Media fieldname management. Seems to be always 'media'. What do with that ?
+  fieldname;
 
   @Column({
     type: String,

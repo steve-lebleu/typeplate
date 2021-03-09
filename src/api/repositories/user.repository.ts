@@ -102,9 +102,7 @@ export class UserRepository extends Repository<User>  {
   }
 
   /**
-   * TODO: rename
    * TODO: don't create user if not exists
-   * TODO: deprecated ?
    */
   async oAuthLogin(options: IAuthExternalProvider): Promise<User> {
 

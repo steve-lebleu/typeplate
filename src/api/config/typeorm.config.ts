@@ -28,6 +28,7 @@ export class TypeormConfiguration {
         password: typeorm.pwd,
         database: typeorm.database,
         entities: [ typeorm.entities ],
+        subscribers: [ typeorm.subscribers ],
         synchronize: typeorm.sync,
         logging: typeorm.log
       })

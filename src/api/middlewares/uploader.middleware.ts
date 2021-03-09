@@ -15,8 +15,6 @@ import { IMedia } from '@interfaces/IMedia.interface';
 import { foldername, extension, fieldname } from '@utils/string.util';
 import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
 
-import { MEDIA_EVENT_EMITTER } from '@events/media.event';
-
 interface IMulter {
   diskStorage: ( { destination, filename } ) => IStorage;
   // eslint-disable-next-line id-blacklist
@@ -80,10 +78,6 @@ export class Uploader {
           media.url = `${type}/${type === 'image' ? `${resize.destinations.master}/` : ''}${media.filename}`
           return media;
         }) || [];
-        const images = req.files.filter( ( file: IMedia ) => IMAGE_MIME_TYPE.hasOwnProperty(file.mimetype));
-        if ( resize.isActive && images.length > 0 ) {
-          MEDIA_EVENT_EMITTER.emit('media.resize', images);
-        }
       next();
     });
   }

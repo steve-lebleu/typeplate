@@ -1,5 +1,3 @@
-import * as Moment from 'moment'
-
 import { getRepository, getCustomRepository } from 'typeorm';
 
 import { User } from '@models/user.model';
@@ -62,7 +60,6 @@ export class UserController {
   static async update (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = await repository.findOneOrFail(req.params.userId);
-    user.updatedAt = Moment( new Date() ).format('YYYY-MM-DD HH:ss');
     repository.merge(user, req.body);
     await repository.save(user);
     res.locals.data = user;

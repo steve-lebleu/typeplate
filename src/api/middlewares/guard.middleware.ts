@@ -29,7 +29,7 @@ export class Guard {
    * @description Authorize user access according to service.access_token
    * @param service Service to use for authentication
    */
-  static oauth = (service: string): { service: string } => authenticate(service, { session: false });
+  static oauth = (service: string) => authenticate(service, { session: false });
 
   /**
    * @description Callback function provided to passport.authenticate when authentication strategy is JWT

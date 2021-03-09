@@ -49,6 +49,7 @@ export class MySQLError implements Error, IHTTPError {
    * @param error
    *
    * @example 1052 ER_NON_UNIQ_ERROR
+   * @example 1054 ER_BAD_FIELD_ERROR
    * @example 1062 DUPLICATE_ENTRY
    * @example 1452 ER_NO_REFERENCED_ROW_2
    *
@@ -58,6 +59,8 @@ export class MySQLError implements Error, IHTTPError {
   private convertError(errno: number, message: string): { statusCode: number, statusText: string, error: string } {
     switch (errno) {
       case 1052:
+        return { statusCode: 409, statusText: HTTP_STATUS['409_NAME'], error: message }
+      case 1054:
         return { statusCode: 409, statusText: HTTP_STATUS['409_NAME'], error: message }
       case 1062:
         return { statusCode: 409, statusText: HTTP_STATUS['409_NAME'], error: message } // `Duplicate entry for ${/\'[a-z]{1,}\./.exec(message)[0].slice(1, -1).trim()}` not working in CI with MySQL < 8

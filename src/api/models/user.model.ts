@@ -12,7 +12,6 @@ import { Media } from '@models/media.model';
 import { IModel } from '@interfaces/IModel.interface';
 import { whitelist } from '@whitelists/user.whitelist';
 import { sanitize } from '@utils/sanitize.util';
-import { crypt } from '@utils/string.util';
 
 @Entity()
 export class User implements IModel {
@@ -101,19 +100,17 @@ export class User implements IModel {
     }
   }
 
-  @BeforeInsert()
-  @BeforeUpdate()
-  hashApiKey(): boolean {
-    try {
-      this.apikey = crypt(this.email + jwtSecret, 64);
-      return true;
-    } catch (error) {
-      throw badImplementation(error.message);
-    }
+  /**
+   * @description Check that password matches
+   *
+   * @param password
+   */
+  async passwordMatches(password: string): Promise<boolean> {
+    return await Bcrypt.compare(password, this.password);
   }
 
   /**
-   *
+   * @description Generate JWT token
    */
   token(): string {
     const payload = {
@@ -125,17 +122,9 @@ export class User implements IModel {
   }
 
   /**
-   *
-   * @param password
-   */
-  async passwordMatches(password: string): Promise<boolean> {
-    return await Bcrypt.compare(password, this.password);
-  }
-
-  /**
    * @description Filter on allowed entity fields
    */
-  public whitelist(): Record<string,unknown> {
+  whitelist(): Record<string,unknown> {
     return sanitize(whitelist, this);
   }
 

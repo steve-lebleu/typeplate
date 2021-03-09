@@ -78,7 +78,7 @@ export class Media implements IModel {
   /**
    * @description Filter on allowed entity fields
    */
-  public whitelist(): Record<string,unknown> {
+   whitelist(): Record<string,unknown> {
     return sanitize(whitelist, this);
   }
 }

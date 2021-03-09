@@ -11,7 +11,6 @@
       "@enums/*": ["api/types/enums/*"],
       "@errors": ["api/types/errors/"],
       "@errors/*": ["api/types/errors/*"],
-      "@events/*": ["api/events/*"],
       "@factories/*": ["api/factories/*"],
       "@interfaces/*": ["api/types/interfaces/*"],
       "@middlewares/*": ["api/middlewares/*"],

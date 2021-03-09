@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { expectationFailed } from '@hapi/boom';
 
 import { contentType } from '@config/environment.config';
 

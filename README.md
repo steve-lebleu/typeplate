@@ -1,4 +1,4 @@
-![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/sCpPzpy/header-ts-boilerplate-2.png)
+![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/gSrfgS6/header-ts-boilerplate-3.png)
 
 [![Node](https://img.shields.io/badge/Node-14.16.0-informational)](https://nodejs.org/docs/latest-v14.x/api/index.html)
 [![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-informational)](https://www.typescriptlang.org/)
@@ -8,8 +8,9 @@
 
 [![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
 [![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm-boilerplate?branch=master)
-![David](https://img.shields.io/david/konfer-be/ts-express-typeorm-boilerplate)
-[![Known Vulnerabilities](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?style=flat)](https://snyk.io/test/github/konfer-be/ts-express-typeorm-boilerplate)
+![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/konfer-be/ts-express-typeorm-boilerplate/master)
+![Requires.io (branch)](https://img.shields.io/requires/github/konfer-be/ts-express-typeorm-boilerplate/master)
+![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/konfer-be/ts-express-typeorm-boilerplate)
 
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 ![Discord](https://img.shields.io/discord/817108781291929641)
@@ -42,7 +43,7 @@ Classic security features with [CORS](https://expressjs.com/en/resources/middlew
 
 ### HTTP friendly errors
 
-Customized error handling for clean and consistent HTTP friendly errors with [boom]() and [http-status](https://www.npmjs.com/package/http-status).
+Customized error handling for clean and consistent HTTP friendly errors with [boom](https://github.com/hapijs/boom) and [http-status](https://www.npmjs.com/package/http-status).
 
 ### Logging
 
@@ -54,7 +55,7 @@ Full authentication process based on [passport.js](http://www.passportjs.org/) (
 
 ### Validation
 
-Route validation with [express-validation](https://www.npmjs.com/package/express-validation) and [Joi](https://github.com/hapijs/joi).
+Route validation with [Joi](https://github.com/hapijs/joi).
 
 ### File upload
 
@@ -331,25 +332,23 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
 ## Roadmap
 
-- [ ] ESLint compliance
+- [x] Events vs TyperORM subscribers / hooks decorators
+- [ ] Caching / performances
+- [ ] Oauth twitter, github, linkedin
+- [ ] Permission services
+- [ ] Business services
 - [ ] Unit testing
   - [ ] 95% coverage
   - [x] Refactoring UT, split e2e testing
   - [x] Pretty fixtures
   - [x] Dest path lcov (~~docs~~)
-- [ ] Caching / performances
-- [ ] Events vs TyperORM subscribers / hooks decorators
-- [ ] Permission services
-- [ ] Business services
+  - [ ] e2e tests generating
+- [ ] ESLint compliance
 - [ ] Modular architecture
-- [ ] Integrate Typeorm cli into the game
-- [ ] Clean documentation generation api + typedoc. Set Api doc as public link on Github ?
-- [ ] Oauth for twitter, github, linkedin
+- [ ] Typeorm cli into the game (generating)
+- [ ] Clean doc generation. Set Api doc as demo
 - [ ] Email sending
 - [ ] CI providers (circle-ci at least)
 - [ ] PM2 deployment and configuration
 - [ ] API monitoring
-- [ ] e2e tests generating
 - [ ] Graphql support
-- [ ] Jimp features
-- [ ] I18n

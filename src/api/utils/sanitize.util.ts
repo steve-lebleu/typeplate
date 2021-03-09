@@ -3,8 +3,8 @@ import * as Pluralize from 'pluralize';
 import { IModel } from '@interfaces/IModel.interface';
 
 /**
- * @description Say if a value can be serialized
- * @param value Value to check as serializable
+ * @description Say if a value can be sanitized
+ * @param value Value to check as sanitizable
  */
 const isSanitizable = (value: any): boolean => {
   const isTypedObject = value !== null && !Util.types.isDate(value) && typeof value !== 'string' && typeof value === 'object' && value.constructor !== Object;
@@ -14,10 +14,12 @@ const isSanitizable = (value: any): boolean => {
 };
 
 /**
- * @description Whitelist an entity when Content-Type is application/json
+ * @description Whitelist an entity
  *
  * @param whitelist Whitelisted properties
- * @param entity Entity to serialize
+ * @param entity Entity to sanitize
+ * 
+ * TODO: these methods should be work with sanitize middleware. Look to group it
  */
 const sanitize = (whitelist: string[], entity: IModel): Record<string, unknown> => {
   const output = {} as Record<string, unknown>;
@@ -34,6 +36,4 @@ const sanitize = (whitelist: string[], entity: IModel): Record<string, unknown> 
   return output;
 };
 
-
-
-export { sanitize }
+export { isSanitizable, sanitize }

@@ -1,8 +1,4 @@
-import { badImplementation } from '@hapi/boom';
-
 import { IError } from '@interfaces/IError.interface';
-import { IHTTPError } from '@interfaces/IHTTPError.interface';
-import { NotFoundError, MySQLError, UploadError, ValidationError } from '@errors'
 
 /**
  * @description Get error status code

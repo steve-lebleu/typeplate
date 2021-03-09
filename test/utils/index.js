@@ -1,11 +1,7 @@
 var { expect } = require('chai');
-var { isDate } = require('util');
 var { existsSync }= require('fs');
 
 var Util = require('util');
-
-var prefix = 'api';
-var version = 'v1';
 
 const _exec = (agent, payload, options, done) => {
   _doRequest(agent, 'post', options.route, null, options.token, payload, options.code, function(err, res) {

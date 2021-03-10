@@ -75,8 +75,6 @@ export class UserRepository extends Repository<User>  {
    * @description Find user by email and try to generate a JWT token
    *
    * @param options Payload data
-   * @param origin
-   *
    */
   async findAndGenerateToken(options: ITokenOptions): Promise<{user: User, accessToken: string}> {
 
@@ -102,7 +100,9 @@ export class UserRepository extends Repository<User>  {
   }
 
   /**
-   * TODO: don't create user if not exists
+   * @description Create / save user for oauth connexion
+   *
+   * @param options
    */
   async oAuthLogin(options: IAuthExternalProvider): Promise<User> {
 

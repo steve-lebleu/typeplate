@@ -3,5 +3,5 @@ export interface IModel {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
-  whitelist: () => Record<string,unknown>;
+  whitelist: string[];
 }

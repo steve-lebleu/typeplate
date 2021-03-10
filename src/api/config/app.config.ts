@@ -80,7 +80,7 @@ export class ExpressConfiguration {
     /**
      * First, before all : check headers validity
      */
-    this.instance.use( Kors.check(contentType) );
+    this.instance.use( Kors(contentType) );
 
     /**
      * Expose body on req.body
@@ -158,7 +158,7 @@ export class ExpressConfiguration {
      * - Router(s)
      * - Resolver
      */
-    this.instance.use(`/api/${version}`, RateLimit(this.options.rate), Kache, ProxyRouter.map(), Sanitizer.whitelist, Resolver.resolve);
+    this.instance.use(`/api/${version}`, RateLimit(this.options.rate), Kache, ProxyRouter.map(), Sanitizer, Resolver);
 
     /**
      * Errors handlers

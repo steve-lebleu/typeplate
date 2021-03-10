@@ -18,18 +18,6 @@ export class Catcher {
   constructor() {}
 
   /**
-   * @description
-   *
-   * @param err
-   * @param req
-   * @param res
-   * @param next
-   */
-  static factory = (err: Error, req: Request, res: Response, next: (e: IHTTPError, req, res) => void): void => {
-    next(ErrorFactory.get(err), req, res);
-  }
-
-  /**
    * @description Display error in desktop notification
    *
    * @param err Error object
@@ -47,6 +35,18 @@ export class Catcher {
     });
     next(err, req, res, next);
   };
+
+  /**
+   * @description
+   *
+   * @param err
+   * @param req
+   * @param res
+   * @param next
+   */
+  static factory = (err: Error, req: Request, res: Response, next: (e: IHTTPError, req, res) => void): void => {
+    next(ErrorFactory.get(err), req, res);
+  }
 
   /**
    * @description Write errors in a log file

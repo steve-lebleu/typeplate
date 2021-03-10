@@ -5,12 +5,10 @@ const { MEDIA } = require(process.cwd() + '/dist/api/types/enums/media.enum');
 const { getAge } = require(process.cwd() + '/dist/api/utils/date.util');
 const { getErrorStatusCode } = require(process.cwd() + '/dist/api/utils/error.util');
 const { list } = require(process.cwd() + '/dist/api/utils/enum.util');
-const { isSanitizable, sanitize } = require(process.cwd() + '/dist/api/utils/sanitize.util');
 
 var str = {}; str.util = require(process.cwd() + '/dist/api/utils/string.util');
 
 var fs = require('fs');
-var UnknownError = function(message) { this.message = message; return this; };
 
 describe('Utils', () => {
 
@@ -64,58 +62,6 @@ describe('Utils', () => {
       done();
     });
   
-  });
-  
-  describe('Sanitize', () => {
-      
-    it('isSanitizable() should return false on primitive type', function(done) {
-      const result = isSanitizable('yoda');
-      expect(result).to.be.false;
-      done();
-    });
-    
-    it('isSanitizable() should return false on primitive type array', function(done) {
-      const result = isSanitizable(['yoda']);
-      expect(result).to.be.false;
-      done();
-    });
-
-    it('isSanitizable() should return false on primitive object', function(done) {
-      const result = isSanitizable({ name: 'yoda' });
-      expect(result).to.be.false;
-      done();
-    });
-
-    it('isSanitizable() should return true on mixed array', function(done) {
-      const result = isSanitizable([{ name: 'yoda'}, 'dark vador']);
-      expect(result).to.be.true;
-      done();
-    });
-
-    it.skip('isSanitizable() should work better with types', function(done) {
-      done();
-    });
-
-    it('sanitize() should return sanitized object', function(done) {
-      const wildcards = ['id', 'name'];
-      const entity = function() {
-        const self = {};
-        self.id = 1;
-        self.name = 'Yoda';
-        self.password = '123456'
-        return self
-      }
-      const result = sanitize(wildcards, new entity());
-      expect(result).to.haveOwnProperty('id');
-      expect(result).to.haveOwnProperty('name');
-      expect(result).to.not.haveOwnProperty('password');
-      done();
-    });
-
-    it.skip('sanitize() should work better with array/embeded objects', function(done) {
-      done();
-    });
-
   });
 
   describe("String", () => {

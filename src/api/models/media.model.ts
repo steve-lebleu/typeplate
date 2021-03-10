@@ -6,8 +6,6 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { MIME_TYPE, MIME_TYPE_ENUM } from '@enums/mime-type.enum';
 import { User } from '@models/user.model';
 import { IModel } from '@interfaces/IModel.interface';
-import { whitelist } from '@serializers/whitelists/media.whitelist';
-import { sanitize } from '@utils/sanitize.util';
 
 /** FIXME Media fieldname management. Seems to be always 'media'. Check and add e2e tests */
 @Entity()
@@ -78,7 +76,18 @@ export class Media implements IModel {
   /**
    * @description Filter on allowed entity fields
    */
-   whitelist(): Record<string,unknown> {
-    return sanitize(whitelist, this);
+   get whitelist(): string[] {
+    return [
+      'id',
+      'fieldname',
+      'filename',
+      'path',
+      'mimetype',
+      'url',
+      'size',
+      'createdAt',
+      'updatedAt'
+    ];
   }
+
 }

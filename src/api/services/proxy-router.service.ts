@@ -30,16 +30,25 @@ export class ProxyRouter {
   constructor() {}
 
   /**
-   * @description Plug sub routes on main router
+   * @description Pseudo singleton
    */
-   static map(): Router {
+  static get(): Router {
     if ( !ProxyRouter.instance ) {
       ProxyRouter.instance = Router();
-      ProxyRouter.routes.forEach( (route: IRoute) => {
-        const instance = new route.provider() as { router: Router };
-        ProxyRouter.instance.use( route.segment, instance.router );
-      });
     }
     return ProxyRouter.instance;
   }
+
+  /**
+   * @description Plug sub routes on main router
+   */
+  static map(): Router {
+    ProxyRouter.routes.forEach( (route: IRoute) => {
+      const instance = new route.provider() as { router: Router };
+      ProxyRouter.instance.use( route.segment, instance.router );
+    });
+    return ProxyRouter.instance;
+  }
 }
+
+ProxyRouter.get();

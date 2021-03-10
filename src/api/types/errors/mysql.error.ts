@@ -70,6 +70,8 @@ export class MySQLError implements Error, IHTTPError {
         return { statusCode: 422, statusText: HTTP_STATUS['422_NAME'], error: message }
       case 1406:
         return { statusCode: 422, statusText: HTTP_STATUS['422_NAME'], error: message }
+      default:
+        return { statusCode: 422, statusText: HTTP_STATUS['422_NAME'], error: message }
     }
   }
 }

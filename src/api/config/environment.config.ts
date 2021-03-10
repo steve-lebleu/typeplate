@@ -1,3 +1,4 @@
+import { CACHE } from '@enums/cache.enum';
 import { DATABASE_ENGINE } from '@enums/database-engine.enum';
 import { ENVIRONMENT } from '@enums/environment.enum';
 import { ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE, CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
@@ -81,6 +82,27 @@ const authorized = ((value: string) => {
   }
   return value;
 })(process.env.AUTHORIZED);
+
+/**
+ * @description Cache configuration
+ */
+ const cacheParams = Object.keys(process.env)
+  .filter(key => key.lastIndexOf('CACHE') !== -1)
+  .reduce( (acc, current) => {
+    acc[current] = process.env[current];
+    return acc;
+  }, {});
+
+ const cache = ((args: Record<string,unknown>) => {
+  if (args.CACHE_TYPE && !CACHE[args.CACHE_TYPE as string]) {
+    throw new Error(`CACHE_TYPE bad value. Supported Content-Type must be one of ${list(CACHE).join(',')}`);
+  }
+  return {
+    isActive: !!parseInt(args.CACHE_IS_ACTIVE as string, 10) || false,
+    type: args.CACHE_TYPE || CACHE.MEMORY,
+    lifetime: parseInt(args.CACHE_LIFETIME as string, 10) || 5000
+  };
+})(cacheParams);
 
 /**
  * @description Supported Content-Type as application/json | application/vnd.api+json | multipart/form-data
@@ -215,7 +237,7 @@ const typeormParams = Object.keys(process.env)
     return acc;
   }, {});
 
-const typeorm = ((args: Record<string,unknown>, environment: string) => {
+const typeorm = ((args: Record<string,unknown>, environment: string, cch: Record<string,unknown>) => {
   if(!args.TYPEORM_TYPE) {
     throw new Error('TYPEORM_TYPE not found. Please fill it in your .env file to define the database engine type.');
   }
@@ -237,21 +259,28 @@ const typeorm = ((args: Record<string,unknown>, environment: string) => {
   if(!args.TYPEORM_PWD && ![ENVIRONMENT.test, ENVIRONMENT.development].includes(environment as ENVIRONMENT)) {
     throw new Error('TYPEORM_PWD not found. Please fill it in your .env file to define the password of the database.');
   }
-  return Object.freeze({
-    type: process.env.TYPEORM_TYPE || 'mysql',
-    name: process.env.TYPEORM_NAME || 'default',
-    port: parseInt(process.env.TYPEORM_PORT, 10),
-    host: process.env.TYPEORM_HOST,
-    database: process.env.TYPEORM_DB,
-    user: process.env.TYPEORM_USER,
-    pwd: process.env.TYPEORM_PWD,
-    sync: environment === ENVIRONMENT.production ? false : !!process.env.TYPEORM_SYNC,
-    log: !!process.env.TYPEORM_LOG,
+
+  const dbCache = cch.isActive && cch.type === 'DB' ? { cache: { duration: cch.lifetime } } : {};
+
+  /* FIXME: use enum for type */
+  /* TODO: define cli options */
+  /* TODO typeorm logger can be "advanced-console" | "simple-console" | "file" | "debug" | Logger */
+  return Object.freeze({...{
+    type: args.TYPEORM_TYPE || 'mysql',
+    name: (args.TYPEORM_NAME || 'default'),
+    port: parseInt(args.TYPEORM_PORT as string, 10),
+    host: args.TYPEORM_HOST,
+    database: args.TYPEORM_DB,
+    user: args.TYPEORM_USER,
+    pwd: args.TYPEORM_PWD,
+    sync: environment === ENVIRONMENT.production ? false : !!args.TYPEORM_SYNC,
+    log: !!args.TYPEORM_LOG,
     entities: `${process.cwd()}/${EnvironmentConfiguration.base}/api/models/**/*.js`,
     migrations: `${process.cwd()}/${EnvironmentConfiguration.base}/migrations/**/*.js`,
     subscribers: `${process.cwd()}/${EnvironmentConfiguration.base}/api/subscribers/**/*.subscriber.js`
-  });
-})(typeormParams, env);
+  }, ...dbCache });
+
+})( typeormParams, env, cache);
 
 /**
  * @description File upload default configuration. Can be setted on the fly when you define upload middleware options
@@ -290,4 +319,4 @@ const upload = ((args: Record<string, unknown>) => {
  */
 const version = process.env.API_VERSION || 'v1';
 
-export { domain, env, port, authorized, contentType, ssl, jwtSecret, jwtExpirationInterval, version, logs, typeorm, upload, resize };
+export { authorized, cache, contentType, domain, env, jwtSecret, jwtExpirationInterval, logs, port, resize, ssl, typeorm, upload, version };

@@ -87,8 +87,6 @@ class MediaController {
    * @param res Express response object
    *
    * @public
-   *
-   * FIXME: set headers after response write error
    */
   @safe
   static async remove (req: IMediaRequest, res: IResponse): Promise<void> {

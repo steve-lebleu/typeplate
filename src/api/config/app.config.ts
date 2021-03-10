@@ -14,7 +14,6 @@ import { notAcceptable } from '@hapi/boom';
 import { ENVIRONMENT } from '@enums/environment.enum';
 
 import { domain, logs, authorized, version, env, contentType, upload } from '@config/environment.config';
-
 import { PassportConfiguration } from '@config/passport.config';
 
 import { Logger } from '@services/logger.service';
@@ -24,6 +23,7 @@ import { Cors as Kors } from '@middlewares/cors.middleware';
 import { Resolver } from '@middlewares/resolver.middleware';
 import { Catcher } from '@middlewares/catcher.middleware';
 import { Sanitizer } from '@middlewares/sanitizer.middleware';
+import { Kache } from '@middlewares/cache.middleware';
 
 /**
  * Instanciate and set Express application.
@@ -132,19 +132,19 @@ export class ExpressConfiguration {
     PassportUse('google', PassportConfiguration.factory('google'));
 
     /**
-     * Request logging with Morgan
-     *
-     * @see https://github.com/expressjs/morgan
-     */
-    this.instance.use( Morgan(logs.token, { stream: this.options.stream } ) );
-
-    /**
      * Configure API Rate limit
      * Note that you can also set limit on specific route path
      *
      * @see https://www.npmjs.com/package/express-rate-limit
      */
     this.instance.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+
+    /**
+     * Request logging with Morgan
+     *
+     * @see https://github.com/expressjs/morgan
+     */
+    this.instance.use( Morgan(logs.token, { stream: this.options.stream } ) );
 
     /**
      * Define CDN static resources location
@@ -158,7 +158,7 @@ export class ExpressConfiguration {
      * - Router(s)
      * - Resolver
      */
-    this.instance.use(`/api/${version}`, RateLimit(this.options.rate), ProxyRouter.map(), Sanitizer.whitelist, Resolver.resolve);
+    this.instance.use(`/api/${version}`, RateLimit(this.options.rate), Kache, ProxyRouter.map(), Sanitizer.whitelist, Resolver.resolve);
 
     /**
      * Errors handlers

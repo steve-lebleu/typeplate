@@ -10,8 +10,6 @@ import { jwtSecret, jwtExpirationInterval } from '@config/environment.config';
 import { ROLE, ROLES } from '@enums/role.enum';
 import { Media } from '@models/media.model';
 import { IModel } from '@interfaces/IModel.interface';
-import { whitelist } from '@whitelists/user.whitelist';
-import { sanitize } from '@utils/sanitize.util';
 
 @Entity()
 export class User implements IModel {
@@ -72,6 +70,9 @@ export class User implements IModel {
   })
   deletedAt;
 
+  /**
+   * @description
+   */
   private temporaryPassword;
 
   /**
@@ -124,8 +125,15 @@ export class User implements IModel {
   /**
    * @description Filter on allowed entity fields
    */
-  whitelist(): Record<string,unknown> {
-    return sanitize(whitelist, this);
+  get whitelist(): string[] {
+    return [
+      'id',
+      'username',
+      'email',
+      'role',
+      'createdAt' ,
+      'updatedAt'
+    ]
   }
 
 }

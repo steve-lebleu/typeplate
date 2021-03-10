@@ -6,6 +6,8 @@ import { CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
 import { IResponse } from '@interfaces/IResponse.interface';
 import { IModel } from '@interfaces/IModel.interface'
 
+import { sanitize } from '@services/sanitizer.service';
+
 /**
  * Sanitizing middleware
  */
@@ -20,7 +22,7 @@ export class Sanitizer {
    * @param res Express Response instance
    * @param next Callback function
    *
-   *  TODO safe decorator ?
+   *  TODO safe decorator on this middleware and each other
    */
   static async whitelist(req: Request, res: IResponse, next: () => void): Promise<void> {
 
@@ -31,10 +33,9 @@ export class Sanitizer {
     }
 
     if (Array.isArray(res.locals.data)) {
-      res.locals.data = res.locals.data.map( (data: { whitelist?: () => Record<string,unknown> } ) => data.whitelist ? data.whitelist() : data );
+      res.locals.data = res.locals.data.map( (data: { whitelist?: string[] } ) => data.whitelist ? sanitize(data as IModel) : data );
     } else if (res.locals.data.whitelist) {
-      res.locals.data = res.locals.data as IModel;
-      res.locals.data = res.locals.data?.whitelist();
+      res.locals.data = sanitize(res.locals.data as IModel);
     }
 
     next();

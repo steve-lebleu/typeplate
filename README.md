@@ -118,7 +118,8 @@ First, fill required env variables in *./dist/env/development.env* and *./dist/e
 | LOGS_MORGAN_TOKEN | Morgan logs format | string | dev | false
 | LOGS_PATH    | Logs directory path | string | logs | false
 | **PORT**         | Listened application port | number | / | true
-| RESIZE_IS_ACTIVE | Images resizing activated | boolean | 1 | false
+| REFRESH_TOKEN_DURATION | Refresh token duration | number | 30 | false
+| REFRESH_TOKEN_UNIT | Refresh token duration unit | string | days | false
 | RESIZE_PATH_MASTER | Images directory name | string | master-copy | false
 | RESIZE_PATH_SCALE | Resized images path | string | rescale | path
 | RESIZE_SIZE_XS | Extra-small size value (px) | number | 260 | false

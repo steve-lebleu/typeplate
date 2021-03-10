@@ -6,7 +6,7 @@ import { IResponse } from '@interfaces/IResponse.interface';
 import { User } from '@models/user.model';
 import { RefreshToken } from '@models/refresh-token.model';
 import { UserRepository } from '@repositories/user.repository';
-import { generateTokenResponse } from '@utils/auth.util';
+import { generateTokenResponse } from '@services/auth.service';
 import { safe } from '@decorators/safe.decorator';
 
 /**
@@ -28,7 +28,7 @@ export class AuthController {
     const user = new User(req.body);
     await repository.insert(user);
     const token = await generateTokenResponse(user, user.token());
-    res.locals.data = { token, user: user.whitelist() as unknown };
+    res.locals.data = { token, user };
   }
 
   /**
@@ -42,7 +42,7 @@ export class AuthController {
     const repository = getCustomRepository(UserRepository);
     const { user, accessToken } = await repository.findAndGenerateToken(req.body);
     const token = await generateTokenResponse(user, accessToken);
-    res.locals.data = { token, user: user.whitelist() as unknown };
+    res.locals.data = { token, user };
   }
 
   /**
@@ -56,7 +56,7 @@ export class AuthController {
     const user = req.body as User;
     const accessToken = user.token();
     const token = await generateTokenResponse(user, accessToken);
-    res.locals.data = { token, user: user.whitelist() as unknown };
+    res.locals.data = { token, user };
   }
 
   /**
@@ -70,7 +70,7 @@ export class AuthController {
     const user = req.body as User;
     const accessToken = user.token();
     const token = await generateTokenResponse(user, accessToken);
-    res.locals.data = { token, user: user.whitelist() as unknown };
+    res.locals.data = { token, user };
   }
 
   /**

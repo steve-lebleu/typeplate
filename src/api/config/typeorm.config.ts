@@ -20,7 +20,7 @@ export class TypeormConfiguration {
   static async connect(): Promise<Connection> {
     return new Promise( (resolve, reject) => {
       createConnection({
-        type: 'mysql', /* FIXME: use enum */
+        type: typeorm.type,
         name: typeorm.name,
         host: typeorm.host,
         port: typeorm.port,

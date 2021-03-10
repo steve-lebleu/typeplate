@@ -52,8 +52,6 @@ class MediaController {
    * @param res Express response object
    *
    * @public
-   *
-   * FIXME: Fallback on upload -> delete file when data is not saved
    */
   @safe
   static async create(req: IMediaRequest, res: IResponse): Promise<void> {

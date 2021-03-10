@@ -1,5 +1,6 @@
 import { CACHE } from '@enums/cache.enum';
-import { DATABASE_ENGINE } from '@enums/database-engine.enum';
+import { DATABASE, DATABASE_ENGINE } from '@enums/database-engine.enum';
+import { MOMENT_UNIT } from '@enums/moment-unity.enum';
 import { ENVIRONMENT } from '@enums/environment.enum';
 import { ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE, CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
 import { list } from '@utils/enum.util';
@@ -262,11 +263,8 @@ const typeorm = ((args: Record<string,unknown>, environment: string, cch: Record
 
   const dbCache = cch.isActive && cch.type === 'DB' ? { cache: { duration: cch.lifetime } } : {};
 
-  /* FIXME: use enum for type */
-  /* TODO: define cli options */
-  /* TODO typeorm logger can be "advanced-console" | "simple-console" | "file" | "debug" | Logger */
   return Object.freeze({...{
-    type: args.TYPEORM_TYPE || 'mysql',
+    type: (DATABASE_ENGINE[args.TYPEORM_TYPE as string] || 'mysql') as DATABASE,
     name: (args.TYPEORM_NAME || 'default'),
     port: parseInt(args.TYPEORM_PORT as string, 10),
     host: args.TYPEORM_HOST,
@@ -281,6 +279,22 @@ const typeorm = ((args: Record<string,unknown>, environment: string, cch: Record
   }, ...dbCache });
 
 })( typeormParams, env, cache);
+
+/**
+ * @description Refresh token duration parameters
+ *
+ *  - duration: duration length. Default: 30
+ *  - unit: unit of duration (hours|days|weeks|months). Default: days
+ */
+const refresh = ((duration: string, unit: string) => {
+  if(duration && isNaN(parseInt(duration, 10)) ) {
+    throw new Error('REFRESH_TOKEN_LIFETIME bad value. Duration must be a number.');
+  }
+  if(unit && ['hours', 'days', 'weeks', 'months'].includes(unit) ) {
+    throw new Error('REFRESH_TOKEN_UNIT bad value. Unity must be one of hours, days, weeks, months.');
+  }
+  return { duration: parseInt(duration, 10) || 30, unit: (unit || 'days') as MOMENT_UNIT }
+})(process.env.REFRESH_TOKEN_DURATION, process.env.REFRESH_TOKEN_UNIT);
 
 /**
  * @description File upload default configuration. Can be setted on the fly when you define upload middleware options
@@ -319,4 +333,4 @@ const upload = ((args: Record<string, unknown>) => {
  */
 const version = process.env.API_VERSION || 'v1';
 
-export { authorized, cache, contentType, domain, env, jwtSecret, jwtExpirationInterval, logs, port, resize, ssl, typeorm, upload, version };
+export { authorized, cache, contentType, domain, env, jwtSecret, jwtExpirationInterval, logs, port, refresh, resize, ssl, typeorm, upload, version };

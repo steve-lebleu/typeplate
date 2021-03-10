@@ -19,12 +19,9 @@
       "@routes/*": ["api/routes/v1/*"],
       "@schemas": ["api/validations/schemas/"],
       "@schemas/*": ["api/validations/schemas/*"],
-      "@serializers/*": ["api/serializers/*"],
-      "@servers/*": ["servers/*"],
       "@services/*": ["api/services/*"],
       "@utils/*": ["api/utils/*"],
-      "@validations/*": ["api/validations/*"],
-      "@whitelists/*": ["api/serializers/whitelists/*"]
+      "@validations/*": ["api/validations/*"]
     },
     "lib": ["dom", "ES2020"],
     "target": "ES2020",

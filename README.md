@@ -1,4 +1,4 @@
-![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/gSrfgS6/header-ts-boilerplate-3.png)
+![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/tbqXm9Q/header-ts-boilerplate-4.png)
 
 [![Node](https://img.shields.io/badge/Node-14.16.0-informational)](https://nodejs.org/docs/latest-v14.x/api/index.html)
 [![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-informational)](https://www.typescriptlang.org/)
@@ -118,7 +118,8 @@ First, fill required env variables in *./dist/env/development.env* and *./dist/e
 | LOGS_MORGAN_TOKEN | Morgan logs format | string | dev | false
 | LOGS_PATH    | Logs directory path | string | logs | false
 | **PORT**         | Listened application port | number | / | true
-| RESIZE_IS_ACTIVE | Images resizing activated | boolean | 1 | false
+| REFRESH_TOKEN_DURATION | Refresh token duration | number | 30 | false
+| REFRESH_TOKEN_UNIT | Refresh token duration unit | string | days | false
 | RESIZE_PATH_MASTER | Images directory name | string | master-copy | false
 | RESIZE_PATH_SCALE | Resized images path | string | rescale | path
 | RESIZE_SIZE_XS | Extra-small size value (px) | number | 260 | false
@@ -339,7 +340,6 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
 ## Roadmap
 
-- [ ] Fixme's and todo's
 - [ ] Services
   - [ ] Permissions
   - [ ] Business

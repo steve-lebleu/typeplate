@@ -2,6 +2,7 @@ import * as Multer from 'multer';
 import * as Pluralize from 'pluralize';
 import * as filenamify from 'filenamify';
 
+import { MulterError } from 'multer';
 import { unsupportedMediaType } from '@hapi/boom';
 
 import { upload, resize } from '@config/environment.config';
@@ -11,34 +12,35 @@ import { IResponse } from '@interfaces/IResponse.interface';
 import { IUploadMulterOptions } from '@interfaces/IUploadMulterOptions.interface';
 import { IUploadOptions } from '@interfaces/IUploadOptions.interface';
 import { IMedia } from '@interfaces/IMedia.interface';
+import { IStorage } from '@interfaces/IStorage.interface';
+import { IUpload } from '@interfaces/IUpload.interface';
 
 import { foldername, extension, fieldname } from '@utils/string.util';
 import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
-
-interface IMulter {
-  diskStorage: ( { destination, filename } ) => IStorage;
-  // eslint-disable-next-line id-blacklist
-  any: () => ( req, res, next ) => void;
-}
-
-interface IStorage {
-  getFilename: () => string;
-  getDestination: () => string;
-}
 
 /**
  * File upload middleware
  */
 export class Uploader {
 
-  static instance: (options?) => IMulter;
+  private static instance: (options?) => IUpload;
 
   /**
    * @description Default options
    */
-  static default: IUploadOptions = upload;
+  private static default: IUploadOptions = upload;
 
   constructor() { }
+
+  /**
+   * @description
+   */
+  static get(): () => IUpload {
+    if (!Uploader.instance) {
+      Uploader.instance = Multer as (options?) => IUpload
+    }
+    return Uploader.instance;
+  }
 
   /**
    * @description Upload file(s)
@@ -51,10 +53,6 @@ export class Uploader {
    */
   static upload = ( options?: IUploadOptions ) => (req: IMediaRequest, res: IResponse, next: (error?: Error) => void): void => {
 
-    if (!Uploader.instance) {
-      Uploader.instance = Multer as (options?) => IMulter
-    }
-
     const opts = options ? Object.keys(options)
       .filter(key => Uploader.default[key])
       .reduce((acc: IUploadOptions, current: string) => {
@@ -66,7 +64,7 @@ export class Uploader {
 
     middleware(req, res, (err: Error) => {
       if(err) {
-        return next(err instanceof Multer.MulterError ? err : new Multer.MulterError(err.message) );
+        return next(err instanceof MulterError ? err : new MulterError(err.message) );
       } else if (typeof req.files === 'undefined') {
         return next(new Error('Binary data cannot be found'));
       }
@@ -108,7 +106,7 @@ export class Uploader {
    * @description Set storage config
    * @param destination As main destination
    */
-   private static storage(destination?: string): IStorage {
+  private static storage(destination?: string): IStorage {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return Multer.diskStorage({
       destination: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
@@ -133,3 +131,5 @@ export class Uploader {
   }
 
 }
+
+Uploader.get();

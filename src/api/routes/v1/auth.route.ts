@@ -1,6 +1,6 @@
 import { Router } from '@bases/router.class';
-import { Guard } from '@middlewares/guard.middleware';
-import { Validator } from '@middlewares/validator.middleware';
+import { Oauth } from '@middlewares/guard.middleware';
+import { Validate } from '@middlewares/validator.middleware';
 import { AuthController } from '@controllers/auth.controller';
 
 import { register, login, oAuth, refresh } from '@validations/auth.validation';
@@ -172,7 +172,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/register')
-        .post(Validator.validate(register), AuthController.register);
+        .post(Validate(register), AuthController.register);
 
     /**
      * @api {post} /auth/login Login
@@ -270,7 +270,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/login')
-        .post(Validator.validate(login), AuthController.login);
+        .post(Validate(login), AuthController.login);
 
     /**
      * @api {post} /auth/refresh-token Refresh token
@@ -326,7 +326,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/refresh-token')
-        .post(Validator.validate(refresh), AuthController.refresh);
+        .post(Validate(refresh), AuthController.refresh);
 
     /**
      * @api {post} /auth/facebook Facebook oauth
@@ -374,7 +374,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/facebook')
-        .post(Validator.validate(oAuth), Guard.oauth('facebook'), AuthController.oAuth);
+        .post(Validate(oAuth), Oauth('facebook'), AuthController.oAuth);
 
     /**
      * @api {post} /auth/google Google oauth
@@ -421,7 +421,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/google')
-        .post(Validator.validate(oAuth), Guard.oauth('google'), AuthController.oAuth);
+        .post(Validate(oAuth), Oauth('google'), AuthController.oAuth);
 
   }
 

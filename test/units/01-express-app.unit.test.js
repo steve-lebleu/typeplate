@@ -1,4 +1,4 @@
-const { server, application } = require(process.cwd() + '/dist/api/app.bootstrap');
+const { application } = require(process.cwd() + '/dist/api/app.bootstrap');
 
 const pkgInfo = require(process.cwd() +  '/package.json');
 const expect = require('chai').expect;

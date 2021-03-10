@@ -19,8 +19,8 @@ export class TypeormConfiguration {
    */
   static async connect(): Promise<Connection> {
     return new Promise( (resolve, reject) => {
-      createConnection({
-        type: 'mysql', // FIXME: use enum
+      createConnection( {
+        type: 'mysql', /* FIXME: use enum */
         name: typeorm.name,
         host: typeorm.host,
         port: typeorm.port,
@@ -30,7 +30,8 @@ export class TypeormConfiguration {
         entities: [ typeorm.entities ],
         subscribers: [ typeorm.subscribers ],
         synchronize: typeorm.sync,
-        logging: typeorm.log
+        logging: typeorm.log,
+        cache: typeorm.cache
       })
       .then( (connection: Connection) => {
         Logger.log('info', `Connection to MySQL server established on port ${typeorm.port} (${env})`);

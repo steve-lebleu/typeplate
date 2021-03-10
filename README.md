@@ -7,7 +7,7 @@
 [![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational)](https://mochajs.org)
 
 [![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
-[![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm-boilerplate?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master&refresh=1)](https://coveralls.io/github/konfer-be/ts-express-typeorm-boilerplate?branch=master)
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/konfer-be/ts-express-typeorm-boilerplate/master)
 ![Requires.io (branch)](https://img.shields.io/requires/github/konfer-be/ts-express-typeorm-boilerplate/master)
 ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/konfer-be/ts-express-typeorm-boilerplate)
@@ -47,11 +47,15 @@ Customized error handling for clean and consistent HTTP friendly errors with [bo
 
 ### Logging
 
-Simple logs management based on [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
+Simple logs management with [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
+
+### Caching
+
+Simple cache system with [memory-cache](https://www.npmjs.com/package/memory-cache) or [typeorm caching](https://github.com/typeorm/typeorm/blob/master/docs/caching.md).
 
 ### Authentication
 
-Full authentication process based on [passport.js](http://www.passportjs.org/) (Bearer, oauth Facebook, oauth Google).
+Full authentication process with [passport.js](http://www.passportjs.org/) (Bearer, oauth Facebook, oauth Google).
 
 ### Validation
 
@@ -59,7 +63,7 @@ Route validation with [Joi](https://github.com/hapijs/joi).
 
 ### File upload
 
-Configurable file upload with [uploader middleware](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/middlewares/uploader.middleware.ts) - based on [Multer](https://www.npmjs.com/package/multer). Uploaded files are managed as [Medias](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/models/media.model.ts) entities.
+Configurable [Medias](https://github.com/konfer-be/ts-express-typeorm-boilerplate/blob/master/src/api/models/media.model.ts) and file upload with [Multer](https://www.npmjs.com/package/multer).
 
 ### Image resizing
 
@@ -101,6 +105,9 @@ First, fill required env variables in *./dist/env/development.env* and *./dist/e
 | ------------ | ----------- | ----------- | ----------- | ---------- |
 | API_VERSION  | Current version of your API | string | v1 | false
 | **AUTHORIZED**   | Allowed client hosts | string | / | true
+| CACHE_IS_ACTIVE | Cache activated | boolean | 0 | false
+| CACHE_TYPE | Cache type | enum | MEMORY | false
+| CACHE_LIFETIME | Cache lifetime duration (ms) | number | 5000 | false
 | CONTENT_TYPE | Supported Content-Type | string | application/json | false
 | **DOMAIN** | API domain | string | localhost | true
 | HTTPS_IS_ACTIVE | SSL support activated | boolean | 0 | false
@@ -332,23 +339,24 @@ More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
 ## Roadmap
 
-- [x] Events vs TyperORM subscribers / hooks decorators
-- [ ] Caching / performances
-- [ ] Oauth twitter, github, linkedin
-- [ ] Permission services
-- [ ] Business services
+- [ ] Fixme's and todo's
+- [ ] Services
+  - [ ] Permissions
+  - [ ] Business
+  - [ ] Data layer
+- [ ] Modular, scalable & consistent architecture
 - [ ] Unit testing
   - [ ] 95% coverage
   - [x] Refactoring UT, split e2e testing
   - [x] Pretty fixtures
   - [x] Dest path lcov (~~docs~~)
-  - [ ] e2e tests generating
 - [ ] ESLint compliance
-- [ ] Modular architecture
-- [ ] Typeorm cli into the game (generating)
-- [ ] Clean doc generation. Set Api doc as demo
-- [ ] Email sending
-- [ ] CI providers (circle-ci at least)
 - [ ] PM2 deployment and configuration
 - [ ] API monitoring
+- [ ] Wiki
+- [ ] Generating (Typeorm cli and kem)
+- [ ] Clean doc generation. Set Api doc as demo
+- [ ] Oauth twitter, github, linkedin
+- [ ] Email sending
 - [ ] Graphql support
+- [ ] CI providers (circle-ci at least)

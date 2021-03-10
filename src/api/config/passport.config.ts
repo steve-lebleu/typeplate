@@ -1,10 +1,11 @@
 import { jwtSecret } from '@config/environment.config';
 
+import { getCustomRepository, getRepository } from 'typeorm';
+
 import * as BearerStrategy from 'passport-http-bearer';
 
 import { Strategy as JwtStrategy } from 'passport-jwt';
 import { ExtractJwt } from 'passport-jwt';
-import { getCustomRepository, getRepository } from 'typeorm';
 
 import { AuthProvider } from '@services/auth-provider.service';
 import { UserRepository } from '@repositories/user.repository';
@@ -63,6 +64,8 @@ export class PassportConfiguration {
   /**
    * @description Authentication by JWT middleware function
    * @async
+   *
+   * FIXME: promise error is not managed
    */
   private static jwt = async (payload: { sub }, next: (e?: Error, v?: User|boolean) => void) => {
     try {

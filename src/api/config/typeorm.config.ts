@@ -30,7 +30,7 @@ export class TypeormConfiguration {
         entities: [ typeorm.entities ],
         subscribers: [ typeorm.subscribers ],
         synchronize: typeorm.sync,
-        logging: typeorm.log
+        logging: typeorm.log,
         cache: typeorm.cache
       })
       .then( (connection: Connection) => {

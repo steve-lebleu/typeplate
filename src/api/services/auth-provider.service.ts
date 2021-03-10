@@ -3,11 +3,7 @@ import { default as Axios } from 'axios';
 import { IAuthExternalProvider } from '@interfaces/IAuthExternalProvider.interface';
 
 /**
- * Manage some authentication related actions:
- *
- * - Do effective authentication by oauth
- * - Provide provider keys, not whitelisted by default
- * - Provide smtp credentials, not whitelisted by default
+ * @description
  */
 export class AuthProvider {
 
@@ -16,7 +12,7 @@ export class AuthProvider {
   /**
    * @description Try to connect to Facebook
    *
-   * @param access_token Token registered on user // TODO:
+   * @param access_token Token registered on user
    */
   static facebook = async (access_token: string): Promise<IAuthExternalProvider> => {
     const fields = 'id, name, email, picture';
@@ -36,7 +32,7 @@ export class AuthProvider {
   /**
    * @description Try to connect to Google
    *
-   * @param access_token Token registered on user // TODO:
+   * @param access_token Token registered on user
    */
   static google = async (access_token: string): Promise<IAuthExternalProvider> => {
     const url = 'https://www.googleapis.com/oauth2/v3/userinfo';

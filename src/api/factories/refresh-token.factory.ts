@@ -5,9 +5,10 @@ import { User } from '@models/user.model';
 import { RefreshToken } from '@models/refresh-token.model';
 import { refresh } from '@config/environment.config';
 
+/**
+ * @description
+ */
 export class RefreshTokenFactory {
-
-  constructor() {}
 
   /**
    * @description

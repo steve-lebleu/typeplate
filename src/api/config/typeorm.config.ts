@@ -19,20 +19,20 @@ export class TypeormConfiguration {
    */
   static async connect(): Promise<Connection> {
     return new Promise( (resolve, reject) => {
-      createConnection( {
+      createConnection({
         type: 'mysql', /* FIXME: use enum */
         name: typeorm.name,
         host: typeorm.host,
         port: typeorm.port,
         username: typeorm.user,
-        password: typeorm.pwd,
+        password: typeorm .pwd,
         database: typeorm.database,
         entities: [ typeorm.entities ],
         subscribers: [ typeorm.subscribers ],
         synchronize: typeorm.sync,
         logging: typeorm.log,
         cache: typeorm.cache
-      })
+      } as any)
       .then( (connection: Connection) => {
         Logger.log('info', `Connection to MySQL server established on port ${typeorm.port} (${env})`);
         resolve(connection);

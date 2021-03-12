@@ -2,7 +2,7 @@ import * as Moment from 'moment-timezone';
 
 import { getCustomRepository, getRepository } from 'typeorm';
 
-import { jwtExpirationInterval } from '@config/environment.config';
+import { JWT } from '@config/environment.config';
 
 import { UserRepository } from '@repositories/user.repository';
 import { RefreshTokenRepository } from '@repositories/refresh-token.repository';
@@ -10,7 +10,6 @@ import { RefreshTokenRepository } from '@repositories/refresh-token.repository';
 import { User } from '@models/user.model';
 import { RefreshToken } from '@models/refresh-token.model';
 
-import { AuthProvider } from '@services/auth-provider.service';
 import { badData } from '@hapi/boom';
 import { IOauthResponse } from '@interfaces/IOauthResponse.interface';
 
@@ -35,7 +34,7 @@ export class AuthService {
         await getRepository(RefreshToken).remove(oldToken)
       }
       const refreshToken = getCustomRepository(RefreshTokenRepository).generate(user).token;
-      const expiresIn = Moment().add(jwtExpirationInterval, 'minutes');
+      const expiresIn = Moment().add(JWT.EXPIRATION, 'minutes');
       return { tokenType, accessToken, refreshToken, expiresIn };
     } catch(e) {
       return e;
@@ -58,8 +57,8 @@ export class AuthService {
     try {
       const iRegistrable = {
         id: profile.id,
-        username: `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}`,
-        email: profile.emails ? profile.emails.filter(email => email.verified).slice().shift()?.value : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}@externalprovider.com`,
+        username: profile.username ? profile.username : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}`,
+        email: profile.emails ? profile.emails.filter(email => (email.hasOwnProperty('verified') && email.verified) || email.value).slice().shift()?.value : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}@externalprovider.com`,
         picture: profile.photos.slice().shift()?.value,
         password: hash('email', 16)
       }
@@ -89,9 +88,5 @@ export class AuthService {
     } catch (error) {
       return next(error, false);
     }
-  }
-
-  static async bearer() {
-    throw new Error('To be implemented');
   }
 }

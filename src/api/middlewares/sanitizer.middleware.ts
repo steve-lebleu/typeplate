@@ -1,6 +1,6 @@
 import { Request } from 'express';
 
-import { contentType } from '@config/environment.config';
+import { CONTENT_TYPE } from '@config/environment.config';
 
 import { CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
 import { IResponse } from '@interfaces/IResponse.interface';
@@ -21,7 +21,7 @@ const Sanitizer = async (req: Request, res: IResponse, next: () => void): Promis
 
   const hasContent = typeof res.locals.data !== 'undefined';
 
-  if (req.method === 'DELETE' || contentType !== CONTENT_MIME_TYPE['application/json'] || !hasContent) {
+  if (req.method === 'DELETE' || CONTENT_TYPE !== CONTENT_MIME_TYPE['application/json'] || !hasContent) {
     return next();
   }
 

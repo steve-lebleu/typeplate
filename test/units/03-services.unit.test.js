@@ -1,14 +1,16 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 
+const fs = require('fs');
+
 const fixtures = require(process.cwd() + '/test/utils/fixtures');
 
 const { User } = require(process.cwd() + '/dist/api/models/user.model');
 
 const { isSanitizable, sanitize } = require(process.cwd() + '/dist/api/services/sanitizer.service');
-const { AuthProvider } = require(process.cwd() + '/dist/api/services/auth-provider.service');
 const { AuthService } = require(process.cwd() + '/dist/api/services/auth.service');
 const { Cache } = require(process.cwd() + '/dist/api/services/cache.service');
+const { remove, rescale } = require(process.cwd() + '/dist/api/services/media.service');
 
 describe('Services', () => {
 
@@ -66,54 +68,6 @@ describe('Services', () => {
 
   });
 
-  describe('Auth provider', () => {
-
-    it.skip('AuthProvider.facebook() should return credentials from Facebook API', async () => {
-      
-      const stub = sinon.stub(Axios, 'get')
-
-      stub.callsFake( async (url) => {
-        return { data: { id: 1, name: 'Yoda', email: 'yoda@theforce.com', picture:  { data: { url: 'https://media.giphy.com/media/3o7abrH8o4HMgEAV9e/giphy.gif' } } } };
-      })
-
-      const result = await AuthProvider.facebook('my-token');
-
-      expect(result.service).to.be.eqls('facebook');
-      expect(result.id).to.be.eqls(1);
-      expect(result.name).to.be.eqls('Yoda');
-      expect(result.email).to.be.eqls('yoda@theforce.com');
-
-      stub.restore();
-
-    });
-
-    it.skip('AuthProvider.google() should return credentials from Google API', async () => {
-      
-      const stub = sinon.stub(Axios, 'get')
-
-      stub.callsFake( async (url) => {
-        return { data: { sub: 1, name: 'Yoda', email: 'yoda@theforce.com', picture: 'https://media.giphy.com/media/3o7abrH8o4HMgEAV9e/giphy.gif' } };
-      })
-
-      const result = await AuthProvider.google('my-token');
-
-      expect(result.service).to.be.eqls('google');
-      expect(result.id).to.be.eqls(1);
-      expect(result.name).to.be.eqls('Yoda');
-      expect(result.email).to.be.eqls('yoda@theforce.com');
-
-      stub.restore();
-
-    })
-    
-  });
-
-  describe('Auth', function() {
-
-    
-    
-  });
-
   describe('Cache', () => {
 
     it('Cache.revolve should return memory cache instance', () => {
@@ -146,6 +100,27 @@ describe('Services', () => {
   });
 
   describe('Media', () => {
+
+    describe('remove()', () => {
+
+      it('should remove all scaled images', () => {
+        const image = fixtures.media.image({id:1});
+        fs.copyFileSync(`${process.cwd()}/test/utils/fixtures/files/${image.filename}`, `${process.cwd()}/dist/public/images/master-copy/${image.filename}`);
+        ['XS', 'SM', 'MD', 'LG', 'XL'].forEach(size => {
+          fs.copyFileSync(`${process.cwd()}/test/utils/fixtures/files/${image.filename}`, `${process.cwd()}/dist/public/images/rescale/${size}/${image.filename}`);
+        });
+        remove(fixtures.media.image({id:1}));
+        setTimeout(() => {
+          expect(fs.existsSync(`${process.cwd()}/dist/public/images/master-copy/${image.filename}`)).to.be.false;
+          ['XS', 'SM', 'MD', 'LG', 'XL'].forEach(size => {
+            expect(fs.existsSync(`${process.cwd()}/dist/public/images/rescale/${size}/${image.filename}`)).to.be.false;
+          });
+          done();
+        }, 500)
+        
+      });
+
+    });
 
   });
 

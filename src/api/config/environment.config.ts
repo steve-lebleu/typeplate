@@ -1,4 +1,3 @@
-import { CACHE } from '@enums/cache.enum';
 import { DATABASE, DATABASE_ENGINE } from '@enums/database-engine.enum';
 import { MOMENT_UNIT } from '@enums/moment-unity.enum';
 import { ENVIRONMENT } from '@enums/environment.enum';
@@ -6,11 +5,7 @@ import { ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE
 import { list } from '@utils/enum.util';
 import { existsSync } from 'fs';
 
-const errors = [];
-
 /**
- * Configure dotenv with variables.env file before app, to allow process.env accessibility in
- * app.js
  *
  * @dependency dotenv
  *
@@ -18,366 +13,868 @@ const errors = [];
  *
  * FIXME: encrypt confidential data on env variables (ie typeorm)
  */
-export class EnvironmentConfiguration {
-
-  /**
-   * @description Current environment (default development)
-   */
-  static environment: string = ENVIRONMENT.development;
+export class Environment {
 
   /**
    * @description Current root dir
    */
-  static base: string;
+  base: string;
+
+  /**
+   * @description Cluster with aggregated data
+   */
+  cluster: Record<string,unknown>;
+
+  /**
+   * @description Current environment (default development)
+   */
+  environment: string = ENVIRONMENT.development;
+
+  /**
+   * @description Errors staged on current environment
+   */
+  errors: string[] = [];
+
+  /**
+   * @description
+   */
+  variables: Record<string,unknown>;
+
+  constructor() {}
+
+  /**
+   * @description Env variables exhaustive key list
+   */
+  get keys(): string[] {
+    return [
+      'API_VERSION',
+      'AUTHORIZED',
+      'CONTENT_TYPE',
+      'DOMAIN',
+      'FACEBOOK_CONSUMER_ID',
+      'FACEBOOK_CONSUMER_SECRET',
+      'GITHUB_CONSUMER_ID',
+      'GITHUB_CONSUMER_SECRET',
+      'GOOGLE_CONSUMER_ID',
+      'GOOGLE_CONSUMER_SECRET',
+      'JWT_EXPIRATION_MINUTES',
+      'JWT_SECRET',
+      'LINKEDIN_CONSUMER_ID',
+      'LINKEDIN_CONSUMER_SECRET',
+      'LOGS_PATH',
+      'LOGS_TOKEN',
+      'MEMORY_CACHE',
+      'MEMORY_CACHE_DURATION',
+      'PORT',
+      'REFRESH_TOKEN_DURATION',
+      'REFRESH_TOKEN_UNIT',
+      'RESIZE_IS_ACTIVE',
+      'RESIZE_PATH_MASTER',
+      'RESIZE_PATH_SCALE',
+      'RESIZE_SIZE_LG',
+      'RESIZE_SIZE_MD',
+      'RESIZE_SIZE_SM',
+      'RESIZE_SIZE_XL',
+      'RESIZE_SIZE_XS',
+      'SSL_CERT',
+      'SSL_KEY',
+      'TYPEORM_DB',
+      'TYPEORM_CACHE',
+      'TYPEORM_CACHE_DURATION',
+      'TYPEORM_HOST',
+      'TYPEORM_LOG',
+      'TYPEORM_NAME',
+      'TYPEORM_PORT',
+      'TYPEORM_PWD',
+      'TYPEORM_SYNC',
+      'TYPEORM_TYPE',
+      'TYPEORM_USER',
+      'UPLOAD_MAX_FILE_SIZE',
+      'UPLOAD_MAX_FILES',
+      'UPLOAD_PATH',
+      'UPLOAD_WILDCARDS',
+      'URL'
+    ]
+  }
+
+  /**
+   * @description Embeded validation rules for env variables
+   */
+  get rules(): any {
+
+    return {
+
+      /**
+       * @description Current api version
+       *
+       * @default v1
+       */
+      API_VERSION: (value: string): string => {
+        return value ? value.trim().toLowerCase() : 'v1';
+      },
+
+      /**
+       * @description Authorized remote(s) host(s)
+       *
+       * @default null
+       */
+      AUTHORIZED: (value: string): string => {
+        const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}(:[0-9]{1,5})|\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+        if (!value) {
+          this.errors.push('AUTHORIZED not found: please fill a single host as string or multiple hosts separated by coma (ie: http://my-domain.com or http://my-domain-1.com,http://my-domain-2.com, ...');
+        }
+        if ( value && value.lastIndexOf(',') === -1 && !regex.test(value)) {
+          this.errors.push('AUTHORIZED bad value: please fill a single host as string or multiple hosts separated by coma (ie: http://my-domain.com or http://my-domain-1.com,http://my-domain-2.com, ...');
+        }
+        if ( value && value.lastIndexOf(',') !== -1 && value.split(',').some(v => !regex.test(v) )) {
+          this.errors.push('AUTHORIZED bad value: please fill a single host as string or multiple hosts separated by coma (ie: http://my-domain.com or http://my-domain-1.com,http://my-domain-2.com, ...');
+        }
+        return value ? value.trim().toLowerCase() : null;
+      },
+
+      /**
+       * @description Content-Type
+       *
+       * @default application/json
+       */
+      CONTENT_TYPE: (value: string) => {
+        if (value && !CONTENT_MIME_TYPE[value]) {
+          this.errors.push(`CONTENT_TYPE bad value: please fill a supported Content-Type must be one of ${list(CONTENT_MIME_TYPE).join(',')}`);
+        }
+        return value || CONTENT_MIME_TYPE['application/json'];
+      },
+
+      /**
+       * @description Domain of the application in current environment
+       *
+       * @default localhost
+       */
+      DOMAIN: (value: string): string => {
+        return value ? value.trim().toLowerCase() : 'localhost';
+      },
+
+      /**
+       * @description Current runtime environment
+       */
+      ENVIRONMENT: (value: string): string => {
+        return value;
+      },
+
+      /**
+       * @description Facebook application id
+       *
+       * @default null
+       */
+      FACEBOOK_CONSUMER_ID: (value: string): string => {
+        if (value && /[0-9]{15}/.test(value) === false) {
+          this.errors.push('FACEBOOK_CONSUMER_ID bad value: check your Facebook app settings to fill a correct value.');
+        }
+        return value || null;
+      },
+
+      /**
+       * @description Facebook application secret
+       *
+       * @default null
+       */
+      FACEBOOK_CONSUMER_SECRET: (value: string): string => {
+        if (value && /[0-9-abcdef]{32}/.test(value) === false) {
+          this.errors.push('FACEBOOK_CONSUMER_SECRET bad value: check your Facebook app settings to fill a correct value.')
+        }
+        return value || null;
+      },
+
+      /**
+       * @description Github application id
+       *
+       * @default null
+       */
+      GITHUB_CONSUMER_ID: (value: string): string => {
+        if (value && /[0-9-a-z-A-Z]{20}/.test(value) === false) {
+          this.errors.push('GITHUB_CONSUMER_ID bad value: check your Github app settings to fill a correct value.');
+        }
+        return value || null;
+      },
+
+     /**
+      * @description Github application secret
+      *
+      * @default null
+      */
+      GITHUB_CONSUMER_SECRET: (value: string): string => {
+        if (value && /[0-9-A-Z-a-z-_]{40}/.test(value) === false) {
+          this.errors.push('GITHUB_CONSUMER_SECRET bad value: check your Github app and fill a correct value in your .env file.')
+        }
+        return value || null;
+      },
+
+      /**
+       * @description Google application id
+       *
+       * @default null
+       */
+      GOOGLE_CONSUMER_ID: (value: string): string => {
+        if (value && /[0-9]{12}-[0-9-a-z]{32}.apps.googleusercontent.com/.test(value) === false) {
+          this.errors.push('GOOGLE_CONSUMER_ID bad value: check your Google app settings to fill a correct value.');
+        }
+        return value || null;
+      },
+
+      /**
+       * @description Google application secret
+       *
+       * @default null
+       */
+      GOOGLE_CONSUMER_SECRET: (value: string): string => {
+        if (value && /[0-9-A-Z-a-z-_]{24}/.test(value) === false) {
+          this.errors.push('GOOGLE_CONSUMER_SECRET bad value: check your Google app and fill a correct value in your .env file.')
+        }
+        return value || null;
+      },
+
+      /**
+       * @description JWT exiration duration in minutes
+       *
+       * @default 120960
+       */
+      JWT_EXPIRATION_MINUTES: (value: string): number => {
+        if (value && isNaN(parseInt(value, 10))) {
+          this.errors.push('JWT_EXPIRATION_MINUTES bad value: please fill a duration expressed as a number');
+        }
+        return parseInt(value, 10) || 120960;
+      },
+
+      /**
+       * @description JWT secret token
+       *
+       * @default null
+       */
+      JWT_SECRET: (value: string): string => {
+        if (!value) {
+          this.errors.push('JWT_SECRET not found: please fill a jwt secret value in your .env file to strengthen the encryption.');
+        }
+        if (value && value.toString().length < 32) {
+          this.errors.push('JWT_SECRET bad value: please fill a jwt secret which have a length >= 32.');
+        }
+        return value ? value.toString() : null;
+      },
+
+      /**
+       * @description Linkedin application id
+       *
+       * @default null
+       */
+      LINKEDIN_CONSUMER_ID: (value: string): string => {
+        if (value && /[0-9-a-z-A-Z]{20}/.test(value) === false) {
+          this.errors.push('LINKEDIN_CONSUMER_ID bad value: check your Linkedin app settings to fill a correct value.');
+        }
+        return value || null;
+      },
+
+      /**
+       * @description Linkedin application secret
+       *
+       * @default null
+       */
+      LINKEDIN_CONSUMER_SECRET: (value: string): string => {
+        if (value && /[0-9-A-Z-a-z-_]{40}/.test(value) === false) {
+          this.errors.push('LINKEDIN_CONSUMER_SECRET bad value: check your Linkedin app and fill a correct value in your .env file.')
+        }
+        return value || null;
+      },
+
+      /**
+       * @description Logs token configuration used by Morgan for output pattern
+       *
+       * @default dev
+       */
+      LOGS_TOKEN: (value: string): string => {
+        return this.environment === 'production' ? 'combined' : value || 'dev'
+      },
+
+      /**
+       * @description Logs path root directory
+       *
+       * @default logs
+       */
+      LOGS_PATH: (value: string): string => {
+        return `${process.cwd()}/${this.base}/${value || 'logs'}`
+      },
+
+      /**
+       * @description Memory cache activated
+       *
+       * @default false
+       */
+      MEMORY_CACHE: (value: string): boolean => {
+        return !!parseInt(value, 10) || false
+      },
+
+      /**
+       * @description Memory cache lifetime duration
+       *
+       * @default 5000
+       */
+      MEMORY_CACHE_DURATION: (value: string): number => {
+        return parseInt(value, 10) || 5000
+      },
+
+      /**
+       * @description Listened port. Default 8101
+       *
+       * @default 8101
+       */
+      PORT: (value: string): number => {
+        if (value && ( isNaN(parseInt(value,10)) || parseInt(value,10) > 65535)) {
+          this.errors.push('PORT bad value: please fill a valid TCP port number');
+        }
+        return parseInt(value,10) || 8101;
+      },
+
+      /**
+       * @description Refresh token duration
+       *
+       * @default 30
+       */
+      REFRESH_TOKEN_DURATION: (value: string): number => {
+        if (value && isNaN(parseInt(value, 10))) {
+          this.errors.push('REFRESH_TOKEN_DURATION bad value: duration must be a number expressed in minutes.');
+        }
+        return parseInt(value, 10) || 30
+      },
+
+      /**
+       * @description Refresh token unit of duration (hours|days|weeks|months)
+       *
+       * @default 30
+       */
+      REFRESH_TOKEN_UNIT: (value: string): MOMENT_UNIT => {
+        if(value && !['hours', 'days', 'weeks', 'months'].includes(value) ) {
+          this.errors.push('REFRESH_TOKEN_UNIT bad value: unit must be one of hours, days, weeks, months.');
+        }
+        return (value || 'days') as MOMENT_UNIT
+      },
+
+      /**
+       * @description Image resizing activated
+       *
+       * @default true
+       */
+      RESIZE_IS_ACTIVE: (value: string): boolean => {
+        return !!parseInt(value, 10) || true
+      },
+
+      /**
+       * @description Directory name for original copy (required)
+       *
+       * @default master-copy
+       */
+      RESIZE_PATH_MASTER: (value: string): string => {
+        return value || 'master-copy'
+      },
+
+      /**
+       * @description Directory name for resizes
+       *
+       * @default rescale
+       */
+      RESIZE_PATH_SCALE: (value: string): string => {
+        return value || 'rescale'
+      },
+
+      /**
+       * @description
+       *
+       * @default 1024
+       */
+      RESIZE_SIZE_LG: (value: string): number => {
+        return parseInt(value, 10) || 1024
+      },
+
+      /**
+       * @description
+       *
+       * @default 768
+       */
+      RESIZE_SIZE_MD: (value: string): number => {
+        return parseInt(value, 10) || 768
+      },
+
+      /**
+       * @description
+       *
+       * @default 320
+       */
+      RESIZE_SIZE_SM: (value: string): number => {
+        return parseInt(value, 10) || 320
+      },
+
+      /**
+       * @description
+       *
+       * @default 1366
+       */
+      RESIZE_SIZE_XL: (value: string): number => {
+        return parseInt(value, 10) || 1366
+      },
+
+      /**
+       * @description
+       *
+       * @default 280
+       */
+      RESIZE_SIZE_XS: (value: string): number => {
+        return parseInt(value, 10) || 280
+      },
+
+      /**
+       * @description SSL certificate location
+       *
+       * @default null
+       */
+      SSL_CERT: (value: string): string => {
+        if (value && !existsSync(value)) {
+          this.errors.push('SSL_CERT bad value or SSL certificate not found. Please check path and/or file access rights.')
+        }
+        return value || null
+      },
+
+      /**
+       * @description SSL key location
+       *
+       * @default null
+       */
+      SSL_KEY: (value: string): string => {
+        if (value && !existsSync(value)) {
+          this.errors.push('SSL_KEY bad value or SSL key not found. Please check path and/or file access rights.')
+        }
+        return value || null
+      },
+
+      /**
+       * @description
+       *
+       * @default null
+       */
+      TYPEORM_DB: (value: string): string => {
+        if(!value) {
+          this.errors.push('TYPEORM_DB not found: please define the targeted database.');
+        }
+        if (value && /^[0-9a-zA-Z_]{3,}$/.test(value) === false) {
+          this.errors.push('TYPEORM_DB bad value: please check the name of your database according [0-9a-zA-Z_].');
+        }
+        return value || null
+      },
+
+      /**
+       * @description
+       *
+       * @default false
+       */
+       TYPEORM_CACHE: (value: string): boolean => {
+        if(value && isNaN(parseInt(value, 10))) {
+          this.errors.push('TYPEORM_CACHE bad value: please use 0 or 1 to define activation of the db cache');
+        }
+        return !!parseInt(value, 10) || false
+      },
+
+      /**
+       * @description
+       *
+       * @default 5000
+       */
+       TYPEORM_CACHE_DURATION: (value: string): number => {
+        if(value && isNaN(parseInt(value,10))) {
+          this.errors.push('TYPEORM_CACHE_DURATION bad value: please fill it with a duration expressed in ms.');
+        }
+        return parseInt(value,10) || 5000
+      },
+
+      /**
+       * @description
+       *
+       * @default localhost
+       */
+      TYPEORM_HOST: (value: string): string => {
+        if(!value) {
+          this.errors.push('TYPEORM_HOST not found: please define the database server host.');
+        }
+        if(value && value !== 'localhost' && /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/.test(value) === false) {
+          this.errors.push('TYPEORM_HOST bad value: please fill it with a valid database server host.');
+        }
+        return value || 'localhost'
+      },
+
+      /**
+       * @description
+       *
+       * @default false
+       */
+      TYPEORM_LOG: (value: string): boolean => {
+        return !!parseInt(value, 10) || false
+      },
+
+      /**
+       * @description
+       *
+       * @default default
+       */
+      TYPEORM_NAME: (value: string): string => {
+        return value || 'default'
+      },
+
+      /**
+       * @description
+       *
+       * @default 3306
+       */
+      TYPEORM_PORT: (value: string): number => {
+        if(!value) {
+          this.errors.push('TYPEORM_PORT not found: please define the database server port.');
+        }
+        return parseInt(value,10) || 3306;
+      },
+
+      /**
+       * @description
+       *
+       * @default null
+       */
+      TYPEORM_PWD: (value: string): string => {
+        if(!value && ![ENVIRONMENT.test, ENVIRONMENT.development].includes(this.environment as ENVIRONMENT)) {
+          this.errors.push('TYPEORM_PWD not found: please define the database user password.');
+        }
+        return value || null
+      },
+
+      /**
+       * @description
+       *
+       * @default false
+       */
+      TYPEORM_SYNC: (value: string): boolean => {
+        return this.environment === ENVIRONMENT.production ? false : !!parseInt(value, 10) || false
+      },
+
+      /**
+       * @description
+       *
+       * @default mysql
+       */
+      TYPEORM_TYPE: (value: string): DATABASE => {
+        if(!value) {
+          this.errors.push('TYPEORM_TYPE not found: please define the database engine type.');
+        }
+        if(value && !DATABASE_ENGINE[value]) {
+          this.errors.push(`TYPEORM_TYPE bad value: database engine must be one of following: ${list(DATABASE_ENGINE).join(',')}.`);
+        }
+        return (value || 'mysql') as DATABASE
+      },
+
+      /**
+       * @description
+       *
+       * @default null
+       */
+      TYPEORM_USER: (value: string): string => {
+        if(!value) {
+          this.errors.push('TYPEORM_USER not found: please define one user for your database.');
+        }
+        return value || null
+      },
+
+      /**
+       * @description Max upload file size
+       *
+       * @default 1000000
+       */
+      UPLOAD_MAX_FILE_SIZE: (value: string): number => {
+        if(value && isNaN(parseInt(value, 10))) {
+          this.errors.push('UPLOAD_MAX_FILE_SIZE bad value: please fill it with an integer.');
+        }
+        return parseInt(value, 10) || 1000000
+      },
+
+      /**
+       * @description Max number of uploaded files by request
+       *
+       * @default 5
+       */
+      UPLOAD_MAX_FILES: (value: string): number => {
+        if(value && isNaN(parseInt(value, 10))) {
+          this.errors.push('UPLOAD_MAX_FILES bad value: please fill it with an integer.');
+        }
+        return parseInt(value, 10) || 5
+      },
+
+      /**
+       * @description Upload directory path
+       *
+       * @default public
+       */
+      UPLOAD_PATH: (value: string): string => {
+        return `${process.cwd()}/${this.base}/${value || 'public'}`
+      },
+
+      /**
+       * @description Accepted mime-type
+       *
+       * @default AUDIO|ARCHIVE|DOCUMENT|IMAGE|VIDEO
+       */
+      UPLOAD_WILDCARDS: (value: string): string[] => {
+
+        const mimes = { AUDIO: AUDIO_MIME_TYPE, ARCHIVE: ARCHIVE_MIME_TYPE, DOCUMENT: DOCUMENT_MIME_TYPE, IMAGE: IMAGE_MIME_TYPE, VIDEO: VIDEO_MIME_TYPE };
+        const input = value ? value.toString().split(',') : Object.keys(mimes);
+        const keys = Object.keys(mimes).map(k => k.toLowerCase());
+
+        if (value && value.toString().split(',').some(key => !keys.includes(key)) ) {
+          this.errors.push(`UPLOAD_WILDCARDS bad value: please fill it with an accepted value (${keys.join(',')}) with coma separation`);
+        }
+
+        return input
+          .filter(key => mimes[key])
+          .map(key => mimes[key] as Record<string,unknown> )
+          .reduce((acc,current) => {
+            return [...acc as string[], ...list(current)] as string[];
+          }, []) as string[];
+      },
+
+      /**
+       * @description API main URL
+       *
+       * @default http://localhost:8101
+       */
+      URL: (value: string): string => {
+        if (value && /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(value)) {
+          this.errors.push('URL bad value. Please fill a local or remote URL');
+        }
+        return value || 'http://localhost:8101'
+      }
+
+    }
+  }
 
   /**
    * @description Set env according to args, and load .env file
    */
-  static load(nodeVersion: string): void {
+  loads(nodeVersion: string): Environment {
 
     const [major, minor] = nodeVersion.split('.').map( parseFloat )
 
     if(major < 14  || major === 14 && minor < 16) {
-      process.stdout.write('\n\x1b[41m[ERROR]\x1b[40m\n\n');
-      process.stdout.write('The node version of the server is too low. Please consider at least v14.16.0.');
-      process.exit(0);
+      this.exit('The node version of the server is too low. Please consider at least v14.16.0.');
     }
 
     if (process.argv && process.argv.indexOf('--env') !== -1 ) {
-      EnvironmentConfiguration.environment = ENVIRONMENT[process.argv[process.argv.indexOf('--env') + 1]] as string || ENVIRONMENT.development;
+      this.environment = ENVIRONMENT[process.argv[process.argv.indexOf('--env') + 1]] as string || ENVIRONMENT.development;
     }
 
-    switch (EnvironmentConfiguration.environment) {
+    switch (this.environment) {
       case ENVIRONMENT.development:
-        EnvironmentConfiguration.base = 'dist';
+        this.base = 'dist';
       break;
       case ENVIRONMENT.staging:
-        EnvironmentConfiguration.base = '';
+        this.base = '';
       break;
       case ENVIRONMENT.production:
-        EnvironmentConfiguration.base = '';
+        this.base = '';
       break;
       case ENVIRONMENT.test:
-        EnvironmentConfiguration.base = 'dist';
+        this.base = 'dist';
       break;
     }
 
-    const path = `${process.cwd()}/${EnvironmentConfiguration.base}/env/${EnvironmentConfiguration.environment}.env`;
+    const path = `${process.cwd()}/${this.base}/env/${this.environment}.env`;
 
     if (!existsSync(path)) {
-      process.stdout.write('\n\x1b[41m[ERROR]\x1b[40m\n\n');
-      process.stdout.write(`Environment file not found at ${path}`);
-      process.exit(0);
+      this.exit(`Environment file not found at ${path}`);
     }
 
     const dtv: { config: (options) => void, parse: () => void } = require('dotenv') as { config: () => void, parse: () => void };
 
     dtv.config( { path} );
+
+    return this;
+  }
+
+  /**
+   * @description Extract variables from process.env
+   *
+   * @param args Environment variables
+   */
+  extracts(args: Record<string,unknown>): Environment {
+    this.variables = this.keys.reduce( (acc, current) => {
+      acc[current] = args[current];
+      return acc;
+    }, {});
+    return this;
+  }
+
+  /**
+   * @description Parse allowed env variables, validate it and returns safe current or default value
+   */
+  validates(): Environment {
+    this.keys.forEach( (key: string) => {
+      this.variables[key] = this.rules[key](this.variables[key])
+    });
+    return this
+  }
+
+  /**
+   * @description Say if current environment is valid or not
+   */
+  isValid(): boolean {
+    return this.errors.length === 0;
+  }
+
+  /**
+   * @description Aggregates some data for easy use
+   */
+  aggregates(): Environment {
+    this.cluster = {
+      API_VERSION: this.variables.API_VERSION,
+      AUTHORIZED: this.variables.AUTHORIZED,
+      CONTENT_TYPE: this.variables.CONTENT_TYPE,
+      DOMAIN: this.variables.DOMAIN,
+      ENV: this.environment,
+      JWT: {
+        SECRET: this.variables.JWT_SECRET,
+        EXPIRATION: this.variables.JWT_EXPIRATION_MINUTES
+      },
+      FACEBOOK: {
+        KEY: 'facebook',
+        IS_ACTIVE: this.variables.FACEBOOK_CONSUMER_ID !== null && this.variables.FACEBOOK_CONSUMER_SECRET !== null,
+        ID: this.variables.FACEBOOK_CONSUMER_ID,
+        SECRET: this.variables.FACEBOOK_CONSUMER_SECRET,
+        CALLBACK_URL: `${this.variables.URL as string}/api/${this.variables.API_VERSION as string}/auth/facebook/callback`
+      },
+      GITHUB: {
+        KEY: 'github',
+        IS_ACTIVE: this.variables.GITHUB_CONSUMER_ID !== null && this.variables.GITHUB_CONSUMER_SECRET !== null,
+        ID: this.variables.GITHUB_CONSUMER_ID,
+        SECRET: this.variables.GITHUB_CONSUMER_SECRET,
+        CALLBACK_URL: `${this.variables.URL as string}/api/${this.variables.API_VERSION as string}/auth/github/callback`
+      },
+      GOOGLE: {
+        KEY: 'google',
+        IS_ACTIVE: this.variables.GOOGLE_CONSUMER_ID !== null && this.variables.GOOGLE_CONSUMER_SECRET !== null,
+        ID: this.variables.GOOGLE_CONSUMER_ID,
+        SECRET: this.variables.GOOGLE_CONSUMER_SECRET,
+        CALLBACK_URL: `${this.variables.URL as string}/api/${this.variables.API_VERSION as string}/auth/google/callback`
+      },
+      LINKEDIN: {
+        KEY: 'linkedin',
+        IS_ACTIVE: this.variables.LINKEDIN_CONSUMER_ID !== null && this.variables.LINKEDIN_CONSUMER_SECRET !== null,
+        ID: this.variables.LINKEDIN_CONSUMER_ID,
+        SECRET: this.variables.LINKEDIN_CONSUMER_SECRET,
+        CALLBACK_URL: `${this.variables.URL as string}/api/${this.variables.API_VERSION as string}/auth/linkedin/callback`
+      },
+      LOGS: {
+        PATH: this.variables.LOGS_PATH,
+        TOKEN: this.variables.LOGS_TOKEN
+      },
+      MEMORY_CACHE: {
+        IS_ACTIVE: this.variables.MEMORY_CACHE,
+        DURATION: this.variables.MEMORY_CACHE_DURATION
+      },
+      PORT: this.variables.PORT,
+      REFRESH_TOKEN: {
+        DURATION: this.variables.REFRESH_TOKEN_DURATION,
+        UNIT: this.variables.REFRESH_TOKEN_UNIT
+      },
+      SCALING: {
+        IS_ACTIVE: this.variables.RESIZE_IS_ACTIVE,
+        PATH_MASTER: this.variables.RESIZE_PATH_MASTER,
+        PATH_SCALE: this.variables.RESIZE_PATH_SCALE,
+        SIZES: {
+          XS: this.variables.RESIZE_SIZE_XS,
+          SM: this.variables.RESIZE_SIZE_SM,
+          MD: this.variables.RESIZE_SIZE_MD,
+          LG: this.variables.RESIZE_SIZE_LG,
+          XL: this.variables.RESIZE_SIZE_XL
+        }
+      },
+      SSL: {
+        IS_ACTIVE: this.variables.SSL_CERT !== null && this.variables.SSL_KEY !== null,
+        CERT: this.variables.SSL_CERT,
+        KEY: this.variables.SSL_KEY
+      },
+      TYPEORM: {
+        DB: this.variables.TYPEORM_DB,
+        NAME: this.variables.TYPEORM_NAME,
+        TYPE: this.variables.TYPEORM_TYPE,
+        HOST: this.variables.TYPEORM_HOST,
+        PORT: this.variables.TYPEORM_PORT,
+        PWD: this.variables.TYPEORM_PWD,
+        USER: this.variables.TYPEORM_USER,
+        SYNC: this.variables.TYPEORM_SYNC,
+        LOG: this.variables.TYPEORM_LOG,
+        CACHE: !this.variables.MEMORY_CACHE && this.variables.TYPEORM_CACHE,
+        CACHE_DURATION: !this.variables.MEMORY_CACHE && this.variables.TYPEORM_CACHE ? this.variables.TYPEORM_CACHE_DURATION : 0,
+        ENTITIES: `${process.cwd()}/${this.base}/api/models/**/*.js`,
+        MIGRATIONS: `${process.cwd()}/${this.base}/migrations/**/*.js`,
+        SUBSCRIBERS: `${process.cwd()}/${this.base}/api/subscribers/**/*.subscriber.js`
+      },
+      UPLOAD: {
+        MAX_FILE_SIZE: this.variables.UPLOAD_MAX_FILE_SIZE,
+        MAX_FILES: this.variables.UPLOAD_MAX_FILES,
+        PATH: this.variables.UPLOAD_PATH,
+        WILDCARDS: this.variables.UPLOAD_WILDCARDS
+      },
+      URL: this.variables.URL
+    };
+
+    return this;
+  }
+
+  /**
+   * @description Exit of current process with error messages
+   *
+   * @param messages
+   */
+  exit(messages: string|string[]): void {
+    process.stdout.write('\n\x1b[41m[ERROR]\x1b[40m\n\n');
+    process.stdout.write([].concat(messages).join('\n'));
+    process.exit(0);
   }
 }
 
-EnvironmentConfiguration.load(process.versions.node);
+const environment = new Environment().loads(process.versions.node).extracts(process.env).validates().aggregates();
 
-/**
- * @description Authorized remote(s) host(s)
- */
-const authorized = ((value: string) => {
-  if (!value) {
-    errors.push('AUTHORIZED not found. Please fill this value in your .env file to indicate allowed hosts.');
-  }
-  return value;
-})(process.env.AUTHORIZED);
-
-/**
- * @description Cache configuration
- */
- const cacheParams = Object.keys(process.env)
-  .filter(key => key.lastIndexOf('CACHE') !== -1)
-  .reduce( (acc, current) => {
-    acc[current] = process.env[current];
-    return acc;
-  }, {});
-
- const cache = ((args: Record<string,unknown>) => {
-  if (args.CACHE_TYPE && !CACHE[args.CACHE_TYPE as string]) {
-    errors.push(`CACHE_TYPE bad value. Supported Content-Type must be one of ${list(CACHE).join(',')}`);
-  }
-  return {
-    isActive: !!parseInt(args.CACHE_IS_ACTIVE as string, 10) || false,
-    type: args.CACHE_TYPE || CACHE.MEMORY,
-    lifetime: parseInt(args.CACHE_LIFETIME as string, 10) || 5000
-  };
-})(cacheParams);
-
-/**
- * @description Supported Content-Type as application/json | application/vnd.api+json | multipart/form-data
- */
- const contentType = ((value: string) => {
-  if (value && !CONTENT_MIME_TYPE[value]) {
-    errors.push(`CONTENT_TYPE bad value. Supported Content-Type must be one of ${list(CONTENT_MIME_TYPE).join(',')}`);
-  }
-  return value || CONTENT_MIME_TYPE['application/json'];
-})(process.env.CONTENT_TYPE);
-
-/**
- * @description API domain
- */
- const domain = ((value: string) => {
-  if (!value) {
-    errors.push('DOMAIN not found. Please fill this value in your .env file to indicate domain of your API.');
-  }
-  return value;
-})(process.env.DOMAIN);
-
-/**
- * @description Current runtime environment as development | staging | production | test
- */
- const env = EnvironmentConfiguration.environment;
-
-/**
- * @description Facebook oauth configuration
- */
- const facebookOauth = ((id: string, secret: string) => {
-  if (id && /[0-9]{15}/.test(id) === false) {
-    errors.push('FACEBOOK_APP_ID bad value. Check your Facebook app and fill a correct value in .env file.');
-  }
-  if (secret && /[0-9-abcdef]{32}/.test(secret) === false) {
-    errors.push('FACEBOOK_APP_SECRET bad value. Check your Facebook app and fill a correct value in your .env file.')
-  }
-  return { id: id || null, secret: secret || null, callback: `${process.env.URL}/api/${process.env.API_VERSION}/auth/facebook/callback` };
-})(process.env.FACEBOOK_APP_ID, process.env.FACEBOOK_APP_SECRET);
-
-/**
- * @description Google oauth configuration
- */
- const googleOauth = ((id: string, secret: string) => {
-  if (id && /[0-9]{12}-[0-9-a-z]{32}.apps.googleusercontent.com/.test(id) === false) {
-    errors.push('GOOGLE_CLIENT_ID bad value. Check your Google app and fill a correct value in .env file.');
-  }
-  if (secret && /[0-9-A-Z-a-z-_]{24}/.test(secret) === false) {
-    errors.push('GOOGLE_CLIENT_SECRET bad value. Check your Google app and fill a correct value in your .env file.')
-  }
-  return { id: id || null, secret: secret || null, callback: `${process.env.URL}/api/${process.env.API_VERSION}/auth/google/callback` };
-})(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET);
-
-/**
- * @description JWT exiration duration in minutes
- */
- const jwtExpirationInterval = ((value: string) => {
-  if (value && isNaN(parseInt(value, 10))) {
-    errors.push('JWT_EXPIRATION_MINUTES bad value. Expiration value must be a duration expressed as a number');
-  }
-  return parseInt(value, 10) || 120960;
-})(process.env.JWT_EXPIRATION_MINUTES);
-
-/**
- * @description JWT secret token
- */
- const jwtSecret = ((value: string) => {
-  if (!value) {
-    errors.push('JWT_SECRET not found. Please fill this value in your .env file to strengthen the encryption.');
-  }
-  return value;
-})(process.env.JWT_SECRET);
-
-/**
- * @description Logs configuration
- *
- *  - token: morgan output pattern. Default: dev
- *  - path: root directory for logs. Default: logs
- */
-const logs = Object.freeze({
-  token: EnvironmentConfiguration.environment === 'production' ? 'combined' : process.env.LOGS_MORGAN_TOKEN || 'dev',
-  path: `${process.cwd()}/${EnvironmentConfiguration.base}/${process.env.LOGS_PATH || 'logs'}`
-});
-
-/**
- * @description Listened port. Default 8001
- */
- const port = ((value: string) => {
-  if (value && isNaN(parseInt(value,10))) {
-    errors.push('PORT bad value. Port value must be a number');
-  }
-  return value;
-})(process.env.PORT);
-
-/**
- * @description Image resize configuration
- *
- *  - isActive: enable|disable image resize feature. Default: disabled
- *  - destinations: destination paths for images
- *    - master: directory for original copy (required). Default: master-copy
- *    - scale: directory for resizes. Default: rescale
- *  - sizes: image sizes definitions. Default: 260, 320, 768, 1024, 1366
- */
- const resize = Object.freeze({
-  isActive: !!parseInt(process.env.RESIZE_IS_ACTIVE, 10) || false,
-  destinations: {
-    master: process.env.RESIZE_PATH_MASTER || 'master-copy',
-    scale: process.env.RESIZE_PATH_SCALE || 'rescale'
-  },
-  sizes: {
-    xs: parseInt(process.env.RESIZE_SIZE_XS, 10) || 280,
-    sm: parseInt(process.env.RESIZE_SIZE_SM, 10) || 320,
-    md: parseInt(process.env.RESIZE_SIZE_MD, 10) || 768,
-    lg: parseInt(process.env.RESIZE_SIZE_LG, 10) || 1024,
-    xl: parseInt(process.env.RESIZE_SIZE_XL, 10) || 1366
-  }
-});
-
-/**
- * @description HTTPS configuration
- *
- *  - isActive: enable|disable HTTPS. Default: disabled
- *  - key: path to private key
- *  - cert: path to SSL certificate
- */
-const ssl = ((isActive: string, key: string, cert: string) => {
-  const is = !!parseInt(isActive, 10);
-  if (is && !existsSync(key)) {
-    errors.push('HTTPS_KEY bad value or private key not found. Please check your .env file configuration.')
-  }
-  if (is && !existsSync(cert)) {
-    errors.push('HTTPS_CERT bad value or SSL certificate not found. Please check your .env file configuration.')
-  }
-  return Object.freeze({
-    isActive: is,
-    key: is ? key || null : null,
-    cert: is ? cert || null : null
-  });
-})(process.env.HTTPS_IS_ACTIVE, process.env.HTTPS_KEY, process.env.HTTPS_CERT);
-
-/**
- * @description TypeORM configuration
- *
- *  - type: database server type (mysql, postgresql, ...)
- *  - name: connection name
- *  - port: database server port
- *  - host: database server host address
- *  - database: database name
- *  - user: database user
- *  - pwd: database user password
- *  - sync: enable|disable typeorm schema synchronization (by default disabled in production)
- *  - log: enable|disable typeorm logs
- *  - entities: directory path of models that should be managed by typeorm
- */
-const typeormParams = Object.keys(process.env)
-  .filter(key => key.lastIndexOf('TYPEORM') !== -1)
-  .reduce( (acc, current) => {
-    acc[current] = process.env[current];
-    return acc;
-  }, {});
-
-const typeorm = ((args: Record<string,unknown>, environment: string, cch: Record<string,unknown>) => {
-  if(!args.TYPEORM_TYPE) {
-    errors.push('TYPEORM_TYPE not found. Please fill it in your .env file to define the database engine type.');
-  }
-  if(args.TYPEORM_TYPE && !DATABASE_ENGINE[args.TYPEORM_TYPE as string]) {
-    errors.push(`TYPEORM_TYPE bad value. Database engine must be one of following: ${list(DATABASE_ENGINE).join(',')}.`);
-  }
-  if(!args.TYPEORM_PORT) {
-    errors.push('TYPEORM_PORT not found. Please fill it in your .env file to define the database server port.');
-  }
-  if(!args.TYPEORM_HOST) {
-    errors.push('TYPEORM_HOST not found. Please fill it in your .env file to define the database server host.');
-  }
-  if(!args.TYPEORM_DB) {
-    errors.push('TYPEORM_DB not found. Please fill it in your .env file to define the targeted database.');
-  }
-  if(!args.TYPEORM_USER) {
-    errors.push('TYPEORM_USER not found. Please fill it in your .env file to define the user of the database.');
-  }
-  if(!args.TYPEORM_PWD && ![ENVIRONMENT.test, ENVIRONMENT.development].includes(environment as ENVIRONMENT)) {
-    errors.push('TYPEORM_PWD not found. Please fill it in your .env file to define the password of the database.');
-  }
-
-  const dbCache = cch.isActive && cch.type === 'DB' ? { cache: { duration: cch.lifetime } } : {};
-
-  return Object.freeze({...{
-    type: (DATABASE_ENGINE[args.TYPEORM_TYPE as string] || 'mysql') as DATABASE,
-    name: (args.TYPEORM_NAME || 'default'),
-    port: parseInt(args.TYPEORM_PORT as string, 10),
-    host: args.TYPEORM_HOST,
-    database: args.TYPEORM_DB,
-    user: args.TYPEORM_USER,
-    pwd: args.TYPEORM_PWD,
-    sync: environment === ENVIRONMENT.production ? false : !!args.TYPEORM_SYNC,
-    log: !!args.TYPEORM_LOG,
-    entities: `${process.cwd()}/${EnvironmentConfiguration.base}/api/models/**/*.js`,
-    migrations: `${process.cwd()}/${EnvironmentConfiguration.base}/migrations/**/*.js`,
-    subscribers: `${process.cwd()}/${EnvironmentConfiguration.base}/api/subscribers/**/*.subscriber.js`
-  }, ...dbCache });
-
-})( typeormParams, env, cache);
-
-/**
- * @description Refresh token duration parameters
- *
- *  - duration: duration length. Default: 30
- *  - unit: unit of duration (hours|days|weeks|months). Default: days
- */
-const refresh = ((duration: string, unit: string) => {
-  if(duration && isNaN(parseInt(duration, 10)) ) {
-    errors.push('REFRESH_TOKEN_LIFETIME bad value. Duration must be a number.');
-  }
-  if(unit && ['hours', 'days', 'weeks', 'months'].includes(unit) ) {
-    errors.push('REFRESH_TOKEN_UNIT bad value. Unity must be one of hours, days, weeks, months.');
-  }
-  return { duration: parseInt(duration, 10) || 30, unit: (unit || 'days') as MOMENT_UNIT }
-})(process.env.REFRESH_TOKEN_DURATION, process.env.REFRESH_TOKEN_UNIT);
-
-/**
- * @description File upload default configuration. Can be setted on the fly when you define upload middleware options
- *
- *  - destination: upload directory path
- *  - filesize: max filesize
- *  - wildcards: accepted mime-type
- *  - maxFiles: max number of files by request
- */
-const uploadParams = Object.keys(process.env)
-  .filter(key => key.lastIndexOf('UPLOAD') !== -1)
-  .reduce( (acc, current) => {
-    acc[current] = process.env[current];
-    return acc;
-  }, {});
-
-const upload = ((args: Record<string, unknown>) => {
-  const mimes = { AUDIO: AUDIO_MIME_TYPE, ARCHIVE: ARCHIVE_MIME_TYPE, DOCUMENT: DOCUMENT_MIME_TYPE, IMAGE: IMAGE_MIME_TYPE, VIDEO: VIDEO_MIME_TYPE };
-  const input = args.UPLOAD_WILDCARDS ? args.UPLOAD_WILDCARDS.toString().split(',') : Object.keys(mimes);
-  const wildcards = input
-    .filter(key => mimes[key])
-    .map(key => mimes[key] as Record<string,unknown> )
-    .reduce((acc,current) => {
-      return [...acc as string[], ...list(current)] as string[];
-    }, []);
-  return {
-    destination: `${process.cwd()}/${EnvironmentConfiguration.base}/${args.UPLOAD_PATH as string || 'public'}`,
-    filesize: parseInt(args.UPLOAD_MAX_FILE_SIZE as string, 10) || 1000000,
-    wildcards,
-    maxFiles: parseInt(args.UPLOAD_MAX_FILES as string, 10) || 5
-  };
-})(uploadParams);
-
-/**
- * @description Current API version
- */
-const version = process.env.API_VERSION || 'v1';
-
-if (errors.length > 0) {
-  process.stdout.write('\n\x1b[41m[ERROR]\x1b[40m\n\n');
-  process.stdout.write('\x1b[40mSome environment variables seems to be broken:\n\n');
-  process.stdout.write(errors.join('\n'));
-  process.exit(0);
+if (!environment.isValid()) {
+  environment.exit(environment.errors);
 }
 
-/**
- * @description Main URL. Default http://localhost:8101
- */
- const url = ((value: string) => {
-  if (value && /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(value)) {
-    errors.push('PORT bad value. Port value must be a number');
-  }
-  return value;
-})(process.env.URL);
+export default environment.variables;
 
-export { authorized, cache, contentType, domain, env, facebookOauth, googleOauth, jwtSecret, jwtExpirationInterval, logs, port, refresh, resize, ssl, typeorm, upload, url, version };
+type OauthCluser = { KEY: string, IS_ACTIVE: boolean, ID: string, SECRET: string, CALLBACK_URL: string }
+type JwtCluster = { SECRET: string, EXPIRATION: number };
+type MemoryCluster = { IS_ACTIVE: boolean, DURATION: number };
+type SSLCluster = { IS_ACTIVE: boolean, CERT: string, KEY: string };
+type TypeormCluster = { DB: string, NAME: string, TYPE: DATABASE, HOST: string, PORT: number, PWD: string, USER: string, SYNC: boolean, LOG: boolean, CACHE: boolean, ENTITIES: string, MIGRATIONS: string, SUBSCRIBERS: string };
+type LogCluster = { PATH: string, TOKEN: string };
+type UploadCluster = { MAX_FILE_SIZE: number, MAX_FILES: number, PATH: string, WILDCARDS: string[] };
+type ScalingCluster = { IS_ACTIVE: boolean, PATH_MASTER: string, PATH_SCALE: string, SIZES: { XS: number, SM: number, MD: number, LG: number, XL: number } };
+type RefreshTokenCluster = { DURATION: number, UNIT: MOMENT_UNIT };
+
+const API_VERSION = environment.cluster.API_VERSION as string;
+const AUTHORIZED = environment.cluster.AUTHORIZED as string;
+const CONTENT_TYPE = environment.cluster.CONTENT_TYPE as string;
+const DOMAIN = environment.cluster.DOMAINE as string;
+const ENV = environment.cluster.ENV as string;
+const FACEBOOK = environment.cluster.FACEBOOK as OauthCluser;
+const GITHUB = environment.cluster.GITHUB as OauthCluser;
+const GOOGLE = environment.cluster.GOOGLE as OauthCluser;
+const JWT = environment.cluster.JWT as JwtCluster;
+const LINKEDIN = environment.cluster.LINKEDIN as OauthCluser;
+const LOGS = environment.cluster.LOGS as LogCluster;
+const MEMORY_CACHE = environment.cluster.MEMORY_CACHE as MemoryCluster;
+const PORT = environment.cluster.PORT as number;
+const REFRESH_TOKEN = environment.cluster.REFRESH_TOKEN as RefreshTokenCluster;
+const SCALING = environment.cluster.SCALING as ScalingCluster;
+const SSL = environment.cluster.SSL as SSLCluster;
+const TYPEORM = environment.cluster.TYPEORM as TypeormCluster;
+const UPLOAD = environment.cluster.UPLOAD as UploadCluster;
+const URL = environment.cluster.URL as string;
+
+export { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, ENV, FACEBOOK, GITHUB, GOOGLE, LINKEDIN, JWT, LOGS, MEMORY_CACHE, PORT, REFRESH_TOKEN, SCALING, SSL, TYPEORM, UPLOAD, URL }

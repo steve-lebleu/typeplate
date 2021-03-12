@@ -5,7 +5,7 @@ import * as filenamify from 'filenamify';
 import { MulterError } from 'multer';
 import { unsupportedMediaType } from '@hapi/boom';
 
-import { upload, resize } from '@config/environment.config';
+import { UPLOAD, SCALING } from '@config/environment.config';
 
 import { IMediaRequest } from '@interfaces/IMediaRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
@@ -28,7 +28,7 @@ export class Uploader {
   /**
    * @description Default options
    */
-  private static default: IUploadOptions = upload;
+  private static default: IUploadOptions = { destination: UPLOAD.PATH, maxFiles: UPLOAD.MAX_FILES, filesize: UPLOAD.MAX_FILE_SIZE, wildcards: UPLOAD.WILDCARDS};
 
   constructor() { }
 
@@ -73,7 +73,7 @@ export class Uploader {
         .map( ( media: IMedia ) => {
           const type = Pluralize(fieldname(media.mimetype)) as string;
           media.owner = req.user.id;
-          media.url = `${type}/${type === 'image' ? `${resize.destinations.master}/` : ''}${media.filename}`
+          media.url = `${type}/${type === 'image' ? `${SCALING.PATH_MASTER}/` : ''}${media.filename}`
           return media;
         }) || [];
       next();
@@ -112,7 +112,7 @@ export class Uploader {
       destination: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
         let towards = `${destination}/${Pluralize(fieldname(file.mimetype)) as string}`;
         if (IMAGE_MIME_TYPE[file.mimetype]) {
-          towards += `/${resize.destinations.master}`;
+          towards += `/${SCALING.PATH_MASTER}`;
         }
         next(null, towards);
       },

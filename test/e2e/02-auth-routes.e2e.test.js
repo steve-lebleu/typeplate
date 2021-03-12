@@ -178,7 +178,7 @@ describe('Authentification routes', function () {
 
     describe('Facebook', function() {
 
-      it('GET /api/v1/auth/facebook 302 - oauth redirection is ok', function (done) {
+      it.skip('GET /api/v1/auth/facebook 302 - oauth redirection is ok', function (done) {
         doRequest(agent, 'get', '/api/v1/auth/facebook', null, null, {}, 302, function(err, res) {
           expect(res.statusCode).to.eqls(302);
           done();
@@ -198,10 +198,10 @@ describe('Authentification routes', function () {
 
     });
 
-    describe('Twitter', function() {
+    describe('Github', function() {
 
-      it.skip('GET /api/v1/auth/twitter 302 - oauth redirection is ok', function (done) {
-        doRequest(agent, 'get', '/api/v1/auth/twitter', null, null, {}, 302, function(err, res) {
+      it.skip('GET /api/v1/auth/github 302 - oauth redirection is ok', function (done) {
+        doRequest(agent, 'get', '/api/v1/auth/github', null, null, {}, 302, function(err, res) {
           expect(res.statusCode).to.eqls(302);
           done();
         });
@@ -220,16 +220,6 @@ describe('Authentification routes', function () {
 
     });
 
-    describe('Github', function() {
-
-      it.skip('GET /api/v1/auth/github 302 - oauth redirection is ok', function (done) {
-        doRequest(agent, 'get', '/api/v1/auth/github', null, null, {}, 302, function(err, res) {
-          expect(res.statusCode).to.eqls(302);
-          done();
-        });
-      });
-
-    });
   });
 
   describe('Refresh token', function() {

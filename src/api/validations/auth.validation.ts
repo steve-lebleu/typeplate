@@ -44,4 +44,11 @@ const refresh = {
   })
 };
 
-export { register, login, refresh };
+// GEET api/v1/auth/:service/callback
+const oauthCb = {
+  query: Joi.object({
+    code: Joi.string().min(8).max(88).required(),
+  })
+};
+
+export { register, login, refresh, oauthCb };

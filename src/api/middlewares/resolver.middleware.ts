@@ -4,7 +4,6 @@ import { IResponse } from '@interfaces/IResponse.interface';
 import { expectationFailed } from '@hapi/boom';
 import { getStatusCode } from '@utils/http.util';
 import { Cache } from '@services/cache.service';
-import { CACHE } from '@enums/cache.enum';
 
 /**
  * @description Resolve the current request and get output. The princip is that we becomes here, it means that none error has been encountered except a potential and non declared as is 404 error
@@ -36,8 +35,8 @@ const Resolver = async (req: Request, res: IResponse, next: (e?: Error) => void)
 
   // The end for the rest
   if ( ( hasContent && ['GET', 'POST', 'PUT', 'PATCH'].includes(req.method) ) || ( hasStatusCodeOnResponse && res.statusCode !== NOT_FOUND ) ) {
-    if (req.method === 'GET' && Cache.options.isActive && Cache.options.type === CACHE.MEMORY) {
-      Cache.resolve.put( Cache.key(req), res.locals.data, Cache.options.lifetime );
+    if (req.method === 'GET' && Cache.options.IS_ACTIVE) {
+      Cache.resolve.put( Cache.key(req), res.locals.data, Cache.options.DURATION );
     }
     res.status( status );
     res.json(res.locals.data);

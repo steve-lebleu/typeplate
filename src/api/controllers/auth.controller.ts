@@ -61,20 +61,6 @@ export class AuthController {
   }
 
   /**
-   * @description Login with an existing user or creates a new one if valid accessToken token
-   *
-   * @param req Express request object derived from http.incomingMessage
-   * @param res Express response object
-   */
-  @safe
-  static async authorize (req: Request, res: IResponse): Promise<void> {
-    const user = req.body as User;
-    const accessToken = user.token();
-    const token = await AuthService.generateTokenResponse(user, accessToken);
-    res.locals.data = { token, user };
-  }
-
-  /**
    * @description Refresh JWT token by RefreshToken removing, and re-creating
    *
    * @param req Express request object derived from http.incomingMessage

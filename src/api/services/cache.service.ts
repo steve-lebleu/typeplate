@@ -2,7 +2,7 @@
 import { Request } from 'express';
 import * as mcache from 'memory-cache';
 
-import { cache } from '@config/environment.config';
+import { MEMORY_CACHE } from '@config/environment.config';
 import { ICache } from '@interfaces/ICache.interface';
 
 /**
@@ -13,7 +13,7 @@ export class Cache {
   /**
    * @description
    */
-  static options = cache;
+  static options = MEMORY_CACHE;
 
   /**
    * @description

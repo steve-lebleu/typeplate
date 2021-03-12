@@ -182,7 +182,6 @@ describe('Media routes', function () {
 
   it('GET /api/v1/medias 200 - pagination get n results by query param', function (done) {
     doQueryRequest(agent, '/api/v1/medias/', null, token, { perPage: 50 }, 200, function(err, res) {
-      // console.log('res', res)
       expect(res.statusCode).to.eqls(200);
       expect(res.body).length.lte(50);
       done();
@@ -219,6 +218,18 @@ describe('Media routes', function () {
       expect(res.body).satisfy(function(value) {
         return value.map( (entry) => { 
           expect(entry.mimetype).to.equals('application/pdf');
+        })
+      });
+      done();
+    });
+  });
+
+  it('GET /api/v1/medias 200 - results matches size query param', function (done) {
+    doQueryRequest(agent, '/api/v1/medias/', null, token, { size: 30000 }, 200, function(err, res) {
+      expect(res.statusCode).to.eqls(200);
+      expect(res.body).satisfy(function(value) {
+        return value.map( (entry) => { 
+          expect(entry.size).to.be.gte(3000);
         })
       });
       done();

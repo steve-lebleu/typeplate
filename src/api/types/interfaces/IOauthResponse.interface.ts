@@ -15,12 +15,12 @@ export interface IOauthResponse {
   /**
    *
    */
-  name: { familyName: string, givenName: string },
+  name?: { familyName: string, givenName: string },
 
   /**
    *
    */
-  emails: { value: string, verified: boolean }[],
+  emails: { value: string, verified?: boolean }[],
 
   /**
    *
@@ -31,4 +31,9 @@ export interface IOauthResponse {
    *
    */
   provider: { name: OAuthProvider, _raw: string, _json: Record<string,unknown> }
+
+  /**
+   *
+   */
+  username?: string;
 }

@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { Cache } from '@services/cache.service';
-import { CACHE } from '@enums/cache.enum';
 
 /**
  * @description Request cache middleware
@@ -10,7 +9,7 @@ import { CACHE } from '@enums/cache.enum';
  * @param next Middleware function
  */
 const Kache = async (req: Request, res: Response, next: () => void): Promise<void> => {
-  if (req.method !== 'GET' || !Cache.options.isActive || Cache.options.type !== CACHE.MEMORY) {
+  if (req.method !== 'GET' || !Cache.options.IS_ACTIVE) {
     return next();
   }
   const cached = Cache.resolve.get( Cache.key(req) ) as unknown ;

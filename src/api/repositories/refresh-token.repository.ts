@@ -1,5 +1,4 @@
 import { Repository, EntityRepository } from 'typeorm';
-import { expectationFailed } from '@hapi/boom';
 import { User } from '@models/user.model';
 import { RefreshToken } from '@models/refresh-token.model';
 import { RefreshTokenFactory } from '@factories/refresh-token.factory';
@@ -17,12 +16,8 @@ export class RefreshTokenRepository extends Repository<RefreshToken> {
    * @param user
    */
   generate(user: User): RefreshToken {
-    try {
-      const refreshToken = RefreshTokenFactory.get(user);
-      void this.save(refreshToken);
-      return refreshToken;
-    } catch(e) {
-      throw expectationFailed(e.message);
-    }
+    const refreshToken = RefreshTokenFactory.get(user);
+    void this.save(refreshToken);
+    return refreshToken;
   }
 }

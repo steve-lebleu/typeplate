@@ -6,7 +6,7 @@ import * as Bcrypt from 'bcrypt';
 import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, AfterLoad, BeforeInsert, OneToMany } from 'typeorm';
 import { badImplementation } from '@hapi/boom';
 
-import { jwtSecret, jwtExpirationInterval } from '@config/environment.config';
+import { JWT } from '@config/environment.config';
 import { ROLE, ROLES } from '@enums/role.enum';
 import { Media } from '@models/media.model';
 import { IModel } from '@interfaces/IModel.interface';
@@ -115,11 +115,11 @@ export class User implements IModel {
    */
   token(): string {
     const payload = {
-      exp: Moment().add(jwtExpirationInterval, 'minutes').unix(),
+      exp: Moment().add(JWT.EXPIRATION, 'minutes').unix(),
       iat: Moment().unix(),
       sub: this.id
     };
-    return Jwt.encode(payload, jwtSecret);
+    return Jwt.encode(payload, JWT.SECRET);
   }
 
   /**

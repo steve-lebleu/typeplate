@@ -30,7 +30,8 @@ Small but badass & ready to use RESTful API boilerplate builded with [Express.js
 * **Logs management** with [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
 * **HTTP request cache** with [memory-cache](https://www.npmjs.com/package/memory-cache).
 * **Database query cache** with [typeorm caching](https://github.com/typeorm/typeorm/blob/master/docs/caching.md).
-* **Full authentication process** with [passport.js](http://www.passportjs.org/).
+* **JWT authentication process** with [passport.js](http://www.passportjs.org/).
+* **oAuth authentication process** with [passport.js](http://www.passportjs.org/).
 * **Route validation** with [Joi](https://github.com/hapijs/joi).
 * **Customizable file upload** with [Multer](https://www.npmjs.com/package/multer).
 * **Customizable image resizing** designed for front-end requirements with [Jimp](https://www.npmjs.com/package/jimp).
@@ -96,41 +97,51 @@ Open *./dist/env/development.env* and *./dist/env/test.env* files and fill the r
 | ------------ | ----------- | ----------- | ----------- | ---------- |
 | API_VERSION  | Current version of your API | string | v1 | false
 | **AUTHORIZED**   | Allowed client hosts | string | / | true
-| CACHE_IS_ACTIVE | Cache activated | boolean | 0 | false
-| CACHE_TYPE | Cache type | enum | MEMORY | false
-| CACHE_LIFETIME | Cache lifetime duration (ms) | number | 5000 | false
 | CONTENT_TYPE | Supported Content-Type | string | application/json | false
 | **DOMAIN** | API domain | string | localhost | true
-| HTTPS_IS_ACTIVE | SSL support activated | boolean | 0 | false
-| HTTPS_CERT | SSL certificate path | string | / | false
-| HTTPS_KEY | Private key path | string | / | false
+| FACEBOOK_CONSUMER_ID | Facebook app ID | string | / | false
+| FACEBOOK_CONSUMER_SECRET | Facebook app secret | string | / | false
+| GITHUB_CONSUMER_ID | Github app ID | string | / | false
+| GITHUB_CONSUMER_SECRET | Github app secret | string | / | false
+| GOOGLE_CONSUMER_ID | Google app ID | string | / | false
+| GOOGLE_CONSUMER_SECRET | Google app secret | string | / | false
 | JWT_EXPIRATION_MINUTES   | JWT lifetime (minutes) | number | 120960 | false
 | **JWT_SECRET**   | JWT secret passphrase | string | / | true
-| LOGS_MORGAN_TOKEN | Morgan logs format | string | dev | false
+| LINKEDIN_CONSUMER_ID | Linkedin app ID | string | / | false
+| LINKEDIN_CONSUMER_SECRET | Linkedin app secret | string | / | false
 | LOGS_PATH    | Logs directory path | string | logs | false
+| LOGS_TOKEN | Morgan logs format | string | dev | false
+| MEMORY_CACHE | Memory cache activated | boolean | 0 | false
+| MEMORY_CACHE_DURATION | Cache lifetime duration (ms) | number | 5000 | false
 | **PORT**         | Listened application port | number | / | true
 | REFRESH_TOKEN_DURATION | Refresh token duration | number | 30 | false
 | REFRESH_TOKEN_UNIT | Refresh token duration unit | string | days | false
+| RESIZE_IS_ACTIVE | Images resizing activated | boolean | 1 | false
 | RESIZE_PATH_MASTER | Images directory name | string | master-copy | false
 | RESIZE_PATH_SCALE | Resized images path | string | rescale | path
-| RESIZE_SIZE_XS | Extra-small size value (px) | number | 260 | false
-| RESIZE_SIZE_SM | Small size value (px) | number | 320 | false
-| RESIZE_SIZE_MD | Medium size value (px) | number | 768 | false
 | RESIZE_SIZE_LG | Large size value (px) | number | 1024 | false
+| RESIZE_SIZE_MD | Medium size value (px) | number | 768 | false
+| RESIZE_SIZE_SM | Small size value (px) | number | 320 | false
 | RESIZE_SIZE_XL | Extra-large size value (px) | number | 1366 | false
-| **TYPEORM_TYPE** | Database engine | string | / | true
-| TYPEORM_NAME | Databse connection identifier | string | default | false
-| **TYPEORM_HOST** | Database server host | string | / | true
+| RESIZE_SIZE_XS | Extra-small size value (px) | number | 260 | false
+| SSL_CERT | SSL certificate path | string | / | false
+| SSL_KEY | SSL key path | string | / | false
 | **TYPEORM_DB**   | Database name | string | / | true
-| **TYPEORM_USER** | Database user | string | / | true
-| **TYPEORM_PWD**  | Database password | string | / | true
-| **TYPEORM_PORT** | Database server port | number | / | true
-| TYPEORM_SYNC | Schema synchronization activated | boolean | 0 | false
+| TYPEORM_CACHE | Database cache activated | boolean | 0 | false
+| TYPEORM_CACHE_DURATION | Database cache duration | number | 5000 | false
+| **TYPEORM_HOST** | Database server host | string | / | true
 | TYPEORM_LOG  | Queries logs activated | boolean | 0 | false
-| UPLOAD_PATH  | Destination path for uploads | string | public | false
+| TYPEORM_NAME | Databse connection identifier | string | default | false
+| **TYPEORM_PORT** | Database server port | number | / | true
+| **TYPEORM_PWD**  | Database password | string | / | true
+| TYPEORM_SYNC | Schema synchronization activated | boolean | 0 | false
+| **TYPEORM_TYPE** | Database engine | string | / | true
+| **TYPEORM_USER** | Database user | string | / | true
 | UPLOAD_MAX_FILE_SIZE | Max file size (bytes) | number | 1000000 | false
 | UPLOAD_MAX_FILES | Max number of files per request | number | 5 | false
+| UPLOAD_PATH  | Destination path for uploads | string | public | false
 | UPLOAD_WILDCARDS | Accepted file types for upload | string | * | false
+| URL | HTTP root path of your API | string | http://localhost:8101 | false
 
 ### Step 7: setup your Typescript environment
 

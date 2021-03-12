@@ -1,9 +1,10 @@
 import { Router } from '@bases/router.class';
-import { Oauth } from '@middlewares/guard.middleware';
 import { Validate } from '@middlewares/validator.middleware';
+import { Oauth, OauthCallback } from '@middlewares/guard.middleware';
 import { AuthController } from '@controllers/auth.controller';
-
 import { register, login, oAuth, refresh } from '@validations/auth.validation';
+
+import { AuthService } from '@services/auth.service';
 
 export class AuthRouter extends Router {
 
@@ -329,7 +330,53 @@ export class AuthRouter extends Router {
         .post(Validate(refresh), AuthController.refresh);
 
     /**
-     * @api {post} /auth/facebook Facebook oauth
+     * @api {get} /auth/facebook Facebook oauth
+     * @apiDescription Login with facebook. Obtains facebook authorization for oAuth
+     * @apiVersion 1.0.0
+     * @apiName FacebookLogin
+     * @apiGroup Auth
+     * @apiPermission public
+     *
+     * @apiUse BaseHeaderSimple
+     *
+     * @apiUse SuccessToken
+     *
+     * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
+     * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
+     *
+     * @apiErrorExample {json} ValidationError
+     * {
+     *    "statusCode": 400,
+     *    "statusText": "Bad request",
+     *    "errors": [
+     *      {
+     *        "field": "access_token",
+     *        "types": [
+     *          "string.base"
+     *        ],
+     *        "messages": [
+     *          "\"access_token\" must be a string"
+     *        ]
+     *      }
+     *    ]
+     * }
+     *
+     * @apiErrorExample {json} Unauthorized example
+     * {
+     *    "statusCode": 401,
+     *    "statusText": "Unauthorized",
+     *    "errors": [
+     *      "Invalid access token"
+     *    ]
+     * }
+     *
+     */
+    this.router
+      .route('/facebook')
+        .get( Oauth('facebook') );
+
+    /**
+     * @api {post} /auth/facebook/callback Callback URL Facebook oauth
      * @apiDescription Login with facebook. Creates a new user if it does not exist.
      * @apiVersion 1.0.0
      * @apiName FacebookLogin
@@ -372,9 +419,9 @@ export class AuthRouter extends Router {
      * }
      *
      */
-    this.router
-      .route('/facebook')
-        .post(Validate(oAuth), Oauth('facebook'), AuthController.oAuth);
+     this.router
+     .route('/facebook/callback')
+       .get( OauthCallback('facebook'), AuthController.oAuth );
 
     /**
      * @api {post} /auth/google Google oauth
@@ -418,10 +465,12 @@ export class AuthRouter extends Router {
      *      "Invalid access token"
      *    ]
      * }
+     * 
+     * FIXME: rendre ça dynamique, utiliser les mêmes routes pour tous les fournisseurs
      */
-    this.router
-      .route('/google')
-        .post(Validate(oAuth), Oauth('google'), AuthController.oAuth);
+    // this.router
+      //.route('/google')
+       // .get(Validate(oAuth), Oauth('google'), AuthController.oAuth);
 
   }
 

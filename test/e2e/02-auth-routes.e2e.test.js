@@ -133,18 +133,21 @@ describe('Authentification routes', function () {
       });
     });
 
+    it('POST /api/v1/auth/login 403 - invalid refresh token', function (done) {
+      const payload = clone(credentials);
+      delete payload.password;
+      payload.refreshToken = { user: { email: payload.email }, expires: new Date() }
+      doRequest(agent, 'post', '/api/v1/auth/login', null, null, payload, 401, function(err, res) {
+        expect(res.statusCode).to.eqls(401);
+        done();
+      });
+    });
+
     it('POST /api/v1/auth/login 404 - email not found', function (done) {
       const payload = clone(credentials);
       payload.email = 'fake' + chance.email();
       doRequest(agent, 'post', '/api/v1/auth/login', null, null, payload, 404, function(err, res) {
         expect(res.statusCode).to.eqls(404);
-        done();
-      });
-    });
-
-    it('POST /api/v1/auth/login 201 - with credentials', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { email: credentials.email, password: password }, 201, function(err, res) {
-        expect(res.statusCode).to.eqls(201);
         done();
       });
     });
@@ -159,13 +162,6 @@ describe('Authentification routes', function () {
       });
     });
 
-    it('POST /api/v1/auth/login 201 - with api key', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/login', null, null, { apikey }, 201, function(err, res) {
-        expect(res.statusCode).to.eqls(201);
-        done();
-      });
-    });
-
     it('POST /api/v1/auth/login 201 - with api key + data ok', function (done) {
       doRequest(agent, 'post', '/api/v1/auth/login', null, null, { apikey }, 201, function(err, res) {
         expect(res.statusCode).to.eqls(201);
@@ -176,6 +172,64 @@ describe('Authentification routes', function () {
       });
     });
     
+  });
+
+  describe('OAuth', function() {
+
+    describe('Facebook', function() {
+
+      it('GET /api/v1/auth/facebook 302 - oauth redirection is ok', function (done) {
+        doRequest(agent, 'get', '/api/v1/auth/facebook', null, null, {}, 302, function(err, res) {
+          expect(res.statusCode).to.eqls(302);
+          done();
+        });
+      });
+
+    });
+    
+    describe('Google', function() {
+
+      it.skip('GET /api/v1/auth/google 302 - oauth redirection is ok', function (done) {
+        doRequest(agent, 'get', '/api/v1/auth/google', null, null, {}, 302, function(err, res) {
+          expect(res.statusCode).to.eqls(302);
+          done();
+        });
+      });
+
+    });
+
+    describe('Twitter', function() {
+
+      it.skip('GET /api/v1/auth/twitter 302 - oauth redirection is ok', function (done) {
+        doRequest(agent, 'get', '/api/v1/auth/twitter', null, null, {}, 302, function(err, res) {
+          expect(res.statusCode).to.eqls(302);
+          done();
+        });
+      });
+
+    });
+
+    describe('Linkedin', function() {
+
+      it.skip('GET /api/v1/auth/linkedin 302 - oauth redirection is ok', function (done) {
+        doRequest(agent, 'get', '/api/v1/auth/linkedin', null, null, {}, 302, function(err, res) {
+          expect(res.statusCode).to.eqls(302);
+          done();
+        });
+      });
+
+    });
+
+    describe('Github', function() {
+
+      it.skip('GET /api/v1/auth/github 302 - oauth redirection is ok', function (done) {
+        doRequest(agent, 'get', '/api/v1/auth/github', null, null, {}, 302, function(err, res) {
+          expect(res.statusCode).to.eqls(302);
+          done();
+        });
+      });
+
+    });
   });
 
   describe('Refresh token', function() {
@@ -210,28 +264,6 @@ describe('Authentification routes', function () {
       });
     });
     
-  });
-
-  describe('Oauth Google', function() {
-
-    it('POST /api/v1/auth/google 400 - empty payload', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/google', null, null, {}, 400, function(err, res) {
-        expect(res.statusCode).to.eqls(400);
-        done();
-      });
-    });
-
-  });
-
-  describe('Oauth Facebook', function() {
-
-    it('POST /api/v1/auth/facebook 400 - empty payload', function (done) {
-      doRequest(agent, 'post', '/api/v1/auth/facebook', null, null, {}, 400, function(err, res) {
-        expect(res.statusCode).to.eqls(400);
-        done();
-      });
-    });
-
   });
 
 });

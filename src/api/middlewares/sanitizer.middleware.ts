@@ -29,8 +29,17 @@ const Sanitizer = async (req: Request, res: IResponse, next: () => void): Promis
     res.locals.data = res.locals.data.map( (data: { whitelist?: string[] } ) => data.whitelist ? sanitize(data as IModel) : data );
   } else if (res.locals.data.whitelist) {
     res.locals.data = sanitize(res.locals.data as IModel);
+  } else if (typeof res.locals.data === 'object') {
+    const sanitized = Object.keys(res.locals.data).reduce((acc: any,current: string) => {
+      if (res.locals.data[current].whitelist) {
+        acc[current] = sanitize(res.locals.data[current])
+      } else {
+        acc[current] = res.locals.data[current];
+      }
+      return acc;
+    }, {}) as Record<string,unknown>;
+    res.locals.data = sanitized
   }
-
   next();
 }
 

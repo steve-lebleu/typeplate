@@ -8,7 +8,7 @@ import * as Morgan from 'morgan';
 import * as Helmet from 'helmet';
 
 import { createWriteStream } from 'fs';
-import { initialize as PassportInitialize, use as PassportUse } from 'passport';
+import { initialize as PassportInitialize, use as PassportUse, serializeUser, deserializeUser } from 'passport';
 import { notAcceptable } from '@hapi/boom';
 
 import { ENVIRONMENT } from '@enums/environment.enum';
@@ -127,9 +127,17 @@ export class ExpressConfiguration {
      */
     this.instance.use( PassportInitialize() );
 
+    serializeUser( (user, cb) => {
+      cb(null, user);
+    });
+
+    deserializeUser( (obj, cb) => {
+      cb(null, obj);
+    });
+
     PassportUse('jwt', PassportConfiguration.factory('jwt'));
     PassportUse('facebook', PassportConfiguration.factory('facebook'));
-    PassportUse('google', PassportConfiguration.factory('google'));
+    // PassportUse('google', PassportConfiguration.factory('google'));
 
     /**
      * Configure API Rate limit

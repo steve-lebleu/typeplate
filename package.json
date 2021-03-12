@@ -66,6 +66,7 @@
     "@routes": "dist/api/routes/v1",
     "@schemas": "dist/api/validations/schemas",
     "@services": "dist/api/services",
+    "@types": "dist/api/types/types/*",
     "@utils": "dist/api/utils",
     "@validations": "dist/api/validations"
   },
@@ -95,6 +96,8 @@
     "multer": "^1.4.2",
     "mysql": "^2.18.1",
     "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth": "^2.0.0",
     "passport-http-bearer": "^1.0.1",
     "passport-jwt": "^4.0.0",
     "pluralize": "^8.0.0",

@@ -7,8 +7,9 @@ import { badRequest, notFound, unauthorized } from '@hapi/boom';
 
 import { User } from '@models/user.model';
 import { IUserQueryString } from '@interfaces/IUserQueryString.interface';
-import { IAuthExternalProvider } from '@interfaces/IAuthExternalProvider.interface';
+import { IOauth } from '@interfaces/IOauth.interface';
 import { ITokenOptions } from '@interfaces/ITokenOptions.interface';
+import { hash } from '@utils/string.util';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User>  {
@@ -104,26 +105,27 @@ export class UserRepository extends Repository<User>  {
    *
    * @param options
    */
-  async oAuthLogin(options: IAuthExternalProvider): Promise<User> {
+  async oAuthLogin(options: IOauth): Promise<User> {
 
-    const { email, name } = options;
+    console.log('Oauth login in repository with options: ', options);
+
+    const { email, username } = options;
 
     const userRepository = getRepository(User);
 
-    const user = await userRepository.findOne({
+    let user = await userRepository.findOne({
       where: { email },
     });
 
     if (user) {
       if (!user.username) {
-        user.username = name;
+        user.username = username;
       }
       return userRepository.save(user);
     }
 
-    const password = uuidv4();
+    user = userRepository.create({ email, password: hash('email', 16), username });
 
-    return userRepository.create({ email, password, username: name });
-
+    return userRepository.save(user);
   }
 }

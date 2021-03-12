@@ -1,11 +1,11 @@
-import { jwtSecret } from '@config/environment.config';
+import { jwtSecret, facebookOauth, googleOauth } from '@config/environment.config';
 
-import * as BearerStrategy from 'passport-http-bearer';
+import { Strategy as BearerStrategy } from 'passport-http-bearer';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 
-import { Strategy as JwtStrategy } from 'passport-jwt';
-import { ExtractJwt } from 'passport-jwt';
-
-import { oAuth, jwt } from '@services/auth.service';
+import { AuthService } from '@services/auth.service';
 
 const ExtractJwtAlias = ExtractJwt as { fromAuthHeaderWithScheme: (type: string) => string };
 
@@ -33,12 +33,23 @@ export class PassportConfiguration {
    */
   static factory (strategy: string): JwtStrategy|BearerStrategy {
     switch(strategy) {
+      case 'bearer':
+        return new BearerStrategy( AuthService.bearer ) as unknown;
       case 'jwt':
-        return new JwtStrategy( PassportConfiguration.options.jwt, jwt );
+        return new JwtStrategy( PassportConfiguration.options.jwt, AuthService.jwt ) as unknown;
       case 'facebook':
-        return new BearerStrategy( oAuth('facebook') );
+        return new FacebookStrategy({
+          clientID: facebookOauth.id,
+          clientSecret: facebookOauth.secret,
+          callbackURL: facebookOauth.callback,
+          profileFields: ['id', 'link', 'email', 'name', 'picture', 'address']
+        }, AuthService.oAuth ) as unknown;
       case 'google':
-        return new BearerStrategy( oAuth('google') );
+        return new GoogleStrategy({
+          clientID: googleOauth.id,
+          clientSecret: googleOauth.secret,
+          callbackURL: googleOauth.callback
+        }, AuthService.oAuth ) as unknown;
     }
   }
 }

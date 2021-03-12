@@ -20,6 +20,7 @@
       "@schemas": ["api/validations/schemas/"],
       "@schemas/*": ["api/validations/schemas/*"],
       "@services/*": ["api/services/*"],
+      "@types/*": ["api/types/types/*"],
       "@utils/*": ["api/utils/*"],
       "@validations/*": ["api/validations/*"]
     },

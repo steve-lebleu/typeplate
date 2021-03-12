@@ -6,6 +6,8 @@ import { ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE
 import { list } from '@utils/enum.util';
 import { existsSync } from 'fs';
 
+const errors = [];
+
 /**
  * Configure dotenv with variables.env file before app, to allow process.env accessibility in
  * app.js
@@ -36,8 +38,9 @@ class EnvironmentConfiguration {
     const [major, minor] = process.versions.node.split('.').map( parseFloat )
 
     if(major < 14  || major === 14 && minor < 16) {
-        process.stdout.write('--- The node version of the server is too low for modern node programming');
-        process.exit(1);
+      process.stdout.write('\n\x1b[41m[ERROR]\x1b[40m\n\n');
+      process.stdout.write('The node version of the server is too low. Please consider at least v14.16.0.');
+      process.exit(1);
     }
 
     if (process.argv && process.argv.indexOf('--env') !== -1 ) {
@@ -62,8 +65,9 @@ class EnvironmentConfiguration {
     const path = `${process.cwd()}/${EnvironmentConfiguration.base}/env/${EnvironmentConfiguration.environment}.env`;
 
     if (!existsSync(path)) {
-        process.stdout.write(`.env file not found on ${path}`);
-        process.exit(1);
+      process.stdout.write('\n\x1b[41m[ERROR]\x1b[40m\n\n');
+      process.stdout.write(`Environment file not found at ${path}`);
+      process.exit(1);
     }
 
     const dtv: { config: (options) => void, parse: () => void } = require('dotenv') as { config: () => void, parse: () => void };
@@ -79,7 +83,7 @@ EnvironmentConfiguration.load();
  */
 const authorized = ((value: string) => {
   if (!value) {
-    throw new Error('AUTHORIZED not found. Please fill this value in your .env file to indicate allowed hosts.');
+    errors.push('AUTHORIZED not found. Please fill this value in your .env file to indicate allowed hosts.');
   }
   return value;
 })(process.env.AUTHORIZED);
@@ -96,7 +100,7 @@ const authorized = ((value: string) => {
 
  const cache = ((args: Record<string,unknown>) => {
   if (args.CACHE_TYPE && !CACHE[args.CACHE_TYPE as string]) {
-    throw new Error(`CACHE_TYPE bad value. Supported Content-Type must be one of ${list(CACHE).join(',')}`);
+    errors.push(`CACHE_TYPE bad value. Supported Content-Type must be one of ${list(CACHE).join(',')}`);
   }
   return {
     isActive: !!parseInt(args.CACHE_IS_ACTIVE as string, 10) || false,
@@ -110,7 +114,7 @@ const authorized = ((value: string) => {
  */
  const contentType = ((value: string) => {
   if (value && !CONTENT_MIME_TYPE[value]) {
-    throw new Error(`CONTENT_TYPE bad value. Supported Content-Type must be one of ${list(CONTENT_MIME_TYPE).join(',')}`);
+    errors.push(`CONTENT_TYPE bad value. Supported Content-Type must be one of ${list(CONTENT_MIME_TYPE).join(',')}`);
   }
   return value || CONTENT_MIME_TYPE['application/json'];
 })(process.env.CONTENT_TYPE);
@@ -120,7 +124,7 @@ const authorized = ((value: string) => {
  */
  const domain = ((value: string) => {
   if (!value) {
-    throw new Error('DOMAIN not found. Please fill this value in your .env file to indicate domain of your API.');
+    errors.push('DOMAIN not found. Please fill this value in your .env file to indicate domain of your API.');
   }
   return value;
 })(process.env.DOMAIN);
@@ -131,11 +135,37 @@ const authorized = ((value: string) => {
  const env = EnvironmentConfiguration.environment;
 
 /**
+ * @description Facebook oauth configuration
+ */
+ const facebookOauth = ((id: string, secret: string) => {
+  if (id && /[0-9]{15}/.test(id) === false) {
+    errors.push('FACEBOOK_APP_ID bad value. Check your Facebook app and fill a correct value in .env file.');
+  }
+  if (secret && /[0-9-abcdef]{32}/.test(secret) === false) {
+    errors.push('FACEBOOK_APP_SECRET bad value. Check your Facebook app and fill a correct value in your .env file.')
+  }
+  return { id: id || null, secret: secret || null, callback: `${process.env.URL}/api/${process.env.API_VERSION}/auth/facebook/callback` };
+})(process.env.FACEBOOK_APP_ID, process.env.FACEBOOK_APP_SECRET);
+
+/**
+ * @description Google oauth configuration
+ */
+ const googleOauth = ((id: string, secret: string) => {
+  if (id && /[0-9]{15}/.test(id) === false) {
+    errors.push('GOOGLE_CLIENT_ID bad value. Check your Google app and fill a correct value in .env file.');
+  }
+  if (secret && /[0-9-abcdef]{32}/.test(secret) === false) {
+    errors.push('GOOGLE_CLIENT_SECRET bad value. Check your Google app and fill a correct value in your .env file.')
+  }
+  return { id: id || null, secret: secret || null, callback: `${process.env.URL}/api/${process.env.API_VERSION}/auth/google/callback` };
+})(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET);
+
+/**
  * @description JWT exiration duration in minutes
  */
  const jwtExpirationInterval = ((value: string) => {
   if (value && isNaN(parseInt(value, 10))) {
-    throw new Error('JWT_EXPIRATION_MINUTES bad value. Expiration value must be a duration expressed as a number');
+    errors.push('JWT_EXPIRATION_MINUTES bad value. Expiration value must be a duration expressed as a number');
   }
   return parseInt(value, 10) || 120960;
 })(process.env.JWT_EXPIRATION_MINUTES);
@@ -145,7 +175,7 @@ const authorized = ((value: string) => {
  */
  const jwtSecret = ((value: string) => {
   if (!value) {
-    throw new Error('JWT_SECRET not found. Please fill this value in your .env file to strengthen the encryption.');
+    errors.push('JWT_SECRET not found. Please fill this value in your .env file to strengthen the encryption.');
   }
   return value;
 })(process.env.JWT_SECRET);
@@ -166,7 +196,7 @@ const logs = Object.freeze({
  */
  const port = ((value: string) => {
   if (value && isNaN(parseInt(value,10))) {
-    throw new Error('PORT bad value. Port value must be a number');
+    errors.push('PORT bad value. Port value must be a number');
   }
   return value;
 })(process.env.PORT);
@@ -205,10 +235,10 @@ const logs = Object.freeze({
 const ssl = ((isActive: string, key: string, cert: string) => {
   const is = !!parseInt(isActive, 10);
   if (is && !existsSync(key)) {
-    throw new Error('HTTPS_KEY bad value or private key not found. Please check your .env file configuration.')
+    errors.push('HTTPS_KEY bad value or private key not found. Please check your .env file configuration.')
   }
   if (is && !existsSync(cert)) {
-    throw new Error('HTTPS_CERT bad value or SSL certificate not found. Please check your .env file configuration.')
+    errors.push('HTTPS_CERT bad value or SSL certificate not found. Please check your .env file configuration.')
   }
   return Object.freeze({
     isActive: is,
@@ -240,25 +270,25 @@ const typeormParams = Object.keys(process.env)
 
 const typeorm = ((args: Record<string,unknown>, environment: string, cch: Record<string,unknown>) => {
   if(!args.TYPEORM_TYPE) {
-    throw new Error('TYPEORM_TYPE not found. Please fill it in your .env file to define the database engine type.');
+    errors.push('TYPEORM_TYPE not found. Please fill it in your .env file to define the database engine type.');
   }
   if(args.TYPEORM_TYPE && !DATABASE_ENGINE[args.TYPEORM_TYPE as string]) {
-    throw new Error(`TYPEORM_TYPE bad value. Database engine must be one of following: ${list(DATABASE_ENGINE).join(',')}.`);
+    errors.push(`TYPEORM_TYPE bad value. Database engine must be one of following: ${list(DATABASE_ENGINE).join(',')}.`);
   }
   if(!args.TYPEORM_PORT) {
-    throw new Error('TYPEORM_PORT not found. Please fill it in your .env file to define the database server port.');
+    errors.push('TYPEORM_PORT not found. Please fill it in your .env file to define the database server port.');
   }
   if(!args.TYPEORM_HOST) {
-    throw new Error('TYPEORM_HOST not found. Please fill it in your .env file to define the database server host.');
+    errors.push('TYPEORM_HOST not found. Please fill it in your .env file to define the database server host.');
   }
   if(!args.TYPEORM_DB) {
-    throw new Error('TYPEORM_DB not found. Please fill it in your .env file to define the targeted database.');
+    errors.push('TYPEORM_DB not found. Please fill it in your .env file to define the targeted database.');
   }
   if(!args.TYPEORM_USER) {
-    throw new Error('TYPEORM_USER not found. Please fill it in your .env file to define the user of the database.');
+    errors.push('TYPEORM_USER not found. Please fill it in your .env file to define the user of the database.');
   }
   if(!args.TYPEORM_PWD && ![ENVIRONMENT.test, ENVIRONMENT.development].includes(environment as ENVIRONMENT)) {
-    throw new Error('TYPEORM_PWD not found. Please fill it in your .env file to define the password of the database.');
+    errors.push('TYPEORM_PWD not found. Please fill it in your .env file to define the password of the database.');
   }
 
   const dbCache = cch.isActive && cch.type === 'DB' ? { cache: { duration: cch.lifetime } } : {};
@@ -288,10 +318,10 @@ const typeorm = ((args: Record<string,unknown>, environment: string, cch: Record
  */
 const refresh = ((duration: string, unit: string) => {
   if(duration && isNaN(parseInt(duration, 10)) ) {
-    throw new Error('REFRESH_TOKEN_LIFETIME bad value. Duration must be a number.');
+    errors.push('REFRESH_TOKEN_LIFETIME bad value. Duration must be a number.');
   }
   if(unit && ['hours', 'days', 'weeks', 'months'].includes(unit) ) {
-    throw new Error('REFRESH_TOKEN_UNIT bad value. Unity must be one of hours, days, weeks, months.');
+    errors.push('REFRESH_TOKEN_UNIT bad value. Unity must be one of hours, days, weeks, months.');
   }
   return { duration: parseInt(duration, 10) || 30, unit: (unit || 'days') as MOMENT_UNIT }
 })(process.env.REFRESH_TOKEN_DURATION, process.env.REFRESH_TOKEN_UNIT);
@@ -333,4 +363,21 @@ const upload = ((args: Record<string, unknown>) => {
  */
 const version = process.env.API_VERSION || 'v1';
 
-export { authorized, cache, contentType, domain, env, jwtSecret, jwtExpirationInterval, logs, port, refresh, resize, ssl, typeorm, upload, version };
+if (errors.length > 0) {
+  process.stdout.write('\n\x1b[41m[ERROR]\x1b[40m\n\n');
+  process.stdout.write('\x1b[40mSome environment variables seems to be broken:\n\n');
+  process.stdout.write(errors.join('\n'));
+  process.exit(1);
+}
+
+/**
+ * @description Main URL. Default http://localhost:8101
+ */
+ const url = ((value: string) => {
+  if (value && /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(value)) {
+    errors.push('PORT bad value. Port value must be a number');
+  }
+  return value;
+})(process.env.URL);
+
+export { authorized, cache, contentType, domain, env, facebookOauth, googleOauth, jwtSecret, jwtExpirationInterval, logs, port, refresh, resize, ssl, typeorm, upload, url, version };

@@ -12,55 +12,76 @@ import { RefreshToken } from '@models/refresh-token.model';
 
 import { AuthProvider } from '@services/auth-provider.service';
 
-/**
- * @description Build a token response and return it
- *
- * @param user
- * @param accessToken
- */
-const generateTokenResponse = async (user : User, accessToken : string): Promise<{ tokenType, accessToken, refreshToken, expiresIn }> => {
-  const tokenType = 'Bearer';
-  const oldToken = await getRepository(RefreshToken).findOne({ where : { user } });
-  if (oldToken) {
-    await getRepository(RefreshToken).remove(oldToken)
-  }
-  const refreshToken = getCustomRepository(RefreshTokenRepository).generate(user).token;
-  const expiresIn = Moment().add(jwtExpirationInterval, 'minutes');
-  return { tokenType, accessToken, refreshToken, expiresIn };
-}
+export class AuthService {
 
-/**
- * @description Authentication by oAuth middleware function
- * @async
- */
-const oAuth = (service: 'facebook' | 'google') => async (token, next: (e?: Error, v?: User) => void): Promise<void> => {
-  try {
-    const userRepository = getCustomRepository(UserRepository);
-    const userData = await AuthProvider[service](token);
-    const user = await userRepository.oAuthLogin(userData);
-    next(null, user);
-  } catch (err) {
-    return next(err);
-  }
-}
-
-/**
- * @description Authentication by JWT middleware function
- * @async
- *
- * FIXME: promise error is not managed
- */
-const jwt = async (payload: { sub }, next: (e?: Error, v?: User|boolean) => void): Promise<void> => {
-  try {
-    const userRepository = getRepository(User);
-    const user = await userRepository.findOne( payload.sub );
-    if (user) {
-      return next(null, user);
+  /**
+   * @description Build a token response and return it
+   *
+   * @param user
+   * @param accessToken
+   */
+  static async generateTokenResponse(user : User, accessToken : string): Promise<{ tokenType, accessToken, refreshToken, expiresIn }> {
+    const tokenType = 'Bearer';
+    const oldToken = await getRepository(RefreshToken).findOne({ where : { user } });
+    if (oldToken) {
+      await getRepository(RefreshToken).remove(oldToken)
     }
-    return next(null, false);
-  } catch (error) {
-    return next(error, false);
+    const refreshToken = getCustomRepository(RefreshTokenRepository).generate(user).token;
+    const expiresIn = Moment().add(jwtExpirationInterval, 'minutes');
+    return { tokenType, accessToken, refreshToken, expiresIn };
+  }
+
+  /**
+   * @description Authentication by oAuth processing
+   *
+   * @param token Access token of provider
+   * @param refreshToken Refresh token of provider
+   * @param profile Shared profile information
+   * @param next Callback function
+   *
+   * FIXME: promise error is not managed
+   *
+   * @async
+   */
+  static async oAuth(token: string, refreshToken: string, profile: any, next: (e?: Error, v?: User) => void): Promise<void> {
+    // TODO: clean up and type this
+    const tmp = {
+      id: profile.id,
+      username: profile.username || `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}`,
+      email: profile.emails ? profile.emails[0] : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}@facebook.com`,
+      picture: profile.picture || ''
+    }
+
+    try {
+      const userRepository = getCustomRepository(UserRepository);
+      const user = await userRepository.oAuthLogin(tmp);
+      next(null, user);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
+   * @description Authentication by JWT middleware function
+   *
+   * @async
+   *
+   * FIXME: promise error is not managed
+   */
+  static async jwt(payload: { sub }, next: (e?: Error, v?: User|boolean) => void): Promise<void> {
+    try {
+      const userRepository = getRepository(User);
+      const user = await userRepository.findOne( payload.sub );
+      if (user) {
+        return next(null, user);
+      }
+      return next(null, false);
+    } catch (error) {
+      return next(error, false);
+    }
+  }
+
+  static async bearer() {
+    throw new Error('To be implemented');
   }
 }
-
-export { generateTokenResponse, oAuth, jwt };

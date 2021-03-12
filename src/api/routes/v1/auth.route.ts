@@ -425,7 +425,7 @@ export class AuthRouter extends Router {
 
     /**
      * @api {post} /auth/google Google oauth
-     * @apiDescription Login with google. Creates a new user if it does not exist.
+     * @apiDescription Login with google.
      * @apiVersion 1.0.0
      * @apiName GoogleLogin
      * @apiGroup Auth
@@ -465,12 +465,59 @@ export class AuthRouter extends Router {
      *      "Invalid access token"
      *    ]
      * }
-     * 
-     * FIXME: rendre ça dynamique, utiliser les mêmes routes pour tous les fournisseurs
+     *
      */
-    // this.router
-      //.route('/google')
-       // .get(Validate(oAuth), Oauth('google'), AuthController.oAuth);
+    this.router
+      .route('/google')
+       .get( Oauth('google'), AuthController.oAuth );
+
+    /**
+     * @api {post} /auth/google/callback Callback URL Google oauth
+     * @apiDescription Login with Google. Creates a new user if it does not exist.
+     * @apiVersion 1.0.0
+     * @apiName GoogleLogin
+     * @apiGroup Auth
+     * @apiPermission public
+     *
+     * @apiUse BaseHeaderSimple
+     *
+     * @apiParam  {String}  access_token  Google's access_token
+     *
+     * @apiUse SuccessToken
+     *
+     * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
+     * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
+     *
+     * @apiErrorExample {json} ValidationError
+     * {
+     *    "statusCode": 400,
+     *    "statusText": "Bad request",
+     *    "errors": [
+     *      {
+     *        "field": "access_token",
+     *        "types": [
+     *          "string.base"
+     *        ],
+     *        "messages": [
+     *          "\"access_token\" must be a string"
+     *        ]
+     *      }
+     *    ]
+     * }
+     *
+     * @apiErrorExample {json} Unauthorized example
+     * {
+     *    "statusCode": 401,
+     *    "statusText": "Unauthorized",
+     *    "errors": [
+     *      "Invalid access token"
+     *    ]
+     * }
+     *
+     */
+     this.router
+     .route('/google/callback')
+       .get( OauthCallback('google'), AuthController.oAuth );
 
   }
 

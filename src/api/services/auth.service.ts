@@ -12,6 +12,9 @@ import { RefreshToken } from '@models/refresh-token.model';
 
 import { AuthProvider } from '@services/auth-provider.service';
 import { badData } from '@hapi/boom';
+import { IOauthResponse } from '@interfaces/IOauthResponse.interface';
+
+import { hash } from '@utils/string.util';
 
 export class AuthService {
 
@@ -48,19 +51,20 @@ export class AuthService {
    * @param next Callback function
    *
    * FIXME: promise error is not managed
-   * TODO: clean up and type
+   *
    * @async
    */
-  static async oAuth(token: string, refreshToken: string, profile: any, next: (e?: Error, v?: User) => void): Promise<void> {
+  static async oAuth(token: string, refreshToken: string, profile: IOauthResponse, next: (e?: Error, v?: User) => void): Promise<void> {
     try {
-      const tmp = {
+      const iRegistrable = {
         id: profile.id,
-        username: profile.username || `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}`,
-        email: profile.emails ? profile.emails[0] : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}@facebook.com`,
-        picture: profile.picture || ''
+        username: `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}`,
+        email: profile.emails ? profile.emails.filter(email => email.verified).slice().shift()?.value : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}@externalprovider.com`,
+        picture: profile.photos.slice().shift()?.value,
+        password: hash('email', 16)
       }
       const userRepository = getCustomRepository(UserRepository);
-      const user = await userRepository.oAuthLogin(tmp);
+      const user = await userRepository.oAuthLogin(iRegistrable);
       next(null, user);
     } catch (err) {
       return next(err);

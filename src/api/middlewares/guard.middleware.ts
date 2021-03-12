@@ -7,8 +7,7 @@ import { ROLES } from '@enums/role.enum';
 import { list } from '@utils/enum.util';
 import { IUserRequest } from '@interfaces/IUserRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
-import { OAuthProvider } from '@types/oauth-provider.type';
-
+import { OAuthProvider } from '@customtypes/oauth-provider.type';
 
 /**
  * @description Callback function provided to passport.authenticate with JWT strategy

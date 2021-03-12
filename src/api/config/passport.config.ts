@@ -48,7 +48,8 @@ export class PassportConfiguration {
         return new GoogleStrategy({
           clientID: googleOauth.id,
           clientSecret: googleOauth.secret,
-          callbackURL: googleOauth.callback
+          callbackURL: googleOauth.callback,
+          scope: ['profile', 'email']
         }, AuthService.oAuth ) as unknown;
     }
   }

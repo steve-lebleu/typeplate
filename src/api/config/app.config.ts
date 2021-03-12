@@ -80,7 +80,7 @@ export class ExpressConfiguration {
     /**
      * First, before all : check headers validity
      */
-    this.instance.use( Kors(contentType) );
+    // this.instance.use( Kors(contentType) );
 
     /**
      * Expose body on req.body
@@ -118,7 +118,7 @@ export class ExpressConfiguration {
      *
      * @see https://www.npmjs.com/package/cors
      */
-    this.instance.use( Cors( this.options.cors ) );
+    // this.instance.use( Cors( this.options.cors ) );
 
     /**
      * Passport configuration
@@ -127,17 +127,9 @@ export class ExpressConfiguration {
      */
     this.instance.use( PassportInitialize() );
 
-    serializeUser( (user, cb) => {
-      cb(null, user);
-    });
-
-    deserializeUser( (obj, cb) => {
-      cb(null, obj);
-    });
-
     PassportUse('jwt', PassportConfiguration.factory('jwt'));
     PassportUse('facebook', PassportConfiguration.factory('facebook'));
-    // PassportUse('google', PassportConfiguration.factory('google'));
+    PassportUse('google', PassportConfiguration.factory('google'));
 
     /**
      * Configure API Rate limit

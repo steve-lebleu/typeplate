@@ -6,9 +6,8 @@ import { badRequest, notFound, unauthorized } from '@hapi/boom';
 
 import { User } from '@models/user.model';
 import { IUserQueryString } from '@interfaces/IUserQueryString.interface';
-import { IOauth } from '@interfaces/IOauth.interface';
 import { ITokenOptions } from '@interfaces/ITokenOptions.interface';
-import { hash } from '@utils/string.util';
+import { IRegistrable } from '@interfaces/IRegistrable.interface';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User>  {
@@ -103,25 +102,32 @@ export class UserRepository extends Repository<User>  {
    * @description Create / save user for oauth connexion
    *
    * @param options
+   *
+   * FIXME: user should always retrieved from her email address. If not, possible collision on username value
    */
-  async oAuthLogin(options: IOauth): Promise<User> {
+  async oAuthLogin(options: IRegistrable): Promise<User> {
 
-    const { email, username } = options;
+    const { email, username, password } = options;
 
     const userRepository = getRepository(User);
 
     let user = await userRepository.findOne({
-      where: { email },
+      where: [ { email }, { username } ],
     });
 
     if (user) {
       if (!user.username) {
         user.username = username;
+        await userRepository.save(user)
       }
-      return userRepository.save(user);
+      if (user.email.includes('externalprovider') && !email.includes('externalprovider')) {
+        user.email = email;
+        await userRepository.save(user)
+      }
+      return user;
     }
 
-    user = userRepository.create({ email, password: hash('email', 16), username });
+    user = userRepository.create({ email, password, username });
 
     return userRepository.save(user);
   }

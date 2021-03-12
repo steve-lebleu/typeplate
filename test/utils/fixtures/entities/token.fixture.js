@@ -21,3 +21,40 @@ const oauthFacebook = {
 }
 
 exports.oauthFacebook = oauthFacebook;
+
+
+/** OAuth Google
+ * {
+  id: '100381987564055936818',
+  displayName: 'Steve Lebleu',
+  name: { familyName: 'Lebleu', givenName: 'Steve' },
+  emails: [ { value: 'steve.lebleu1979@gmail.com', verified: true } ],
+  photos: [
+    {
+      value: 'https://lh6.googleusercontent.com/-QmuEXYjq2Ag/AAAAAAAAAAI/AAAAAAAAFT4/AMZuucmaVXn8Gopeny7NpT9A5uM5lJH6yQ/s96-c/photo.jpg'
+    }
+  ],
+  provider: 'google',
+  _raw: '{\n' +
+    '  "sub": "100381987564055936818",\n' +
+    '  "name": "Steve Lebleu",\n' +
+    '  "given_name": "Steve",\n' +
+    '  "family_name": "Lebleu",\n' +
+    '  "picture": "https://lh6.googleusercontent.com/-QmuEXYjq2Ag/AAAAAAAAAAI/AAAAAAAAFT4/AMZuucmaVXn8Gopeny7NpT9A5uM5lJH6yQ/s96-c/photo.jpg",\n' +
+    '  "email": "steve.lebleu1979@gmail.com",\n' +
+    '  "email_verified": true,\n' +
+    '  "locale": "fr"\n' +
+    '}',
+  _json: {
+    sub: '100381987564055936818',
+    name: 'Steve Lebleu',
+    given_name: 'Steve',
+    family_name: 'Lebleu',
+    picture: 'https://lh6.googleusercontent.com/-QmuEXYjq2Ag/AAAAAAAAAAI/AAAAAAAAFT4/AMZuucmaVXn8Gopeny7NpT9A5uM5lJH6yQ/s96-c/photo.jpg',
+    email: 'steve.lebleu1979@gmail.com',
+    email_verified: true,
+    locale: 'fr'
+  }
+}
+
+ */

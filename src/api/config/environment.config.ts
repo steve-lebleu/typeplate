@@ -18,7 +18,7 @@ const errors = [];
  *
  * FIXME: encrypt confidential data on env variables (ie typeorm)
  */
-class EnvironmentConfiguration {
+export class EnvironmentConfiguration {
 
   /**
    * @description Current environment (default development)
@@ -33,14 +33,14 @@ class EnvironmentConfiguration {
   /**
    * @description Set env according to args, and load .env file
    */
-  static load() {
+  static load(nodeVersion: string): void {
 
-    const [major, minor] = process.versions.node.split('.').map( parseFloat )
+    const [major, minor] = nodeVersion.split('.').map( parseFloat )
 
     if(major < 14  || major === 14 && minor < 16) {
       process.stdout.write('\n\x1b[41m[ERROR]\x1b[40m\n\n');
       process.stdout.write('The node version of the server is too low. Please consider at least v14.16.0.');
-      process.exit(1);
+      process.exit(0);
     }
 
     if (process.argv && process.argv.indexOf('--env') !== -1 ) {
@@ -67,16 +67,16 @@ class EnvironmentConfiguration {
     if (!existsSync(path)) {
       process.stdout.write('\n\x1b[41m[ERROR]\x1b[40m\n\n');
       process.stdout.write(`Environment file not found at ${path}`);
-      process.exit(1);
+      process.exit(0);
     }
 
     const dtv: { config: (options) => void, parse: () => void } = require('dotenv') as { config: () => void, parse: () => void };
+
     dtv.config( { path} );
   }
-
 }
 
-EnvironmentConfiguration.load();
+EnvironmentConfiguration.load(process.versions.node);
 
 /**
  * @description Authorized remote(s) host(s)
@@ -151,10 +151,10 @@ const authorized = ((value: string) => {
  * @description Google oauth configuration
  */
  const googleOauth = ((id: string, secret: string) => {
-  if (id && /[0-9]{15}/.test(id) === false) {
+  if (id && /[0-9]{12}-[0-9-a-z]{32}.apps.googleusercontent.com/.test(id) === false) {
     errors.push('GOOGLE_CLIENT_ID bad value. Check your Google app and fill a correct value in .env file.');
   }
-  if (secret && /[0-9-abcdef]{32}/.test(secret) === false) {
+  if (secret && /[0-9-A-Z-a-z-_]{24}/.test(secret) === false) {
     errors.push('GOOGLE_CLIENT_SECRET bad value. Check your Google app and fill a correct value in your .env file.')
   }
   return { id: id || null, secret: secret || null, callback: `${process.env.URL}/api/${process.env.API_VERSION}/auth/google/callback` };
@@ -367,7 +367,7 @@ if (errors.length > 0) {
   process.stdout.write('\n\x1b[41m[ERROR]\x1b[40m\n\n');
   process.stdout.write('\x1b[40mSome environment variables seems to be broken:\n\n');
   process.stdout.write(errors.join('\n'));
-  process.exit(1);
+  process.exit(0);
 }
 
 /**

@@ -11,7 +11,8 @@ import { Logger } from '@services/logger.service';
 
 TypeormConfiguration.connect()
   .catch( (e: Error) => {
-    throw new Error(e.message);
+    process.stdout.write(e.message);
+    process.exit(1);
   });
 
 const application = new ExpressConfiguration( Express() ).get();

@@ -11,6 +11,7 @@ import { User } from '@models/user.model';
 import { RefreshToken } from '@models/refresh-token.model';
 
 import { AuthProvider } from '@services/auth-provider.service';
+import { badData } from '@hapi/boom';
 
 export class AuthService {
 
@@ -20,15 +21,22 @@ export class AuthService {
    * @param user
    * @param accessToken
    */
-  static async generateTokenResponse(user : User, accessToken : string): Promise<{ tokenType, accessToken, refreshToken, expiresIn }> {
-    const tokenType = 'Bearer';
-    const oldToken = await getRepository(RefreshToken).findOne({ where : { user } });
-    if (oldToken) {
-      await getRepository(RefreshToken).remove(oldToken)
+  static async generateTokenResponse(user: User, accessToken: string): Promise<{ tokenType, accessToken, refreshToken, expiresIn }|Error> {
+    if (!user || !(user instanceof User)) {
+      return badData('User is not an instance of User');
     }
-    const refreshToken = getCustomRepository(RefreshTokenRepository).generate(user).token;
-    const expiresIn = Moment().add(jwtExpirationInterval, 'minutes');
-    return { tokenType, accessToken, refreshToken, expiresIn };
+    try {
+      const tokenType = 'Bearer';
+      const oldToken = await getRepository(RefreshToken).findOne({ where : { user } });
+      if (oldToken) {
+        await getRepository(RefreshToken).remove(oldToken)
+      }
+      const refreshToken = getCustomRepository(RefreshTokenRepository).generate(user).token;
+      const expiresIn = Moment().add(jwtExpirationInterval, 'minutes');
+      return { tokenType, accessToken, refreshToken, expiresIn };
+    } catch(e) {
+      return e;
+    }
   }
 
   /**
@@ -40,19 +48,17 @@ export class AuthService {
    * @param next Callback function
    *
    * FIXME: promise error is not managed
-   *
+   * TODO: clean up and type
    * @async
    */
   static async oAuth(token: string, refreshToken: string, profile: any, next: (e?: Error, v?: User) => void): Promise<void> {
-    // TODO: clean up and type this
-    const tmp = {
-      id: profile.id,
-      username: profile.username || `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}`,
-      email: profile.emails ? profile.emails[0] : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}@facebook.com`,
-      picture: profile.picture || ''
-    }
-
     try {
+      const tmp = {
+        id: profile.id,
+        username: profile.username || `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}`,
+        email: profile.emails ? profile.emails[0] : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}@facebook.com`,
+        picture: profile.picture || ''
+      }
       const userRepository = getCustomRepository(UserRepository);
       const user = await userRepository.oAuthLogin(tmp);
       next(null, user);

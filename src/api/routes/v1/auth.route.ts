@@ -2,7 +2,7 @@ import { Router } from '@bases/router.class';
 import { Validate } from '@middlewares/validator.middleware';
 import { Oauth, OauthCallback } from '@middlewares/guard.middleware';
 import { AuthController } from '@controllers/auth.controller';
-import { register, login, oAuth, refresh } from '@validations/auth.validation';
+import { register, login, refresh } from '@validations/auth.validation';
 
 import { AuthService } from '@services/auth.service';
 

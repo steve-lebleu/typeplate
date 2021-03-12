@@ -27,6 +27,7 @@ type ARCHIVE = 'application/x-7z-compressed' | 'application/x-rar-compressed' | 
  */
 enum AUDIO_MIME_TYPE {
   'audio/mpeg' = 'audio/mpeg',
+  'audio/mp3' = 'audio/mp3',
   'audio/mid' = 'audio/mid',
   'audio/mp4' = 'audio/mp4',
   'audio/x-aiff' = 'audio/x-aiff',
@@ -35,7 +36,7 @@ enum AUDIO_MIME_TYPE {
   'audio/vnd.wav' = 'audio/vnd.wav',
 }
 
-type AUDIO = 'audio/mpeg' | 'audio/mid' | 'audio/mp4' | 'audio/x-aiff' | 'audio/ogg' | 'audio/vorbis' | 'audio/vnd.wav';
+type AUDIO = 'audio/mpeg' | 'audio/mp3' | 'audio/mid' | 'audio/mp4' | 'audio/x-aiff' | 'audio/ogg' | 'audio/vorbis' | 'audio/vnd.wav';
 
 /**
  * @description Define supported documents mime-types

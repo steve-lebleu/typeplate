@@ -2,7 +2,6 @@ import * as Moment from 'moment-timezone';
 
 import { Repository, EntityRepository, getRepository } from 'typeorm';
 import { omitBy, isNil } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 import { badRequest, notFound, unauthorized } from '@hapi/boom';
 
 import { User } from '@models/user.model';
@@ -106,8 +105,6 @@ export class UserRepository extends Repository<User>  {
    * @param options
    */
   async oAuthLogin(options: IOauth): Promise<User> {
-
-    console.log('Oauth login in repository with options: ', options);
 
     const { email, username } = options;
 

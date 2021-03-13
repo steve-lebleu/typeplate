@@ -36,7 +36,7 @@ export class ServerError implements Error, IHTTPError {
   constructor(error: IError) {
     this.statusCode = 500;
     this.statusText = 'Ooops... server seems to be broken';
-    this.errors = ['Looks like someone\'s done something wrong again\''];
+    this.errors = ['Looks like someone\'s was not there while the meeting\''];
     this.stack = error?.stack;
   }
 

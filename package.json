@@ -1,5 +1,5 @@
 {
-  "version": "1.1.4",
+  "version": "1.2.0",
   "engines": {
     "node": ">=14.16"
   },
@@ -49,12 +49,13 @@
     "test:unit": "./node_modules/.bin/mocha ./test/units/00-application.unit.test.js --exit --reporter spec --timeout 10000 --env test",
     "test:e2e": "./node_modules/.bin/mocha ./test/e2e/00-api.e2e.test.js --exit --reporter spec --timeout 10000 --env test",
     "todo": "leasot -x --reporter markdown './src/**/*.ts' > TODO.md && git add TODO.md",
-    "version": "auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\""
+    "version": "npm run todo && git add TODO.md && git add package.json && auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\" --no-verify"
   },
   "_moduleAliases": {
     "@bases": "dist/api/types/classes",
     "@config": "dist/api/config",
     "@controllers": "dist/api/controllers",
+    "@customtypes": "dist/api/types/types",
     "@decorators": "dist/api/decorators",
     "@enums": "dist/api/types/enums",
     "@errors": "dist/api/types/errors",
@@ -95,8 +96,12 @@
     "multer": "^1.4.2",
     "mysql": "^2.18.1",
     "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "passport-github2": "^0.1.12",
+    "passport-google-oauth": "^2.0.0",
     "passport-http-bearer": "^1.0.1",
     "passport-jwt": "^4.0.0",
+    "passport-linkedin-oauth2": "^2.0.0",
     "pluralize": "^8.0.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.31",

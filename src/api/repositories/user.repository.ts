@@ -2,13 +2,12 @@ import * as Moment from 'moment-timezone';
 
 import { Repository, EntityRepository, getRepository } from 'typeorm';
 import { omitBy, isNil } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 import { badRequest, notFound, unauthorized } from '@hapi/boom';
 
 import { User } from '@models/user.model';
 import { IUserQueryString } from '@interfaces/IUserQueryString.interface';
-import { IAuthExternalProvider } from '@interfaces/IAuthExternalProvider.interface';
 import { ITokenOptions } from '@interfaces/ITokenOptions.interface';
+import { IRegistrable } from '@interfaces/IRegistrable.interface';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User>  {
@@ -103,27 +102,33 @@ export class UserRepository extends Repository<User>  {
    * @description Create / save user for oauth connexion
    *
    * @param options
+   *
+   * FIXME: user should always retrieved from her email address. If not, possible collision on username value
    */
-  async oAuthLogin(options: IAuthExternalProvider): Promise<User> {
+  async oAuthLogin(options: IRegistrable): Promise<User> {
 
-    const { email, name } = options;
+    const { email, username, password } = options;
 
     const userRepository = getRepository(User);
 
-    const user = await userRepository.findOne({
-      where: { email },
+    let user = await userRepository.findOne({
+      where: [ { email }, { username } ],
     });
 
     if (user) {
       if (!user.username) {
-        user.username = name;
+        user.username = username;
+        await userRepository.save(user)
       }
-      return userRepository.save(user);
+      if (user.email.includes('externalprovider') && !email.includes('externalprovider')) {
+        user.email = email;
+        await userRepository.save(user)
+      }
+      return user;
     }
 
-    const password = uuidv4();
+    user = userRepository.create({ email, password, username });
 
-    return userRepository.create({ email, password, username: name });
-
+    return userRepository.save(user);
   }
 }

@@ -1,9 +1,8 @@
 import { Router } from '@bases/router.class';
-import { Oauth } from '@middlewares/guard.middleware';
 import { Validate } from '@middlewares/validator.middleware';
+import { Oauth, OauthCallback } from '@middlewares/guard.middleware';
 import { AuthController } from '@controllers/auth.controller';
-
-import { register, login, oAuth, refresh } from '@validations/auth.validation';
+import { register, login, refresh, oauthCb } from '@validations/auth.validation';
 
 export class AuthRouter extends Router {
 
@@ -329,7 +328,37 @@ export class AuthRouter extends Router {
         .post(Validate(refresh), AuthController.refresh);
 
     /**
-     * @api {post} /auth/facebook Facebook oauth
+     * @api {get} /auth/facebook Facebook oauth
+     * @apiDescription Login with facebook. Obtains facebook authorization for oAuth
+     * @apiVersion 1.0.0
+     * @apiName FacebookLogin
+     * @apiGroup Auth
+     * @apiPermission public
+     *
+     * @apiUse BaseHeaderSimple
+     *
+     * @apiUse SuccessToken
+     *
+     * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
+     * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
+     *
+     *
+     * @apiErrorExample {json} Unauthorized example
+     * {
+     *    "statusCode": 401,
+     *    "statusText": "Unauthorized",
+     *    "errors": [
+     *      "Invalid access token"
+     *    ]
+     * }
+     *
+     */
+    this.router
+      .route('/facebook')
+        .get( Oauth('facebook') );
+
+    /**
+     * @api {post} /auth/facebook/callback Callback URL Facebook oauth
      * @apiDescription Login with facebook. Creates a new user if it does not exist.
      * @apiVersion 1.0.0
      * @apiName FacebookLogin
@@ -351,34 +380,47 @@ export class AuthRouter extends Router {
      *    "statusText": "Bad request",
      *    "errors": [
      *      {
-     *        "field": "access_token",
+     *        "field": "code",
      *        "types": [
      *          "string.base"
      *        ],
      *        "messages": [
-     *          "\"access_token\" must be a string"
+     *          "\"code\" must be a string"
      *        ]
      *      }
      *    ]
      * }
      *
-     * @apiErrorExample {json} Unauthorized example
-     * {
-     *    "statusCode": 401,
-     *    "statusText": "Unauthorized",
-     *    "errors": [
-     *      "Invalid access token"
-     *    ]
-     * }
-     *
      */
-    this.router
-      .route('/facebook')
-        .post(Validate(oAuth), Oauth('facebook'), AuthController.oAuth);
+     this.router
+     .route('/facebook/callback')
+       .get( Validate(oauthCb), OauthCallback('facebook'), AuthController.oAuth );
 
     /**
      * @api {post} /auth/google Google oauth
-     * @apiDescription Login with google. Creates a new user if it does not exist.
+     * @apiDescription Login with google.
+     * @apiVersion 1.0.0
+     * @apiName GoogleLogin
+     * @apiGroup Auth
+     * @apiPermission public
+     *
+     * @apiUse BaseHeaderSimple
+     *
+     * @apiParam  {String}  access_token  Google's access_token
+     *
+     * @apiUse SuccessToken
+     *
+     * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
+     * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
+     *
+     */
+    this.router
+      .route('/google')
+       .get( Oauth('google'), AuthController.oAuth );
+
+    /**
+     * @api {post} /auth/google/callback Callback URL Google oauth
+     * @apiDescription Login with Google. Creates a new user if it does not exist.
      * @apiVersion 1.0.0
      * @apiName GoogleLogin
      * @apiGroup Auth
@@ -399,30 +441,140 @@ export class AuthRouter extends Router {
      *    "statusText": "Bad request",
      *    "errors": [
      *      {
-     *        "field": "access_token",
+     *        "field": "code",
      *        "types": [
      *          "string.base"
      *        ],
      *        "messages": [
-     *          "\"access_token\" must be a string"
+     *          "\"code\" must be a string"
      *        ]
      *      }
      *    ]
      * }
-     *
-     * @apiErrorExample {json} Unauthorized
-     * {
-     *    "statusCode": 401,
-     *    "statusText": "Unauthorized",
-     *    "errors": [
-     *      "Invalid access token"
-     *    ]
-     * }
      */
+     this.router
+     .route('/google/callback')
+       .get( Validate(oauthCb), OauthCallback('google'), AuthController.oAuth );
+
+    /**
+     * @api {post} /auth/github Github oauth
+     * @apiDescription Login with Github.
+     * @apiVersion 1.0.0
+     * @apiName GithubLogin
+     * @apiGroup Auth
+     * @apiPermission public
+     *
+     * @apiUse BaseHeaderSimple
+     *
+     * @apiParam  {String}  access_token  Github access_token
+     *
+     * @apiUse SuccessToken
+     *
+     * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
+     * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
+     *
+     */
+     this.router
+     .route('/github')
+      .get( Oauth('github'), AuthController.oAuth );
+
+   /**
+    * @api {post} /auth/github/callback Callback URL Github oauth
+    * @apiDescription Login with Github. Creates a new user if it does not exist.
+    * @apiVersion 1.0.0
+    * @apiName GithubLogin
+    * @apiGroup Auth
+    * @apiPermission public
+    *
+    * @apiUse BaseHeaderSimple
+    *
+    * @apiParam  {String}  access_token  Twitter access_token
+    *
+    * @apiUse SuccessToken
+    *
+    * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
+    * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
+    *
+    * @apiErrorExample {json} ValidationError
+    * {
+    *    "statusCode": 400,
+    *    "statusText": "Bad request",
+    *    "errors": [
+    *      {
+    *        "field": "code",
+    *        "types": [
+    *          "string.base"
+    *        ],
+    *        "messages": [
+    *          "\"code\" must be a string"
+    *        ]
+    *      }
+    *    ]
+    * }
+    */
     this.router
-      .route('/google')
-        .post(Validate(oAuth), Oauth('google'), AuthController.oAuth);
+    .route('/github/callback')
+      .get( Validate(oauthCb), OauthCallback('github'), AuthController.oAuth );
+
+    /**
+     * @api {post} /auth/linkedin Linkedin oauth
+     * @apiDescription Login with Linkedin.
+     * @apiVersion 1.0.0
+     * @apiName LinkedinLogin
+     * @apiGroup Auth
+     * @apiPermission public
+     *
+     * @apiUse BaseHeaderSimple
+     *
+     * @apiParam  {String}  access_token  Linkedin access_token
+     *
+     * @apiUse SuccessToken
+     *
+     * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
+     * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
+     *
+     */
+     this.router
+     .route('/linkedin')
+      .get( Oauth('linkedin'), AuthController.oAuth );
+
+   /**
+    * @api {post} /auth/linkedin/callback Callback URL Github oauth
+    * @apiDescription Login with Linkedin. Creates a new user if it does not exist.
+    * @apiVersion 1.0.0
+    * @apiName LinkedinLogin
+    * @apiGroup Auth
+    * @apiPermission public
+    *
+    * @apiUse BaseHeaderSimple
+    *
+    * @apiParam  {String}  access_token  Linkedin access_token
+    *
+    * @apiUse SuccessToken
+    *
+    * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
+    * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
+    *
+    * @apiErrorExample {json} ValidationError
+    * {
+    *    "statusCode": 400,
+    *    "statusText": "Bad request",
+    *    "errors": [
+    *      {
+    *        "field": "code",
+    *        "types": [
+    *          "string.base"
+    *        ],
+    *        "messages": [
+    *          "\"code\" must be a string"
+    *        ]
+    *      }
+    *    ]
+    * }
+    */
+    this.router
+    .route('/linkedin/callback')
+      .get( Validate(oauthCb), OauthCallback('linkedin'), AuthController.oAuth );
 
   }
-
 }

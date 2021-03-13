@@ -34,6 +34,8 @@ const hash = (str: string, length: number): string => {
  *
  * @param str Base string to crypt
  * @param length Number of chars to return
+ *
+ * FIXME: not working
  */
 const crypt = (str: string, length: number): string => {
   const table = [].concat(chars).concat(numbers).concat(symbols);
@@ -106,4 +108,4 @@ const fieldname = (mimetype: string): string => {
 
 };
 
-export { shuffle, hash, crypt, base64Encode, base64Decode, foldername, extension, fieldname };
+export { base64Encode, base64Decode, crypt, extension, fieldname, foldername, hash, shuffle };

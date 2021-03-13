@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
 import { createConnection, Connection } from 'typeorm';
-import { env, typeorm } from '@config/environment.config';
+import { ENV } from '@config/environment.config';
 import { Logger } from '@services/logger.service';
 
 /**
@@ -17,24 +17,24 @@ export class TypeormConfiguration {
    * @description Connect to MySQL server
    * @async
    */
-  static async connect(): Promise<Connection> {
+  static async connect(options: Record<string,unknown>): Promise<Connection> {
     return new Promise( (resolve, reject) => {
       createConnection({
-        type: typeorm.type,
-        name: typeorm.name,
-        host: typeorm.host,
-        port: typeorm.port,
-        username: typeorm.user,
-        password: typeorm .pwd,
-        database: typeorm.database,
-        entities: [ typeorm.entities ],
-        subscribers: [ typeorm.subscribers ],
-        synchronize: typeorm.sync,
-        logging: typeorm.log,
-        cache: typeorm.cache
+        type: options.TYPE,
+        name: options.NAME,
+        host: options.HOST,
+        port: options.PORT,
+        username: options.USER,
+        password: options.PWD,
+        database: options.DB,
+        entities: [ options.ENTITIES ],
+        subscribers: [ options.SUBSCRIBERS ],
+        synchronize: options.SYNC,
+        logging: options.LOG,
+        cache: options.CACHE
       } as any)
       .then( (connection: Connection) => {
-        Logger.log('info', `Connection to MySQL server established on port ${typeorm.port} (${env})`);
+        Logger.log('info', `Connection to MySQL server established on port ${options.port as string} (${ENV})`);
         resolve(connection);
       })
       .catch( (error: Error) => {

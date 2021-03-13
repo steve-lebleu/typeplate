@@ -6,8 +6,9 @@ import { IResponse } from '@interfaces/IResponse.interface';
 import { User } from '@models/user.model';
 import { RefreshToken } from '@models/refresh-token.model';
 import { UserRepository } from '@repositories/user.repository';
-import { generateTokenResponse } from '@services/auth.service';
+import { AuthService } from '@services/auth.service';
 import { safe } from '@decorators/safe.decorator';
+import { IUserRequest } from '@interfaces/IUserRequest.interface';
 
 /**
  * Manage incoming requests from api/{version}/auth
@@ -27,7 +28,7 @@ export class AuthController {
     const repository = getRepository(User);
     const user = new User(req.body);
     await repository.insert(user);
-    const token = await generateTokenResponse(user, user.token());
+    const token = await AuthService.generateTokenResponse(user, user.token());
     res.locals.data = { token, user };
   }
 
@@ -41,7 +42,7 @@ export class AuthController {
   static async login(req: Request, res: IResponse): Promise<void> {
     const repository = getCustomRepository(UserRepository);
     const { user, accessToken } = await repository.findAndGenerateToken(req.body);
-    const token = await generateTokenResponse(user, accessToken);
+    const token = await AuthService.generateTokenResponse(user, accessToken);
     res.locals.data = { token, user };
   }
 
@@ -52,24 +53,10 @@ export class AuthController {
    * @param res Express response object
    */
   @safe
-  static async oAuth (req: Request, res: IResponse): Promise<void> {
-    const user = req.body as User;
+  static async oAuth (req: IUserRequest, res: IResponse): Promise<void> {
+    const user = req.user as User;
     const accessToken = user.token();
-    const token = await generateTokenResponse(user, accessToken);
-    res.locals.data = { token, user };
-  }
-
-  /**
-   * @description Login with an existing user or creates a new one if valid accessToken token
-   *
-   * @param req Express request object derived from http.incomingMessage
-   * @param res Express response object
-   */
-  @safe
-  static async authorize (req: Request, res: IResponse): Promise<void> {
-    const user = req.body as User;
-    const accessToken = user.token();
-    const token = await generateTokenResponse(user, accessToken);
+    const token = await AuthService.generateTokenResponse(user, accessToken);
     res.locals.data = { token, user };
   }
 
@@ -98,7 +85,7 @@ export class AuthController {
 
     // Get owner user of the token
     const { user, accessToken } = await userRepository.findAndGenerateToken({ email: refreshToken.user.email , refreshToken });
-    const response = await generateTokenResponse(user, accessToken);
+    const response = await AuthService.generateTokenResponse(user, accessToken);
 
     res.locals.data = { token: response };
   }

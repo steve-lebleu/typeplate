@@ -106,13 +106,13 @@ describe('Services', () => {
       it('should remove all scaled images', () => {
         const image = fixtures.media.image({id:1});
         fs.copyFileSync(`${process.cwd()}/test/utils/fixtures/files/${image.filename}`, `${process.cwd()}/dist/public/images/master-copy/${image.filename}`);
-        ['XS', 'SM', 'MD', 'LG', 'XL'].forEach(size => {
+        ['xs', 'sm', 'md', 'lg', 'xl'].forEach(size => {
           fs.copyFileSync(`${process.cwd()}/test/utils/fixtures/files/${image.filename}`, `${process.cwd()}/dist/public/images/rescale/${size}/${image.filename}`);
         });
         remove(fixtures.media.image({id:1}));
         setTimeout(() => {
           expect(fs.existsSync(`${process.cwd()}/dist/public/images/master-copy/${image.filename}`)).to.be.false;
-          ['XS', 'SM', 'MD', 'LG', 'XL'].forEach(size => {
+          ['xs', 'sm', 'md', 'lg', 'xl'].forEach(size => {
             expect(fs.existsSync(`${process.cwd()}/dist/public/images/rescale/${size}/${image.filename}`)).to.be.false;
           });
           done();

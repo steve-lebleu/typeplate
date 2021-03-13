@@ -5,7 +5,7 @@ import * as Moment from 'moment-timezone';
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, RemoveEvent } from 'typeorm';
 
 import { Media } from '@models/media.model';
-import { resize } from '@config/environment.config';
+import { SCALING } from '@config/environment.config';
 import { rescale, remove } from '@services/media.service';
 
 @EventSubscriber()
@@ -31,7 +31,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
    * @description Called after media deletetion.
    */
   afterInsert(event: InsertEvent<Media>): void {
-    if ( resize.isActive ) {
+    if ( SCALING.IS_ACTIVE ) {
       rescale(event.entity);
     }
   }

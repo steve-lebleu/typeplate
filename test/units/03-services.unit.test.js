@@ -1,83 +1,71 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
-const Axios = require('axios');
+
+const fs = require('fs');
+
+const fixtures = require(process.cwd() + '/test/utils/fixtures');
 
 const { User } = require(process.cwd() + '/dist/api/models/user.model');
+
 const { isSanitizable, sanitize } = require(process.cwd() + '/dist/api/services/sanitizer.service');
-const { AuthProvider } = require(process.cwd() + '/dist/api/services/auth-provider.service');
-const { jwt } = require(process.cwd() + '/dist/api/services/auth.service');
+const { AuthService } = require(process.cwd() + '/dist/api/services/auth.service');
 const { Cache } = require(process.cwd() + '/dist/api/services/cache.service');
+const { remove, rescale } = require(process.cwd() + '/dist/api/services/media.service');
 
 describe('Services', () => {
 
-  describe('Auth provider', () => {
+  describe('AuthService', () => {
 
-    it('AuthProvider.facebook() should return credentials from Facebook API', async () => {
-      
-      const stub = sinon.stub(Axios, 'get')
-
-      stub.callsFake( async (url) => {
-        return { data: { id: 1, name: 'Yoda', email: 'yoda@theforce.com', picture:  { data: { url: 'https://media.giphy.com/media/3o7abrH8o4HMgEAV9e/giphy.gif' } } } };
-      })
-
-      const result = await AuthProvider.facebook('my-token');
-
-      expect(result.service).to.be.eqls('facebook');
-      expect(result.id).to.be.eqls(1);
-      expect(result.name).to.be.eqls('Yoda');
-      expect(result.email).to.be.eqls('yoda@theforce.com');
-
-      stub.restore();
-
+    it('AuthService.generateTokenResponse() should return error', async () => {
+      const result = await AuthService.generateTokenResponse({}, '',  null);
+      expect(result).is.instanceOf(Error);
     });
 
-    it('AuthProvider.google() should return credentials from Google API', async () => {
-      
-      const stub = sinon.stub(Axios, 'get')
+    it('AuthService.generateTokenResponse() should return well formed token', async () => {
+      const result = await AuthService.generateTokenResponse(new User(), '',  null);
+      expect(result).to.haveOwnProperty('tokenType');
+      expect(result).to.haveOwnProperty('accessToken');
+      expect(result).to.haveOwnProperty('refreshToken');
+      expect(result).to.haveOwnProperty('expiresIn');
+    });
 
-      stub.callsFake( async (url) => {
-        return { data: { sub: 1, name: 'Yoda', email: 'yoda@theforce.com', picture: 'https://media.giphy.com/media/3o7abrH8o4HMgEAV9e/giphy.gif' } };
-      })
-
-      const result = await AuthProvider.google('my-token');
-
-      expect(result.service).to.be.eqls('google');
-      expect(result.id).to.be.eqls(1);
-      expect(result.name).to.be.eqls('Yoda');
-      expect(result.email).to.be.eqls('yoda@theforce.com');
-
-      stub.restore();
-
-    })
-    
-  });
-
-  describe('Auth', function() {
-
-    it('jwt() next with false if user not found', function(done) {
-      jwt({ sub: 0 }, function(error, result) {
-        expect(error).is.null;
-        expect(result).is.false;
-        done();
+    it('AuthService.oAuth() next with error if data cannot be retrieved from provider', async () => {
+      await AuthService.oAuth('', '',  null, (error, user) => { 
+        expect(error).is.instanceOf(Error);
       });
     });
 
-    it('jwt() next with error if error occurrs', function(done) {
-      jwt({ alter: 0 }, function(error, result) {
-        expect(error).is.not.null;
-        expect(result).is.false;
-        done();
+    it('AuthService.oAuth() next with User instance', async () => {
+      await AuthService.oAuth('', '', fixtures.token.oauthFacebook, (error, user) => { 
+        if (error) throw error;
+        expect(user).to.haveOwnProperty('id');
+        expect(user).to.haveOwnProperty('username');
+        expect(user).to.haveOwnProperty('email');
+        expect(user).to.haveOwnProperty('role');
+        expect(user).to.haveOwnProperty('password');
+        expect(user).to.haveOwnProperty('apikey');   
       });
     });
 
-    it('jwt() next with error if error occurrs', function(done) {
-      jwt({ alter: 0 }, function(error, result) {
-        expect(error).is.not.null;
+    it('AuthService.jwt() next with error', async () =>  {
+      await AuthService.jwt({ alter: 0 }, (error, result) => {
+        expect(error).is.instanceOf(Error);
         expect(result).is.false;
-        done();
       });
     });
-    
+
+    it('AuthService.jwt() next with false if user not found', async () => {
+      await AuthService.jwt({ sub: 0 }, (error, result) => {
+        expect(result).is.false;
+      });
+    });
+
+    it('AuthService.jwt() next with User instance', async () => {
+      await AuthService.jwt({ sub: 1 }, (error, result) => {
+        expect(result).is.an('object');
+      });
+    });
+
   });
 
   describe('Cache', () => {
@@ -112,6 +100,27 @@ describe('Services', () => {
   });
 
   describe('Media', () => {
+
+    describe('remove()', () => {
+
+      it('should remove all scaled images', () => {
+        const image = fixtures.media.image({id:1});
+        fs.copyFileSync(`${process.cwd()}/test/utils/fixtures/files/${image.filename}`, `${process.cwd()}/dist/public/images/master-copy/${image.filename}`);
+        ['XS', 'SM', 'MD', 'LG', 'XL'].forEach(size => {
+          fs.copyFileSync(`${process.cwd()}/test/utils/fixtures/files/${image.filename}`, `${process.cwd()}/dist/public/images/rescale/${size}/${image.filename}`);
+        });
+        remove(fixtures.media.image({id:1}));
+        setTimeout(() => {
+          expect(fs.existsSync(`${process.cwd()}/dist/public/images/master-copy/${image.filename}`)).to.be.false;
+          ['XS', 'SM', 'MD', 'LG', 'XL'].forEach(size => {
+            expect(fs.existsSync(`${process.cwd()}/dist/public/images/rescale/${size}/${image.filename}`)).to.be.false;
+          });
+          done();
+        }, 500)
+        
+      });
+
+    });
 
   });
 

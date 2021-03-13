@@ -1,7 +1,7 @@
 import * as Winston from 'winston';
 
 import { format, Logger as WinstonLogger } from 'winston';
-import { env, logs } from '@config/environment.config';
+import { ENV, LOGS } from '@config/environment.config';
 
 /**
  * This logger implements Winston module for writing custom logs
@@ -32,7 +32,7 @@ export class WinstonConfiguration {
         format.timestamp(),
         WinstonConfiguration.formater
       ),
-      filename: `${logs.path}/error.log`,
+      filename: `${LOGS.PATH}/error.log`,
       handleException: true,
       json: true,
       maxSize: 5242880, // 5MB
@@ -45,7 +45,7 @@ export class WinstonConfiguration {
         format.timestamp(),
         WinstonConfiguration.formater
       ),
-      filename: `${logs.path}/combined.log`,
+      filename: `${LOGS.PATH}/combined.log`,
       handleException: false,
       json: true,
       maxSize: 5242880, // 5MB
@@ -91,7 +91,7 @@ export class WinstonConfiguration {
     });
 
     // If we're not in production||test then log to the `console`
-    if ( !['production', 'test'].includes(env) ) {
+    if ( !['production', 'test'].includes(ENV) ) {
       logger.add( new Winston.transports.Console(WinstonConfiguration.options.console) );
     }
 

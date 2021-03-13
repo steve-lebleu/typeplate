@@ -35,14 +35,6 @@ const login = {
   })
 };
 
-// POST api/v1/auth/facebook
-// POST api/v1/auth/google
-const oAuth = {
-  body: Joi.object({
-    access_token: Joi.string().required(),
-  })
-};
-
 // POST api/v1/auth/refresh
 const refresh = {
   body: Joi.object({
@@ -52,4 +44,11 @@ const refresh = {
   })
 };
 
-export { register, login, oAuth, refresh };
+// GEET api/v1/auth/:service/callback
+const oauthCb = {
+  query: Joi.object({
+    code: Joi.string().min(8).max(88).required(),
+  })
+};
+
+export { register, login, refresh, oauthCb };

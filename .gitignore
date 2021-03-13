@@ -83,3 +83,6 @@ reports/
 
 # Husky configuration
 .husky/
+
+# Roadmap
+ROADMAP.md

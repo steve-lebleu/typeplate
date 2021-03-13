@@ -8,12 +8,12 @@ import * as Morgan from 'morgan';
 import * as Helmet from 'helmet';
 
 import { createWriteStream } from 'fs';
-import { initialize as PassportInitialize, use as PassportUse } from 'passport';
+import { initialize as Passport } from 'passport';
 import { notAcceptable } from '@hapi/boom';
 
 import { ENVIRONMENT } from '@enums/environment.enum';
 
-import { domain, logs, authorized, version, env, contentType, upload } from '@config/environment.config';
+import { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, LOGS, ENV, UPLOAD } from '@config/environment.config';
 import { PassportConfiguration } from '@config/passport.config';
 
 import { Logger } from '@services/logger.service';
@@ -36,13 +36,14 @@ export class ExpressConfiguration {
    */
   private instance: Express.Application;
 
+
   /**
    * @description Middlewares options
    */
   private options = {
     cors: {
       origin: (origin, callback: ( error: Error, status?: boolean ) => void) => {
-        if (authorized.indexOf(origin) !== -1) {
+        if (AUTHORIZED.indexOf(origin) !== -1) {
           callback(null, true);
         } else {
           callback( notAcceptable('Domain not allowed by CORS') );
@@ -53,7 +54,7 @@ export class ExpressConfiguration {
     },
     helmet: {
       contentSecurityPolicy: {
-        defaultSrc: ['\'self\'', `'${domain}'`],
+        defaultSrc: ['\'self\'', `'${DOMAIN}'`],
         scriptSrc: ['\'self\'', '\'unsafe-inline\''],
         sandbox: ['allow-forms', 'allow-scripts'],
         reportUri: '/report-violation',
@@ -65,7 +66,7 @@ export class ExpressConfiguration {
       noSniff: true,
       referrerPolicy: { policy: 'no-referrer' }
     },
-    stream: ( env === ENVIRONMENT.production ? createWriteStream(`${logs.path}/access.log`, { flags: 'a+' }) : Logger.stream ) as ReadableStream,
+    stream: (ENV === ENVIRONMENT.production ? createWriteStream(`${LOGS.PATH}/access.log`, { flags: 'a+' }) : Logger.stream ) as ReadableStream,
     rate: {
       windowMs: 60 * 60 * 1000, // 1 hour
       max: 2500,
@@ -80,7 +81,7 @@ export class ExpressConfiguration {
     /**
      * First, before all : check headers validity
      */
-    this.instance.use( Kors(contentType) );
+    this.instance.use( Kors(CONTENT_TYPE) );
 
     /**
      * Expose body on req.body
@@ -88,7 +89,7 @@ export class ExpressConfiguration {
      * @see https://www.npmjs.com/package/body-parser
      */
     this.instance.use( BodyParser.urlencoded({ extended : false }) );
-    this.instance.use( BodyParser.json({ type: contentType }) );
+    this.instance.use( BodyParser.json({ type: CONTENT_TYPE }) );
 
     /**
      * Prevent request parameter pollution
@@ -121,15 +122,16 @@ export class ExpressConfiguration {
     this.instance.use( Cors( this.options.cors ) );
 
     /**
-     * Passport configuration
+     * Passport initialize
      *
      * @see http://www.passportjs.org/
      */
-    this.instance.use( PassportInitialize() );
+    this.instance.use( Passport() );
 
-    PassportUse('jwt', PassportConfiguration.factory('jwt'));
-    PassportUse('facebook', PassportConfiguration.factory('facebook'));
-    PassportUse('google', PassportConfiguration.factory('google'));
+    /**
+     * Plug active oAuth provider
+     */
+    PassportConfiguration.plug()
 
     /**
      * Configure API Rate limit
@@ -144,26 +146,27 @@ export class ExpressConfiguration {
      *
      * @see https://github.com/expressjs/morgan
      */
-    this.instance.use( Morgan(logs.token, { stream: this.options.stream } ) );
+    this.instance.use( Morgan(LOGS.TOKEN, { stream: this.options.stream } ) );
 
     /**
      * Define CDN static resources location
      */
-    this.instance.use('/cdn', RateLimit(this.options.rate), Express.static(`${__dirname}/../../${upload.destination}`));
+    this.instance.use('/cdn', RateLimit(this.options.rate), Express.static(`${__dirname}/../../${UPLOAD.PATH}`));
 
     /**
      * Set global middlewares on Express Application
      *
      * - RateLimit
+     * - Memory cache
      * - Router(s)
      * - Resolver
      */
-    this.instance.use(`/api/${version}`, RateLimit(this.options.rate), Kache, ProxyRouter.map(), Sanitizer, Resolver);
+    this.instance.use(`/api/${API_VERSION}`, RateLimit(this.options.rate), Kache, ProxyRouter.map(), Sanitizer, Resolver);
 
     /**
      * Errors handlers
      */
-    if( [ENVIRONMENT.development].includes(env as ENVIRONMENT) ) {
+    if( [ENVIRONMENT.development].includes(ENV as ENVIRONMENT) ) {
       this.instance.use( Catcher.notification );
     }
 

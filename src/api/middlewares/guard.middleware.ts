@@ -1,12 +1,13 @@
 import { authenticate } from 'passport';
 import { promisify } from 'es6-promisify';
-import { forbidden, badRequest } from '@hapi/boom';
+import { forbidden, badRequest, notFound } from '@hapi/boom';
 
 import { User } from '@models/user.model';
 import { ROLES } from '@enums/role.enum';
 import { list } from '@utils/enum.util';
 import { IUserRequest } from '@interfaces/IUserRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
+import { OAuthProvider } from '@customtypes/oauth-provider.type';
 
 /**
  * @description Callback function provided to passport.authenticate with JWT strategy
@@ -42,6 +43,29 @@ const handleJWT = (req: IUserRequest, res: IResponse, next: (error?: Error) => v
 };
 
 /**
+ * @description
+ *
+ * @param req
+ * @param res
+ * @param nex
+ */
+const handleOauth = (req: IUserRequest, res: IResponse, next: (error?: Error) => void) => async (err: Error, user: User) => {
+
+  if (err) {
+    return next( badRequest(err?.message) );
+  } else if (!user) {
+    return next( notFound(err?.message) );
+  } else if (!list(ROLES).includes(user.role)) {
+    return next( forbidden('Forbidden area') );
+  }
+
+  req.user = user
+
+  next();
+}
+
+
+/**
  * @description Authorize user access according to role(s) in arguments
  *
  * @param roles
@@ -60,6 +84,16 @@ const Authorize = (roles = list(ROLES)) => (req: IUserRequest, res: IResponse, n
  * @dependency passport
  * @see http://www.passportjs.org/
  */
-const Oauth = (service: string) => authenticate(service, { session: false });
+const Oauth = (service: OAuthProvider) => authenticate(service, { session: false });
 
-export { Authorize, Oauth }
+/**
+ * @description
+ *
+ * @param service OAuthProvider
+ *
+ * @dependency passport
+ * @see http://www.passportjs.org/
+ */
+const OauthCallback = (service: OAuthProvider) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => authenticate(service, { session: false }, handleOauth(req, res, next) )( req, res, next);
+
+export { Authorize, Oauth, OauthCallback }

@@ -4,38 +4,39 @@ import * as BodyParser from 'body-parser';
 import * as Cors from 'cors';
 import * as Compression from 'compression';
 import * as RateLimit from 'express-rate-limit';
-import * as Morgan from 'morgan';
 import * as Helmet from 'helmet';
 
-import { createWriteStream } from 'fs';
-import { initialize as Passport } from 'passport';
 import { notAcceptable } from '@hapi/boom';
 
 import { ENVIRONMENT } from '@enums/environment.enum';
 
-import { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, LOGS, ENV, UPLOAD } from '@config/environment.config';
-import { PassportConfiguration } from '@config/passport.config';
+import { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, ENV, UPLOAD } from '@config/environment.config';
+import { Authentication } from '@config/authentication.config';
 
-import { Logger } from '@services/logger.service';
+import { LoggerConfiguration } from '@config/logger.config';
 import { ProxyRouter } from '@services/proxy-router.service';
 
 import { Cors as Kors } from '@middlewares/cors.middleware';
-import { Resolver } from '@middlewares/resolver.middleware';
-import { Catcher } from '@middlewares/catcher.middleware';
-import { Sanitizer } from '@middlewares/sanitizer.middleware';
-import { Kache } from '@middlewares/cache.middleware';
+import { Resolve } from '@middlewares/resolve.middleware';
+import { Catch } from '@middlewares/catch.middleware';
+import { Sanitize } from '@middlewares/sanitize.middleware';
+import { Cache } from '@middlewares/cache.middleware';
 
 /**
  * Instanciate and set Express application.
- * Configure and plug middlewares from local options or dedicated files in ./config.
+ * Configure and plug middlewares from local options or dedicated files in ./config
  */
 export class ExpressConfiguration {
 
   /**
    * @description Wrapped Express.js application
    */
-  private instance: Express.Application;
+  private static instance: ExpressConfiguration;
 
+  /**
+   * @description Express application
+   */
+  application: Express.Application;
 
   /**
    * @description Middlewares options
@@ -66,7 +67,6 @@ export class ExpressConfiguration {
       noSniff: true,
       referrerPolicy: { policy: 'no-referrer' }
     },
-    stream: (ENV === ENVIRONMENT.production ? createWriteStream(`${LOGS.PATH}/access.log`, { flags: 'a+' }) : Logger.stream ) as ReadableStream,
     rate: {
       windowMs: 60 * 60 * 1000, // 1 hour
       max: 2500,
@@ -74,36 +74,59 @@ export class ExpressConfiguration {
     }
   };
 
-  constructor(app: Express.Application) {
+  private constructor() {}
 
-    this.instance = app;
+  /**
+   * @description Instantiate Express configuration
+   */
+  static get(): ExpressConfiguration {
+    if (!ExpressConfiguration.instance) {
+      ExpressConfiguration.instance = new ExpressConfiguration();
+    }
+    return ExpressConfiguration.instance;
+  }
+
+  /**
+   * @description
+   */
+  init(): ExpressConfiguration {
+    if (!this.application) {
+      this.application = Express();
+    }
+    return this;
+  }
+
+  /**
+   * @description Plug middlewares
+   */
+  plug(): ExpressConfiguration {
 
     /**
-     * First, before all : check headers validity
+     * Check headers validity
      */
-    this.instance.use( Kors(CONTENT_TYPE) );
+    this.application.use( Kors(CONTENT_TYPE) );
 
     /**
      * Expose body on req.body
      *
      * @see https://www.npmjs.com/package/body-parser
      */
-    this.instance.use( BodyParser.urlencoded({ extended : false }) );
-    this.instance.use( BodyParser.json({ type: CONTENT_TYPE }) );
+    this.application.use( BodyParser.urlencoded({ extended : false }) );
+    this.application.use( BodyParser.json({ type: CONTENT_TYPE }) );
 
     /**
      * Prevent request parameter pollution
      *
      * @see https://www.npmjs.com/package/hpp
      */
-    this.instance.use( Hpp({ checkBody: false }) );
+    this.application.use( Hpp({ checkBody: false }) );
 
     /**
      * GZIP compression
      *
      * @see https://github.com/expressjs/compression
      */
-    this.instance.use( Compression() );
+    this.application.use( Compression() );
 
     /**
      * Enable and set Helmet security middleware
@@ -111,7 +134,7 @@ export class ExpressConfiguration {
      * @see https://github.com/helmetjs/helmet
      */
      Object.keys(this.options.helmet).forEach( key => {
-      this.instance.use( typeof this.options.helmet[key] === 'boolean' && this.options.helmet[key] ? Helmet[key]() : Helmet[key](this.options.helmet[key]) )
+      this.application.use( typeof this.options.helmet[key] === 'boolean' && this.options.helmet[key] ? Helmet[key]() : Helmet[key](this.options.helmet[key]) )
     });
 
     /**
@@ -119,64 +142,77 @@ export class ExpressConfiguration {
      *
      * @see https://www.npmjs.com/package/cors
      */
-    this.instance.use( Cors( this.options.cors ) );
+    this.application.use( Cors( this.options.cors ) );
 
     /**
-     * Passport initialize
+     * Initialize Passport
      *
      * @see http://www.passportjs.org/
      */
-    this.instance.use( Passport() );
+    this.application.use( Authentication.initialize() );
 
     /**
-     * Plug active oAuth provider
+     * Plug available auth providers
      */
-    PassportConfiguration.plug()
+     Authentication.plug();
 
     /**
      * Configure API Rate limit
-     * Note that you can also set limit on specific route path
+     * You can also set limit on specific route path
      *
      * @see https://www.npmjs.com/package/express-rate-limit
      */
-    this.instance.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+    this.application.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
 
     /**
-     * Request logging with Morgan
+     * Request logging with Winston and Morgan
      *
+     * @see https://github.com/winstonjs/winston
      * @see https://github.com/expressjs/morgan
      */
-    this.instance.use( Morgan(LOGS.TOKEN, { stream: this.options.stream } ) );
+    this.application.use( LoggerConfiguration.writeStream() as any );
 
     /**
-     * Define CDN static resources location
+     * Define CDN location for static resources
      */
-    this.instance.use('/cdn', RateLimit(this.options.rate), Express.static(`${__dirname}/../../${UPLOAD.PATH}`));
+    this.application.use('/cdn', RateLimit(this.options.rate), Express.static(`${__dirname}/../../${UPLOAD.PATH}`));
 
     /**
-     * Set global middlewares on Express Application
+     * Lifecyle of a classic request
      *
      * - RateLimit
      * - Memory cache
      * - Router(s)
+     * - Sanitizer
      * - Resolver
      */
-    this.instance.use(`/api/${API_VERSION}`, RateLimit(this.options.rate), Kache, ProxyRouter.map(), Sanitizer, Resolver);
+    this.application.use(`/api/${API_VERSION}`, RateLimit(this.options.rate), Cache, ProxyRouter.map(), Sanitize, Resolve);
 
     /**
-     * Errors handlers
+     * Desktop error notification
      */
     if( [ENVIRONMENT.development].includes(ENV as ENVIRONMENT) ) {
-      this.instance.use( Catcher.notification );
+      this.application.use( Catch.notification );
     }
 
-    this.instance.use( Catcher.factory, Catcher.log, Catcher.exit, Catcher.notFound ); // Factorize error, log it, exit with clean HTTP error | clean 404
-  }
+    /**
+     * Lifecycle of an error request
+     *
+     * - Generate typed error
+     * - Log dirty error
+     * - Output clean HTTP friendly error
+     * - Output clean 404 error
+     */
+    this.application.use( Catch.factory, Catch.log, Catch.exit, Catch.notFound );
 
-  /**
-   * @description Instantiate Express application
-   */
-  get(): Express.Application {
-    return this.instance;
+    return this;
   }
 }
+
+const Application = ExpressConfiguration
+  .get()
+  .init()
+  .plug()
+  .application;
+
+export { Application }

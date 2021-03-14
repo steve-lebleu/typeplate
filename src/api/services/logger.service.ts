@@ -1,39 +1,36 @@
-import { WinstonConfiguration } from '@config/winston.config';
+import { LoggerConfiguration } from '@config/logger.config';
 import { Logger as WinstonLogger } from 'winston';
 
 /**
  * Log service
  */
-export class Logger {
+class Logger {
 
   /**
    * @description Wrapped logger instance, here winston
    */
-  private static instance?: WinstonLogger;
+  private static instance: WinstonLogger;
 
-  constructor() {}
+  private constructor() {}
+
+  static get() {
+    if ( !Logger.instance ) {
+      Logger.instance = LoggerConfiguration.logger
+    }
+    return Logger.instance;
+  }
 
   /**
    * @description Do log action
+   *
    * @param level
    * @param message
-   * @param scope
    */
-  static log(level: string, message: string ): void {
-    if ( !Logger.instance ) {
-      Logger.instance = WinstonConfiguration.get()
-    }
+  log(level: string, message: string ): void {
     Logger.instance[level](message);
   }
-
-  static get stream(): any {
-    if ( !Logger.instance ) {
-      Logger.instance = WinstonConfiguration.get()
-    }
-    return {
-      write:(message: string) => {
-        Logger.instance.info(message.substring(0, message.lastIndexOf('\n')));
-      }
-    }
-  }
 }
+
+const logger = Logger.get();
+
+export { logger as Logger }

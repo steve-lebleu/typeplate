@@ -64,36 +64,38 @@ const handleOauth = (req: IUserRequest, res: IResponse, next: (error?: Error) =>
   next();
 }
 
+class Guard {
 
-/**
- * @description Authorize user access according to role(s) in arguments
- *
- * @param roles
- *
- * @dependency passport
- * @see http://www.passportjs.org/
- */
-const Authorize = (roles = list(ROLES)) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => authenticate( 'jwt', { session: false }, handleJWT(req, res, next, roles) )(req, res, next);
+  /**
+   * @description Authorize user access according to role(s) in arguments
+   *
+   * @param roles
+   *
+   * @dependency passport
+   * @see http://www.passportjs.org/
+   */
+  static authorize = (roles = list(ROLES)) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => authenticate( 'jwt', { session: false }, handleJWT(req, res, next, roles) )(req, res, next);
 
+  /**
+   * @description Authorize user access according to service.access_token
+   *
+   * @param service Service to use for authentication
+   *
+   * @dependency passport
+   * @see http://www.passportjs.org/
+   */
+  static oAuth = (service: OAuthProvider) => authenticate(service, { session: false });
 
-/**
- * @description Authorize user access according to service.access_token
- *
- * @param service Service to use for authentication
- *
- * @dependency passport
- * @see http://www.passportjs.org/
- */
-const Oauth = (service: OAuthProvider) => authenticate(service, { session: false });
+  /**
+   * @description
+   *
+   * @param service OAuthProvider
+   *
+   * @dependency passport
+   * @see http://www.passportjs.org/
+   */
+  static oAuthCallback = (service: OAuthProvider) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => authenticate(service, { session: false }, handleOauth(req, res, next) ) (req, res, next);
 
-/**
- * @description
- *
- * @param service OAuthProvider
- *
- * @dependency passport
- * @see http://www.passportjs.org/
- */
-const OauthCallback = (service: OAuthProvider) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => authenticate(service, { session: false }, handleOauth(req, res, next) )( req, res, next);
+}
 
-export { Authorize, Oauth, OauthCallback }
+export { Guard }

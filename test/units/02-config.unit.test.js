@@ -7,7 +7,7 @@ const { clone } = require('lodash');
 const { Environment } = require(process.cwd() + '/dist/api/config/environment.config');
 
 const { TYPEORM } = require(process.cwd() + '/dist/api/config/environment.config');
-const { TypeormConfiguration } = require(process.cwd() + '/dist/api/config/typeorm.config');
+const { Database } = require(process.cwd() + '/dist/api/config/database.config');
 
 describe('Config', function () {
 
@@ -130,11 +130,11 @@ describe('Config', function () {
 
   describe('Typeorm', () => {
 
-    it('TypeormConfiguration.connect() should failed', async () => {  
+    it('Database.connect() should failed', async () => {  
       const options = clone(TYPEORM);
       options.TYPE = 'yoda';
       options.NAME = 'yoda';
-      await TypeormConfiguration.connect(options).catch(e => {
+      await Database.connect(options).catch(e => {
         expect(e).to.be.instanceOf(Error);
         expect(e.name).to.be.eqls('MissingDriverError');
       });

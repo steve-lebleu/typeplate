@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Cache } from '@services/cache.service';
+import { CacheService } from '@services/cache.service';
 
 /**
  * @description Request cache middleware
@@ -8,11 +8,11 @@ import { Cache } from '@services/cache.service';
  * @param res Express response
  * @param next Middleware function
  */
-const Kache = async (req: Request, res: Response, next: () => void): Promise<void> => {
-  if (req.method !== 'GET' || !Cache.options.IS_ACTIVE) {
+const Cache = async (req: Request, res: Response, next: () => void): Promise<void> => {
+  if ( !CacheService.isCachable(req) ) {
     return next();
   }
-  const cached = Cache.resolve.get( Cache.key(req) ) as unknown ;
+  const cached = CacheService.engine.get( CacheService.key(req) ) as unknown ;
   if (cached) {
     res.status(200);
     res.json(cached);
@@ -21,4 +21,4 @@ const Kache = async (req: Request, res: Response, next: () => void): Promise<voi
   next();
 }
 
-export { Kache }
+export { Cache }

@@ -11,14 +11,14 @@ import { AuthService } from '@services/auth.service';
 const ExtractJwtAlias = ExtractJwt as { fromAuthHeaderWithScheme: (type: string) => string };
 
 /**
- * Passport configuration
+ * Authentication configuration
  */
-class Passport {
+class Authentication {
 
   /**
-   * @description Passport instance
+   * @description Authentication instance
    */
-  private static instance: Passport;
+  private static instance: Authentication;
 
   /**
    * @description Default options
@@ -33,13 +33,13 @@ class Passport {
   private constructor() {}
 
   /**
-   * @description Passport singleton getter
+   * @description Authentication singleton getter
    */
-  static get(): Passport {
-    if (!Passport.instance) {
-      Passport.instance = new Passport();
+  static get(): Authentication {
+    if (!Authentication.instance) {
+      Authentication.instance = new Authentication();
     }
-    return Passport.instance;
+    return Authentication.instance;
   }
 
   /**
@@ -102,6 +102,6 @@ class Passport {
   }
 }
 
-const instance = Passport.get();
+const instance = Authentication.get();
 
-export { instance as Passport };
+export { instance as Authentication };

@@ -1,33 +1,28 @@
 
 import { Request } from 'express';
-import * as mcache from 'memory-cache';
 
-import { MEMORY_CACHE } from '@config/environment.config';
 import { ICache } from '@interfaces/ICache.interface';
+
+import { CacheConfiguration } from '@config/cache.config';
+
 
 /**
  * @description Cache service interface with memory cache module
  */
-export class Cache {
+class CacheService {
 
   /**
    * @description
    */
-  static options = MEMORY_CACHE;
+  private static instance: CacheService;
 
-  /**
-   * @description
-   */
-  private static instance: ICache = null;
+  private constructor() {}
 
-  /**
-   * @description
-   */
-  static get resolve(): ICache {
-    if (!Cache.instance) {
-      Cache.instance = mcache as ICache;
+  static get(): CacheService {
+    if (!CacheService.instance) {
+      CacheService.instance = new CacheService();
     }
-    return Cache.instance;
+    return CacheService.instance;
   }
 
   /**
@@ -35,7 +30,41 @@ export class Cache {
    *
    * @param req Express request
    */
-  static key(req: Request): string {
-    return `__mcache_${req.originalUrl||req.url}`;
+  key(req: Request): string {
+    return `${CacheConfiguration.key}${req.originalUrl||req.url}`;
+  }
+
+  /**
+   * @description
+   *
+   * @param req
+   */
+  isCachable(req: Request): boolean {
+    return CacheConfiguration.options.IS_ACTIVE && req.method === 'GET';
+  }
+
+  /**
+   * @description
+   */
+  get engine(): ICache {
+    return CacheConfiguration.start
+  }
+
+  /**
+   * @description
+   */
+  get duration(): number {
+    return CacheConfiguration.options.DURATION;
+  }
+
+  /**
+   * @description
+   */
+   get isActive(): boolean {
+    return CacheConfiguration.options.IS_ACTIVE;
   }
 }
+
+const cacheService = CacheService.get();
+
+export { cacheService as CacheService }

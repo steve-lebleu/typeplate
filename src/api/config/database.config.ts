@@ -9,7 +9,7 @@ import { Logger } from '@services/logger.service';
  *
  * @see https://http://typeorm.io
  */
-export class TypeormConfiguration {
+export class Database {
 
   constructor () { }
 

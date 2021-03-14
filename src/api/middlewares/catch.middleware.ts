@@ -13,7 +13,7 @@ import { IHTTPError } from '@interfaces/IHTTPError.interface';
  *
  * @see https://www.npmjs.com/package/node-notifier
  */
-export class Catcher {
+export class Catch {
 
   constructor() {}
 

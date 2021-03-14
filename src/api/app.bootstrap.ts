@@ -1,11 +1,11 @@
 require('module-alias/register');
 
 import { TYPEORM } from '@config/environment.config';
-import { TypeormConfiguration } from '@config/typeorm.config';
+import { Database } from '@config/database.config';
 import { Server } from '@config/server.config';
-import { Application } from '@config/express.config';
+import { Application } from '@config/app.config';
 
-TypeormConfiguration.connect(TYPEORM)
+Database.connect(TYPEORM)
   .catch( (e: Error) => {
     process.stdout.write(e.message);
     process.exit(1);

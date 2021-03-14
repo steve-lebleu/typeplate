@@ -10,17 +10,17 @@ import { notAcceptable } from '@hapi/boom';
 
 import { ENVIRONMENT } from '@enums/environment.enum';
 
-import { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, LOGS, ENV, UPLOAD } from '@config/environment.config';
-import { Passport } from '@config/passport.config';
+import { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, ENV, UPLOAD } from '@config/environment.config';
+import { Authentication } from '@config/authentication.config';
 
 import { LoggerConfiguration } from '@config/logger.config';
 import { ProxyRouter } from '@services/proxy-router.service';
 
 import { Cors as Kors } from '@middlewares/cors.middleware';
-import { Resolver } from '@middlewares/resolver.middleware';
-import { Catcher } from '@middlewares/catcher.middleware';
-import { Sanitizer } from '@middlewares/sanitizer.middleware';
-import { Kache } from '@middlewares/cache.middleware';
+import { Resolve } from '@middlewares/resolve.middleware';
+import { Catch } from '@middlewares/catch.middleware';
+import { Sanitize } from '@middlewares/sanitize.middleware';
+import { Cache } from '@middlewares/cache.middleware';
 
 /**
  * Instanciate and set Express application.
@@ -149,12 +149,12 @@ export class ExpressConfiguration {
      *
      * @see http://www.passportjs.org/
      */
-    this.application.use( Passport.initialize() );
+    this.application.use( Authentication.initialize() );
 
     /**
      * Plug available auth providers
      */
-    Passport.plug();
+     Authentication.plug();
 
     /**
      * Configure API Rate limit
@@ -170,7 +170,7 @@ export class ExpressConfiguration {
      * @see https://github.com/winstonjs/winston
      * @see https://github.com/expressjs/morgan
      */
-    this.application.use( LoggerConfiguration.writeStream() );
+    this.application.use( LoggerConfiguration.writeStream() as any );
 
     /**
      * Define CDN location for static resources
@@ -186,13 +186,13 @@ export class ExpressConfiguration {
      * - Sanitizer
      * - Resolver
      */
-    this.application.use(`/api/${API_VERSION}`, RateLimit(this.options.rate), Kache, ProxyRouter.map(), Sanitizer, Resolver);
+    this.application.use(`/api/${API_VERSION}`, RateLimit(this.options.rate), Cache, ProxyRouter.map(), Sanitize, Resolve);
 
     /**
      * Desktop error notification
      */
     if( [ENVIRONMENT.development].includes(ENV as ENVIRONMENT) ) {
-      this.application.use( Catcher.notification );
+      this.application.use( Catch.notification );
     }
 
     /**
@@ -203,7 +203,7 @@ export class ExpressConfiguration {
      * - Output clean HTTP friendly error
      * - Output clean 404 error
      */
-    this.application.use( Catcher.factory, Catcher.log, Catcher.exit, Catcher.notFound );
+    this.application.use( Catch.factory, Catch.log, Catch.exit, Catch.notFound );
 
     return this;
   }

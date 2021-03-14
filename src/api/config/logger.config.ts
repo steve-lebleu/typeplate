@@ -123,7 +123,7 @@ class LoggerConfiguration {
   /**
    * @description
    */
-  writeStream() {
+  writeStream(): ReadableStream {
     return Morgan(LOGS.TOKEN, { stream: ( ENV === ENVIRONMENT.production ? createWriteStream(`${LOGS.PATH}/access.log`, { flags: 'a+' }) : this.stream ) as ReadableStream } ) as ReadableStream
   }
 

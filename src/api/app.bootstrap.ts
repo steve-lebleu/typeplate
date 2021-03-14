@@ -1,13 +1,9 @@
 require('module-alias/register');
 
-import * as Express from 'express';
-
-import { ENV, PORT, TYPEORM } from '@config/environment.config';
+import { TYPEORM } from '@config/environment.config';
 import { TypeormConfiguration } from '@config/typeorm.config';
-import { ServerConfiguration } from '@config/server.config';
-import { ExpressConfiguration } from '@config/app.config';
-
-import { Logger } from '@services/logger.service';
+import { Server } from '@config/server.config';
+import { Application } from '@config/express.config';
 
 TypeormConfiguration.connect(TYPEORM)
   .catch( (e: Error) => {
@@ -15,11 +11,7 @@ TypeormConfiguration.connect(TYPEORM)
     process.exit(1);
   });
 
-const application = new ExpressConfiguration( Express() ).get();
-const HTTPServer = ServerConfiguration.server(application);
-
-const server = HTTPServer.listen(PORT, () => {
-  Logger.log('info', `HTTP(S) server is now running on port ${PORT} (${ENV})`);
-});
+const application = Application;
+const server = Server.init(application).listen() as unknown;
 
 export { application, server };

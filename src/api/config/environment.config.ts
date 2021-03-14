@@ -1,9 +1,13 @@
+import { existsSync } from 'fs';
+
+import { config as Dotenv } from 'dotenv';
+
 import { DATABASE, DATABASE_ENGINE } from '@enums/database-engine.enum';
 import { MOMENT_UNIT } from '@enums/moment-unity.enum';
 import { ENVIRONMENT } from '@enums/environment.enum';
 import { ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE, CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
+
 import { list } from '@utils/enum.util';
-import { existsSync } from 'fs';
 
 /**
  *
@@ -11,9 +15,13 @@ import { existsSync } from 'fs';
  *
  * @see https://www.npmjs.com/package/dotenv
  *
- * FIXME: encrypt confidential data on env variables (ie typeorm)
  */
 export class Environment {
+
+  /**
+   * @description Environment instance
+   */
+  private static instance: Environment;
 
   /**
    * @description Current root dir
@@ -26,7 +34,7 @@ export class Environment {
   cluster: Record<string,unknown>;
 
   /**
-   * @description Current environment (default development)
+   * @description Current environment
    */
   environment: string = ENVIRONMENT.development;
 
@@ -36,11 +44,21 @@ export class Environment {
   errors: string[] = [];
 
   /**
-   * @description
+   * @description Env variables
    */
   variables: Record<string,unknown>;
 
-  constructor() {}
+  private constructor() {}
+
+  /**
+   * @description Environment singleton getter
+   */
+  static get(): Environment {
+    if (!Environment.instance) {
+      Environment.instance = new Environment();
+    }
+    return Environment.instance;
+  }
 
   /**
    * @description Env variables exhaustive key list
@@ -100,7 +118,7 @@ export class Environment {
   /**
    * @description Embeded validation rules for env variables
    */
-  get rules(): any {
+  get rules(): Record<string,any> {
 
     return {
 
@@ -690,9 +708,7 @@ export class Environment {
       this.exit(`Environment file not found at ${path}`);
     }
 
-    const dtv: { config: (options) => void, parse: () => void } = require('dotenv') as { config: () => void, parse: () => void };
-
-    dtv.config( { path} );
+    Dotenv({path});
 
     return this;
   }
@@ -714,17 +730,12 @@ export class Environment {
    * @description Parse allowed env variables, validate it and returns safe current or default value
    */
   validates(): Environment {
+
     this.keys.forEach( (key: string) => {
       this.variables[key] = this.rules[key](this.variables[key])
     });
-    return this
-  }
 
-  /**
-   * @description Say if current environment is valid or not
-   */
-  isValid(): boolean {
-    return this.errors.length === 0;
+    return this
   }
 
   /**
@@ -828,6 +839,13 @@ export class Environment {
   }
 
   /**
+   * @description Say if current environment is valid or not
+   */
+  isValid(): boolean {
+    return this.errors.length === 0;
+  }
+
+  /**
    * @description Exit of current process with error messages
    *
    * @param messages
@@ -839,42 +857,43 @@ export class Environment {
   }
 }
 
-const environment = new Environment().loads(process.versions.node).extracts(process.env).validates().aggregates();
+const environment = Environment
+  .get()
+  .loads(process.versions.node)
+  .extracts(process.env)
+  .validates()
+  .aggregates();
 
-if (!environment.isValid()) {
-  environment.exit(environment.errors);
-}
+if (!environment.isValid()) environment.exit(environment.errors);
 
-export default environment.variables;
+type EnvOauth = { KEY: string, IS_ACTIVE: boolean, ID: string, SECRET: string, CALLBACK_URL: string };
+type EnvJWT = { SECRET: string, EXPIRATION: number };
+type EnvMemoryCache = { IS_ACTIVE: boolean, DURATION: number };
+type EnvSSL = { IS_ACTIVE: boolean, CERT: string, KEY: string };
+type EnvTypeorm = { DB: string, NAME: string, TYPE: DATABASE, HOST: string, PORT: number, PWD: string, USER: string, SYNC: boolean, LOG: boolean, CACHE: boolean, ENTITIES: string, MIGRATIONS: string, SUBSCRIBERS: string };
+type EnvLog = { PATH: string, TOKEN: string };
+type EnvUpload = { MAX_FILE_SIZE: number, MAX_FILES: number, PATH: string, WILDCARDS: string[] };
+type EnvImageScaling = { IS_ACTIVE: boolean, PATH_MASTER: string, PATH_SCALE: string, SIZES: { XS: number, SM: number, MD: number, LG: number, XL: number } };
+type EnvRefreshToken = { DURATION: number, UNIT: MOMENT_UNIT };
 
-type OauthCluser = { KEY: string, IS_ACTIVE: boolean, ID: string, SECRET: string, CALLBACK_URL: string }
-type JwtCluster = { SECRET: string, EXPIRATION: number };
-type MemoryCluster = { IS_ACTIVE: boolean, DURATION: number };
-type SSLCluster = { IS_ACTIVE: boolean, CERT: string, KEY: string };
-type TypeormCluster = { DB: string, NAME: string, TYPE: DATABASE, HOST: string, PORT: number, PWD: string, USER: string, SYNC: boolean, LOG: boolean, CACHE: boolean, ENTITIES: string, MIGRATIONS: string, SUBSCRIBERS: string };
-type LogCluster = { PATH: string, TOKEN: string };
-type UploadCluster = { MAX_FILE_SIZE: number, MAX_FILES: number, PATH: string, WILDCARDS: string[] };
-type ScalingCluster = { IS_ACTIVE: boolean, PATH_MASTER: string, PATH_SCALE: string, SIZES: { XS: number, SM: number, MD: number, LG: number, XL: number } };
-type RefreshTokenCluster = { DURATION: number, UNIT: MOMENT_UNIT };
-
-const API_VERSION = environment.cluster.API_VERSION as string;
-const AUTHORIZED = environment.cluster.AUTHORIZED as string;
-const CONTENT_TYPE = environment.cluster.CONTENT_TYPE as string;
-const DOMAIN = environment.cluster.DOMAINE as string;
-const ENV = environment.cluster.ENV as string;
-const FACEBOOK = environment.cluster.FACEBOOK as OauthCluser;
-const GITHUB = environment.cluster.GITHUB as OauthCluser;
-const GOOGLE = environment.cluster.GOOGLE as OauthCluser;
-const JWT = environment.cluster.JWT as JwtCluster;
-const LINKEDIN = environment.cluster.LINKEDIN as OauthCluser;
-const LOGS = environment.cluster.LOGS as LogCluster;
-const MEMORY_CACHE = environment.cluster.MEMORY_CACHE as MemoryCluster;
-const PORT = environment.cluster.PORT as number;
-const REFRESH_TOKEN = environment.cluster.REFRESH_TOKEN as RefreshTokenCluster;
-const SCALING = environment.cluster.SCALING as ScalingCluster;
-const SSL = environment.cluster.SSL as SSLCluster;
-const TYPEORM = environment.cluster.TYPEORM as TypeormCluster;
-const UPLOAD = environment.cluster.UPLOAD as UploadCluster;
-const URL = environment.cluster.URL as string;
+const API_VERSION   = environment.cluster.API_VERSION as string;
+const AUTHORIZED    = environment.cluster.AUTHORIZED as string;
+const CONTENT_TYPE  = environment.cluster.CONTENT_TYPE as string;
+const DOMAIN        = environment.cluster.DOMAINE as string;
+const ENV           = environment.cluster.ENV as string;
+const FACEBOOK      = environment.cluster.FACEBOOK as EnvOauth;
+const GITHUB        = environment.cluster.GITHUB as EnvOauth;
+const GOOGLE        = environment.cluster.GOOGLE as EnvOauth;
+const JWT           = environment.cluster.JWT as EnvJWT;
+const LINKEDIN      = environment.cluster.LINKEDIN as EnvOauth;
+const LOGS          = environment.cluster.LOGS as EnvLog;
+const MEMORY_CACHE  = environment.cluster.MEMORY_CACHE as EnvMemoryCache;
+const PORT          = environment.cluster.PORT as number;
+const REFRESH_TOKEN = environment.cluster.REFRESH_TOKEN as EnvRefreshToken;
+const SCALING       = environment.cluster.SCALING as EnvImageScaling;
+const SSL           = environment.cluster.SSL as EnvSSL;
+const TYPEORM       = environment.cluster.TYPEORM as EnvTypeorm;
+const UPLOAD        = environment.cluster.UPLOAD as EnvUpload;
+const URL           = environment.cluster.URL as string;
 
 export { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, ENV, FACEBOOK, GITHUB, GOOGLE, LINKEDIN, JWT, LOGS, MEMORY_CACHE, PORT, REFRESH_TOKEN, SCALING, SSL, TYPEORM, UPLOAD, URL }

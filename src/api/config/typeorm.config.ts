@@ -34,7 +34,7 @@ export class TypeormConfiguration {
         cache: options.CACHE
       } as any)
       .then( (connection: Connection) => {
-        Logger.log('info', `Connection to MySQL server established on port ${options.port as string} (${ENV})`);
+        Logger.log('info', `Connection to MySQL server established on port ${options.PORT as string} (${ENV})`);
         resolve(connection);
       })
       .catch( (error: Error) => {

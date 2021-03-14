@@ -19,7 +19,7 @@ Small but badass & ready to use RESTful API boilerplate builded with [Express.js
 
 ## > Features
 
-* **Clear code architecture** with classic layers such controllers, services, repositories, models, middlewares, subscribers, utils, ...
+* **Clear code architecture** with classic layers such controllers, services, repositories, models, ...
 * **Object Relational Mapping** with [Typeorm](https://typeorm.io/#/).
 * **SSL secure connection** with native [HTTPS node module](https://nodejs.org/docs/latest-v14.x/api/https.html).
 * **Cross Oigin Resource Sharing** with [CORS](https://expressjs.com/en/resources/middleware/cors.html).

@@ -3,7 +3,7 @@ import { NOT_FOUND } from 'http-status';
 import { IResponse } from '@interfaces/IResponse.interface';
 import { expectationFailed } from '@hapi/boom';
 import { getStatusCode } from '@utils/http.util';
-import { Cache } from '@services/cache.service';
+import { CacheService } from '@services/cache.service';
 
 /**
  * @description Resolve the current request and get output. The princip is that we becomes here, it means that none error has been encountered except a potential and non declared as is 404 error
@@ -12,7 +12,7 @@ import { Cache } from '@services/cache.service';
  * @param res Express response object
  * @param next Callback function
  */
-const Resolver = async (req: Request, res: IResponse, next: (e?: Error) => void): Promise<void> => {
+const Resolve = async (req: Request, res: IResponse, next: (e?: Error) => void): Promise<void> => {
 
   const hasContent = typeof res.locals?.data !== 'undefined';
   const hasStatusCodeOnResponse = typeof res.statusCode !== 'undefined';
@@ -35,8 +35,8 @@ const Resolver = async (req: Request, res: IResponse, next: (e?: Error) => void)
 
   // The end for the rest
   if ( ( hasContent && ['GET', 'POST', 'PUT', 'PATCH'].includes(req.method) ) || ( hasStatusCodeOnResponse && res.statusCode !== NOT_FOUND ) ) {
-    if (req.method === 'GET' && Cache.options.IS_ACTIVE) {
-      Cache.resolve.put( Cache.key(req), res.locals.data, Cache.options.DURATION );
+    if ( CacheService.isCachable(req) ) {
+      CacheService.engine.put( CacheService.key(req), res.locals.data, CacheService.duration );
     }
     res.status( status );
     res.json(res.locals.data);
@@ -44,4 +44,4 @@ const Resolver = async (req: Request, res: IResponse, next: (e?: Error) => void)
 
 }
 
-export { Resolver }
+export { Resolve }

@@ -14,10 +14,8 @@ import { sanitize } from '@services/sanitizer.service';
  * @param req Express Request instance
  * @param res Express Response instance
  * @param next Callback function
- *
- *  TODO safe decorator on this middleware and each other
  */
-const Sanitizer = async (req: Request, res: IResponse, next: () => void): Promise<void>  => {
+const Sanitize = async (req: Request, res: IResponse, next: () => void): Promise<void>  => {
 
   const hasContent = typeof res.locals.data !== 'undefined';
 
@@ -43,4 +41,4 @@ const Sanitizer = async (req: Request, res: IResponse, next: () => void): Promis
   next();
 }
 
-export { Sanitizer }
+export { Sanitize }

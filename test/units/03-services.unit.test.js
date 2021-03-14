@@ -9,7 +9,7 @@ const { User } = require(process.cwd() + '/dist/api/models/user.model');
 
 const { isSanitizable, sanitize } = require(process.cwd() + '/dist/api/services/sanitizer.service');
 const { AuthService } = require(process.cwd() + '/dist/api/services/auth.service');
-const { Cache } = require(process.cwd() + '/dist/api/services/cache.service');
+const { CacheService } = require(process.cwd() + '/dist/api/services/cache.service');
 const { remove, rescale } = require(process.cwd() + '/dist/api/services/media.service');
 
 describe('Services', () => {
@@ -68,31 +68,31 @@ describe('Services', () => {
 
   });
 
-  describe('Cache', () => {
+  describe('CacheService', () => {
 
-    it('Cache.revolve should return memory cache instance', () => {
-      const result = Cache.resolve;
+    it('CacheService.revolve should return memory cache instance', () => {
+      const result = CacheService.engine;
       expect(result).to.be.an('object');
     });
 
-    it('Cache.key() should return well formated key', () => {
+    it('CacheService.key() should return well formated key', () => {
       const url = '/path-to-the-light/door/25';
-      const result = Cache.key( { url });
+      const result = CacheService.key( { url });
       expect(result).to.be.eqls(`__mcache_${url}`);
     });
 
-    it('Cache.resolve.put() should push a data into the cache', () => {
+    it('CacheService.engine.put() should push a data into the cache', () => {
       const url = '/path-to-the-light/door/25';
-      const key = Cache.key( { url });
-      const cached = Cache.resolve.put(key, { data: 'Yoda is into the game' } );
+      const key = CacheService.key( { url });
+      const cached = CacheService.engine.put(key, { data: 'Yoda is into the game' } );
       expect(cached).to.be.an('object');
       expect(cached.data).to.be.eqls('Yoda is into the game');
     });
 
-    it('Cache.resolve.get() should retrieve data from the cache', () => {
+    it('CacheService.engine.get() should retrieve data from the cache', () => {
       const url = '/path-to-the-light/door/25';
-      const key = Cache.key( { url });
-      const cached = Cache.resolve.get(key);
+      const key = CacheService.key( { url });
+      const cached = CacheService.engine.get(key);
       expect(cached).to.be.an('object');
       expect(cached.data).to.be.eqls('Yoda is into the game');
     });

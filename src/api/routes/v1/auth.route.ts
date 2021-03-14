@@ -1,6 +1,6 @@
 import { Router } from '@bases/router.class';
-import { Validate } from '@middlewares/validator.middleware';
-import { Oauth, OauthCallback } from '@middlewares/guard.middleware';
+import { Validate } from '@middlewares/validate.middleware';
+import { Guard } from '@middlewares/guard.middleware';
 import { AuthController } from '@controllers/auth.controller';
 import { register, login, refresh, oauthCb } from '@validations/auth.validation';
 
@@ -328,10 +328,10 @@ export class AuthRouter extends Router {
         .post(Validate(refresh), AuthController.refresh);
 
     /**
-     * @api {get} /auth/facebook Facebook oauth
+     * @api {get} /auth/facebook Facebook oAuth
      * @apiDescription Login with facebook. Obtains facebook authorization for oAuth
      * @apiVersion 1.0.0
-     * @apiName FacebookLogin
+     * @apiName FacebookOauth
      * @apiGroup Auth
      * @apiPermission public
      *
@@ -355,19 +355,19 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/facebook')
-        .get( Oauth('facebook') );
+        .get( Guard.oAuth('facebook') );
 
     /**
-     * @api {post} /auth/facebook/callback Callback URL Facebook oauth
+     * @api {get} /auth/facebook/callback Facebook oAuth callback
      * @apiDescription Login with facebook. Creates a new user if it does not exist.
      * @apiVersion 1.0.0
-     * @apiName FacebookLogin
+     * @apiName FacebookOauthCallback
      * @apiGroup Auth
      * @apiPermission public
      *
      * @apiUse BaseHeaderSimple
      *
-     * @apiParam  {String}  access_token  Facebook's access_token
+     * @apiParam {String}  code  Facebook access_token
      *
      * @apiUse SuccessToken
      *
@@ -394,19 +394,17 @@ export class AuthRouter extends Router {
      */
      this.router
      .route('/facebook/callback')
-       .get( Validate(oauthCb), OauthCallback('facebook'), AuthController.oAuth );
+       .get( Validate(oauthCb), Guard.oAuthCallback('facebook'), AuthController.oAuth );
 
     /**
-     * @api {post} /auth/google Google oauth
+     * @api {get} /auth/google Google oAuth
      * @apiDescription Login with google.
      * @apiVersion 1.0.0
-     * @apiName GoogleLogin
+     * @apiName GoogleOauth
      * @apiGroup Auth
      * @apiPermission public
      *
      * @apiUse BaseHeaderSimple
-     *
-     * @apiParam  {String}  access_token  Google's access_token
      *
      * @apiUse SuccessToken
      *
@@ -416,19 +414,19 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/google')
-       .get( Oauth('google'), AuthController.oAuth );
+       .get( Guard.oAuth('google'), AuthController.oAuth );
 
     /**
-     * @api {post} /auth/google/callback Callback URL Google oauth
+     * @api {get} /auth/google/callback Google oAuth callback
      * @apiDescription Login with Google. Creates a new user if it does not exist.
      * @apiVersion 1.0.0
-     * @apiName GoogleLogin
+     * @apiName GoogleOauthCallback
      * @apiGroup Auth
      * @apiPermission public
      *
      * @apiUse BaseHeaderSimple
      *
-     * @apiParam  {String}  access_token  Google's access_token
+     * @apiParam  {String}  code  Google access_token
      *
      * @apiUse SuccessToken
      *
@@ -454,19 +452,17 @@ export class AuthRouter extends Router {
      */
      this.router
      .route('/google/callback')
-       .get( Validate(oauthCb), OauthCallback('google'), AuthController.oAuth );
+       .get( Validate(oauthCb), Guard.oAuthCallback('google'), AuthController.oAuth );
 
     /**
-     * @api {post} /auth/github Github oauth
+     * @api {get} /auth/github Github oAuth
      * @apiDescription Login with Github.
      * @apiVersion 1.0.0
-     * @apiName GithubLogin
+     * @apiName GithubOauth
      * @apiGroup Auth
      * @apiPermission public
      *
      * @apiUse BaseHeaderSimple
-     *
-     * @apiParam  {String}  access_token  Github access_token
      *
      * @apiUse SuccessToken
      *
@@ -476,19 +472,19 @@ export class AuthRouter extends Router {
      */
      this.router
      .route('/github')
-      .get( Oauth('github'), AuthController.oAuth );
+      .get( Guard.oAuth('github'), AuthController.oAuth );
 
    /**
-    * @api {post} /auth/github/callback Callback URL Github oauth
+    * @api {get} /auth/github/callback Github oAuth callback
     * @apiDescription Login with Github. Creates a new user if it does not exist.
     * @apiVersion 1.0.0
-    * @apiName GithubLogin
+    * @apiName GithubOauthCallback
     * @apiGroup Auth
     * @apiPermission public
     *
     * @apiUse BaseHeaderSimple
     *
-    * @apiParam  {String}  access_token  Twitter access_token
+    * @apiParam  {String}  code  Github access_token
     *
     * @apiUse SuccessToken
     *
@@ -514,19 +510,17 @@ export class AuthRouter extends Router {
     */
     this.router
     .route('/github/callback')
-      .get( Validate(oauthCb), OauthCallback('github'), AuthController.oAuth );
+      .get( Validate(oauthCb), Guard.oAuthCallback('github'), AuthController.oAuth );
 
     /**
-     * @api {post} /auth/linkedin Linkedin oauth
+     * @api {get} /auth/linkedin Linkedin oAuth
      * @apiDescription Login with Linkedin.
      * @apiVersion 1.0.0
-     * @apiName LinkedinLogin
+     * @apiName LinkedinOauth
      * @apiGroup Auth
      * @apiPermission public
      *
      * @apiUse BaseHeaderSimple
-     *
-     * @apiParam  {String}  access_token  Linkedin access_token
      *
      * @apiUse SuccessToken
      *
@@ -536,19 +530,19 @@ export class AuthRouter extends Router {
      */
      this.router
      .route('/linkedin')
-      .get( Oauth('linkedin'), AuthController.oAuth );
+      .get( Guard.oAuth('linkedin'), AuthController.oAuth );
 
    /**
-    * @api {post} /auth/linkedin/callback Callback URL Github oauth
+    * @api {get} /auth/linkedin/callback Linkedin oAuth callback
     * @apiDescription Login with Linkedin. Creates a new user if it does not exist.
     * @apiVersion 1.0.0
-    * @apiName LinkedinLogin
+    * @apiName LinkedinOauthCallback
     * @apiGroup Auth
     * @apiPermission public
     *
     * @apiUse BaseHeaderSimple
     *
-    * @apiParam  {String}  access_token  Linkedin access_token
+    * @apiParam  {String}  code  Linkedin access_token
     *
     * @apiUse SuccessToken
     *
@@ -574,7 +568,7 @@ export class AuthRouter extends Router {
     */
     this.router
     .route('/linkedin/callback')
-      .get( Validate(oauthCb), OauthCallback('linkedin'), AuthController.oAuth );
+      .get( Validate(oauthCb), Guard.oAuthCallback('linkedin'), AuthController.oAuth );
 
   }
 }

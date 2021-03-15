@@ -7,10 +7,9 @@ const fixtures = require(process.cwd() + '/test/utils/fixtures');
 
 const { User } = require(process.cwd() + '/dist/api/models/user.model');
 
-const { isSanitizable, sanitize } = require(process.cwd() + '/dist/api/services/sanitizer.service');
+const { SanitizeService } = require(process.cwd() + '/dist/api/services/sanitizer.service');
 const { AuthService } = require(process.cwd() + '/dist/api/services/auth.service');
-const { remove, rescale } = require(process.cwd() + '/dist/api/services/media.service');
-
+const { MediaService} = require(process.cwd() + '/dist/api/services/media.service');
 const { CacheService } = require(process.cwd() + '/dist/api/services/cache.service');
 const { CacheConfiguration } = require(process.cwd() + '/dist/api/config/cache.config');
 
@@ -121,7 +120,7 @@ describe('Services', () => {
 
   });
 
-  describe('Media', () => {
+  describe('MediaService', () => {
 
     describe('remove()', () => {
 
@@ -131,7 +130,7 @@ describe('Services', () => {
         ['xs', 'sm', 'md', 'lg', 'xl'].forEach(size => {
           fs.copyFileSync(`${process.cwd()}/test/utils/fixtures/files/${image.filename}`, `${process.cwd()}/dist/public/images/rescale/${size}/${image.filename}`);
         });
-        remove(fixtures.media.image({id:1}));
+        MediaService.remove(fixtures.media.image({id:1}));
         setTimeout(() => {
           expect(fs.existsSync(`${process.cwd()}/dist/public/images/master-copy/${image.filename}`)).to.be.false;
           ['xs', 'sm', 'md', 'lg', 'xl'].forEach(size => {
@@ -139,7 +138,6 @@ describe('Services', () => {
           });
           done();
         }, 500)
-        
       });
 
     });
@@ -148,43 +146,43 @@ describe('Services', () => {
 
   describe('Sanitize', () => {
       
-    it('isSanitizable() should return false on primitive type', function(done) {
-      const result = isSanitizable('yoda');
+    it('SanitizeService.isSanitizable() should return false on primitive type', function(done) {
+      const result = SanitizeService.isSanitizable('yoda');
       expect(result).to.be.false;
       done();
     });
     
-    it('isSanitizable() should return false on primitive type array', function(done) {
-      const result = isSanitizable(['yoda']);
+    it('SanitizeService.isSanitizable() should return false on primitive type array', function(done) {
+      const result = SanitizeService.isSanitizable(['yoda']);
       expect(result).to.be.false;
       done();
     });
   
-    it('isSanitizable() should return false on primitive object', function(done) {
-      const result = isSanitizable({ name: 'yoda' });
+    it('SanitizeService.isSanitizable() should return false on primitive object', function(done) {
+      const result = SanitizeService.isSanitizable({ name: 'yoda' });
       expect(result).to.be.false;
       done();
     });
   
-    it('isSanitizable() should return false on mixed array', function(done) {
-      const result = isSanitizable([{ name: 'yoda'}, 'dark vador']);
+    it('SanitizeService.isSanitizable() should return false on mixed array', function(done) {
+      const result = SanitizeService.isSanitizable([{ name: 'yoda'}, 'dark vador']);
       expect(result).to.be.false;
       done();
     });
   
-    it('isSanitizable() should return true on IModel instance', function(done) {
-      const result = isSanitizable( new User() );
+    it('SanitizeService.isSanitizable() should return true on IModel instance', function(done) {
+      const result = SanitizeService.isSanitizable( new User() );
       expect(result).to.be.true;
       done();
     });
   
-    it('isSanitizable() should return true on IModel instance array', function(done) {
-      const result = isSanitizable( [ new User(), new User() ] );
+    it('SanitizeService.isSanitizable() should return true on IModel instance array', function(done) {
+      const result = SanitizeService.isSanitizable( [ new User(), new User() ] );
       expect(result).to.be.true;
       done();
     });
 
-    it('sanitize() should return sanitized object', function(done) {
+    it('SanitizeService.sanitize() should return sanitized object', function(done) {
       const entity = function() {
         const self = {};
         self.id = 1;
@@ -193,7 +191,7 @@ describe('Services', () => {
         self.whitelist =  ['id', 'name'];
         return self
       }
-      const result = sanitize(new entity());
+      const result = SanitizeService.sanitize(new entity());
       expect(result).to.haveOwnProperty('id');
       expect(result).to.haveOwnProperty('name');
       expect(result).to.not.haveOwnProperty('password');

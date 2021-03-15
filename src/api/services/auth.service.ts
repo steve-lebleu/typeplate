@@ -15,7 +15,27 @@ import { IOauthResponse } from '@interfaces/IOauthResponse.interface';
 
 import { hash } from '@utils/string.util';
 
-export class AuthService {
+/**
+ * @description
+ */
+class AuthService {
+
+  /**
+   * @description
+   */
+  private static instance: AuthService;
+
+  private constructor() {}
+
+  /**
+   * @description
+   */
+  static get(): AuthService {
+    if (!AuthService.instance) {
+      AuthService.instance = new AuthService();
+    }
+    return AuthService.instance;
+  }
 
   /**
    * @description Build a token response and return it
@@ -23,7 +43,7 @@ export class AuthService {
    * @param user
    * @param accessToken
    */
-  static async generateTokenResponse(user: User, accessToken: string): Promise<{ tokenType, accessToken, refreshToken, expiresIn }|Error> {
+  async generateTokenResponse(user: User, accessToken: string): Promise<{ tokenType, accessToken, refreshToken, expiresIn }|Error> {
     if (!user || !(user instanceof User)) {
       return badData('User is not an instance of User');
     }
@@ -51,7 +71,7 @@ export class AuthService {
    *
    * @async
    */
-  static async oAuth(token: string, refreshToken: string, profile: IOauthResponse, next: (e?: Error, v?: User|boolean) => void): Promise<void> {
+  async oAuth(token: string, refreshToken: string, profile: IOauthResponse, next: (e?: Error, v?: User|boolean) => void): Promise<void> {
     try {
       const iRegistrable = {
         id: profile.id,
@@ -76,7 +96,7 @@ export class AuthService {
    *
    * @async
    */
-  static async jwt(payload: { sub }, next: (e?: Error, v?: User|boolean) => void): Promise<void> {
+  async jwt(payload: { sub }, next: (e?: Error, v?: User|boolean) => void): Promise<void> {
     try {
       const userRepository = getRepository(User);
       const user = await userRepository.findOne( payload.sub );
@@ -89,3 +109,7 @@ export class AuthService {
     }
   }
 }
+
+const authService = AuthService.get();
+
+export { authService as AuthService }

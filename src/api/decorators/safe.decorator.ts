@@ -1,5 +1,5 @@
 import { Controller } from '@bases/controller.class';
-import { remove } from '@services/media.service';
+import { MediaService } from '@services/media.service';
 
 /**
  * @description Endpoint decorator which catch errors fired while endpoint execution
@@ -18,7 +18,7 @@ const safe = ( target: Controller, key: string ): any => {
         .then(() => next())
         .catch(e => {
           if (files && files.length > 0) {
-            files.map(f => remove(f))
+            files.map(f => MediaService.remove(f))
           }
           next(e);
         });

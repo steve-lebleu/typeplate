@@ -5,8 +5,7 @@ import * as Moment from 'moment-timezone';
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, RemoveEvent } from 'typeorm';
 
 import { Media } from '@models/media.model';
-import { SCALING } from '@config/environment.config';
-import { rescale, remove } from '@services/media.service';
+import { MediaService } from '@services/media.service';
 import { CacheService } from '@services/cache.service';
 @EventSubscriber()
 export class MediaSubscriber implements EntitySubscriberInterface<Media> {
@@ -33,9 +32,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
    * @description Called after media insertion.
    */
   afterInsert(event: InsertEvent<Media>): void {
-    if ( SCALING.IS_ACTIVE ) {
-      rescale(event.entity);
-    }
+    MediaService.rescale(event.entity);
     CacheService.refresh('medias');
   }
 
@@ -51,10 +48,8 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
    * @description Called after media update.
    */
   afterUpdate(event: UpdateEvent<Media>): void {
-    if ( SCALING.IS_ACTIVE ) {
-      rescale(event.entity);
-    }
-    remove(this.previous);
+    MediaService.rescale(event.entity);
+    MediaService.remove(this.previous);
     CacheService.refresh('medias');
   }
 
@@ -62,7 +57,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
    * @description Called after media deletetion.
    */
   afterRemove(event: RemoveEvent<Media>): void {
-    remove(event.entity);
+    MediaService.remove(event.entity);
     CacheService.refresh('medias');
   }
 

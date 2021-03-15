@@ -28,6 +28,27 @@ class CacheService {
 
   /**
    * @description
+   */
+   get engine(): ICache {
+    return CacheConfiguration.start
+  }
+
+  /**
+   * @description
+   */
+  get duration(): number {
+    return CacheConfiguration.options.DURATION;
+  }
+
+  /**
+   * @description
+   */
+   get isActive(): boolean {
+    return CacheConfiguration.options.IS_ACTIVE;
+  }
+
+  /**
+   * @description
    *
    * @param req Express request
    */
@@ -64,26 +85,6 @@ class CacheService {
       .forEach(key => this.engine.del(key))
   }
 
-  /**
-   * @description
-   */
-  get engine(): ICache {
-    return CacheConfiguration.start
-  }
-
-  /**
-   * @description
-   */
-  get duration(): number {
-    return CacheConfiguration.options.DURATION;
-  }
-
-  /**
-   * @description
-   */
-   get isActive(): boolean {
-    return CacheConfiguration.options.IS_ACTIVE;
-  }
 }
 
 const cacheService = CacheService.get();

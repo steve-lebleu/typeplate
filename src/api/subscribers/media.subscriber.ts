@@ -2,20 +2,18 @@ require('module-alias/register');
 
 import * as Moment from 'moment-timezone';
 
+import { CacheService } from '@services/cache.service';
+
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, RemoveEvent } from 'typeorm';
 
 import { Media } from '@models/media.model';
 import { MediaService } from '@services/media.service';
-import { CacheService } from '@services/cache.service';
+
 @EventSubscriber()
 export class MediaSubscriber implements EntitySubscriberInterface<Media> {
 
-  previous: Media;
-
   /**
    * @description Indicates that this subscriber only listen to Media events.
-   *
-   * TODO: emit custom event to say what to external services
    */
   listenTo(): any {
     return Media;
@@ -41,7 +39,6 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
    */
   beforeUpdate(event: UpdateEvent<Media>): void {
     event.entity.updatedAt = Moment( new Date() ).utc(true).toDate();
-    this.previous = event.databaseEntity;
   }
 
   /**
@@ -49,7 +46,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
    */
   afterUpdate(event: UpdateEvent<Media>): void {
     MediaService.rescale(event.entity);
-    MediaService.remove(this.previous);
+    MediaService.remove(event.databaseEntity);
     CacheService.refresh('medias');
   }
 

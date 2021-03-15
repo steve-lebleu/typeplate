@@ -50,7 +50,7 @@ class MediaService {
           .forEach( size => {
             image
               .clone()
-              .resize(SCALING.SIZES[size], Jimp.AUTO)
+              .resize(SCALING.SIZES[size.toUpperCase()], Jimp.AUTO)
               .write(`${media.path.split('/').slice(0, -1).join('/').replace(SCALING.PATH_MASTER, SCALING.PATH_SCALE)}/${size}/${media.filename as string}`, (err: Error) => {
                 if(err) throw expectationFailed(err.message);
               });

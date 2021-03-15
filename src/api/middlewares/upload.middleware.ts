@@ -21,7 +21,6 @@ import { getTypeOfMedia } from '@utils/string.util';
  * @param next Callback function
  */
 const Upload = ( options?: IUploadOptions ) => (req: IMediaRequest, res: IResponse, next: (error?: Error) => void): void => {
-
   const opts = options ? Object.keys(options)
     .filter(key => UploadConfiguration.options[key])
     .reduce((acc: IUploadOptions, current: string) => {

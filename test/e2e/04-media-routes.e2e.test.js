@@ -42,8 +42,6 @@ describe('Media routes', function () {
     delete server;
   });
 
-
-
   it('POST /api/v1/medias 400 - empty payload', function (done) {
     doFormRequest(agent, 'post', '/api/v1/medias/', null, token, {}, 400, function(err, res) {
       expect(res.statusCode).to.eqls(400);
@@ -59,7 +57,7 @@ describe('Media routes', function () {
   });
 
   it('POST /api/v1/medias 400 - not supported mimetype', function (done) {
-    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'audio', path: process.cwd() + '/test/utils/fixtures/files/electric-bulb.mp4' }, 400, function(err, res) {
+    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'image', path: process.cwd() + '/test/utils/fixtures/files/tags.tif' }, 400, function(err, res) {
       expect(res.statusCode).to.eqls(400);
       done();
     });
@@ -72,20 +70,8 @@ describe('Media routes', function () {
     });
   });
 
-  it('POST /api/v1/medias 201 - image - file(s) exists + data ok', function (done) {
-    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'image', path: process.cwd() + '/test/utils/fixtures/files/javascript.jpg' }, 201, function(err, res) {
-      expect(res.statusCode).to.eqls(201);
-      expect(res.body).to.be.an('array');
-      expect(res.body).satisfy(function(value) {
-        return value.map( entry => dataOk( { body: entry }, 'media', 'create') );
-      });
-      images = res.body;
-      done();
-    });
-  });
-
-  it('POST /api/v1/medias 201 - document - file(s) exists + data ok', function (done) {
-    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'document', path: process.cwd() + '/test/utils/fixtures/files/Responsive_Webdesign.pdf' }, 201, function(err, res) {
+  it('POST /api/v1/medias 201 - audio - file(s) exists + data ok', function (done) {
+    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'audio', path: process.cwd() + '/test/utils/fixtures/files/kill-bill-vol-1-the-whistle-song.mp3' }, 201, function(err, res) {
       expect(res.statusCode).to.eqls(201);
       expect(res.body).to.be.an('array');
       expect(res.body).satisfy(function(value) {
@@ -108,7 +94,43 @@ describe('Media routes', function () {
     });
   });
 
-  it('GET /api/v1/medias/:id 400 - documentId is not a number', function (done) {
+  it('POST /api/v1/medias 201 - document - file(s) exists + data ok', function (done) {
+    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'document', path: process.cwd() + '/test/utils/fixtures/files/Responsive_Webdesign.pdf' }, 201, function(err, res) {
+      expect(res.statusCode).to.eqls(201);
+      expect(res.body).to.be.an('array');
+      expect(res.body).satisfy(function(value) {
+        return value.map( entry => dataOk( { body: entry }, 'media', 'create') );
+      });
+      documents = res.body;
+      done();
+    });
+  });
+
+  it('POST /api/v1/medias 201 - image - file(s) exists + data ok', function (done) {
+    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'image', path: process.cwd() + '/test/utils/fixtures/files/javascript.jpg' }, 201, function(err, res) {
+      expect(res.statusCode).to.eqls(201);
+      expect(res.body).to.be.an('array');
+      expect(res.body).satisfy(function(value) {
+        return value.map( entry => dataOk( { body: entry }, 'media', 'create') );
+      });
+      images = res.body;
+      done();
+    });
+  });
+
+  it('POST /api/v1/medias 201 - video - file(s) exists + data ok', function (done) {
+    doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'video', path: process.cwd() + '/test/utils/fixtures/files/electric-bulb-2.mp4' }, 201, function(err, res) {
+      expect(res.statusCode).to.eqls(201);
+      expect(res.body).to.be.an('array');
+      expect(res.body).satisfy(function(value) {
+        return value.map( entry => dataOk( { body: entry }, 'media', 'create') );
+      });
+      documents = res.body;
+      done();
+    });
+  });
+
+  it('GET /api/v1/medias/:id 400 - media id is not a number', function (done) {
     doQueryRequest(agent, '/api/v1/medias/a', null, token, {}, 400, function(err, res) {
       expect(res.statusCode).to.eqls(400);
       done();
@@ -153,6 +175,13 @@ describe('Media routes', function () {
 
   it('GET /api/v1/medias 400 - not supported mimetype', function (done) {
     doQueryRequest(agent, '/api/v1/medias/', null, token, { mimetype: 'application/unknown' }, 400, function(err, res) {
+      expect(res.statusCode).to.eqls(400);
+      done();
+    });
+  });
+
+  it('GET /api/v1/medias 400 - not supported type', function (done) {
+    doQueryRequest(agent, '/api/v1/medias/', null, token, { type: 'yoda' }, 400, function(err, res) {
       expect(res.statusCode).to.eqls(400);
       done();
     });
@@ -218,6 +247,19 @@ describe('Media routes', function () {
       expect(res.body).satisfy(function(value) {
         return value.map( (entry) => { 
           expect(entry.mimetype).to.equals('application/pdf');
+        })
+      });
+      done();
+    });
+  });
+
+  
+  it('GET /api/v1/medias 200 - results matches type query param', function (done) {
+    doQueryRequest(agent, '/api/v1/medias/', null, token, { type: 'image' }, 200, function(err, res) {
+      expect(res.statusCode).to.eqls(200);
+      expect(res.body).satisfy(function(value) {
+        return value.map( (entry) => { 
+          expect(['image/bmp' , 'image/gif' , 'image/jpg' , 'image/jpeg' , 'image/png'].includes(entry.mimetype)).to.be.true;
         })
       });
       done();

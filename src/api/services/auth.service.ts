@@ -49,11 +49,9 @@ export class AuthService {
    * @param profile Shared profile information
    * @param next Callback function
    *
-   * FIXME: promise error is not managed
-   *
    * @async
    */
-  static async oAuth(token: string, refreshToken: string, profile: IOauthResponse, next: (e?: Error, v?: User) => void): Promise<void> {
+  static async oAuth(token: string, refreshToken: string, profile: IOauthResponse, next: (e?: Error, v?: User|boolean) => void): Promise<void> {
     try {
       const iRegistrable = {
         id: profile.id,
@@ -64,9 +62,12 @@ export class AuthService {
       }
       const userRepository = getCustomRepository(UserRepository);
       const user = await userRepository.oAuthLogin(iRegistrable);
-      next(null, user);
+      if (user) {
+        return next(null, user);
+      }
+      return next(null, false);
     } catch (err) {
-      return next(err);
+      return next(err, false);
     }
   }
 
@@ -74,8 +75,6 @@ export class AuthService {
    * @description Authentication by JWT middleware function
    *
    * @async
-   *
-   * FIXME: promise error is not managed
    */
   static async jwt(payload: { sub }, next: (e?: Error, v?: User|boolean) => void): Promise<void> {
     try {

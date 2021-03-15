@@ -604,13 +604,13 @@ export class Environment {
       /**
        * @description Max upload file size
        *
-       * @default 1000000
+       * @default 2000000
        */
       UPLOAD_MAX_FILE_SIZE: (value: string): number => {
         if(value && isNaN(parseInt(value, 10))) {
           this.errors.push('UPLOAD_MAX_FILE_SIZE bad value: please fill it with an integer.');
         }
-        return parseInt(value, 10) || 1000000
+        return parseInt(value, 10) || 2000000
       },
 
       /**

@@ -2,6 +2,7 @@ import { Media } from '@models/media.model';
 import { IMediaQueryString } from '@interfaces/IMediaQueryString.interface';
 import { Repository, EntityRepository, getRepository } from 'typeorm';
 import { omitBy, isNil } from 'lodash';
+import { getMimeTypesOfType } from '@utils/string.util';
 
 @EntityRepository(Media)
 export class MediaRepository extends Repository<Media>  {
@@ -14,11 +15,11 @@ export class MediaRepository extends Repository<Media>  {
   /**
    * @description Get a list of files according to current query
    */
-  async list({ page = 1, perPage = 30, path, fieldname, filename, size, mimetype, owner }: IMediaQueryString): Promise<Media[]> {
+  async list({ page = 1, perPage = 30, path, fieldname, filename, size, mimetype, owner, type }: IMediaQueryString): Promise<Media[]> {
 
     const repository = getRepository(Media);
 
-    const options = omitBy({ path, fieldname, filename, size, mimetype, owner }, isNil) as IMediaQueryString;
+    const options = omitBy({ path, fieldname, filename, size, mimetype, owner, type }, isNil) as IMediaQueryString;
 
     const query = repository
       .createQueryBuilder('media')
@@ -34,6 +35,10 @@ export class MediaRepository extends Repository<Media>  {
 
     if(options.mimetype) {
       query.andWhere('mimetype LIKE :mimetype', { mimetype: `%${options.mimetype}%` });
+    }
+
+    if(options.type) {
+      query.andWhere('mimetype IN (:mimetypes)', { mimetypes: getMimeTypesOfType(options.type) });
     }
 
     if(options.size) {

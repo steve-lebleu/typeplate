@@ -9,7 +9,7 @@ import { IResponse } from '@interfaces/IResponse.interface';
 import { IUploadOptions } from '@interfaces/IUploadOptions.interface';
 import { IMedia } from '@interfaces/IMedia.interface';
 
-import { fieldname } from '@utils/string.util';
+import { getTypeOfMedia } from '@utils/string.util';
 
 /**
  * @description Upload file(s) middleware
@@ -40,9 +40,9 @@ const Upload = ( options?: IUploadOptions ) => (req: IMediaRequest, res: IRespon
     req.body.files = req.files
       .slice(0, opts.maxFiles)
       .map( ( media: IMedia ) => {
-        const type = Pluralize(fieldname(media.mimetype)) as string;
+        const type = Pluralize(getTypeOfMedia(media.mimetype)) as string;
         media.owner = req.user.id;
-        media.url = `${type}/${type === 'image' ? `${SCALING.PATH_MASTER}/` : ''}${media.filename}`
+        media.url = `${type}s/${type === 'image' ? `${SCALING.PATH_MASTER}/` : ''}${media.filename}`
         return media;
       }) || [];
     next();

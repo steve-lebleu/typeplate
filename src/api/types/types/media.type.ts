@@ -1,0 +1,1 @@
+export type MediaType = 'archive' | 'audio' | 'document' | 'image' | 'video';

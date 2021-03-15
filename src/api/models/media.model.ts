@@ -7,7 +7,6 @@ import { MIME_TYPE, MIME_TYPE_ENUM } from '@enums/mime-type.enum';
 import { User } from '@models/user.model';
 import { IModel } from '@interfaces/IModel.interface';
 
-/** FIXME Media fieldname management. Seems to be always 'media'. Check and add e2e tests */
 @Entity()
 export class Media implements IModel {
 

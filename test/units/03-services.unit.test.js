@@ -9,8 +9,10 @@ const { User } = require(process.cwd() + '/dist/api/models/user.model');
 
 const { isSanitizable, sanitize } = require(process.cwd() + '/dist/api/services/sanitizer.service');
 const { AuthService } = require(process.cwd() + '/dist/api/services/auth.service');
-const { CacheService } = require(process.cwd() + '/dist/api/services/cache.service');
 const { remove, rescale } = require(process.cwd() + '/dist/api/services/media.service');
+
+const { CacheService } = require(process.cwd() + '/dist/api/services/cache.service');
+const { CacheConfiguration } = require(process.cwd() + '/dist/api/config/cache.config');
 
 describe('Services', () => {
 
@@ -75,10 +77,30 @@ describe('Services', () => {
       expect(result).to.be.an('object');
     });
 
-    it('CacheService.key() should return well formated key', () => {
-      const url = '/path-to-the-light/door/25';
-      const result = CacheService.key( { url });
-      expect(result).to.be.eqls(`__mcache_${url}`);
+    it('CacheService.key() should return well formated key with crypted q params', () => {
+      const req = {
+        baseUrl: '/api/v1',
+        path: '/medias/',
+        query: { type: 'image' }
+      };
+      const result = CacheService.key(req);
+      expect(result).to.includes('__mcache_/api/v1/medias/?q=');
+      expect(result.split('q=')[1]).to.be.a('string')
+    });
+
+    it('CacheService.refresh() should refresh current cache', () => {
+      const stubIsActive = sinon.stub(CacheConfiguration.options, 'IS_ACTIVE').value(true);
+      const req = {
+        baseUrl: '/api/v1',
+        path: '/medias/',
+        query: { type: 'image' }
+      };
+      const key = CacheService.key(req);
+      CacheService.engine.put(key, 'cached');
+      expect(CacheService.engine.get(key)).to.be.eqls('cached');
+      CacheService.refresh('medias');
+      expect(CacheService.engine.get(key)).to.be.null;
+      stubIsActive.restore();
     });
 
     it('CacheService.engine.put() should push a data into the cache', () => {

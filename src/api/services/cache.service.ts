@@ -4,6 +4,7 @@ import { Request } from 'express';
 import { ICache } from '@interfaces/ICache.interface';
 
 import { CacheConfiguration } from '@config/cache.config';
+import { encrypt } from '@utils/string.util';
 
 
 /**
@@ -31,7 +32,11 @@ class CacheService {
    * @param req Express request
    */
   key(req: Request): string {
-    return `${CacheConfiguration.key}${req.originalUrl||req.url}`;
+    let queryParams = '';
+    if (req.query) {
+      queryParams = encrypt(Object.keys(req.query).sort().map(key => req.query[key]).join(''));
+    }
+    return `${CacheConfiguration.key}${req.baseUrl}${req.path}?q=${queryParams}`;
   }
 
   /**
@@ -41,6 +46,22 @@ class CacheService {
    */
   isCachable(req: Request): boolean {
     return CacheConfiguration.options.IS_ACTIVE && req.method === 'GET';
+  }
+
+  /**
+   * @description Refresh cache after insert / update
+   *
+   * @param segment
+   */
+  refresh(segment: string): void|boolean {
+    if (!CacheConfiguration.options.IS_ACTIVE) {
+      return false;
+    }
+    this.engine
+      .keys()
+      .slice()
+      .filter(key => key.includes(segment))
+      .forEach(key => this.engine.del(key))
   }
 
   /**

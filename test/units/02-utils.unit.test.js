@@ -64,7 +64,7 @@ describe('Utils', () => {
   
   });
 
-  describe.only('String', () => {
+  describe('String', () => {
   
     it('shuffle() returns a shuffled value', function() {
       const array = [0,1,2,3,4,5];

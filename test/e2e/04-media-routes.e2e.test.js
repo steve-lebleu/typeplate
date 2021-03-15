@@ -12,7 +12,7 @@ var { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 var fixtures = require(process.cwd() + '/test/utils/fixtures');
 var { doRequest, doQueryRequest, doFormRequest, expectations, dataOk, pools } = require(process.cwd() + '/test/utils');
 
-describe.only('Media routes', function () {
+describe('Media routes', function () {
   
   
   var agent, password, credentials, token, unauthorizedToken, user, images, documents, archives;

@@ -12,7 +12,7 @@ var { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 
 // --- API utils
 
-var { crypt } = require(process.cwd() + '/dist/api/utils/string.util');
+var { encrypt } = require(process.cwd() + '/dist/api/utils/string.util');
 
 // --- Test utils
 
@@ -31,7 +31,7 @@ describe('Authentification routes', function () {
       agent       = request.agent(server);
       password    = 'e2q2mak7';
       credentials = fixtures.user.entity('admin', password);
-      apikey      = crypt(credentials.email + process.env.JWT_SECRET, 64);
+      apikey      = encrypt(credentials.email);
 
       doRequest(agent, 'post', '/api/v1/auth/register', null, null, credentials, 201, function(err, res) {
         expect(res.statusCode).to.eqls(201);

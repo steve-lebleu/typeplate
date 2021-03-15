@@ -1,5 +1,4 @@
 import * as Multer from 'multer';
-import * as Pluralize from 'pluralize';
 import * as filenamify from 'filenamify';
 
 import { unsupportedMediaType } from '@hapi/boom';
@@ -12,7 +11,7 @@ import { IMedia } from '@interfaces/IMedia.interface';
 import { IStorage } from '@interfaces/IStorage.interface';
 import { IUpload } from '@interfaces/IUpload.interface';
 
-import { foldername, extension, fieldname } from '@utils/string.util';
+import { foldername, extension, getTypeOfMedia } from '@utils/string.util';
 import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
 
 class UploadConfiguration {
@@ -76,7 +75,7 @@ class UploadConfiguration {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return Multer.diskStorage({
       destination: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
-        let towards = `${destination}/${Pluralize(fieldname(file.mimetype)) as string}`;
+        let towards = `${destination}/${getTypeOfMedia(file.mimetype)}s`;
         if (IMAGE_MIME_TYPE[file.mimetype]) {
           towards += `/${SCALING.PATH_MASTER}`;
         }

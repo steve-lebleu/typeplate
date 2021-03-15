@@ -3,8 +3,7 @@ require('module-alias/register');
 import * as Moment from 'moment-timezone';
 import { EventSubscriber, EntitySubscriberInterface, UpdateEvent } from 'typeorm';
 import { User } from '@models/user.model';
-import { crypt } from '@utils/string.util';
-import { JWT } from '@config/environment.config';
+import { encrypt } from '@utils/string.util';
 
 /**
  *
@@ -25,7 +24,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
    * @description Called after media deletetion.
    */
   beforeInsert(event: UpdateEvent<User>): void {
-    event.entity.apikey = crypt(event.entity.email + JWT.SECRET, 64);
+    event.entity.apikey = encrypt(event.entity.email);
     event.entity.createdAt = Moment( new Date() ).utc(true).toDate();
   }
 
@@ -33,7 +32,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
    * @description Called after media deletetion.
    */
   beforeUpdate(event: UpdateEvent<User>): void {
-    event.entity.apikey = crypt(event.entity.email + JWT.SECRET, 64)
+    event.entity.apikey = encrypt(event.entity.email)
     event.entity.updatedAt = Moment( new Date() ).utc(true).toDate();
   }
 

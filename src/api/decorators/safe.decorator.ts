@@ -16,22 +16,15 @@ const safe = ( target: Controller, key: string ): any => {
     if (result && result instanceof Promise) {
       result
         .then(() => next())
-        .catch(e => next(e));
+        .catch(e => {
+          if (files && files.length > 0) {
+            files.map(f => remove(f))
+          }
+          next(e);
+        });
     }
   }
   return target[key] as (req, res, next) => void;
 }
 
 export { safe }
-
-/**
- * TODO fallback in catch
- * .catch(e => {
-          console.log('Catched by decorator', e);
-          if (files.length > 0) {
-            console.log('Files foreach');
-            files.forEach(file => remove(file));
-          }
-          return next(e); scope of next is not accessible
-        });
- */

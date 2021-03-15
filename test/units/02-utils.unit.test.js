@@ -5,7 +5,7 @@ const { MEDIA } = require(process.cwd() + '/dist/api/types/enums/media.enum');
 const { getAge } = require(process.cwd() + '/dist/api/utils/date.util');
 const { getErrorStatusCode } = require(process.cwd() + '/dist/api/utils/error.util');
 const { list } = require(process.cwd() + '/dist/api/utils/enum.util');
-const { fieldname, hash, crypt, shuffle, base64Decode, base64Encode } = require(process.cwd() + '/dist/api/utils/string.util');
+const { getTypeOfMedia, getMimeTypesOfType, hash, encrypt, decrypt, shuffle, base64Decode, base64Encode } = require(process.cwd() + '/dist/api/utils/string.util');
 
 
 var fs = require('fs');
@@ -64,7 +64,7 @@ describe('Utils', () => {
   
   });
 
-  describe('String', () => {
+  describe.only('String', () => {
   
     it('shuffle() returns a shuffled value', function() {
       const array = [0,1,2,3,4,5];
@@ -99,26 +99,38 @@ describe('Utils', () => {
       fs.unlinkSync(copy);
       done();
     });
+
+    it('decrypt() should returns original string', function() {
+      const string = 'totowasaheroes';
+      const encrypted = encrypt(string);
+      expect(decrypt(encrypted)).to.be.eqls(string)
+    });
+
+    it('encrypt() should returns encrypted string', function() {
+      const string = 'totowasaheroes';
+      expect(encrypt(string)).to.be.not.eqls(string)
+    });
     
-    it('fieldname() should returns audio', function() {
-      expect(fieldname('audio/mp3')).to.be.eqls('audio');
+    it('getTypeOfMedia() should returns audio', function() {
+      expect(getTypeOfMedia('audio/mp3')).to.be.eqls('audio');
     });
 
-    it('fieldname() should returns archive', function() {
-      expect(fieldname('application/zip')).to.be.eqls('archive');
+    it('getTypeOfMedia() should returns archive', function() {
+      expect(getTypeOfMedia('application/zip')).to.be.eqls('archive');
     });
 
-    it('fieldname() should returns document', function() {
-      expect(fieldname('application/pdf')).to.be.eqls('document');
+    it('getTypeOfMedia() should returns document', function() {
+      expect(getTypeOfMedia('application/pdf')).to.be.eqls('document');
     });
 
-    it('fieldname() should returns image', function() {
-      expect(fieldname('image/jpg')).to.be.eqls('image');
+    it('getTypeOfMedia() should returns image', function() {
+      expect(getTypeOfMedia('image/jpg')).to.be.eqls('image');
     });
 
-    it('fieldname() should returns video', function() {
-      expect(fieldname('video/mp4')).to.be.eqls('video');
+    it('getTypeOfMedia() should returns video', function() {
+      expect(getTypeOfMedia('video/mp4')).to.be.eqls('video');
     });
+
   });
 
 });

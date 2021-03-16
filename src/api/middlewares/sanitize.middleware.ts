@@ -7,27 +7,52 @@ import { IResponse } from '@interfaces';
 import { SanitizeService } from '@services/sanitizer.service';
 
 /**
- * @description Clean current data before output if the context requires it
- *
- * @param req Express Request instance
- * @param res Express Response instance
- * @param next Callback function
+ * @description
  */
-const Sanitize = async (req: Request, res: IResponse, next: () => void): Promise<void>  => {
+ class Sanitize {
 
-  const hasContent = typeof res.locals.data !== 'undefined';
+  /**
+   * @description
+   */
+  private static instance: Sanitize;
 
-  if (req.method === 'DELETE' || CONTENT_TYPE !== CONTENT_TYPE_ENUM['application/json'] || !hasContent) {
-    return next();
+  private constructor() {}
+
+  /**
+   * @description
+   */
+  static get(): Sanitize {
+    if (!Sanitize.instance) {
+      Sanitize.instance = new Sanitize();
+    }
+    return Sanitize.instance;
   }
 
-  if ( !SanitizeService.hasEligibleMember(res.locals.data) ) {
-    return next();
+  /**
+   * @description Clean current data before output if the context requires it
+   *
+   * @param req Express Request instance
+   * @param res Express Response instance
+   * @param next Callback function
+   */
+   async sanitize(req: Request, res: IResponse, next: () => void): Promise<void> {
+
+    const hasContent = typeof res.locals.data !== 'undefined';
+
+    if (req.method === 'DELETE' || CONTENT_TYPE !== CONTENT_TYPE_ENUM['application/json'] || !hasContent) {
+      return next();
+    }
+
+    if ( !SanitizeService.hasEligibleMember(res.locals.data) ) {
+      return next();
+    }
+
+    res.locals.data = SanitizeService.process(res.locals.data);
+
+    next();
   }
-
-  res.locals.data = SanitizeService.process(res.locals.data);
-
-  next();
 }
 
-export { Sanitize }
+const sanitize = Sanitize.get();
+
+export { sanitize as Sanitize };

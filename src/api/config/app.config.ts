@@ -105,7 +105,7 @@ export class ExpressConfiguration {
     /**
      * Check headers validity
      */
-    this.application.use( Kors(CONTENT_TYPE) );
+    this.application.use( Kors.validate );
 
     /**
      * Expose body on req.body
@@ -187,7 +187,7 @@ export class ExpressConfiguration {
      * - Sanitizer
      * - Resolver
      */
-    this.application.use(`/api/${API_VERSION}`, RateLimit(this.options.rate), Cache, ProxyRouter.map(), Sanitize, Resolve);
+    this.application.use(`/api/${API_VERSION}`, RateLimit(this.options.rate), Cache.read, ProxyRouter.map(), Sanitize.sanitize, Resolve.write);
 
     /**
      * Desktop error notification

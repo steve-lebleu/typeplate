@@ -13,9 +13,24 @@ import { IHTTPError } from '@interfaces';
  *
  * @see https://www.npmjs.com/package/node-notifier
  */
-export class Catch {
+class Catch {
 
-  constructor() {}
+  /**
+   * @description
+   */
+   private static instance: Catch;
+
+   private constructor() {}
+
+   /**
+    * @description
+    */
+  static get(): Catch {
+    if (!Catch.instance) {
+      Catch.instance = new Catch();
+    }
+    return Catch.instance;
+  }
 
   /**
    * @description Display error in desktop notification
@@ -28,13 +43,13 @@ export class Catch {
    * @require libnotify-bin
    * @require node-notifier
    */
-  static notification = (err: Error, req: Request, res: Response, next: (e: Error, req, res, next) => void): void => {
+  notification(err: Error, req: Request, res: Response, next: (e: Error, req, res, next) => void): void {
     notify({
       title: `Error in ${req.method} ${req.url}`,
       message : err.name + '\n' + err.stack ? err.stack : err.message
     });
     next(err, req, res, next);
-  };
+  }
 
   /**
    * @description
@@ -44,7 +59,7 @@ export class Catch {
    * @param res
    * @param next
    */
-  static factory = (err: Error, req: Request, res: Response, next: (e: IHTTPError, req, res) => void): void => {
+  factory(err: Error, req: Request, res: Response, next: (e: IHTTPError, req, res) => void): void {
     next(ErrorFactory.get(err), req, res);
   }
 
@@ -56,10 +71,10 @@ export class Catch {
    * @param res Express response object
    * @param next Callback function
    */
-  static log = (err: IHTTPError, req: Request, res: Response, next: (e: IHTTPError, req, res) => void): void => {
+  log(err: IHTTPError, req: Request, res: Response, next: (e: IHTTPError, req, res) => void): void {
     Logger.log('error', `${req.headers['x-forwarded-for'] as string || req.connection.remoteAddress} HTTP/${req.httpVersion} ${err.statusCode} ${req.method} ${req.url} ${err.stack ? '\n' + err.stack : err.errors.slice().shift()}`);
     next(err, req, res);
-  };
+  }
 
   /**
    * @description Display clean error for final user
@@ -68,10 +83,10 @@ export class Catch {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  static exit = (err: IHTTPError, req: Request, res: Response, next: (e: Error, req, res) => void): void => {
+  exit(err: IHTTPError, req: Request, res: Response, next: (e: Error, req, res) => void): void {
     res.status( err.statusCode );
     res.json( { statusCode: err.statusCode, statusText: err.statusText, errors: err.errors } );
-  };
+  }
 
   /**
    * @description Display clean 404 error for final user
@@ -79,9 +94,13 @@ export class Catch {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  static notFound = (req: Request, res: Response): void => {
+  notFound(req: Request, res: Response): void {
     res.status( 404 );
     res.json( { statusCode: 404, statusText: 'Ooops... end point was not found', errors: ['Looks like someone\'s gone mushroom picking\''] } );
-  };
+  }
 
 }
+
+const catcher = Catch.get();
+
+export { catcher as Catch }

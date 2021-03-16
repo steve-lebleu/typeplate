@@ -67,6 +67,23 @@ const handleOauth = (req: IUserRequest, res: IResponse, next: (error?: Error) =>
 class Guard {
 
   /**
+   * @description
+   */
+  private static instance: Guard;
+
+  private constructor() {}
+
+   /**
+    * @description
+    */
+  static get(): Guard {
+    if (!Guard.instance) {
+      Guard.instance = new Guard();
+    }
+    return Guard.instance;
+  }
+
+  /**
    * @description Authorize user access according to role(s) in arguments
    *
    * @param roles
@@ -74,7 +91,7 @@ class Guard {
    * @dependency passport
    * @see http://www.passportjs.org/
    */
-  static authorize = (roles = list(ROLE)) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => authenticate( 'jwt', { session: false }, handleJWT(req, res, next, roles) )(req, res, next);
+  authorize = (roles = list(ROLE)) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => authenticate( 'jwt', { session: false }, handleJWT(req, res, next, roles) )(req, res, next);
 
   /**
    * @description Authorize user access according to service.access_token
@@ -84,7 +101,7 @@ class Guard {
    * @dependency passport
    * @see http://www.passportjs.org/
    */
-  static oAuth = (service: OAuthProvider) => authenticate(service, { session: false });
+  oAuth = (service: OAuthProvider) => authenticate(service, { session: false });
 
   /**
    * @description
@@ -94,8 +111,10 @@ class Guard {
    * @dependency passport
    * @see http://www.passportjs.org/
    */
-  static oAuthCallback = (service: OAuthProvider) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => authenticate(service, { session: false }, handleOauth(req, res, next) ) (req, res, next);
+  oAuthCallback = (service: OAuthProvider) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => authenticate(service, { session: false }, handleOauth(req, res, next) ) (req, res, next);
 
 }
 
-export { Guard }
+const guard = Guard.get();
+
+export { guard as Guard }

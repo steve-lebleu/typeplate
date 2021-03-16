@@ -12,9 +12,24 @@ import { safe } from '@decorators/safe.decorator';
 /**
  * Manage incoming requests from api/{version}/auth
  */
-export class AuthController {
+class AuthController {
 
-  constructor() {}
+  /**
+   * @description
+   */
+  private static instance: AuthController;
+
+  private constructor() {}
+
+  /**
+   * @description
+   */
+  static get(): AuthController {
+    if (!AuthController.instance) {
+      AuthController.instance = new AuthController();
+    }
+    return AuthController.instance;
+  }
 
   /**
    * @description Creates and save new user
@@ -23,7 +38,7 @@ export class AuthController {
    * @param res Express response object
    */
   @safe
-  static async register(req: Request, res: IResponse): Promise<void> {
+  async register(req: Request, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = new User(req.body);
     await repository.insert(user);
@@ -38,7 +53,7 @@ export class AuthController {
    * @param res Express response object
    */
   @safe
-  static async login(req: Request, res: IResponse): Promise<void> {
+  async login(req: Request, res: IResponse): Promise<void> {
     const repository = getCustomRepository(UserRepository);
     const { user, accessToken } = await repository.findAndGenerateToken(req.body);
     const token = await AuthService.generateTokenResponse(user, accessToken);
@@ -52,7 +67,7 @@ export class AuthController {
    * @param res Express response object
    */
   @safe
-  static async oAuth (req: IUserRequest, res: IResponse): Promise<void> {
+  async oAuth (req: IUserRequest, res: IResponse): Promise<void> {
     const user = req.user as User;
     const accessToken = user.token();
     const token = await AuthService.generateTokenResponse(user, accessToken);
@@ -66,7 +81,7 @@ export class AuthController {
    * @param res Express response object
    */
   @safe
-  static async refresh(req: Request, res: IResponse, next: (e?: Error) => void): Promise<void> {
+  async refresh(req: Request, res: IResponse, next: (e?: Error) => void): Promise<void> {
     const refreshTokenRepository = getRepository(RefreshToken);
     const userRepository = getCustomRepository(UserRepository);
 
@@ -89,3 +104,7 @@ export class AuthController {
     res.locals.data = { token: response };
   }
 }
+
+const authController = AuthController.get();
+
+export { authController as AuthController }

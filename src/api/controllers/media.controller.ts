@@ -13,8 +13,22 @@ import { Media } from '@models/media.model';
  */
 class MediaController {
 
-  /** */
-  constructor() { }
+  /**
+   * @description
+   */
+   private static instance: MediaController;
+
+   private constructor() {}
+
+    /**
+     * @description
+     */
+  static get(): MediaController {
+    if (!MediaController.instance) {
+      MediaController.instance = new MediaController();
+    }
+    return MediaController.instance;
+  }
 
   /**
    * @description Retrieve one document according to :documentId
@@ -25,7 +39,7 @@ class MediaController {
    * @public
    */
   @safe
-  static async get(req: IMediaRequest, res: IResponse): Promise<void> {
+  async get(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
     const media = await repository.findOneOrFail(req.params.mediaId, { relations: ['owner'] });
     res.locals.data = media;
@@ -38,7 +52,7 @@ class MediaController {
    * @param res Express response object
    */
   @safe
-  static async list (req: IMediaRequest, res: IResponse): Promise<void> {
+  async list (req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(MediaRepository);
     const medias = await repository.list(req.query);
     res.locals.data = medias;
@@ -53,7 +67,7 @@ class MediaController {
    * @public
    */
   @safe
-  static async create(req: IMediaRequest, res: IResponse): Promise<void> {
+  async create(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
     const medias = [].concat(req.files).map( (file) => new Media(file));
     await repository.save(medias);
@@ -69,7 +83,7 @@ class MediaController {
    * @public
    */
   @safe
-  static async update(req: IMediaRequest, res: IResponse): Promise<void> {
+  async update(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
     const media = clone(res.locals.data) as Media;
     repository.merge(media, req.files[0] as unknown);
@@ -86,11 +100,13 @@ class MediaController {
    * @public
    */
   @safe
-  static async remove (req: IMediaRequest, res: IResponse): Promise<void> {
+  async remove (req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
     const media = clone(res.locals.data) as Media;
     await repository.remove(media);
   }
 }
 
-export { MediaController };
+const mediaController = MediaController.get();
+
+export { mediaController as MediaController }

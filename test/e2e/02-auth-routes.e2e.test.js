@@ -2,13 +2,16 @@
 
 var request = require('supertest');
 var chance = require('chance').Chance();
-
+var sinon = require('sinon');
 var { clone } = require('lodash');
 var { expect } = require('chai');
 
 // --- API server
 
 var { server } = require(process.cwd() + '/dist/api/app.bootstrap');
+var { User } = require(process.cwd() + '/dist/api/models/user.model');
+
+var Guard = require(process.cwd() + '/dist/api/middlewares/guard.middleware');
 
 // --- API utils
 
@@ -17,12 +20,12 @@ var { encrypt } = require(process.cwd() + '/dist/api/utils/string.util');
 // --- Test utils
 
 var fixtures = require(process.cwd() + '/test/utils/fixtures');
-var { doRequest } = require(process.cwd() + '/test/utils');
+var { doRequest, doQueryRequest, doOauth } = require(process.cwd() + '/test/utils');
 
 
 describe('Authentification routes', function () {
   
-  var agent, password, credentials, token, refreshToken, apikey;
+  var agent, password, credentials, token, refreshToken, apikey, user;
   
   before(function (done) {
 
@@ -39,6 +42,7 @@ describe('Authentification routes', function () {
         doRequest(agent, 'post', '/api/v1/auth/register', null, null, fixtures.user.entity('user', password), 201, function(err, res) {
           expect(res.statusCode).to.eqls(201);
           unauthorizedToken = res.body.token.accessToken;
+          user = res.body.user;
           done();
         });
       });
@@ -176,46 +180,99 @@ describe('Authentification routes', function () {
 
   describe('OAuth', function() {
 
-    describe('Facebook', function() {
+    ['facebook', 'github', 'google', 'linkedin'].forEach(provider => {
 
-      it.skip('GET /api/v1/auth/facebook 302 - oauth redirection is ok', function (done) {
-        doRequest(agent, 'get', '/api/v1/auth/facebook', null, null, {}, 302, function(err, res) {
-          expect(res.statusCode).to.eqls(302);
-          done();
+      describe(provider, function() {
+
+        it.skip(`GET /api/v1/auth/${provider} 302 - oauth redirection is ok`, function (done) {
+          doQueryRequest(agent, `/api/v1/auth/${provider}`, null, null, {}, 302, function(err, res) {
+            expect(res.statusCode).to.eqls(302);
+            done();
+          });
         });
-      });
-
-    });
-    
-    describe('Google', function() {
-
-      it.skip('GET /api/v1/auth/google 302 - oauth redirection is ok', function (done) {
-        doRequest(agent, 'get', '/api/v1/auth/google', null, null, {}, 302, function(err, res) {
-          expect(res.statusCode).to.eqls(302);
-          done();
+  
+        it(`GET /api/v1/auth/${provider}/callback 400 - code is required`, function (done) {
+          doQueryRequest(agent, `/api/v1/auth/${provider}/callback`, null, null, {}, 400, function(err, res) {
+            expect(res.statusCode).to.eqls(400);
+            done();
+          });
         });
-      });
-
-    });
-
-    describe('Github', function() {
-
-      it.skip('GET /api/v1/auth/github 302 - oauth redirection is ok', function (done) {
-        doRequest(agent, 'get', '/api/v1/auth/github', null, null, {}, 302, function(err, res) {
-          expect(res.statusCode).to.eqls(302);
-          done();
+        
+        it(`GET /api/v1/auth/${provider}/callback 400 - invalid verification code format`, function (done) {
+          doQueryRequest(agent, `/api/v1/auth/${provider}/callback`, null, null, { code: 'thisisacode' }, 400, function(err, res) {
+            expect(res.statusCode).to.eqls(400);
+            done();
+          });
         });
-      });
-
-    });
-
-    describe('Linkedin', function() {
-
-      it.skip('GET /api/v1/auth/linkedin 302 - oauth redirection is ok', function (done) {
-        doRequest(agent, 'get', '/api/v1/auth/linkedin', null, null, {}, 302, function(err, res) {
-          expect(res.statusCode).to.eqls(302);
-          done();
+  
+        it(`GET /api/v1/auth/${provider}/callback 400 - authentication failed`, (done) => {
+  
+          const stub = sinon.stub(Guard.Guard, 'oAuthentify');
+  
+          stub.callsFake((...args) => {
+            args[4](args[0], args[1], args[2])( new Error('bad'), null )
+            return ({ err: null, user: { username: 'YODA' } })
+          });
+  
+          doQueryRequest(agent, `/api/v1/auth/${provider}/callback`, null, null, { code: 'thisisacode' }, 400, function(err, res) {
+            expect(res.statusCode).to.eqls(400);
+            stub.restore();
+            done();
+          });
         });
+  
+        it(`GET /api/v1/auth/${provider}/callback 403 - forbidden role`, (done) => {
+  
+          const stub = sinon.stub(Guard.Guard, 'oAuthentify');
+  
+          stub.callsFake((...args) => {
+            args[4](args[0], args[1], args[2])( null, { username: 'YODA', role: 'supersayen' } )
+            return ({ err: null, user: { username: 'YODA' } })
+          });
+  
+          doQueryRequest(agent, `/api/v1/auth/${provider}/callback`, null, null, { code: 'thisisacode' }, 403, function(err, res) {
+            expect(res.statusCode).to.eqls(403);
+            stub.restore();
+            done();
+          });
+        });
+  
+        it(`GET /api/v1/auth/${provider}/callback 404 - user not found at provider`, (done) => {
+  
+          const stub = sinon.stub(Guard.Guard, 'oAuthentify');
+  
+          stub.callsFake((...args) => {
+            args[4](args[0], args[1], args[2])( null, null )
+            return ({ err: null, user: { username: 'YODA' } })
+          });
+  
+          doQueryRequest(agent, `/api/v1/auth/${provider}/callback`, null, null, { code: 'thisisacode' }, 404, function(err, res) {
+            expect(res.statusCode).to.eqls(404);
+            stub.restore();
+            done();
+          });
+        });
+  
+        it(`GET /api/v1/auth/${provider}/callback 200 - credentials received`, (done) => {
+  
+          const stub = sinon.stub(Guard.Guard, 'oAuthentify');
+  
+          stub.callsFake((...args) => {
+            args[4](args[0], args[1], args[2])( null, new User(user))
+            return ({ err: null, user: { username: 'YODA' } })
+          });
+  
+          doQueryRequest(agent, `/api/v1/auth/${provider}/callback`, null, null, { code: 'thisisacode' }, 200, function(err, res) {
+            expect(res.statusCode).to.eqls(200);
+            expect(res.body).to.haveOwnProperty('token');
+            expect(res.body.token).to.haveOwnProperty('tokenType');
+            expect(res.body.token.tokenType).to.be.eqls('Bearer');
+            expect(res.body).to.haveOwnProperty('user');
+            stub.restore()
+            done();
+          });
+        });
+  
       });
 
     });

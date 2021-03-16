@@ -128,7 +128,7 @@ describe('Config', function () {
   
   });
 
-  describe('Typeorm', () => {
+  describe('Database', () => {
 
     it('Database.connect() should failed', async () => {  
       const options = clone(TYPEORM);
@@ -139,7 +139,7 @@ describe('Config', function () {
         expect(e.name).to.be.eqls('MissingDriverError');
       });
     })
-    
+
   });
 
 });

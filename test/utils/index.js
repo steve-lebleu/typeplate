@@ -1,5 +1,8 @@
 var { expect } = require('chai');
 var { existsSync }= require('fs');
+var sinon = require('sinon')
+
+
 
 var Util = require('util');
 
@@ -18,6 +21,20 @@ const _doRequest = (agent, method, route, id, token, payload, status, callback) 
     .set('Content-Type', process.env.CONTENT_TYPE)
     .set('Origin', process.env.ORIGIN)
     .send(payload)
+    .expect(status)
+    .end(function(err, res) {
+      callback(err, res);
+    });
+};
+
+const _doQueryRequest = (agent, route, id, token, payload, status, callback) => {
+  const path = id !== null ? `${route}${id}` : route;
+  return agent.get(path)
+    .set('Authorization', 'Bearer ' + token)
+    .set('Accept', process.env.CONTENT_TYPE)
+    .set('Content-Type', process.env.CONTENT_TYPE)
+    .set('Origin', process.env.ORIGIN)
+    .query(payload)
     .expect(status)
     .end(function(err, res) {
       callback(err, res);
@@ -50,19 +67,7 @@ exports.statusCodes = {
 
 exports.doRequest = _doRequest;
 
-exports.doQueryRequest = (agent, route, id, token, payload, status, callback) => {
-  const path = id !== null ? `${route}${id}` : route;
-  return agent.get(path)
-    .set('Authorization', 'Bearer ' + token)
-    .set('Accept', process.env.CONTENT_TYPE)
-    .set('Content-Type', process.env.CONTENT_TYPE)
-    .set('Origin', process.env.ORIGIN)
-    .query(payload)
-    .expect(status)
-    .end(function(err, res) {
-      callback(err, res);
-    });
-};
+exports.doQueryRequest = _doQueryRequest;
 
 exports.doFormRequest = (agent, method, route, id, token, payload, status, callback) => {
   const path = id !== null ? `${route}${id}` : route;

@@ -15,5 +15,6 @@ describe('Units tests', () => {
   require('./02-utils.unit.test');
   require('./03-services.unit.test');
   require('./04-middlewares.unit.test');
+  require('./05-factories.unit.test');
 
 });

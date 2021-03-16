@@ -23,28 +23,6 @@ class SanitizeService {
   }
 
   /**
-   * @description Whitelist an entity
-   *
-   * @param whitelist Whitelisted properties
-   * @param entity Entity to sanitize
-   *
-   */
-  sanitize(entity: IModel): Record<string, unknown> {
-    const output = {} as Record<string, unknown>;
-    Object.keys(entity)
-      .map( (key) => {
-        if (entity.whitelist.includes(key) || entity.whitelist.includes(Pluralize(key))) {
-          if( this.isSanitizable( entity[key] ) ) {
-            output[key] = Array.isArray(entity[key]) ? [].concat(entity[key]).map( (model: IModel) => this.sanitize(model) ) : this.sanitize(entity[key]);
-          } else {
-            output[key] = entity[key];
-          }
-        }
-    });
-    return output;
-  }
-
-  /**
    * @description
    *
    * @param data
@@ -75,6 +53,28 @@ class SanitizeService {
           return acc as Record<string,unknown>;
         }, {}) as Record<string,unknown>;
     }
+  }
+
+  /**
+   * @description Whitelist an entity
+   *
+   * @param whitelist Whitelisted properties
+   * @param entity Entity to sanitize
+   *
+   */
+  private sanitize(entity: IModel): Record<string, unknown> {
+    const output = {} as Record<string, unknown>;
+    Object.keys(entity)
+      .map( (key) => {
+        if (entity.whitelist.includes(key) || entity.whitelist.includes(Pluralize(key))) {
+          if( this.isSanitizable( entity[key] ) ) {
+            output[key] = Array.isArray(entity[key]) ? [].concat(entity[key]).map( (model: IModel) => this.sanitize(model) ) : this.sanitize(entity[key]);
+          } else {
+            output[key] = entity[key];
+          }
+        }
+    });
+    return output;
   }
 
   /**

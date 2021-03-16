@@ -28,7 +28,7 @@ class SanitizeService {
    * @param data
    */
   hasEligibleMember(data): boolean {
-    return ( this.implementsWhitelist(data) && !Array.isArray(data) ) || ( Array.isArray(data) && [].concat(data).some(obj => this.implementsWhitelist(obj) ) )
+    return ( this.implementsWhitelist(data) && !Array.isArray(data) ) || ( Array.isArray(data) && [].concat(data).some(obj => this.implementsWhitelist(obj) ) || ( isObject(data) && Object.keys(data).some(key => this.implementsWhitelist(data[key]) ) ) )
   }
 
   /**
@@ -67,6 +67,7 @@ class SanitizeService {
     Object.keys(entity)
       .map( (key) => {
         if (entity.whitelist.includes(key) || entity.whitelist.includes(Pluralize(key))) {
+          output[key] = entity[key];
           if( this.isSanitizable( entity[key] ) ) {
             output[key] = Array.isArray(entity[key]) ? [].concat(entity[key]).map( (model: IModel) => this.sanitize(model) ) : this.sanitize(entity[key]);
           } else {

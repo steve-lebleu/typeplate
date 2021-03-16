@@ -5,7 +5,6 @@ const chars    = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p
 const numbers  = [0,1,2,3,4,5,6,7,8,9];
 const roles    = ["admin", "user", "ghost"];
 
-
 const shuffle = (a) => {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

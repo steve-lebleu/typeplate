@@ -87,7 +87,8 @@ export class Media implements IModel {
       'url',
       'size',
       'createdAt',
-      'updatedAt'
+      'updatedAt',
+      'owner'
     ];
   }
 

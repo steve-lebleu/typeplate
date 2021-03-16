@@ -14,23 +14,31 @@ describe('Utils', () => {
 
   describe('Date', () => {
 
-    it('getAge() should return 41 as a number', function(done) {
-      const result = getAge(new Date(1979,7,28).toDateString());
-      expect(result).to.eqls(41);
-      done();
+    describe('getAge()', () => {
+
+      it('should return 41 as a number', function(done) {
+        const result = getAge(new Date(1979,7,28).toDateString());
+        expect(result).to.eqls(41);
+        done();
+      });
+  
     });
 
   });
 
   describe('Enum', () => {
 
-    it('list() should return an array of strings', function(done) {
-      const result = list(MEDIA);
-      expect(result).to.an('array');
-      result.forEach(element => {
-        expect(element).to.be.a('string');
+    describe('list()', () => {
+
+      it('should return an array of strings', function(done) {
+        const result = list(MEDIA);
+        expect(result).to.an('array');
+        result.forEach(element => {
+          expect(element).to.be.a('string');
+        });
+        done();
       });
-      done();
+  
     });
 
   });

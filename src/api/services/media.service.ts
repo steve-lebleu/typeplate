@@ -6,7 +6,7 @@ import { expectationFailed } from '@hapi/boom';
 
 import { Media } from '@models/media.model';
 import { SCALING } from '@config/environment.config';
-import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
+import { IMAGE_MIME_TYPE } from '@enums';
 
 /**
  * @description

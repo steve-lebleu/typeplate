@@ -3,7 +3,7 @@ import { Guard } from '@middlewares/guard.middleware';
 import { Validate } from '@middlewares/validate.middleware';
 import { Upload } from '@middlewares/upload.middleware';
 import { MediaController } from '@controllers/media.controller';
-import { ROLES } from '@enums/role.enum';
+import { ROLE } from '@enums/role.enum';
 
 import { listMedias, insertMedia, getMedia, replaceMedia, updateMedia, removeMedia } from '@validations/media.validation';
 
@@ -112,7 +112,7 @@ export class MediaRouter extends Router {
        * }
        *
        */
-      .get(Guard.authorize([ROLES.admin, ROLES.user]), Validate(listMedias), MediaController.list)
+      .get(Guard.authorize([ROLE.admin, ROLE.user]), Validate(listMedias), MediaController.list)
 
       /**
        * @api {post} api/v1/medias Create media(s)
@@ -190,7 +190,7 @@ export class MediaRouter extends Router {
        * }
        *
        */
-      .post(Guard.authorize([ROLES.admin, ROLES.user]), Upload(), Validate(insertMedia), MediaController.create);
+      .post(Guard.authorize([ROLE.admin, ROLE.user]), Upload(), Validate(insertMedia), MediaController.create);
 
     this.router.route('/:mediaId')
 
@@ -275,7 +275,7 @@ export class MediaRouter extends Router {
        *    ]
        * }
        */
-      .get(Guard.authorize([ROLES.admin, ROLES.user]), Validate(getMedia), MediaController.get)
+      .get(Guard.authorize([ROLE.admin, ROLE.user]), Validate(getMedia), MediaController.get)
 
       /**
        * @api {put} api/v1/medias/:id Replace media
@@ -358,7 +358,7 @@ export class MediaRouter extends Router {
        *    ]
        * }
        */
-      .put(Guard.authorize([ROLES.admin, ROLES.user]), Validate(replaceMedia), MediaController.get, Upload(), Validate(insertMedia), MediaController.update)
+      .put(Guard.authorize([ROLE.admin, ROLE.user]), Validate(replaceMedia), MediaController.get, Upload(), Validate(insertMedia), MediaController.update)
 
       /**
        * @api {patch} api/v1/medias/:id Update media
@@ -441,7 +441,7 @@ export class MediaRouter extends Router {
        *    ]
        * }
        */
-      .patch(Guard.authorize([ROLES.admin, ROLES.user]), Validate(updateMedia), MediaController.get, Upload(), MediaController.update)
+      .patch(Guard.authorize([ROLE.admin, ROLE.user]), Validate(updateMedia), MediaController.get, Upload(), MediaController.update)
 
       /**
        * @api {patch} api/v1/medias/:id Delete media
@@ -502,7 +502,7 @@ export class MediaRouter extends Router {
        *    ]
        * }
        */
-      .delete(Guard.authorize([ROLES.admin, ROLES.user]), Validate(removeMedia), MediaController.get, MediaController.remove);
+      .delete(Guard.authorize([ROLE.admin, ROLE.user]), Validate(removeMedia), MediaController.get, MediaController.remove);
 
   }
 }

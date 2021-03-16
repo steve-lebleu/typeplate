@@ -2,10 +2,12 @@ import { existsSync } from 'fs';
 
 import { config as Dotenv } from 'dotenv';
 
-import { DATABASE, DATABASE_ENGINE } from '@enums/database-engine.enum';
-import { MOMENT_UNIT } from '@enums/moment-unity.enum';
+import { DATABASE_ENGINE } from '@enums/database-engine.enum';
+import { MomentUnit } from '@customtypes/moment-unit.type';
 import { ENVIRONMENT } from '@enums/environment.enum';
-import { ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE, CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
+import { ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE, CONTENT_TYPE as CONTENT_TYPE_ENUM } from '@enums';
+
+import { DatabaseEngine } from '@customtypes/database-engine.type';
 
 import { list } from '@utils/enum.util';
 
@@ -156,10 +158,10 @@ export class Environment {
        * @default application/json
        */
       CONTENT_TYPE: (value: string) => {
-        if (value && !CONTENT_MIME_TYPE[value]) {
-          this.errors.push(`CONTENT_TYPE bad value: please fill a supported Content-Type must be one of ${list(CONTENT_MIME_TYPE).join(',')}`);
+        if (value && !CONTENT_TYPE_ENUM[value]) {
+          this.errors.push(`CONTENT_TYPE bad value: please fill a supported Content-Type must be one of ${list(CONTENT_TYPE_ENUM).join(',')}`);
         }
-        return value || CONTENT_MIME_TYPE['application/json'];
+        return value || CONTENT_TYPE_ENUM['application/json'];
       },
 
       /**
@@ -366,11 +368,11 @@ export class Environment {
        *
        * @default 30
        */
-      REFRESH_TOKEN_UNIT: (value: string): MOMENT_UNIT => {
+      REFRESH_TOKEN_UNIT: (value: string): MomentUnit => {
         if(value && !['hours', 'days', 'weeks', 'months'].includes(value) ) {
           this.errors.push('REFRESH_TOKEN_UNIT bad value: unit must be one of hours, days, weeks, months.');
         }
-        return (value || 'days') as MOMENT_UNIT
+        return (value || 'days') as MomentUnit
       },
 
       /**
@@ -579,14 +581,14 @@ export class Environment {
        *
        * @default mysql
        */
-      TYPEORM_TYPE: (value: string): DATABASE => {
+      TYPEORM_TYPE: (value: string): DatabaseEngine => {
         if(!value) {
           this.errors.push('TYPEORM_TYPE not found: please define the database engine type.');
         }
         if(value && !DATABASE_ENGINE[value]) {
           this.errors.push(`TYPEORM_TYPE bad value: database engine must be one of following: ${list(DATABASE_ENGINE).join(',')}.`);
         }
-        return (value || 'mysql') as DATABASE
+        return (value || 'mysql') as DatabaseEngine
       },
 
       /**
@@ -870,11 +872,11 @@ type EnvOauth = { KEY: string, IS_ACTIVE: boolean, ID: string, SECRET: string, C
 type EnvJWT = { SECRET: string, EXPIRATION: number };
 type EnvMemoryCache = { IS_ACTIVE: boolean, DURATION: number };
 type EnvSSL = { IS_ACTIVE: boolean, CERT: string, KEY: string };
-type EnvTypeorm = { DB: string, NAME: string, TYPE: DATABASE, HOST: string, PORT: number, PWD: string, USER: string, SYNC: boolean, LOG: boolean, CACHE: boolean, ENTITIES: string, MIGRATIONS: string, SUBSCRIBERS: string };
+type EnvTypeorm = { DB: string, NAME: string, TYPE: DatabaseEngine, HOST: string, PORT: number, PWD: string, USER: string, SYNC: boolean, LOG: boolean, CACHE: boolean, ENTITIES: string, MIGRATIONS: string, SUBSCRIBERS: string };
 type EnvLog = { PATH: string, TOKEN: string };
 type EnvUpload = { MAX_FILE_SIZE: number, MAX_FILES: number, PATH: string, WILDCARDS: string[] };
 type EnvImageScaling = { IS_ACTIVE: boolean, PATH_MASTER: string, PATH_SCALE: string, SIZES: { XS: number, SM: number, MD: number, LG: number, XL: number } };
-type EnvRefreshToken = { DURATION: number, UNIT: MOMENT_UNIT };
+type EnvRefreshToken = { DURATION: number, UNIT: MomentUnit };
 
 const API_VERSION   = environment.cluster.API_VERSION as string;
 const AUTHORIZED    = environment.cluster.AUTHORIZED as string;

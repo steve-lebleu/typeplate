@@ -1,8 +1,7 @@
 import { Request } from 'express';
 
 import { CONTENT_TYPE } from '@config/environment.config';
-
-import { CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
+import { CONTENT_TYPE as CONTENT_TYPE_ENUM } from '@enums';
 import { IResponse } from '@interfaces/IResponse.interface';
 
 import { SanitizeService } from '@services/sanitizer.service';
@@ -18,7 +17,7 @@ const Sanitize = async (req: Request, res: IResponse, next: () => void): Promise
 
   const hasContent = typeof res.locals.data !== 'undefined';
 
-  if (req.method === 'DELETE' || CONTENT_TYPE !== CONTENT_MIME_TYPE['application/json'] || !hasContent) {
+  if (req.method === 'DELETE' || CONTENT_TYPE !== CONTENT_TYPE_ENUM['application/json'] || !hasContent) {
     return next();
   }
 

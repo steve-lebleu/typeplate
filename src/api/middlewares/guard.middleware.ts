@@ -3,7 +3,7 @@ import { promisify } from 'es6-promisify';
 import { forbidden, badRequest, notFound } from '@hapi/boom';
 
 import { User } from '@models/user.model';
-import { ROLES } from '@enums/role.enum';
+import { ROLE } from '@enums/role.enum';
 import { list } from '@utils/enum.util';
 import { IUserRequest } from '@interfaces/IUserRequest.interface';
 import { IResponse } from '@interfaces/IResponse.interface';
@@ -29,7 +29,7 @@ const handleJWT = (req: IUserRequest, res: IResponse, next: (error?: Error) => v
     return next( forbidden(e) );
   }
 
-  if (roles === ROLES.user && user.role !== ROLES.admin && parseInt(req.params.userId, 10) !== user.id ) {
+  if (roles === ROLE.user && user.role !== ROLE.admin && parseInt(req.params.userId, 10) !== user.id ) {
     return next( forbidden('Forbidden area') );
   } else if (!roles.includes(user.role)) {
     return next( forbidden('Forbidden area') );
@@ -55,7 +55,7 @@ const handleOauth = (req: IUserRequest, res: IResponse, next: (error?: Error) =>
     return next( badRequest(err?.message) );
   } else if (!user) {
     return next( notFound(err?.message) );
-  } else if (!list(ROLES).includes(user.role)) {
+  } else if (!list(ROLE).includes(user.role)) {
     return next( forbidden('Forbidden area') );
   }
 
@@ -74,7 +74,7 @@ class Guard {
    * @dependency passport
    * @see http://www.passportjs.org/
    */
-  static authorize = (roles = list(ROLES)) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => authenticate( 'jwt', { session: false }, handleJWT(req, res, next, roles) )(req, res, next);
+  static authorize = (roles = list(ROLE)) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => authenticate( 'jwt', { session: false }, handleJWT(req, res, next, roles) )(req, res, next);
 
   /**
    * @description Authorize user access according to service.access_token

@@ -12,7 +12,7 @@ import { IStorage } from '@interfaces/IStorage.interface';
 import { IUpload } from '@interfaces/IUpload.interface';
 
 import { foldername, extension, getTypeOfMedia } from '@utils/string.util';
-import { IMAGE_MIME_TYPE } from '@enums/mime-type.enum';
+import { IMAGE_MIME_TYPE } from '@enums';
 
 class UploadConfiguration {
 

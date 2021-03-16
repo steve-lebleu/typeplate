@@ -1,6 +1,6 @@
 import { notAcceptable } from '@hapi/boom';
 import { Request, Response } from 'express';
-import { CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
+import { CONTENT_TYPE } from '@enums';
 
 /**
  * @description Check header validity according to current request and current configuration requirements
@@ -17,7 +17,7 @@ const Cors = (contentType: string) => (req: Request, res: Response, next: (e?: E
     return next( notAcceptable(`Content-Type headers must be ${contentType} or 'multipart/form-data', ${req.headers['content-type']} given`) );
   }
 
-  if ( CONTENT_MIME_TYPE[contentType] !== req.headers['content-type'] && req.headers['content-type'].lastIndexOf(CONTENT_MIME_TYPE['multipart/form-data']) === -1 ) {
+  if ( CONTENT_TYPE[contentType] !== req.headers['content-type'] && req.headers['content-type'].lastIndexOf(CONTENT_TYPE['multipart/form-data']) === -1 ) {
     return next( notAcceptable(`Content-Type head must be ${contentType} or 'multipart/form-data, ${req.headers['content-type']} given`) );
   }
 

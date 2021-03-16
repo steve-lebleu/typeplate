@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { createDecipheriv, createCipheriv,randomBytes } from 'crypto';
-import { DOCUMENT_MIME_TYPE, ARCHIVE_MIME_TYPE, IMAGE_MIME_TYPE, AUDIO_MIME_TYPE, VIDEO_MIME_TYPE } from '@enums/mime-type.enum';
-import { MediaType } from '@customtypes/media.type';
+import { DOCUMENT_MIME_TYPE, ARCHIVE_MIME_TYPE, IMAGE_MIME_TYPE, AUDIO_MIME_TYPE, VIDEO_MIME_TYPE } from '@enums';
+import { MediaType } from '@customtypes';
 
 import { list } from './enum.util';
 

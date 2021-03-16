@@ -1,0 +1,1 @@
+export type AudioMimeType = 'audio/mpeg' | 'audio/mp3' | 'audio/mid' | 'audio/mp4' | 'audio/x-aiff' | 'audio/ogg' | 'audio/vorbis' | 'audio/vnd.wav';

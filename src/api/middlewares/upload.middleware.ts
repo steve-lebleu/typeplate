@@ -32,6 +32,7 @@ const Upload = ( options?: IUploadOptions ) => (req: IMediaRequest, res: IRespon
 
   middleware(req, res, (err: Error) => {
     if(err) {
+      // console.log('ERR', err);
       return next(err instanceof MulterError ? err : new MulterError(err.message) );
     } else if (typeof req.files === 'undefined') {
       return next(new Error('Binary data cannot be found'));

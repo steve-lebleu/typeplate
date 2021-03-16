@@ -357,7 +357,7 @@ describe('Media routes', function () {
   });
 
   it('PATCH /api/v1/medias 400 - not supported mimetype', function (done) {
-    doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'audio', path: process.cwd() + '/test/utils/fixtures/files/electric-bulb.mp4' }, 400, function(err, res) {
+    doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'image', path: process.cwd() + '/test/utils/fixtures/files/tags.tif' }, 400, function(err, res) {
       expect(res.statusCode).to.eqls(400);
       done();
     });

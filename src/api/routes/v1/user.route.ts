@@ -1,8 +1,8 @@
-import { Router } from '@bases/router.class';
+import { Router } from '@classes';
 import { UserController } from '@controllers/user.controller';
 import { Guard } from '@middlewares/guard.middleware';
 import { Validate } from '@middlewares/validate.middleware';
-import { ROLE } from '@enums/role.enum';
+import { ROLE } from '@enums';
 import { listUsers, getUser, createUser, replaceUser, updateUser, removeUser } from '@validations/user.validation';
 
 export class UserRouter extends Router {

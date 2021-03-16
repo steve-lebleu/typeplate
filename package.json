@@ -51,10 +51,9 @@
     "version": "npm run todo && git add TODO.md && git add package.json && auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\" --no-verify"
   },
   "_moduleAliases": {
-    "@bases": "dist/api/types/classes",
+    "@classes": "dist/api/types/classes",
     "@config": "dist/api/config",
     "@controllers": "dist/api/controllers",
-    "@customtypes": "dist/api/types/types",
     "@decorators": "dist/api/decorators",
     "@enums": "dist/api/types/enums",
     "@errors": "dist/api/types/errors",
@@ -64,8 +63,9 @@
     "@models": "dist/api/models",
     "@repositories": "dist/api/repositories",
     "@routes": "dist/api/routes/v1",
-    "@schemas": "dist/api/validations/schemas",
+    "@schemas": "dist/api/types/schemas",
     "@services": "dist/api/services",
+    "@types": "dist/api/types/types",
     "@utils": "dist/api/utils",
     "@validations": "dist/api/validations"
   },

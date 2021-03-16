@@ -1,7 +1,6 @@
-
 import { Request } from 'express';
 
-import { ICache } from '@interfaces/ICache.interface';
+import { ICache } from '@interfaces';
 
 import { CacheConfiguration } from '@config/cache.config';
 import { encrypt } from '@utils/string.util';

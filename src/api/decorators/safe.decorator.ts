@@ -1,4 +1,4 @@
-import { Controller } from '@bases/controller.class';
+import { Controller } from '@classes';
 import { MediaService } from '@services/media.service';
 
 /**

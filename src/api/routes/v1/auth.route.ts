@@ -1,4 +1,4 @@
-import { Router } from '@bases/router.class';
+import { Router } from '@classes';
 import { Validate } from '@middlewares/validate.middleware';
 import { Guard } from '@middlewares/guard.middleware';
 import { AuthController } from '@controllers/auth.controller';

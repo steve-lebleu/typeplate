@@ -6,7 +6,7 @@ import * as Morgan from 'morgan';
 import { format, Logger as WinstonLogger } from 'winston';
 
 import { ENV, LOGS } from '@config/environment.config';
-import { ENVIRONMENT } from '@enums/environment.enum';
+import { ENVIRONMENT } from '@enums';
 
 /**
  * @see https://github.com/winstonjs/winston

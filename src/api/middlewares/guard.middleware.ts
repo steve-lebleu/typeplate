@@ -3,11 +3,11 @@ import { promisify } from 'es6-promisify';
 import { forbidden, badRequest, notFound } from '@hapi/boom';
 
 import { User } from '@models/user.model';
-import { ROLE } from '@enums/role.enum';
+import { ROLE } from '@enums';
 import { list } from '@utils/enum.util';
-import { IUserRequest } from '@interfaces/IUserRequest.interface';
-import { IResponse } from '@interfaces/IResponse.interface';
-import { OAuthProvider } from '@customtypes/oauth-provider.type';
+import { IUserRequest, IResponse } from '@interfaces';
+
+import { OAuthProvider } from '@types';
 
 /**
  * @description Callback function provided to passport.authenticate with JWT strategy

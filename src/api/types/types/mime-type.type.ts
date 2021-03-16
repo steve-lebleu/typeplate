@@ -1,4 +1,4 @@
-import { AudioMimeType, ArchiveMimeType, DocumentMimeType, ImageMimeType, VideoMimeType } from '@customtypes'
+import { AudioMimeType, ArchiveMimeType, DocumentMimeType, ImageMimeType, VideoMimeType } from '@types'
 
 /**
  * @description Shortcut for all mime-types

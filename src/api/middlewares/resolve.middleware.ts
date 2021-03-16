@@ -1,7 +1,8 @@
 import { Request } from 'express';
 import { NOT_FOUND } from 'http-status';
-import { IResponse } from '@interfaces/IResponse.interface';
 import { expectationFailed } from '@hapi/boom';
+
+import { IResponse } from '@interfaces';
 import { getStatusCode } from '@utils/http.util';
 import { CacheService } from '@services/cache.service';
 

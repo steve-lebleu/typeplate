@@ -2,12 +2,8 @@ import { existsSync } from 'fs';
 
 import { config as Dotenv } from 'dotenv';
 
-import { DATABASE_ENGINE } from '@enums/database-engine.enum';
-import { MomentUnit } from '@customtypes/moment-unit.type';
-import { ENVIRONMENT } from '@enums/environment.enum';
-import { ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE, CONTENT_TYPE as CONTENT_TYPE_ENUM } from '@enums';
-
-import { DatabaseEngine } from '@customtypes/database-engine.type';
+import { DatabaseEngine, MomentUnit } from '@types';
+import { DATABASE_ENGINE, ENVIRONMENT, ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE, CONTENT_TYPE as CONTENT_TYPE_ENUM } from '@enums';
 
 import { list } from '@utils/enum.util';
 

@@ -1,8 +1,7 @@
 import { getRepository, getCustomRepository } from 'typeorm';
 import { clone } from 'lodash';
 
-import { IMediaRequest } from '@interfaces/IMediaRequest.interface';
-import { IResponse } from '@interfaces/IResponse.interface';
+import { IMediaRequest, IResponse } from '@interfaces';
 
 import { safe } from '@decorators/safe.decorator';
 

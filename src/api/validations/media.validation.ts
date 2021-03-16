@@ -4,8 +4,7 @@
 
 import * as Joi from 'joi';
 
-import { MIME_TYPE_LIST } from '@enums';
-import { MEDIA_TYPE } from '@enums/media-type.enum';
+import { MIME_TYPE_LIST, MEDIA_TYPE } from '@enums';
 import { id, pagination, fieldname, filename, path, mimetype } from '@schemas';
 import { list } from '@utils/enum.util';
 

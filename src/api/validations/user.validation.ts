@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import * as Joi from 'joi';
-import { ROLE } from '@enums/role.enum';
+import { ROLE } from '@enums';
 import { list } from '@utils/enum.util';
 
 import { email, id, pagination, username, password } from '@schemas';

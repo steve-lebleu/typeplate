@@ -2,7 +2,7 @@ import { Request } from 'express';
 
 import { CONTENT_TYPE } from '@config/environment.config';
 import { CONTENT_TYPE as CONTENT_TYPE_ENUM } from '@enums';
-import { IResponse } from '@interfaces/IResponse.interface';
+import { IResponse } from '@interfaces';
 
 import { SanitizeService } from '@services/sanitizer.service';
 

@@ -4,10 +4,7 @@ import { MulterError } from 'multer';
 import { SCALING } from '@config/environment.config';
 import { UploadConfiguration } from '@config/upload.config'
 
-import { IMediaRequest } from '@interfaces/IMediaRequest.interface';
-import { IResponse } from '@interfaces/IResponse.interface';
-import { IUploadOptions } from '@interfaces/IUploadOptions.interface';
-import { IMedia } from '@interfaces/IMedia.interface';
+import { IMediaRequest, IResponse, IUploadOptions, IMedia } from '@interfaces';
 
 import { getTypeOfMedia } from '@utils/string.util';
 

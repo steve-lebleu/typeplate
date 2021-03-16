@@ -8,9 +8,9 @@ import { badImplementation } from '@hapi/boom';
 
 import { JWT } from '@config/environment.config';
 import { ROLE } from '@enums';
-import { Role } from '@customtypes';
+import { Role } from '@types';
 import { Media } from '@models/media.model';
-import { IModel } from '@interfaces/IModel.interface';
+import { IModel } from '@interfaces';
 
 @Entity()
 export class User implements IModel {

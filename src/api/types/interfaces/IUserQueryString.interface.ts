@@ -1,4 +1,4 @@
-import { IQueryString } from '@interfaces/IQueryString.interface';
+import { IQueryString } from '@interfaces';
 
 export interface IUserQueryString extends IQueryString {
   username?: string;

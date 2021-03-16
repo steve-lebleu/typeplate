@@ -2,13 +2,12 @@ import { Request } from 'express';
 import { getRepository, getCustomRepository } from 'typeorm';
 import { notFound } from '@hapi/boom';
 
-import { IResponse } from '@interfaces/IResponse.interface';
+import { IResponse, IUserRequest } from '@interfaces';
 import { User } from '@models/user.model';
 import { RefreshToken } from '@models/refresh-token.model';
 import { UserRepository } from '@repositories/user.repository';
 import { AuthService } from '@services/auth.service';
 import { safe } from '@decorators/safe.decorator';
-import { IUserRequest } from '@interfaces/IUserRequest.interface';
 
 /**
  * Manage incoming requests from api/{version}/auth

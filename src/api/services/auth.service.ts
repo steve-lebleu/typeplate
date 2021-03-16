@@ -1,5 +1,6 @@
 import * as Moment from 'moment-timezone';
 
+import { badData } from '@hapi/boom';
 import { getCustomRepository, getRepository } from 'typeorm';
 
 import { JWT } from '@config/environment.config';
@@ -10,8 +11,7 @@ import { RefreshTokenRepository } from '@repositories/refresh-token.repository';
 import { User } from '@models/user.model';
 import { RefreshToken } from '@models/refresh-token.model';
 
-import { badData } from '@hapi/boom';
-import { IOauthResponse } from '@interfaces/IOauthResponse.interface';
+import { IOauthResponse } from '@interfaces';
 
 import { hash } from '@utils/string.util';
 

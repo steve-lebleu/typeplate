@@ -3,7 +3,7 @@ import { notify } from 'node-notifier';
 
 import { Logger } from '@services/logger.service';
 import { ErrorFactory } from '@factories/error.factory';
-import { IHTTPError } from '@interfaces/IHTTPError.interface';
+import { IHTTPError } from '@interfaces';
 
 /**
  * Error catch/output middleware

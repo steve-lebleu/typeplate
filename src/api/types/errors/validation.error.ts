@@ -1,6 +1,6 @@
-import { IHTTPError } from '@interfaces/IHTTPError.interface';
-import { IError } from '@interfaces/IError.interface';
 import { ValidationErrorItem } from 'joi';
+
+import { IError, IHTTPError } from '@interfaces';
 
 /**
  * Type upload error

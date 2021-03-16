@@ -8,12 +8,13 @@ import * as Helmet from 'helmet';
 
 import { notAcceptable } from '@hapi/boom';
 
-import { ENVIRONMENT } from '@enums/environment.enum';
+import { ENVIRONMENT } from '@enums';
 
 import { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, ENV, UPLOAD } from '@config/environment.config';
-import { Authentication } from '@config/authentication.config';
 
+import { Authentication } from '@config/authentication.config';
 import { LoggerConfiguration } from '@config/logger.config';
+
 import { ProxyRouter } from '@services/proxy-router.service';
 
 import { Cors as Kors } from '@middlewares/cors.middleware';

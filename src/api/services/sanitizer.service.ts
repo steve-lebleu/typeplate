@@ -1,6 +1,6 @@
 import * as Util from 'util';
 import * as Pluralize from 'pluralize';
-import { IModel } from '@interfaces/IModel.interface';
+import { IModel } from '@interfaces';
 import { isObject } from '@utils/object.util';
 
 class SanitizeService {

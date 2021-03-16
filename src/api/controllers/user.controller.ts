@@ -2,8 +2,7 @@ import { getRepository, getCustomRepository } from 'typeorm';
 
 import { User } from '@models/user.model';
 import { UserRepository } from '@repositories/user.repository';
-import { IUserRequest } from '@interfaces/IUserRequest.interface';
-import { IResponse } from '@interfaces/IResponse.interface';
+import { IUserRequest, IResponse } from '@interfaces';
 import { safe } from '@decorators/safe.decorator';
 
 /**

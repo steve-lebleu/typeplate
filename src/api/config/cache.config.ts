@@ -2,7 +2,7 @@
 import * as mcache from 'memory-cache';
 
 import { MEMORY_CACHE } from '@config/environment.config';
-import { ICache } from '@interfaces/ICache.interface';
+import { ICache } from '@interfaces';
 
 /**
  * @description Cache service interface with memory cache module

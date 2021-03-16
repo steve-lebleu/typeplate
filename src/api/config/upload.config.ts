@@ -5,11 +5,7 @@ import { unsupportedMediaType } from '@hapi/boom';
 
 import { UPLOAD, SCALING } from '@config/environment.config';
 
-import { IUploadMulterOptions } from '@interfaces/IUploadMulterOptions.interface';
-import { IUploadOptions } from '@interfaces/IUploadOptions.interface';
-import { IMedia } from '@interfaces/IMedia.interface';
-import { IStorage } from '@interfaces/IStorage.interface';
-import { IUpload } from '@interfaces/IUpload.interface';
+import { IUploadMulterOptions, IUploadOptions, IMedia, IStorage, IUpload } from '@interfaces';
 
 import { foldername, extension, getTypeOfMedia } from '@utils/string.util';
 import { IMAGE_MIME_TYPE } from '@enums';

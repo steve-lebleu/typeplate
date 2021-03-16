@@ -1,9 +1,9 @@
-import { Router } from '@bases/router.class';
+import { Router } from '@classes';
 import { Guard } from '@middlewares/guard.middleware';
 import { Validate } from '@middlewares/validate.middleware';
 import { Upload } from '@middlewares/upload.middleware';
 import { MediaController } from '@controllers/media.controller';
-import { ROLE } from '@enums/role.enum';
+import { ROLE } from '@enums';
 
 import { listMedias, insertMedia, getMedia, replaceMedia, updateMedia, removeMedia } from '@validations/media.validation';
 

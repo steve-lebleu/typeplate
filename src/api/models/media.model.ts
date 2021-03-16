@@ -3,11 +3,11 @@ require('module-alias/register');
 import * as Moment from 'moment';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
-import { MIME_TYPE } from '@enums/mime-type.enum';
+import { MIME_TYPE } from '@enums';
 import { User } from '@models/user.model';
-import { IModel } from '@interfaces/IModel.interface';
+import { IModel } from '@interfaces';
 
-import { MimeType } from '@customtypes';
+import { MimeType } from '@types';
 
 @Entity()
 export class Media implements IModel {

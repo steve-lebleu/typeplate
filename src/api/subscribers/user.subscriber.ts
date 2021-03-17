@@ -16,8 +16,6 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
 
   /**
    * @description Indicates that this subscriber only listen to Media events.
-   *
-   * TODO: emit custom event to say what to external services
    */
   listenTo(): any {
     return User;

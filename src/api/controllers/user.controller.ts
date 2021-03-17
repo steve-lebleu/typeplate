@@ -2,16 +2,30 @@ import { getRepository, getCustomRepository } from 'typeorm';
 
 import { User } from '@models/user.model';
 import { UserRepository } from '@repositories/user.repository';
-import { IUserRequest } from '@interfaces/IUserRequest.interface';
-import { IResponse } from '@interfaces/IResponse.interface';
+import { IUserRequest, IResponse } from '@interfaces';
 import { safe } from '@decorators/safe.decorator';
 
 /**
  * Manage incoming requests for api/{version}/users
  */
-export class UserController {
+class UserController {
 
-  constructor() {}
+  /**
+   * @description
+   */
+   private static instance: UserController;
+
+   private constructor() {}
+
+    /**
+     * @description
+     */
+  static get(): UserController {
+    if (!UserController.instance) {
+      UserController.instance = new UserController();
+    }
+    return UserController.instance;
+  }
 
   /**
    * @description Get user
@@ -20,7 +34,7 @@ export class UserController {
    * @param res Express response object
    */
   @safe
-  static async get(req: IUserRequest, res: IResponse): Promise<void> {
+  async get(req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(UserRepository);
     res.locals.data = await repository.one(parseInt(req.params.userId, 10));
   }
@@ -32,7 +46,7 @@ export class UserController {
    * @param res Express response object
    */
   @safe
-  static async loggedIn (req: IUserRequest, res: IResponse): Promise<void> {
+  async loggedIn (req: IUserRequest, res: IResponse): Promise<void> {
     res.locals.data = new User(req.user);
   }
 
@@ -43,7 +57,7 @@ export class UserController {
    * @param res Express response object
    */
   @safe
-  static async create (req: IUserRequest, res: IResponse): Promise<void> {
+  async create (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = new User(req.body);
     const savedUser = await repository.save(user);
@@ -57,7 +71,7 @@ export class UserController {
    * @param res Express response object
    */
   @safe
-  static async update (req: IUserRequest, res: IResponse): Promise<void> {
+  async update (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = await repository.findOneOrFail(req.params.userId);
     repository.merge(user, req.body);
@@ -72,7 +86,7 @@ export class UserController {
    * @param res Express response object
    */
   @safe
-  static async list (req: IUserRequest, res: IResponse): Promise<void> {
+  async list (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(UserRepository);
     const users = await repository.list(req.query);
     res.locals.data = users;
@@ -85,9 +99,13 @@ export class UserController {
    * @param res Express response object
    */
   @safe
-  static async remove (req: IUserRequest, res: IResponse): Promise<void> {
+  async remove (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = await repository.findOneOrFail(req.params.userId);
     void repository.remove(user);
   }
 }
+
+const userController = UserController.get();
+
+export { userController as UserController }

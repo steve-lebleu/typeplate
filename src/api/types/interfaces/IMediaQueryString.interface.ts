@@ -1,5 +1,5 @@
-import { MediaType } from '@customtypes/media.type';
-import { IQueryString } from '@interfaces/IQueryString.interface';
+import { MediaType } from '@types';
+import { IQueryString } from '@interfaces';
 
 export interface IMediaQueryString extends IQueryString {
     path?: string;

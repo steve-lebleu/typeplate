@@ -1,4 +1,4 @@
-import { IError } from '@interfaces/IError.interface';
+import { IError } from '@interfaces';
 
 /**
  * @description Get error status code

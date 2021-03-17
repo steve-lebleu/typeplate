@@ -4,8 +4,7 @@
 
 import * as Joi from 'joi';
 
-import { MIME_TYPE_LIST } from '@enums/mime-type.enum';
-import { MEDIA } from '@enums/media.enum';
+import { MIME_TYPE_LIST, MEDIA_TYPE } from '@enums';
 import { id, pagination, fieldname, filename, path, mimetype } from '@schemas';
 import { list } from '@utils/enum.util';
 
@@ -19,7 +18,7 @@ const listMedias = {
     path: path(),
     mimetype: mimetype(MIME_TYPE_LIST),
     size: Joi.number(),
-    type: Joi.any().valid(...list(MEDIA)),
+    type: Joi.any().valid(...list(MEDIA_TYPE)),
     owner: Joi.number()
   })
 };

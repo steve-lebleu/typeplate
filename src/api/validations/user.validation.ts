@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import * as Joi from 'joi';
-import { ROLES } from '@enums/role.enum';
+import { ROLE } from '@enums';
 import { list } from '@utils/enum.util';
 
 import { email, id, pagination, username, password } from '@schemas';
@@ -15,7 +15,7 @@ const listUsers = {
     perPage: pagination('perPage'),
     username: username(),
     email: email(),
-    role: Joi.any().valid(...list(ROLES))
+    role: Joi.any().valid(...list(ROLE))
   })
 };
 

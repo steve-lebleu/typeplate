@@ -1,4 +1,4 @@
-import { Router } from '@bases/router.class';
+import { Router } from '@classes';
 
 /**
  * Define route definition members

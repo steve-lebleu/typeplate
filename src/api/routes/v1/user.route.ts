@@ -1,8 +1,8 @@
-import { Router } from '@bases/router.class';
+import { Router } from '@classes';
 import { UserController } from '@controllers/user.controller';
 import { Guard } from '@middlewares/guard.middleware';
-import { Validate } from '@middlewares/validate.middleware';
-import { ROLES } from '@enums/role.enum';
+import { Validator } from '@middlewares/validator.middleware';
+import { ROLE } from '@enums';
 import { listUsers, getUser, createUser, replaceUser, updateUser, removeUser } from '@validations/user.validation';
 
 export class UserRouter extends Router {
@@ -99,7 +99,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .get(Guard.authorize([ROLES.admin]), Validate(listUsers), UserController.list)
+      .get(Guard.authorize([ROLE.admin]), Validator.check(listUsers), UserController.list)
 
       /**
        * @api {post} /users Create user
@@ -180,7 +180,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .post(Guard.authorize([ROLES.admin]), Validate(createUser), UserController.create);
+      .post(Guard.authorize([ROLE.admin]), Validator.check(createUser), UserController.create);
 
     this.router
       .route('/profile')
@@ -228,7 +228,7 @@ export class UserRouter extends Router {
        *    ]
        * }
        */
-      .get(Guard.authorize([ROLES.admin,ROLES.user]), UserController.loggedIn);
+      .get(Guard.authorize([ROLE.admin,ROLE.user]), UserController.loggedIn);
 
     this.router
       .route('/:userId(\\d+)')
@@ -307,7 +307,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .get(Guard.authorize([ROLES.admin]), Validate(getUser), UserController.get)
+      .get(Guard.authorize([ROLE.admin]), Validator.check(getUser), UserController.get)
 
       /**
        * @api {put} /users/:id Replace user
@@ -408,7 +408,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .put(Guard.authorize([ROLES.admin]), Validate(replaceUser), UserController.update)
+      .put(Guard.authorize([ROLE.admin]), Validator.check(replaceUser), UserController.update)
 
       /**
        * @api {patch} /users/:id Update user
@@ -509,7 +509,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .patch(Guard.authorize([ROLES.admin]), Validate(updateUser), UserController.update)
+      .patch(Guard.authorize([ROLE.admin]), Validator.check(updateUser), UserController.update)
 
       /**
        * @api {patch} /users/:id Delete user
@@ -582,7 +582,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .delete(Guard.authorize([ROLES.admin]), Validate(removeUser), UserController.remove);
+      .delete(Guard.authorize([ROLE.admin]), Validator.check(removeUser), UserController.remove);
 
   }
 

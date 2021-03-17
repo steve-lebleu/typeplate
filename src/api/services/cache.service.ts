@@ -1,7 +1,6 @@
-
 import { Request } from 'express';
 
-import { ICache } from '@interfaces/ICache.interface';
+import { ICache } from '@interfaces';
 
 import { CacheConfiguration } from '@config/cache.config';
 import { encrypt } from '@utils/string.util';
@@ -24,6 +23,27 @@ class CacheService {
       CacheService.instance = new CacheService();
     }
     return CacheService.instance;
+  }
+
+  /**
+   * @description
+   */
+   get engine(): ICache {
+    return CacheConfiguration.start
+  }
+
+  /**
+   * @description
+   */
+  get duration(): number {
+    return CacheConfiguration.options.DURATION;
+  }
+
+  /**
+   * @description
+   */
+   get isActive(): boolean {
+    return CacheConfiguration.options.IS_ACTIVE;
   }
 
   /**
@@ -64,26 +84,6 @@ class CacheService {
       .forEach(key => this.engine.del(key))
   }
 
-  /**
-   * @description
-   */
-  get engine(): ICache {
-    return CacheConfiguration.start
-  }
-
-  /**
-   * @description
-   */
-  get duration(): number {
-    return CacheConfiguration.options.DURATION;
-  }
-
-  /**
-   * @description
-   */
-   get isActive(): boolean {
-    return CacheConfiguration.options.IS_ACTIVE;
-  }
 }
 
 const cacheService = CacheService.get();

@@ -1,5 +1,4 @@
-import { IHTTPError } from '@interfaces/IHTTPError.interface';
-import { IError } from '@interfaces/IError.interface';
+import { IError, IHTTPError } from '@interfaces';
 
 /**
  * @description Custom NotFoundError

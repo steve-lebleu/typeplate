@@ -1,7 +1,7 @@
-import { UploadError } from '@errors/upload.error';
-import { MySQLError } from '@errors/mysql.error';
-import { ValidationError } from '@errors/validation.error';
-import { NotFoundError } from '@errors/not-found.error';
-import { ServerError } from '@errors/server.error';
+import { UploadError } from './upload.error';
+import { MySQLError } from './mysql.error';
+import { ValidationError } from './validation.error';
+import { NotFoundError } from './not-found.error';
+import { ServerError } from './server.error';
 
 export { UploadError, MySQLError, NotFoundError, ValidationError, ServerError }

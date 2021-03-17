@@ -7,7 +7,7 @@ const { Cache } = require(process.cwd() + '/dist/api/middlewares/cache.middlewar
 
 describe('Middlewares', () => {
 
-  describe('CacheService', () => {
+  describe('Cache', () => {
 
     const res = {
       status: (code) => {},
@@ -31,7 +31,7 @@ describe('Middlewares', () => {
     it('should next when not activated', async () => {
       stubIsActive.value(false);
       stubEngine.callsFake((key) => {});
-      await Cache({method: 'GET'}, {}, () => {});
+      await Cache.read({method: 'GET'}, {}, () => {});
       expect(stubEngine.called).to.be.false;
     });
 
@@ -39,14 +39,14 @@ describe('Middlewares', () => {
     it('should next when method is not GET', async () => {
       stubIsActive.value(true)
       stubEngine.callsFake((key) => {});
-      await Cache({method: 'POST'}, {}, () => {});
+      await Cache.read({method: 'POST'}, {}, () => {});
       expect(stubEngine.called).to.be.false;
     });
 
     it('should try to retrieve cached data', async () => {
       stubIsActive.value(true)
       stubEngine.callsFake((key) => {});
-      await Cache({method: 'GET'}, {}, () => {});
+      await Cache.read({method: 'GET'}, {}, () => {});
       expect(stubEngine.called).to.be.true;
     });
 
@@ -56,7 +56,7 @@ describe('Middlewares', () => {
         return { body: 'Hello World' }; 
       });
       stubResJSON.callsFake((data) => {});
-      await Cache({method: 'GET'}, res, () => {});
+      await Cache.read({method: 'GET'}, res, () => {});
       expect(stubEngine.called).to.be.true;
       expect(stubResJSON.called).to.be.true;
     });
@@ -65,7 +65,7 @@ describe('Middlewares', () => {
       stubIsActive.value(true)
       stubEngine.callsFake((key) => null);
       stubResJSON.callsFake((data) => {});
-      await Cache({method: 'GET'}, res, () => {});
+      await Cache.read({method: 'GET'}, res, () => {});
       expect(stubEngine.called).to.be.true;
       expect(stubResJSON.called).to.be.false;
     });

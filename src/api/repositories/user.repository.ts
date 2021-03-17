@@ -5,9 +5,7 @@ import { omitBy, isNil } from 'lodash';
 import { badRequest, notFound, unauthorized } from '@hapi/boom';
 
 import { User } from '@models/user.model';
-import { IUserQueryString } from '@interfaces/IUserQueryString.interface';
-import { ITokenOptions } from '@interfaces/ITokenOptions.interface';
-import { IRegistrable } from '@interfaces/IRegistrable.interface';
+import { IRegistrable, ITokenOptions, IUserQueryString } from '@interfaces';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User>  {

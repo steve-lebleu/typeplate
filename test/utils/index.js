@@ -1,37 +1,33 @@
-var { expect } = require('chai');
-var { existsSync }= require('fs');
+const { expect } = require('chai');
+const { existsSync } = require('fs');
+const Util = require('util');
 
-var Util = require('util');
-
-const _exec = (agent, payload, options, done) => {
-  _doRequest(agent, 'post', options.route, null, options.token, payload, options.code, function(err, res) {
-    expect(res.statusCode).to.equals(options.code);
-    done();
-  });
-};
-
-const _doRequest = (agent, method, route, id, token, payload, status, callback) => {
-  const path = id !== null ? `${route}${id}` : route;
-  return agent[method](path)
-    .set('Authorization', 'Bearer ' + token)
-    .set('Accept', process.env.CONTENT_TYPE)
-    .set('Content-Type', process.env.CONTENT_TYPE)
-    .set('Origin', process.env.ORIGIN)
-    .send(payload)
-    .expect(status)
-    .end(function(err, res) {
-      callback(err, res);
-    });
+exports.routes = {
+  users: [
+    {
+      method: 'GET',
+      path: '',
+      query: {},
+      params: {},
+      tests: [
+        { 
+          statusCode: 400
+        },
+        { 
+          statusCode: 403
+        },
+        { 
+          statusCode: 200
+        }
+      ]
+    }
+  ],
+  medias: {}
 };
 
 exports.pools = {
   password: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
   username: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-};
-
-exports.routes = {
-  users: {},
-  document: {}
 };
 
 exports.statusCodes = {
@@ -48,9 +44,22 @@ exports.statusCodes = {
   "500": 500
 };
 
+const _doRequest = (agent, method, route, id, token, payload, callback) => {
+  const path = id !== null ? `${route}${id}` : route;
+  return agent[method](path)
+    .set('Authorization', 'Bearer ' + token)
+    .set('Accept', process.env.CONTENT_TYPE)
+    .set('Content-Type', process.env.CONTENT_TYPE)
+    .set('Origin', process.env.ORIGIN)
+    .send(payload)
+    .end(function(err, res) {
+      callback(err, res);
+    });
+};
+
 exports.doRequest = _doRequest;
 
-exports.doQueryRequest = (agent, route, id, token, payload, status, callback) => {
+const _doQueryRequest = (agent, route, id, token, payload, callback) => {
   const path = id !== null ? `${route}${id}` : route;
   return agent.get(path)
     .set('Authorization', 'Bearer ' + token)
@@ -58,13 +67,14 @@ exports.doQueryRequest = (agent, route, id, token, payload, status, callback) =>
     .set('Content-Type', process.env.CONTENT_TYPE)
     .set('Origin', process.env.ORIGIN)
     .query(payload)
-    .expect(status)
     .end(function(err, res) {
       callback(err, res);
     });
 };
 
-exports.doFormRequest = (agent, method, route, id, token, payload, status, callback) => {
+exports.doQueryRequest = _doQueryRequest;
+
+const _doFormRequest = (agent, method, route, id, token, payload, callback) => {
   const path = id !== null ? `${route}${id}` : route;
   return agent[method](path)
     .set('Authorization', 'Bearer ' + token)
@@ -72,13 +82,14 @@ exports.doFormRequest = (agent, method, route, id, token, payload, status, callb
     .set('Content-Type', 'multipart/form-data')
     .set('Origin', process.env.ORIGIN)
     .attach(payload.name, payload.path)
-    .expect(status)
     .end(function(err, res) {
       callback(err, res);
     });
 };
 
-exports.expectations = (res, field, err) => {
+exports.doFormRequest = _doFormRequest;
+
+const _expectations = (res, field, err) => {
   expect(res.body.statusCode).to.eqls(400);
   expect(res.body.errors).to.be.an('array').length.gt(0);
   expect(res.body.errors).satisfy(function(value) {
@@ -86,12 +97,15 @@ exports.expectations = (res, field, err) => {
   });
 };
 
+exports.expectations = _expectations;
+
 exports.dataOk = (res, entity, method) => {
   const models = [
     {
       name: 'user',
       expect: () => {
         expect(res.body).to.have.all.keys('id', 'username', 'email', 'role', 'createdAt', 'updatedAt');
+        expect(res.body).to.have.not.keys(['password', 'apikey']);
         expect(res.body.id).to.be.a('number');
         expect(res.body.username).to.be.a('string');
         expect(res.body.email).to.be.a('string');
@@ -111,7 +125,8 @@ exports.dataOk = (res, entity, method) => {
     {
       name: 'media',
       expect: () => {
-        expect(res.body).to.have.all.keys(['id', 'fieldname', 'filename', 'path', 'mimetype', 'size', 'url', 'createdAt', 'updatedAt']);
+        expect(res.body).to.have.all.keys(['id', 'fieldname', 'filename', 'path', 'mimetype', 'size', 'url', 'createdAt', 'updatedAt', 'owner']);
+        expect(res.body.owner).to.have.not.keys(['password', 'apikey']);
         expect(res.body.id).to.be.a('number');
         expect(res.body.fieldname).to.be.a('string');
         expect(res.body.filename).to.be.a('string');
@@ -133,26 +148,3 @@ exports.dataOk = (res, entity, method) => {
   ];
   return models.filter( model => model.name === entity ).shift().expect();
 }
-
-exports.execOne = (name, agent, payload, options, done) => {
-  const c = cases.filter( c => c.name === name ).slice().shift();
-  _exec(agent, c.payload(payload), options, done);
-};
-
-exports.execMany = (agent, payload, options, names) => {
-  cases.filter( c => names.includes[c.name] ).forEach( c => {
-    it(c.description(options), function(done) {
-      _exec(agent, c.payload(payload), options, done);
-    });
-  });
-};
-
-exports.execAll = (agent, payload, options) => {
-  cases.forEach( c => {
-    it(c.description(options), function(done) {
-      _exec(agent, c.payload(payload), options, function(err, res) {
-        done();
-      });
-    });
-  });
-};

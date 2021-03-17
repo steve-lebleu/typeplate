@@ -1,31 +1,57 @@
 import { notAcceptable } from '@hapi/boom';
 import { Request, Response } from 'express';
-import { CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
+import { CONTENT_TYPE } from '@config/environment.config';
+import { CONTENT_TYPE as CONTENT_TYPE_ENUM } from '@enums';
 
 /**
- * @description Check header validity according to current request and current configuration requirements
- *
- * @param contentType Configuration content-type
- *
- * @param req Express request object derived from http.incomingMessage
- * @param res Express response object
- * @param next Callback function
+ * @description
  */
-const Cors = (contentType: string) => (req: Request, res: Response, next: (e?: Error) => void): void => {
+ class Cors {
 
-  if (!req.headers['content-type']) {
-    return next( notAcceptable(`Content-Type headers must be ${contentType} or 'multipart/form-data', ${req.headers['content-type']} given`) );
+  /**
+   * @description
+   */
+  private static instance: Cors;
+
+  private constructor() {}
+
+  /**
+   * @description
+   */
+  static get(): Cors {
+    if (!Cors.instance) {
+      Cors.instance = new Cors();
+    }
+    return Cors.instance;
   }
 
-  if ( CONTENT_MIME_TYPE[contentType] !== req.headers['content-type'] && req.headers['content-type'].lastIndexOf(CONTENT_MIME_TYPE['multipart/form-data']) === -1 ) {
-    return next( notAcceptable(`Content-Type head must be ${contentType} or 'multipart/form-data, ${req.headers['content-type']} given`) );
-  }
+  /**
+   * @description Check header validity according to current request and current configuration requirements
+   *
+   * @param contentType Configuration content-type
+   *
+   * @param req Express request object derived from http.incomingMessage
+   * @param res Express response object
+   * @param next Callback function
+   */
+  validate(req: Request, res: Response, next: (e?: Error) => void): void {
 
-  if (!req.headers.origin) {
-    return next( notAcceptable('Origin header must be specified') );
-  }
+    if (!req.headers['content-type']) {
+      return next( notAcceptable(`Content-Type headers must be ${CONTENT_TYPE} or 'multipart/form-data', ${req.headers['content-type']} given`) );
+    }
 
-  next();
+    if ( CONTENT_TYPE_ENUM[CONTENT_TYPE] !== req.headers['content-type'] && req.headers['content-type'].lastIndexOf(CONTENT_TYPE_ENUM['multipart/form-data']) === -1 ) {
+      return next( notAcceptable(`Content-Type head must be ${CONTENT_TYPE} or 'multipart/form-data, ${req.headers['content-type']} given`) );
+    }
+
+    if (!req.headers.origin) {
+      return next( notAcceptable('Origin header must be specified') );
+    }
+
+    next();
+  }
 }
 
-export { Cors }
+const cors = Cors.get();
+
+export { cors as Cors };

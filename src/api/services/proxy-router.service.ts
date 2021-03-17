@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { IRoute } from '@interfaces/IRoute.interface';
+import { IRoute } from '@interfaces';
 
 import { MainRouter } from '@routes/main.route';
 import { AuthRouter } from '@routes/auth.route';
@@ -10,31 +10,36 @@ import { UserRouter } from '@routes/user.route';
 /**
  * Load all application routes and plug it on main router
  */
-export class ProxyRouter {
+class ProxyRouter {
 
   /**
    * @description Wrapper Express.Router
    */
-  private static instance?: Router = null;
+  private static instance: ProxyRouter;
+
+  /**
+   * @decription
+   */
+  private router: Router = Router();
 
   /**
    * @description Routes descriptions
    */
-  private static routes = [
+  private readonly routes = [
     { segment: '', provider: MainRouter },
     { segment: '/auth/', provider: AuthRouter },
     { segment: '/medias/', provider: MediaRouter },
     { segment: '/users/', provider: UserRouter }
   ];
 
-  constructor() {}
+  private constructor() {}
 
   /**
-   * @description Pseudo singleton
+   * @description
    */
-  static get(): Router {
+  static get(): ProxyRouter {
     if ( !ProxyRouter.instance ) {
-      ProxyRouter.instance = Router();
+      ProxyRouter.instance = new ProxyRouter();
     }
     return ProxyRouter.instance;
   }
@@ -42,13 +47,15 @@ export class ProxyRouter {
   /**
    * @description Plug sub routes on main router
    */
-  static map(): Router {
-    ProxyRouter.routes.forEach( (route: IRoute) => {
+  map(): Router {
+    this.routes.forEach( (route: IRoute) => {
       const instance = new route.provider() as { router: Router };
-      ProxyRouter.instance.use( route.segment, instance.router );
+      this.router.use( route.segment, instance.router );
     });
-    return ProxyRouter.instance;
+    return this.router;
   }
 }
 
-ProxyRouter.get();
+const proxyRouter = ProxyRouter.get();
+
+export { proxyRouter as ProxyRouter }

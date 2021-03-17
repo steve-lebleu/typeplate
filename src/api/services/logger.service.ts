@@ -13,9 +13,9 @@ class Logger {
 
   private constructor() {}
 
-  static get() {
+  static get(engine: WinstonLogger): WinstonLogger {
     if ( !Logger.instance ) {
-      Logger.instance = LoggerConfiguration.logger
+      Logger.instance = engine
     }
     return Logger.instance;
   }
@@ -31,6 +31,6 @@ class Logger {
   }
 }
 
-const logger = Logger.get();
+const logger = Logger.get(LoggerConfiguration.logger);
 
 export { logger as Logger }

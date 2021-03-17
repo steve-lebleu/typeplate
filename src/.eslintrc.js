@@ -101,7 +101,7 @@ module.exports =  {
             }
         ],
         "@typescript-eslint/unbound-method": [
-          "error",
+          "off",
           {
             "ignoreStatic": true
           }

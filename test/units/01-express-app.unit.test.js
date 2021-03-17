@@ -10,7 +10,7 @@ describe('Express application', () => {
   });
 
   it('Express server version is 4.16.4', () => {
-    expect(pkgInfo.dependencies.express.slice(1)).to.equal('4.16.4');
+    expect(pkgInfo.dependencies.express).to.equal('4.16.4');
   });
 
 });

@@ -1,6 +1,5 @@
 import { readFileSync } from 'fs';
 import { Server as HTTPServer, createServer } from 'https';
-
 import { Application } from 'express';
 
 import { ENV, SSL, PORT } from '@config/environment.config';
@@ -10,6 +9,7 @@ import { Logger } from '@services/logger.service';
 /**
  * @description
  */
+
 export class ServerConfiguration {
 
   private static instance: ServerConfiguration;

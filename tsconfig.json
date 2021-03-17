@@ -36,8 +36,8 @@
       "@utils/*": ["api/utils/*"],
       "@validations/*": ["api/validations/*"]
     },
-    "lib": ["dom", "ES2020"],
-    "target": "ES2020",
+    "lib": ["dom", "ESNext"],
+    "target": "ESNext",
     "module": "CommonJS",
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,

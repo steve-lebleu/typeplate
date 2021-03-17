@@ -1,7 +1,10 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
+const { clone } = require('lodash');
 
 const fs = require('fs');
+
+const Jimp = require('jimp');
 
 const fixtures = require(process.cwd() + '/test/utils/fixtures');
 
@@ -12,7 +15,6 @@ const { AuthService } = require(process.cwd() + '/dist/api/services/auth.service
 const { MediaService} = require(process.cwd() + '/dist/api/services/media.service');
 const { CacheService } = require(process.cwd() + '/dist/api/services/cache.service');
 const { Logger } = require(process.cwd() + '/dist/api/services/logger.service');
-const { LoggerConfiguration } = require(process.cwd() + '/dist/api/config/logger.config');
 const { CacheConfiguration } = require(process.cwd() + '/dist/api/config/cache.config');
 
 describe('Services', () => {
@@ -21,16 +23,38 @@ describe('Services', () => {
 
     describe('generateTokenResponse()', () => {
 
-      it('should return error', async () => {
-        const result = await AuthService.generateTokenResponse({}, '',  null);
+      it('should returns error when user is not passed', async () => {
+        const token = fixtures.token.accessToken;
+        const result = await AuthService.generateTokenResponse({}, token,  null);
         expect(result).is.instanceOf(Error);
       });
   
-      it('should return well formed token', async () => {
-        const result = await AuthService.generateTokenResponse(new User(), '',  null);
+      it('should returns error when user is corrupted', async () => {
+        const token = fixtures.token.accessToken;
+        const user = new User();
+        const result = await AuthService.generateTokenResponse(user, token,  null);
+        expect(result).is.instanceOf(Error);
+      });
+
+      it('should returns error when access token not provided', async () => {
+        const user = new User( fixtures.user.entity('user', '13245678') );
+        user.id = 1;
+        const result = await AuthService.generateTokenResponse(user, null,  null);
+        expect(result).is.instanceOf(Error);
+      });
+
+      it('should be ok and returns well formed token', async () => {
+        const token = fixtures.token.accessToken;
+        const user = new User( fixtures.user.entity('user', '13245678') );
+        user.id = 1;
+        const result = await AuthService.generateTokenResponse(user, token,  null);
         expect(result).to.haveOwnProperty('tokenType');
+        expect(result.tokenType).to.be.eqls('Bearer');
         expect(result).to.haveOwnProperty('accessToken');
+        expect(result.accessToken).to.be.eqls(token);
         expect(result).to.haveOwnProperty('refreshToken');
+        expect(result.refreshToken).to.be.a.string;
+        expect(result.refreshToken.split('.')[0]).to.be.eqls(user.id.toString());
         expect(result).to.haveOwnProperty('expiresIn');
       });
 
@@ -39,11 +63,43 @@ describe('Services', () => {
     describe('oAuth()', () => {
 
       it('should next with error if data cannot be retrieved from provider', async () => {
-        await AuthService.oAuth('', '',  null, (error, user) => { 
+        await AuthService.oAuth('', '',  null, (error, user) => {
           expect(error).is.instanceOf(Error);
+          expect(user).to.be.false;
         });
       });
-  
+
+      it('should next with error if verified email is not true', async () => {
+        const profile = clone(fixtures.token.oauthFacebook);
+        profile.username = 'yoda';
+        profile.emails = [ { value: 'yoda@starwars.com', verified: false } ];
+        await AuthService.oAuth('', '', profile, (error, user) => { 
+          expect(error).is.instanceOf(Error);
+          expect(user).to.be.false;
+        });
+      });
+
+      it('should use provided data', async () => {
+        const profile = clone(fixtures.token.oauthFacebook);
+        profile.username = 'yoda';
+        profile.emails = [ { value: 'yoda@starwars.com' } ];
+        await AuthService.oAuth('', '', profile, (error, user) => { 
+          if (error) throw error;
+          expect(user.username).to.be.eqls('yoda');
+          expect(user.email).to.be.eqls('yoda@starwars.com');
+        });
+      });
+
+      it('should improve profile with default data', async () => {
+        const profile = clone(fixtures.token.oauthFacebook);
+        profile.username = undefined;
+        profile.emails = undefined;
+        await AuthService.oAuth('', '', profile, (error, user) => { 
+          if (error) throw error;
+          expect(user.email).to.includes('@externalprovider.com');
+        });
+      });
+
       it('should next with User instance', async () => {
         await AuthService.oAuth('', '', fixtures.token.oauthFacebook, (error, user) => { 
           if (error) throw error;
@@ -172,9 +228,19 @@ describe('Services', () => {
 
   describe('MediaService', () => {
 
+    describe('rescale()', () => {
+
+      it('should do nothing if not activated', (done) => {
+        MediaService.OPTIONS.IS_ACTIVE = false;
+        expect(MediaService.rescale({})).to.be.eqls(false);
+        done();
+      });
+
+    });
+
     describe('remove()', () => {
 
-      it('should remove all scaled images', () => {
+      it('should remove all scaled images', (done) => {
         const image = fixtures.media.image({id:1});
         fs.copyFileSync(`${process.cwd()}/test/utils/fixtures/files/${image.filename}`, `${process.cwd()}/dist/public/images/master-copy/${image.filename}`);
         ['xs', 'sm', 'md', 'lg', 'xl'].forEach(size => {
@@ -262,8 +328,28 @@ describe('Services', () => {
 
     describe('log()', () => {
 
-      it.skip('should call Logger.log with level and message', () => {});
+      let sandbox;
 
+      beforeEach(() => {
+        sandbox = sinon.createSandbox();
+      });
+
+      afterEach(() => {
+        sandbox.restore();
+      });
+
+      it('should call .info()', () => {
+        sandbox.spy(Logger.engine, 'info');
+        Logger.log('info', 'Test');
+        expect(Logger.engine.info.calledOnce).to.be.true;
+      });
+
+      it('should call .error()', () => {
+        sandbox.spy(Logger.engine, 'error');
+        Logger.log('error', 'Test');
+        expect(Logger.engine.error.calledOnce).to.be.true;
+      });
+        
     });
 
   });

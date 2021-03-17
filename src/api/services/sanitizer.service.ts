@@ -67,12 +67,7 @@ class SanitizeService {
     Object.keys(entity)
       .map( (key) => {
         if (entity.whitelist.includes(key) || entity.whitelist.includes(Pluralize(key))) {
-          output[key] = entity[key];
-          if( this.isSanitizable( entity[key] ) ) {
-            output[key] = Array.isArray(entity[key]) ? [].concat(entity[key]).map( (model: IModel) => this.sanitize(model) ) : this.sanitize(entity[key]);
-          } else {
-            output[key] = entity[key];
-          }
+          output[key] = this.isSanitizable( entity[key] ) ? this.sanitize(entity[key]) : entity[key];
         }
     });
     return output;

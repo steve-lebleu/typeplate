@@ -4,9 +4,11 @@ import { unlink, existsSync } from 'fs';
 import { promisify } from 'es6-promisify';
 import { expectationFailed } from '@hapi/boom';
 
-import { Media } from '@models/media.model';
 import { SCALING } from '@config/environment.config';
+
+import { Media } from '@models/media.model';
 import { IMAGE_MIME_TYPE } from '@enums';
+import { EnvImageScaling } from '@types'
 
 /**
  * @description
@@ -21,16 +23,24 @@ class MediaService {
   /**
    * @description
    */
-  private readonly SIZES = Object.keys(SCALING.SIZES).map(key => key.toLowerCase());
-
-  private constructor() {}
+  private readonly OPTIONS: EnvImageScaling;
 
   /**
    * @description
    */
-  static get(): MediaService {
+  private readonly SIZES: string[];
+
+  private constructor(config: EnvImageScaling) {
+    this.OPTIONS = config;
+    this.SIZES = Object.keys(this.OPTIONS.SIZES).map(key => key.toLowerCase())
+  }
+
+  /**
+   * @description
+   */
+  static get(config: any): MediaService {
     if (!MediaService.instance) {
-      MediaService.instance = new MediaService();
+      MediaService.instance = new MediaService(config);
     }
     return MediaService.instance;
   }
@@ -41,7 +51,7 @@ class MediaService {
    * @param media
    */
   rescale(media: Media): void|boolean {
-    if (!SCALING.IS_ACTIVE) {
+    if (!this.OPTIONS.IS_ACTIVE) {
       return false;
     }
     void Jimp.read(media.path)
@@ -50,8 +60,8 @@ class MediaService {
           .forEach( size => {
             image
               .clone()
-              .resize(SCALING.SIZES[size.toUpperCase()], Jimp.AUTO)
-              .write(`${media.path.split('/').slice(0, -1).join('/').replace(SCALING.PATH_MASTER, SCALING.PATH_SCALE)}/${size}/${media.filename as string}`, (err: Error) => {
+              .resize(this.OPTIONS.SIZES[size.toUpperCase()], Jimp.AUTO)
+              .write(`${media.path.split('/').slice(0, -1).join('/').replace(this.OPTIONS.PATH_MASTER, this.OPTIONS.PATH_SCALE)}/${size}/${media.filename as string}`, (err: Error) => {
                 if(err) throw expectationFailed(err.message);
               });
           });
@@ -70,7 +80,7 @@ class MediaService {
       void ulink(media.path.toString());
     } else {
       const promises = this.SIZES
-        .map( size => media.path.toString().replace(SCALING.PATH_MASTER, `${SCALING.PATH_SCALE}/${size}`) )
+        .map( size => media.path.toString().replace(this.OPTIONS.PATH_MASTER, `${this.OPTIONS.PATH_SCALE}/${size}`) )
         .filter( path => existsSync(path) )
         .map( path => ulink(path) );
       void Promise.all( [ existsSync(media.path.toString()) ? ulink( media.path.toString() ) : Promise.resolve() ].concat( promises ) );
@@ -79,6 +89,6 @@ class MediaService {
 
 }
 
-const mediaService = MediaService.get();
+const mediaService = MediaService.get(SCALING);
 
 export { mediaService as MediaService }

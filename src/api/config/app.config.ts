@@ -8,12 +8,13 @@ import * as Helmet from 'helmet';
 
 import { notAcceptable } from '@hapi/boom';
 
-import { ENVIRONMENT } from '@enums/environment.enum';
+import { ENVIRONMENT } from '@enums';
 
 import { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, ENV, UPLOAD } from '@config/environment.config';
-import { Authentication } from '@config/authentication.config';
 
+import { Authentication } from '@config/authentication.config';
 import { LoggerConfiguration } from '@config/logger.config';
+
 import { ProxyRouter } from '@services/proxy-router.service';
 
 import { Cors as Kors } from '@middlewares/cors.middleware';
@@ -104,7 +105,7 @@ export class ExpressConfiguration {
     /**
      * Check headers validity
      */
-    this.application.use( Kors(CONTENT_TYPE) );
+    this.application.use( Kors.validate );
 
     /**
      * Expose body on req.body
@@ -186,7 +187,7 @@ export class ExpressConfiguration {
      * - Sanitizer
      * - Resolver
      */
-    this.application.use(`/api/${API_VERSION}`, RateLimit(this.options.rate), Cache, ProxyRouter.map(), Sanitize, Resolve);
+    this.application.use(`/api/${API_VERSION}`, RateLimit(this.options.rate), Cache.read, ProxyRouter.map(), Sanitize.sanitize, Resolve.write);
 
     /**
      * Desktop error notification

@@ -1,44 +1,58 @@
 import { Request } from 'express';
 
 import { CONTENT_TYPE } from '@config/environment.config';
+import { CONTENT_TYPE as CONTENT_TYPE_ENUM } from '@enums';
+import { IResponse } from '@interfaces';
 
-import { CONTENT_MIME_TYPE } from '@enums/mime-type.enum';
-import { IResponse } from '@interfaces/IResponse.interface';
-import { IModel } from '@interfaces/IModel.interface'
-
-import { sanitize } from '@services/sanitizer.service';
+import { SanitizeService } from '@services/sanitizer.service';
 
 /**
- * @description Clean current data before output if the context requires it
- *
- * @param req Express Request instance
- * @param res Express Response instance
- * @param next Callback function
+ * @description
  */
-const Sanitize = async (req: Request, res: IResponse, next: () => void): Promise<void>  => {
+ class Sanitize {
 
-  const hasContent = typeof res.locals.data !== 'undefined';
+  /**
+   * @description
+   */
+  private static instance: Sanitize;
 
-  if (req.method === 'DELETE' || CONTENT_TYPE !== CONTENT_MIME_TYPE['application/json'] || !hasContent) {
-    return next();
+  private constructor() {}
+
+  /**
+   * @description
+   */
+  static get(): Sanitize {
+    if (!Sanitize.instance) {
+      Sanitize.instance = new Sanitize();
+    }
+    return Sanitize.instance;
   }
 
-  if (Array.isArray(res.locals.data)) {
-    res.locals.data = res.locals.data.map( (data: { whitelist?: string[] } ) => data.whitelist ? sanitize(data as IModel) : data );
-  } else if (res.locals.data.whitelist) {
-    res.locals.data = sanitize(res.locals.data as IModel);
-  } else if (typeof res.locals.data === 'object') {
-    const sanitized = Object.keys(res.locals.data).reduce((acc: any,current: string) => {
-      if (res.locals.data[current].whitelist) {
-        acc[current] = sanitize(res.locals.data[current])
-      } else {
-        acc[current] = res.locals.data[current];
-      }
-      return acc;
-    }, {}) as Record<string,unknown>;
-    res.locals.data = sanitized
+  /**
+   * @description Clean current data before output if the context requires it
+   *
+   * @param req Express Request instance
+   * @param res Express Response instance
+   * @param next Callback function
+   */
+   async sanitize(req: Request, res: IResponse, next: () => void): Promise<void> {
+
+    const hasContent = typeof res.locals.data !== 'undefined';
+
+    if (req.method === 'DELETE' || CONTENT_TYPE !== CONTENT_TYPE_ENUM['application/json'] || !hasContent) {
+      return next();
+    }
+
+    if ( !SanitizeService.hasEligibleMember(res.locals.data) ) {
+      return next();
+    }
+
+    res.locals.data = SanitizeService.process(res.locals.data);
+
+    next();
   }
-  next();
 }
 
-export { Sanitize }
+const sanitize = Sanitize.get();
+
+export { sanitize as Sanitize };

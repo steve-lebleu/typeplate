@@ -1,7 +1,8 @@
-import { Media } from '@models/media.model';
-import { IMediaQueryString } from '@interfaces/IMediaQueryString.interface';
 import { Repository, EntityRepository, getRepository } from 'typeorm';
 import { omitBy, isNil } from 'lodash';
+
+import { Media } from '@models/media.model';
+import { IMediaQueryString } from '@interfaces';
 import { getMimeTypesOfType } from '@utils/string.util';
 
 @EntityRepository(Media)

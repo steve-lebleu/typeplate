@@ -1,7 +1,6 @@
 import * as HTTP_STATUS from 'http-status';
 
-import { IError } from '@interfaces/IError.interface';
-import { IHTTPError } from '@interfaces/IHTTPError.interface';
+import { IError, IHTTPError } from '@interfaces';
 
 /**
  * @description Custom type MySQL error

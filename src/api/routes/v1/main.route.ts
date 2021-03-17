@@ -1,4 +1,4 @@
-import { Router } from '@bases/router.class';
+import { Router } from '@classes';
 import { MainController } from '@controllers/main.controller';
 
 export class MainRouter extends Router {

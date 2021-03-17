@@ -1,6 +1,6 @@
 import { User } from '@models/user.model';
 import { Request } from 'express';
-import { IMedia } from '@interfaces/IMedia.interface';
+import { IMedia } from '@interfaces';
 
 export interface IMediaRequest extends Request {
   user?: User;

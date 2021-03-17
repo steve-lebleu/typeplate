@@ -1,5 +1,5 @@
-import { Router } from '@bases/router.class';
-import { Validate } from '@middlewares/validate.middleware';
+import { Router } from '@classes';
+import { Validator } from '@middlewares/validator.middleware';
 import { Guard } from '@middlewares/guard.middleware';
 import { AuthController } from '@controllers/auth.controller';
 import { register, login, refresh, oauthCb } from '@validations/auth.validation';
@@ -171,7 +171,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/register')
-        .post(Validate(register), AuthController.register);
+        .post(Validator.check(register), AuthController.register);
 
     /**
      * @api {post} /auth/login Login
@@ -269,7 +269,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/login')
-        .post(Validate(login), AuthController.login);
+        .post(Validator.check(login), AuthController.login);
 
     /**
      * @api {post} /auth/refresh-token Refresh token
@@ -325,7 +325,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/refresh-token')
-        .post(Validate(refresh), AuthController.refresh);
+        .post(Validator.check(refresh), AuthController.refresh);
 
     /**
      * @api {get} /auth/facebook Facebook oAuth
@@ -394,7 +394,7 @@ export class AuthRouter extends Router {
      */
      this.router
      .route('/facebook/callback')
-       .get( Validate(oauthCb), Guard.oAuthCallback('facebook'), AuthController.oAuth );
+       .get( Validator.check(oauthCb), Guard.oAuthCallback('facebook'), AuthController.oAuth );
 
     /**
      * @api {get} /auth/google Google oAuth
@@ -452,7 +452,7 @@ export class AuthRouter extends Router {
      */
      this.router
      .route('/google/callback')
-       .get( Validate(oauthCb), Guard.oAuthCallback('google'), AuthController.oAuth );
+       .get( Validator.check(oauthCb), Guard.oAuthCallback('google'), AuthController.oAuth );
 
     /**
      * @api {get} /auth/github Github oAuth
@@ -510,7 +510,7 @@ export class AuthRouter extends Router {
     */
     this.router
     .route('/github/callback')
-      .get( Validate(oauthCb), Guard.oAuthCallback('github'), AuthController.oAuth );
+      .get( Validator.check(oauthCb), Guard.oAuthCallback('github'), AuthController.oAuth );
 
     /**
      * @api {get} /auth/linkedin Linkedin oAuth
@@ -568,7 +568,7 @@ export class AuthRouter extends Router {
     */
     this.router
     .route('/linkedin/callback')
-      .get( Validate(oauthCb), Guard.oAuthCallback('linkedin'), AuthController.oAuth );
+      .get( Validator.check(oauthCb), Guard.oAuthCallback('linkedin'), AuthController.oAuth );
 
   }
 }

@@ -1,7 +1,7 @@
 /**
  * @description Define supported database engines
  */
-enum DATABASE_ENGINE {
+export enum DATABASE_ENGINE {
   'mysql' = 'mysql',
   'mariadb' = 'mariadb',
   'postgres' = 'postgres',
@@ -20,7 +20,3 @@ enum DATABASE_ENGINE {
   'expo' = 'expo',
   'better-sqlite3' = 'better-sqlite3'
 }
-
-type DATABASE = 'mysql' | 'mariadb' | 'postgres' | 'cockroachdb' | 'sqlite' |'mssql' | 'sap' | 'oracle' | 'nativescript' | 'react-native' | 'sqljs' | 'mongodb' | 'aurora-data-api' | 'aurora-data-api-pg' | 'expo' | 'better-sqlite3';
-
-export { DATABASE, DATABASE_ENGINE }

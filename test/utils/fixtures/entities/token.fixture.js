@@ -22,9 +22,7 @@ const oauthFacebook = {
 
 exports.oauthFacebook = oauthFacebook;
 
-
-/** OAuth Google
- * {
+const oauthGoogle = {
   id: '100381987564055936818',
   displayName: 'Steve Lebleu',
   name: { familyName: 'Lebleu', givenName: 'Steve' },
@@ -57,4 +55,4 @@ exports.oauthFacebook = oauthFacebook;
   }
 }
 
- */
+exports.oauthGoogle = oauthGoogle;

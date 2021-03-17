@@ -1,0 +1,1 @@
+export type ImageMimeType = 'image/bmp' | 'image/gif' | 'image/jpg' | 'image/jpeg' | 'image/png';

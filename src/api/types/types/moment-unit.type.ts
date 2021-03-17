@@ -1,0 +1,1 @@
+export type MomentUnit =  'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years';

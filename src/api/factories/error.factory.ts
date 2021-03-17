@@ -1,8 +1,7 @@
 import { badImplementation } from '@hapi/boom';
 import { MySQLError, NotFoundError, UploadError, ValidationError, ServerError } from '@errors';
-import { IError } from '@interfaces/IError.interface';
+import { IError, IHTTPError } from '@interfaces';
 import { getErrorStatusCode } from '@utils/error.util';
-import { IHTTPError } from '@interfaces/IHTTPError.interface';
 
 /**
  * @description

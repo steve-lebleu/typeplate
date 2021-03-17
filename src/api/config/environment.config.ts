@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 
 import { config as Dotenv } from 'dotenv';
 
-import { DatabaseEngine, MomentUnit } from '@types';
+import { DatabaseEngine, MomentUnit, EnvOauth, EnvJWT, EnvMemoryCache, EnvSSL, EnvTypeorm, EnvLog, EnvUpload, EnvImageScaling, EnvRefreshToken } from '@types';
 import { DATABASE_ENGINE, ENVIRONMENT, ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE, CONTENT_TYPE as CONTENT_TYPE_ENUM } from '@enums';
 
 import { list } from '@utils/enum.util';
@@ -167,13 +167,6 @@ export class Environment {
        */
       DOMAIN: (value: string): string => {
         return value ? value.trim().toLowerCase() : 'localhost';
-      },
-
-      /**
-       * @description Current runtime environment
-       */
-      ENVIRONMENT: (value: string): string => {
-        return value;
       },
 
       /**
@@ -661,7 +654,8 @@ export class Environment {
        * @default http://localhost:8101
        */
       URL: (value: string): string => {
-        if (value && /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(value)) {
+        const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}(\.[a-zA-Z0-9()]{1,})?(:[0-9]{1,5})?/;
+        if (value && regex.test(value) === false) {
           this.errors.push('URL bad value. Please fill a local or remote URL');
         }
         return value || 'http://localhost:8101'
@@ -863,16 +857,6 @@ const environment = Environment
   .aggregates();
 
 if (!environment.isValid()) environment.exit(environment.errors);
-
-type EnvOauth = { KEY: string, IS_ACTIVE: boolean, ID: string, SECRET: string, CALLBACK_URL: string };
-type EnvJWT = { SECRET: string, EXPIRATION: number };
-type EnvMemoryCache = { IS_ACTIVE: boolean, DURATION: number };
-type EnvSSL = { IS_ACTIVE: boolean, CERT: string, KEY: string };
-type EnvTypeorm = { DB: string, NAME: string, TYPE: DatabaseEngine, HOST: string, PORT: number, PWD: string, USER: string, SYNC: boolean, LOG: boolean, CACHE: boolean, ENTITIES: string, MIGRATIONS: string, SUBSCRIBERS: string };
-type EnvLog = { PATH: string, TOKEN: string };
-type EnvUpload = { MAX_FILE_SIZE: number, MAX_FILES: number, PATH: string, WILDCARDS: string[] };
-type EnvImageScaling = { IS_ACTIVE: boolean, PATH_MASTER: string, PATH_SCALE: string, SIZES: { XS: number, SM: number, MD: number, LG: number, XL: number } };
-type EnvRefreshToken = { DURATION: number, UNIT: MomentUnit };
 
 const API_VERSION   = environment.cluster.API_VERSION as string;
 const AUTHORIZED    = environment.cluster.AUTHORIZED as string;

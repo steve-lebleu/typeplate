@@ -56,3 +56,5 @@ const oauthGoogle = {
 }
 
 exports.oauthGoogle = oauthGoogle;
+
+exports.accessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MjE5NzU4ODAsImlhdCI6MTYxNDcxODI4MCwic3ViIjoyfQ.qQTiFLLRIXuRLfMxQXfwul_UjIrWV5-x6CG2UIovpSA';

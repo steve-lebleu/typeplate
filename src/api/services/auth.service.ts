@@ -44,21 +44,20 @@ class AuthService {
    * @param accessToken
    */
   async generateTokenResponse(user: User, accessToken: string): Promise<{ tokenType, accessToken, refreshToken, expiresIn }|Error> {
-    if (!user || !(user instanceof User)) {
+    if (!user || !(user instanceof User) || !user.id) {
       return badData('User is not an instance of User');
     }
-    try {
-      const tokenType = 'Bearer';
-      const oldToken = await getRepository(RefreshToken).findOne({ where : { user } });
-      if (oldToken) {
-        await getRepository(RefreshToken).remove(oldToken)
-      }
-      const refreshToken = getCustomRepository(RefreshTokenRepository).generate(user).token;
-      const expiresIn = Moment().add(JWT.EXPIRATION, 'minutes');
-      return { tokenType, accessToken, refreshToken, expiresIn };
-    } catch(e) {
-      return e;
+    if (!accessToken) {
+      return badData('Access token cannot be retrieved');
     }
+    const tokenType = 'Bearer';
+    const oldToken = await getRepository(RefreshToken).findOne({ where : { user } });
+    if (oldToken) {
+      await getRepository(RefreshToken).remove(oldToken)
+    }
+    const refreshToken = getCustomRepository(RefreshTokenRepository).generate(user).token;
+    const expiresIn = Moment().add(JWT.EXPIRATION, 'minutes');
+    return { tokenType, accessToken, refreshToken, expiresIn };
   }
 
   /**
@@ -76,16 +75,13 @@ class AuthService {
       const iRegistrable = {
         id: profile.id,
         username: profile.username ? profile.username : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}`,
-        email: profile.emails ? profile.emails.filter(email => (email.hasOwnProperty('verified') && email.verified) || email.value).slice().shift()?.value : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}@externalprovider.com`,
+        email: profile.emails ? profile.emails.filter(email => ( email.hasOwnProperty('verified') && email.verified ) || !email.hasOwnProperty('verified') ).slice().shift().value : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}@externalprovider.com`,
         picture: profile.photos.slice().shift()?.value,
         password: hash('email', 16)
       }
       const userRepository = getCustomRepository(UserRepository);
       const user = await userRepository.oAuthLogin(iRegistrable);
-      if (user) {
-        return next(null, user);
-      }
-      return next(null, false);
+      return next(null, user);
     } catch (err) {
       return next(err, false);
     }

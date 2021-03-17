@@ -8,6 +8,7 @@ const { Environment } = require(process.cwd() + '/dist/api/config/environment.co
 
 const { TYPEORM } = require(process.cwd() + '/dist/api/config/environment.config');
 const { Database } = require(process.cwd() + '/dist/api/config/database.config');
+const { LoggerConfiguration } = require(process.cwd() + '/dist/api/config/logger.config');
 
 describe('Config', function () {
 
@@ -116,7 +117,7 @@ describe('Config', function () {
         'AUTHORIZED', 'CONTENT_TYPE', 'FACEBOOK_CONSUMER_ID', 'FACEBOOK_CONSUMER_SECRET', 'GITHUB_CONSUMER_ID', 'GITHUB_CONSUMER_SECRET',
         'GOOGLE_CONSUMER_ID', 'GOOGLE_CONSUMER_SECRET', 'JWT_EXPIRATION_MINUTES', 'JWT_SECRET', 'LINKEDIN_CONSUMER_ID', 'LINKEDIN_CONSUMER_SECRET', 'PORT',
         'REFRESH_TOKEN_DURATION', 'REFRESH_TOKEN_UNIT', 'SSL_CERT', 'SSL_KEY', 'TYPEORM_DB', 'TYPEORM_CACHE', 'TYPEORM_HOST', 'TYPEORM_CACHE_DURATION',
-        'UPLOAD_MAX_FILE_SIZE', 'UPLOAD_MAX_FILES', 'UPLOAD_WILDCARDS'
+        'TYPEORM_TYPE', 'UPLOAD_MAX_FILE_SIZE', 'UPLOAD_MAX_FILES', 'UPLOAD_WILDCARDS', 'URL'
       ].forEach( key => {
 
         it(`should wait well formed value for ${key}`, (done) => {
@@ -140,14 +141,42 @@ describe('Config', function () {
 
     describe('connect()', () => {
 
-      it('should fail', async () => {  
+      it('should fail with process.exit(1)', (done) => {  
+        
         const options = clone(TYPEORM);
+        
         options.TYPE = 'yoda';
         options.NAME = 'yoda';
-        await Database.connect(options).catch(e => {
-          expect(e).to.be.instanceOf(Error);
-          expect(e.name).to.be.eqls('MissingDriverError');
+        
+        const stub = sinon.stub(process.stdout, 'write');
+        const stub2 = sinon.stub(process, 'exit');
+        
+        stub.callsFake((message) => {
+          expect(message).to.be.a.string;
+          stub.restore();
         });
+
+        stub2.callsFake((code) => {
+          expect(code).to.be.eqls(1);
+          stub2.restore();
+          done();
+        });
+
+        Database.connect(options);
+      })
+
+    })
+
+  });
+
+  describe('Logger', () => {
+
+    describe('init()', () => {
+
+      it('should return instance of this', (done) => {  
+        const result = LoggerConfiguration.init();
+        expect(LoggerConfiguration.logger).to.be.eqls(result.logger);
+        done();
       })
 
     })

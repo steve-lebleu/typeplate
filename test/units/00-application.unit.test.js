@@ -1,4 +1,4 @@
-var { server } = require(process.cwd() + '/dist/api/app.bootstrap');
+let { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 
 describe('Units tests', () => {
 
@@ -6,7 +6,6 @@ describe('Units tests', () => {
 
   after( () => {
     server.close();
-    server = undefined;
     delete server;
   });
 
@@ -16,5 +15,6 @@ describe('Units tests', () => {
   require('./03-services.unit.test');
   require('./04-middlewares.unit.test');
   require('./05-factories.unit.test');
+  require('./06-errors.unit.test');
 
 });

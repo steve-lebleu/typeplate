@@ -1,19 +1,12 @@
 ![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/tbqXm9Q/header-ts-boilerplate-4.png)
 
-[![Node](https://img.shields.io/badge/Node-14.16.0-informational)](https://nodejs.org/docs/latest-v14.x/api/index.html)
-[![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-informational)](https://www.typescriptlang.org/)
-[![Express](https://img.shields.io/badge/Express-4.16.4-informational)](https://expressjs.com/)
-[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-informational)](https://typeorm.io/#/)
-[![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational)](https://mochajs.org)
-
 [![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
-[![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master&refresh=1)](https://coveralls.io/github/konfer-be/ts-express-typeorm-boilerplate?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm-boilerplate?branch=master)
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/konfer-be/ts-express-typeorm-boilerplate/master)
 ![Requires.io (branch)](https://img.shields.io/requires/github/konfer-be/ts-express-typeorm-boilerplate/master)
 ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/konfer-be/ts-express-typeorm-boilerplate)
 
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
-![Discord](https://img.shields.io/discord/817108781291929641)
 
 Small but badass & ready to use RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript)  [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘
 
@@ -91,57 +84,39 @@ Open the *./package.json* file and edit *version*, *author*, *name*, *descriptio
 
 ### Step 6: setup environment variables
 
-Open *./dist/env/development.env* and *./dist/env/test.env* files and fill the required environment values. Mandatory fields are uncommented in the files. See env variables list above for more informations.
+Environment variables are defined in *.env* files. Open *./dist/env/development.env* and fill the required values (uncommented in the file). See [env variables list](https://github.com/konfer-be/ts-express-typeorm-boilerplate/wiki/Environment-variables) for more informations.
 
-| Key          | Description | Type    | Default     | Required |
-| ------------ | ----------- | ----------- | ----------- | ---------- |
-| API_VERSION  | Current version of your API | string | v1 | false
-| **AUTHORIZED**   | Allowed client hosts | string | / | true
-| CONTENT_TYPE | Supported Content-Type | string | application/json | false
-| **DOMAIN** | API domain | string | localhost | true
-| FACEBOOK_CONSUMER_ID | Facebook app ID | string | / | false
-| FACEBOOK_CONSUMER_SECRET | Facebook app secret | string | / | false
-| GITHUB_CONSUMER_ID | Github app ID | string | / | false
-| GITHUB_CONSUMER_SECRET | Github app secret | string | / | false
-| GOOGLE_CONSUMER_ID | Google app ID | string | / | false
-| GOOGLE_CONSUMER_SECRET | Google app secret | string | / | false
-| JWT_EXPIRATION_MINUTES   | JWT lifetime (minutes) | number | 120960 | false
-| **JWT_SECRET**   | JWT secret passphrase | string | / | true
-| LINKEDIN_CONSUMER_ID | Linkedin app ID | string | / | false
-| LINKEDIN_CONSUMER_SECRET | Linkedin app secret | string | / | false
-| LOGS_PATH    | Logs directory path | string | logs | false
-| LOGS_TOKEN | Morgan logs format | string | dev | false
-| MEMORY_CACHE | Memory cache activated | boolean | 0 | false
-| MEMORY_CACHE_DURATION | Cache lifetime duration (ms) | number | 5000 | false
-| **PORT**         | Listened application port | number | / | true
-| REFRESH_TOKEN_DURATION | Refresh token duration | number | 30 | false
-| REFRESH_TOKEN_UNIT | Refresh token duration unit | string | days | false
-| RESIZE_IS_ACTIVE | Images resizing activated | boolean | 1 | false
-| RESIZE_PATH_MASTER | Images directory name | string | master-copy | false
-| RESIZE_PATH_SCALE | Resized images path | string | rescale | path
-| RESIZE_SIZE_LG | Large size value (px) | number | 1024 | false
-| RESIZE_SIZE_MD | Medium size value (px) | number | 768 | false
-| RESIZE_SIZE_SM | Small size value (px) | number | 320 | false
-| RESIZE_SIZE_XL | Extra-large size value (px) | number | 1366 | false
-| RESIZE_SIZE_XS | Extra-small size value (px) | number | 260 | false
-| SSL_CERT | SSL certificate path | string | / | false
-| SSL_KEY | SSL key path | string | / | false
-| **TYPEORM_DB**   | Database name | string | / | true
-| TYPEORM_CACHE | Database cache activated | boolean | 0 | false
-| TYPEORM_CACHE_DURATION | Database cache duration | number | 5000 | false
-| **TYPEORM_HOST** | Database server host | string | / | true
-| TYPEORM_LOG  | Queries logs activated | boolean | 0 | false
-| TYPEORM_NAME | Databse connection identifier | string | default | false
-| **TYPEORM_PORT** | Database server port | number | / | true
-| **TYPEORM_PWD**  | Database password | string | / | true
-| TYPEORM_SYNC | Schema synchronization activated | boolean | 0 | false
-| **TYPEORM_TYPE** | Database engine | string | / | true
-| **TYPEORM_USER** | Database user | string | / | true
-| UPLOAD_MAX_FILE_SIZE | Max file size (bytes) | number | 1000000 | false
-| UPLOAD_MAX_FILES | Max number of files per request | number | 5 | false
-| UPLOAD_PATH  | Destination path for uploads | string | public | false
-| UPLOAD_WILDCARDS | Accepted file types for upload | string | * | false
-| URL | HTTP root path of your API | string | http://localhost:8101 | false
+```bash
+# CORS authorized domains
+AUTHORIZED = "http://localhost:4200"
+
+# API domain
+DOMAIN = "localhost"
+
+# JWT Secret passphrase
+JWT_SECRET = "bA2xcjpf8y5aSUFsNB2qN5yymUBSs6es3qHoFpGkec75RCeBb8cpKauGefw5qy4"
+
+# Application port.
+PORT = 8101
+
+# Database engine
+TYPEORM_TYPE = "mysql"
+
+# Database server host
+TYPEORM_HOST = "localhost"
+
+# Database name. Keep it different from your developement database.
+TYPEORM_DB = "ts_express_boilerplate_test"
+
+# Database user
+TYPEORM_USER = "root"
+
+# Database password
+TYPEORM_PWD = ""
+
+# Database port
+TYPEORM_PORT = "3306"
+```
 
 ### Step 7: setup your Typescript environment
 

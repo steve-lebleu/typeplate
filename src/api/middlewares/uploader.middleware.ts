@@ -18,14 +18,21 @@ import { getTypeOfMedia } from '@utils/string.util';
    */
   private static instance: Uploader;
 
-  private constructor() {}
+  /**
+   * @description
+   */
+  private options: IUploadOptions;
+
+  private constructor(options: IUploadOptions) {
+    this.options = options;
+  }
 
   /**
    * @description
    */
-  static get(): Uploader {
+  static get(options: IUploadOptions): Uploader {
     if (!Uploader.instance) {
-      Uploader.instance = new Uploader();
+      Uploader.instance = new Uploader(options);
     }
     return Uploader.instance;
   }
@@ -41,14 +48,18 @@ import { getTypeOfMedia } from '@utils/string.util';
    */
   upload = ( options?: IUploadOptions ) => async (req: IMediaRequest, res: IResponse, next: (error?: Error) => void): Promise<void> => {
 
-    const opts = options ? Object.keys(options)
-      .filter(key => UploadConfiguration.options[key])
+    this.options = options ? Object.keys(options)
+      .filter(key => this.options[key])
       .reduce((acc: IUploadOptions, current: string) => {
         acc[current] = options[current] as string|number|Record<string,unknown>;
         return acc;
-      }, UploadConfiguration.options) : UploadConfiguration.options;
+      }, this.options) : this.options;
 
-    const middleware = UploadConfiguration.engine( UploadConfiguration.configuration(opts) ).any();
+    if (!req || !res || !this.options) {
+      return next(new Error('Middleware requirements not found'))
+    }
+
+    const middleware = UploadConfiguration.engine( UploadConfiguration.configuration(this.options) ).any();
 
     middleware(req, res, (err: Error) => {
       if(err) {
@@ -58,7 +69,7 @@ import { getTypeOfMedia } from '@utils/string.util';
         return next(new Error('Binary data cannot be found'));
       }
       req.body.files = req.files
-        .slice(0, opts.maxFiles)
+        .slice(0, this.options.maxFiles)
         .map( ( media: IMedia ) => {
           const type = Pluralize(getTypeOfMedia(media.mimetype)) as string;
           media.owner = req.user.id;
@@ -71,6 +82,6 @@ import { getTypeOfMedia } from '@utils/string.util';
 
 }
 
-const upload = Uploader.get();
+const upload = Uploader.get(UploadConfiguration.options);
 
 export { upload as Uploader };

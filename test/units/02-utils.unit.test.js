@@ -1,7 +1,6 @@
 const expect = require('chai').expect;
-var sinon = require('sinon');
 
-const { MEDIA } = require(process.cwd() + '/dist/api/types/enums/media.enum');
+const { MEDIA } = require(process.cwd() + '/dist/api/types/enums/media-type.enum');
 
 const { getAge } = require(process.cwd() + '/dist/api/utils/date.util');
 const { getErrorStatusCode } = require(process.cwd() + '/dist/api/utils/error.util');

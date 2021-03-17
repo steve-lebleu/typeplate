@@ -9,13 +9,20 @@ class Logger {
   /**
    * @description Wrapped logger instance, here winston
    */
-  private static instance: WinstonLogger;
+  private static instance: Logger;
 
-  private constructor() {}
+  /**
+   * @description
+   */
+  engine: WinstonLogger;
 
-  static get(engine: WinstonLogger): WinstonLogger {
+  private constructor(engine: WinstonLogger) {
+    this.engine = engine;
+  }
+
+  static get(engine: WinstonLogger): Logger {
     if ( !Logger.instance ) {
-      Logger.instance = engine
+      Logger.instance = new Logger(engine)
     }
     return Logger.instance;
   }
@@ -27,10 +34,10 @@ class Logger {
    * @param message
    */
   log(level: string, message: string ): void {
-    Logger.instance[level](message);
+    this.engine[level](message);
   }
 }
 
-const logger = Logger.get(LoggerConfiguration.logger);
+const logger = Logger.get( LoggerConfiguration.logger );
 
 export { logger as Logger }

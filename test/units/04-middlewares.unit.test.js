@@ -4,6 +4,7 @@ const sinon = require('sinon');
 const { CacheConfiguration } = require(process.cwd() + '/dist/api/config/cache.config');
 const { CacheService } = require(process.cwd() + '/dist/api/services/cache.service');
 const { Cache } = require(process.cwd() + '/dist/api/middlewares/cache.middleware');
+const { Uploader } = require(process.cwd() + '/dist/api/middlewares/uploader.middleware');
 
 describe('Middlewares', () => {
 
@@ -68,6 +69,22 @@ describe('Middlewares', () => {
       await Cache.read({method: 'GET'}, res, () => {});
       expect(stubEngine.called).to.be.true;
       expect(stubResJSON.called).to.be.false;
+    });
+
+  });
+
+  describe('Uploader', () => {
+
+    it('should mix args options', (done) => {
+
+      Uploader.upload( { maxFiles: 2, filesize: 5000 } )( null, null, (e) => e )
+        .then(r => {
+          expect(Uploader.options.maxFiles).to.be.eqls(2);
+          expect(Uploader.options.filesize).to.be.eqls(5000);
+          done();
+        })
+        .catch(e => { done(e); });
+
     });
 
   });

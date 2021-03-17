@@ -1,5 +1,11 @@
 ![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/tbqXm9Q/header-ts-boilerplate-4.png)
 
+[![Node](https://img.shields.io/badge/Node-14.16.0-informational?logo=node.js&color=696969)](https://nodejs.org/docs/latest-v14.x/api/index.html)
+[![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-informational?logo=typescript&color=696969)](https://www.typescriptlang.org/)
+[![Express](https://img.shields.io/badge/Express-4.16.4-informational?logo=express&color=696969)](https://expressjs.com/)
+[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-informational?logo=typeorm&color=696969)](https://typeorm.io/#/)
+[![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational?logo=mocha&color=696969)](https://mochajs.org)
+
 [![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
 [![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm-boilerplate?branch=master)
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/konfer-be/ts-express-typeorm-boilerplate/master)
@@ -94,7 +100,7 @@ AUTHORIZED = "http://localhost:4200"
 DOMAIN = "localhost"
 
 # JWT Secret passphrase
-JWT_SECRET = "bA2xcjpf8y5aSUFsNB2qN5yymUBSs6es3qHoFpGkec75RCeBb8cpKauGefw5qy4"
+JWT_SECRET = "your-secret"
 
 # Application port.
 PORT = 8101
@@ -106,7 +112,7 @@ TYPEORM_TYPE = "mysql"
 TYPEORM_HOST = "localhost"
 
 # Database name. Keep it different from your developement database.
-TYPEORM_DB = "ts_express_boilerplate_test"
+TYPEORM_DB = "your-database"
 
 # Database user
 TYPEORM_USER = "root"
@@ -122,45 +128,7 @@ TYPEORM_PORT = "3306"
 
 If you don't wish specify particular Typescript settings, skip this step.
 
-Otherwise, Typescript configuration is provided in *./tsconfig.json* file:
-
-```javascript
-{
-  "compilerOptions": {
-    "outDir": "./dist/api",
-    "sourceMap": false,
-    "baseUrl": "./src",
-    "paths": {
-      "@bases/*": ["api/types/classes/*"],
-      "@config/*": ["api/config/*"],
-      "@controllers/*": ["api/controllers/*"],
-      "@decorators/*": ["api/decorators/*"],
-      "@enums/*": ["api/types/enums/*"],
-      "@errors/*": ["api/types/errors/*"],
-      "@factories/*": ["api/factories/*"],
-      "@interfaces/*": ["api/types/interfaces/*"],
-      "@middlewares/*": ["api/middlewares/*"],
-      "@models/*": ["api/models/*"],
-      "@repositories/*": ["api/repositories/*"],
-      "@routes/*": ["api/routes/v1/*"],
-      "@servers/*": ["servers/*"],
-      "@services/*": ["api/services/*"],
-      "@utils/*": ["api/utils/*"],
-      "@validations/*": ["api/validations/*"],
-    },
-    "lib": ["dom", "es5", "es6", "es7"],
-    "target": "es5",
-    "module": "commonjs",
-    "allowSyntheticDefaultImports": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-  },
-  "exclude" : [
-    "**/**/node_modules",
-    "node_modules"
-  ]
-}
-```
+Otherwise, edit Typescript configuration provided in [./tsconfig.json](tsconfig.json).
 
 More info about [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html).
 
@@ -168,35 +136,7 @@ More info about [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsc
 
 If you don't wish to use Typeorm with CLI, skip this step.
 
-Otherwise, update *./ormconfig.json* file, and fill it with the same parameters as in your environment file.
-
-```javascript
-{
-  "type": "mysql",
-  "name": "default",
-  "host": "localhost",
-  "port": 3306,
-  "username": "root",
-  "password": "root",
-  "database": "your-database",
-  "synchronize": false,
-  "logging": false,
-  "entities": [
-    "./dist/api/models/**/*.js"
-  ],
-  "migrations": [
-    "./dist/migrations/**/*.js"
-  ],
-  "subscribers": [
-    "dist/api/models/subscribers/**/*.subscriber.js"
-  ],
-  "cli": {
-    "entitiesDir": "./dist/api/models",
-    "migrationsDir": "./dist/migrations",
-    "subscribersDir": "./dist/api/models/subscribers"
-  }
-}
-```
+Otherwise, edit [./ormconfig.json](ormconfig.json) and fill it with the same parameters as in your environment file.
 
 More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeorm cli](https://typeorm.io/#/using-cli/installing-cli).
 

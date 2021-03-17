@@ -1,5 +1,5 @@
 {
-  "version": "1.2.3",
+  "version": "1.2.4",
   "engines": {
     "node": ">=14.16"
   },
@@ -49,7 +49,7 @@
     "test:unit": "./node_modules/.bin/mocha ./test/units/00-application.unit.test.js --exit --reporter spec --timeout 10000 --env test",
     "test:e2e": "./node_modules/.bin/mocha ./test/e2e/00-api.e2e.test.js --exit --reporter spec --timeout 10000 --env test",
     "todo": "leasot -x --reporter markdown './src/**/*.ts' > TODO.md && git add TODO.md",
-    "version": "npm run todo && git add TODO.md && git add package.json && auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\" --no-verify"
+    "version": "npm run todo && git add TODO.md && git add package.json && git add README.md && auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\" --no-verify"
   },
   "_moduleAliases": {
     "@classes": "dist/api/types/classes",

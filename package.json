@@ -45,6 +45,8 @@
     "doc:apidoc": "apidoc -i src/ -o docs/apidoc/",
     "doc:typedoc": "typedoc --name 'API documentation' --defaultCategory 'Root' --categorizeByGroup  --out ./docs/typedoc ./src",
     "kickstart": "npm i typescript@4.2.2 -g && npm i typeorm@0.2.31 -g && npm i kfr-kem -g && npm i && npm run build && npm run doc",
+    "kickstart:staging": "",
+    "kickstart:production": "",
     "test": "nyc --reporter=html --report-dir=./reports/nyc-coverage npm-run-all -s test:*",
     "test:unit": "./node_modules/.bin/mocha ./test/units/00-application.unit.test.js --exit --reporter spec --timeout 10000 --env test",
     "test:e2e": "./node_modules/.bin/mocha ./test/e2e/00-api.e2e.test.js --exit --reporter spec --timeout 10000 --env test",

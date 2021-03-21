@@ -21,7 +21,6 @@ export class MainRouter extends Router {
      * @apiPermission public
      *
      * @apiHeader {String="application/json"} Content-Type   Mime-type
-
      *
      * @apiHeaderExample {json} Request headers
      * {

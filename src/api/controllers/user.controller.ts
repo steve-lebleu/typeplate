@@ -3,7 +3,7 @@ import { getRepository, getCustomRepository } from 'typeorm';
 import { User } from '@models/user.model';
 import { UserRepository } from '@repositories/user.repository';
 import { IUserRequest, IResponse } from '@interfaces';
-import { safe } from '@decorators/safe.decorator';
+import { Safe } from '@decorators/safe.decorator';
 
 /**
  * Manage incoming requests for api/{version}/users
@@ -33,7 +33,7 @@ class UserController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
+  @Safe()
   async get(req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(UserRepository);
     res.locals.data = await repository.one(parseInt(req.params.userId, 10));
@@ -45,7 +45,7 @@ class UserController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
+  @Safe()
   async loggedIn (req: IUserRequest, res: IResponse): Promise<void> {
     res.locals.data = new User(req.user);
   }
@@ -56,7 +56,7 @@ class UserController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
+  @Safe()
   async create (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = new User(req.body);
@@ -70,7 +70,7 @@ class UserController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
+  @Safe()
   async update (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = await repository.findOneOrFail(req.params.userId);
@@ -85,7 +85,7 @@ class UserController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
+  @Safe()
   async list (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(UserRepository);
     const users = await repository.list(req.query);
@@ -98,7 +98,7 @@ class UserController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
+  @Safe()
   async remove (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = await repository.findOneOrFail(req.params.userId);

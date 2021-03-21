@@ -114,8 +114,6 @@ export class AuthRouter extends Router {
      * @apiSuccess (Created 201) {String}      user.username       User name
      * @apiSuccess (Created 201) {String}      user.email          User email
      * @apiSuccess (Created 201) {String}      user.role           User role
-     * @apiSuccess (Created 201) {Provider[]}  user.providers      User providers of services
-     * @apiSuccess (Created 201) {Smtp[]}      user.smtps          User smtp's
      * @apiSuccess (Created 201) {Date}        user.createdAt      User creation date
      * @apiSuccess (Created 201) {Date}        user.updatedAt      User updating date
      *
@@ -132,8 +130,6 @@ export class AuthRouter extends Router {
      *      "username": "johndoe",
      *      "email": "contact@john-doe.com",
      *      "role": "user",
-     *      "providers": Provider[],
-     *      "smtps": Smtp[],
      *      "createdAt": "2019-08-10T08:22:00.000Z",
      *      "updatedAt": null
      *    }
@@ -202,8 +198,6 @@ export class AuthRouter extends Router {
      * @apiSuccess (Success 200) {String}      user.username       User name
      * @apiSuccess (Success 200) {String}      user.email          User email
      * @apiSuccess (Success 200) {String}      user.role           User role
-     * @apiSuccess (Success 200) {Provider[]}  user.providers      User providers of services
-     * @apiSuccess (Success 200) {Smtp[]}      user.smtps          User smtp's
      * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
      * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
      *
@@ -220,8 +214,6 @@ export class AuthRouter extends Router {
      *      "username": "johndoe",
      *      "email": "contact@john-doe.com",
      *      "role": "user",
-     *      "providers": Provider[],
-     *      "smtps": Smtp[],
      *      "createdAt": "2019-08-10T08:22:00.000Z",
      *      "updatedAt": "2019-08-10T08:22:03.000Z"
      *    }
@@ -357,42 +349,7 @@ export class AuthRouter extends Router {
       .route('/facebook')
         .get( Guard.oAuth('facebook') );
 
-    /**
-     * @api {get} /auth/facebook/callback Facebook oAuth callback
-     * @apiDescription Login with facebook. Creates a new user if it does not exist.
-     * @apiVersion 1.0.0
-     * @apiName FacebookOauthCallback
-     * @apiGroup Auth
-     * @apiPermission public
-     *
-     * @apiUse BaseHeaderSimple
-     *
-     * @apiParam {String}  code  Facebook access_token
-     *
-     * @apiUse SuccessToken
-     *
-     * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
-     * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
-     *
-     * @apiErrorExample {json} ValidationError
-     * {
-     *    "statusCode": 400,
-     *    "statusText": "Bad request",
-     *    "errors": [
-     *      {
-     *        "field": "code",
-     *        "types": [
-     *          "string.base"
-     *        ],
-     *        "messages": [
-     *          "\"code\" must be a string"
-     *        ]
-     *      }
-     *    ]
-     * }
-     *
-     */
-     this.router
+    this.router
      .route('/facebook/callback')
        .get( Validator.check(oauthCb), Guard.oAuthCallback('facebook'), AuthController.oAuth );
 
@@ -416,159 +373,57 @@ export class AuthRouter extends Router {
       .route('/google')
        .get( Guard.oAuth('google'), AuthController.oAuth );
 
-    /**
-     * @api {get} /auth/google/callback Google oAuth callback
-     * @apiDescription Login with Google. Creates a new user if it does not exist.
-     * @apiVersion 1.0.0
-     * @apiName GoogleOauthCallback
-     * @apiGroup Auth
-     * @apiPermission public
-     *
-     * @apiUse BaseHeaderSimple
-     *
-     * @apiParam  {String}  code  Google access_token
-     *
-     * @apiUse SuccessToken
-     *
-     * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
-     * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
-     *
-     * @apiErrorExample {json} ValidationError
-     * {
-     *    "statusCode": 400,
-     *    "statusText": "Bad request",
-     *    "errors": [
-     *      {
-     *        "field": "code",
-     *        "types": [
-     *          "string.base"
-     *        ],
-     *        "messages": [
-     *          "\"code\" must be a string"
-     *        ]
-     *      }
-     *    ]
-     * }
-     */
-     this.router
+    this.router
      .route('/google/callback')
        .get( Validator.check(oauthCb), Guard.oAuthCallback('google'), AuthController.oAuth );
 
-    /**
-     * @api {get} /auth/github Github oAuth
-     * @apiDescription Login with Github.
-     * @apiVersion 1.0.0
-     * @apiName GithubOauth
-     * @apiGroup Auth
-     * @apiPermission public
-     *
-     * @apiUse BaseHeaderSimple
-     *
-     * @apiUse SuccessToken
-     *
-     * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
-     * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
-     *
-     */
-     this.router
-     .route('/github')
-      .get( Guard.oAuth('github'), AuthController.oAuth );
-
-   /**
-    * @api {get} /auth/github/callback Github oAuth callback
-    * @apiDescription Login with Github. Creates a new user if it does not exist.
-    * @apiVersion 1.0.0
-    * @apiName GithubOauthCallback
-    * @apiGroup Auth
-    * @apiPermission public
-    *
-    * @apiUse BaseHeaderSimple
-    *
-    * @apiParam  {String}  code  Github access_token
-    *
-    * @apiUse SuccessToken
-    *
-    * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
-    * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
-    *
-    * @apiErrorExample {json} ValidationError
-    * {
-    *    "statusCode": 400,
-    *    "statusText": "Bad request",
-    *    "errors": [
-    *      {
-    *        "field": "code",
-    *        "types": [
-    *          "string.base"
-    *        ],
-    *        "messages": [
-    *          "\"code\" must be a string"
-    *        ]
-    *      }
-    *    ]
-    * }
-    */
+  /**
+   * @api {get} /auth/github Github oAuth
+   * @apiDescription Login with Github.
+   * @apiVersion 1.0.0
+   * @apiName GithubOauth
+   * @apiGroup Auth
+   * @apiPermission public
+   *
+   * @apiUse BaseHeaderSimple
+   *
+   * @apiUse SuccessToken
+   *
+   * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
+   * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
+   *
+   */
     this.router
-    .route('/github/callback')
-      .get( Validator.check(oauthCb), Guard.oAuthCallback('github'), AuthController.oAuth );
+      .route('/github')
+        .get( Guard.oAuth('github'), AuthController.oAuth );
 
-    /**
-     * @api {get} /auth/linkedin Linkedin oAuth
-     * @apiDescription Login with Linkedin.
-     * @apiVersion 1.0.0
-     * @apiName LinkedinOauth
-     * @apiGroup Auth
-     * @apiPermission public
-     *
-     * @apiUse BaseHeaderSimple
-     *
-     * @apiUse SuccessToken
-     *
-     * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
-     * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
-     *
-     */
-     this.router
-     .route('/linkedin')
-      .get( Guard.oAuth('linkedin'), AuthController.oAuth );
-
-   /**
-    * @api {get} /auth/linkedin/callback Linkedin oAuth callback
-    * @apiDescription Login with Linkedin. Creates a new user if it does not exist.
-    * @apiVersion 1.0.0
-    * @apiName LinkedinOauthCallback
-    * @apiGroup Auth
-    * @apiPermission public
-    *
-    * @apiUse BaseHeaderSimple
-    *
-    * @apiParam  {String}  code  Linkedin access_token
-    *
-    * @apiUse SuccessToken
-    *
-    * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
-    * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
-    *
-    * @apiErrorExample {json} ValidationError
-    * {
-    *    "statusCode": 400,
-    *    "statusText": "Bad request",
-    *    "errors": [
-    *      {
-    *        "field": "code",
-    *        "types": [
-    *          "string.base"
-    *        ],
-    *        "messages": [
-    *          "\"code\" must be a string"
-    *        ]
-    *      }
-    *    ]
-    * }
-    */
     this.router
-    .route('/linkedin/callback')
-      .get( Validator.check(oauthCb), Guard.oAuthCallback('linkedin'), AuthController.oAuth );
+      .route('/github/callback')
+        .get( Validator.check(oauthCb), Guard.oAuthCallback('github'), AuthController.oAuth );
+
+  /**
+   * @api {get} /auth/linkedin Linkedin oAuth
+   * @apiDescription Login with Linkedin.
+   * @apiVersion 1.0.0
+   * @apiName LinkedinOauth
+   * @apiGroup Auth
+   * @apiPermission public
+   *
+   * @apiUse BaseHeaderSimple
+   *
+   * @apiUse SuccessToken
+   *
+   * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
+   * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
+   *
+   */
+    this.router
+      .route('/linkedin')
+        .get( Guard.oAuth('linkedin'), AuthController.oAuth );
+
+    this.router
+      .route('/linkedin/callback')
+        .get( Validator.check(oauthCb), Guard.oAuthCallback('linkedin'), AuthController.oAuth );
 
   }
 }

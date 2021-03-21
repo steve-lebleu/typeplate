@@ -1,5 +1,5 @@
 {
-  "version": "1.2.4",
+  "version": "1.2.5",
   "engines": {
     "node": ">=14.16"
   },
@@ -55,7 +55,7 @@
     "@classes": "dist/api/types/classes",
     "@config": "dist/api/config",
     "@controllers": "dist/api/controllers",
-    "@decorators": "dist/api/decorators",
+    "@decorators": "dist/api/types/decorators",
     "@enums": "dist/api/types/enums",
     "@errors": "dist/api/types/errors",
     "@factories": "dist/api/factories",

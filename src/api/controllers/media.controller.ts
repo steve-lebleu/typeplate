@@ -3,7 +3,7 @@ import { clone } from 'lodash';
 
 import { IMediaRequest, IResponse } from '@interfaces';
 
-import { safe } from '@decorators/safe.decorator';
+import { Safe } from '@decorators/safe.decorator';
 
 import { MediaRepository } from '@repositories/media.repository';
 import { Media } from '@models/media.model';
@@ -38,7 +38,7 @@ class MediaController {
    *
    * @public
    */
-  @safe
+  @Safe()
   async get(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
     const media = await repository.findOneOrFail(req.params.mediaId, { relations: ['owner'] });
@@ -51,7 +51,7 @@ class MediaController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
+  @Safe()
   async list (req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(MediaRepository);
     const medias = await repository.list(req.query);
@@ -66,7 +66,7 @@ class MediaController {
    *
    * @public
    */
-  @safe
+  @Safe()
   async create(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
     const medias = [].concat(req.files).map( (file) => new Media(file));
@@ -82,7 +82,7 @@ class MediaController {
    *
    * @public
    */
-  @safe
+  @Safe()
   async update(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
     const media = clone(res.locals.data) as Media;
@@ -99,7 +99,7 @@ class MediaController {
    *
    * @public
    */
-  @safe
+  @Safe()
   async remove (req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getRepository(Media);
     const media = clone(res.locals.data) as Media;

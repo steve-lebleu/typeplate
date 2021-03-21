@@ -40,8 +40,6 @@ export class UserRouter extends Router {
        * @apiSuccess (Success 200) {String}      user.username       User name
        * @apiSuccess (Success 200) {String}      user.email          User email
        * @apiSuccess (Success 200) {String}      user.role           User role
-       * @apiSuccess (Success 200) {Provider[]}  user.providers      User providers of services
-       * @apiSuccess (Success 200) {Smtp[]}      user.smtps          User smtp's
        * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
        * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
        *
@@ -52,8 +50,6 @@ export class UserRouter extends Router {
        *    "username": "johndoe",
        *    "email": "contact@john-doe.com",
        *    "role": "user",
-       *    "providers": Provider[],
-       *    "smtps": Smtp[],
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
        *  },
@@ -62,8 +58,6 @@ export class UserRouter extends Router {
        *    "username": "johnpoe",
        *    "email": "contact@john-poe.com",
        *    "role": "user",
-       *    "providers": Provider[],
-       *    "smtps": Smtp[],
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
        *  }
@@ -122,8 +116,6 @@ export class UserRouter extends Router {
        * @apiSuccess (Success 200) {String}      user.username       User name
        * @apiSuccess (Success 200) {String}      user.username       User name
        * @apiSuccess (Success 200) {String}      user.email          User email
-       * @apiSuccess (Success 200) {String}      user.role           User role
-       * @apiSuccess (Success 200) {Provider[]}  user.providers      User providers of services
        * @apiSuccess (Success 200) {Smtp[]}      user.smtps          User smtp's
        * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
        * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
@@ -134,8 +126,6 @@ export class UserRouter extends Router {
        *    "username": "johndoe",
        *    "email": "contact@john-doe.com",
        *    "role": "user",
-       *    "providers": Provider[],
-       *    "smtps": Smtp[],
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
        *  }
@@ -200,8 +190,6 @@ export class UserRouter extends Router {
        * @apiSuccess (Success 200) {String}      user.username       User name
        * @apiSuccess (Success 200) {String}      user.email          User email
        * @apiSuccess (Success 200) {String}      user.role           User role
-       * @apiSuccess (Success 200) {Provider[]}  user.providers      User providers of services
-       * @apiSuccess (Success 200) {Smtp[]}      user.smtps          User smtp's
        * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
        * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
        *
@@ -211,8 +199,6 @@ export class UserRouter extends Router {
        *    "username": "johndoe",
        *    "email": "contact@john-doe.com",
        *    "role": "user",
-       *    "providers": Provider[],
-       *    "smtps": Smtp[],
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
        *  }
@@ -248,8 +234,6 @@ export class UserRouter extends Router {
        * @apiSuccess (Success 200) {String}      user.username       User name
        * @apiSuccess (Success 200) {String}      user.email          User email
        * @apiSuccess (Success 200) {String}      user.role           User role
-       * @apiSuccess (Success 200) {Provider[]}  user.providers      User providers of services
-       * @apiSuccess (Success 200) {Smtp[]}      user.smtps          User smtp's
        * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
        * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
        *
@@ -259,8 +243,6 @@ export class UserRouter extends Router {
        *    "username": "johndoe",
        *    "email": "contact@john-doe.com",
        *    "role": "user",
-       *    "providers": Provider[],
-       *    "smtps": Smtp[],
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
        *  }
@@ -322,8 +304,6 @@ export class UserRouter extends Router {
        * @apiParam  {String}          [email]         User email
        * @apiParam  {String{8..16}}   [password]      User password
        * @apiParam  {String{..32}}    [username]      User username
-       * @apiParam  {Provider[]}      [providers]     User providers
-       * @apiParam  {Smtp[]}          [smtps]         User smtps
        * @apiParam  {String=admin}    [role]          User role
        *
        * @apiSuccess (Success 200) {User}        user                User
@@ -331,8 +311,6 @@ export class UserRouter extends Router {
        * @apiSuccess (Success 200) {String}      user.username       User name
        * @apiSuccess (Success 200) {String}      user.email          User email
        * @apiSuccess (Success 200) {String}      user.role           User role
-       * @apiSuccess (Success 200) {Provider[]}  user.providers      User providers of services
-       * @apiSuccess (Success 200) {Smtp[]}      user.smtps          User smtp's
        * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
        * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
        *
@@ -342,8 +320,6 @@ export class UserRouter extends Router {
        *    "username": "johndoe",
        *    "email": "contact@john-doe.com",
        *    "role": "user",
-       *    "providers": Provider[],
-       *    "smtps": Smtp[],
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
        *  }
@@ -423,8 +399,6 @@ export class UserRouter extends Router {
        * @apiParam  {String}          [email]         User email
        * @apiParam  {String{8..16}}   [password]      User password
        * @apiParam  {String{..32}}    [username]      User username
-       * @apiParam  {Provider[]}      [providers]     User providers
-       * @apiParam  {Smtp[]}          [smtps]         User smtps
        * @apiParam  {String=admin}    [role]          User role
        *
        * @apiSuccess (Success 200) {User}        user                User
@@ -432,8 +406,6 @@ export class UserRouter extends Router {
        * @apiSuccess (Success 200) {String}      user.username       User name
        * @apiSuccess (Success 200) {String}      user.email          User email
        * @apiSuccess (Success 200) {String}      user.role           User role
-       * @apiSuccess (Success 200) {Provider[]}  user.providers      User providers of services
-       * @apiSuccess (Success 200) {Smtp[]}      user.smtps          User smtp's
        * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
        * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
        *

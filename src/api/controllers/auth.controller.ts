@@ -7,7 +7,7 @@ import { User } from '@models/user.model';
 import { RefreshToken } from '@models/refresh-token.model';
 import { UserRepository } from '@repositories/user.repository';
 import { AuthService } from '@services/auth.service';
-import { safe } from '@decorators/safe.decorator';
+import { Safe } from '@decorators/safe.decorator';
 
 /**
  * Manage incoming requests from api/{version}/auth
@@ -37,7 +37,7 @@ class AuthController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
+  @Safe()
   async register(req: Request, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = new User(req.body);
@@ -52,7 +52,7 @@ class AuthController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
+  @Safe()
   async login(req: Request, res: IResponse): Promise<void> {
     const repository = getCustomRepository(UserRepository);
     const { user, accessToken } = await repository.findAndGenerateToken(req.body);
@@ -66,7 +66,7 @@ class AuthController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
+  @Safe()
   async oAuth (req: IUserRequest, res: IResponse): Promise<void> {
     const user = req.user as User;
     const accessToken = user.token();
@@ -80,7 +80,7 @@ class AuthController {
    * @param req Express request object derived from http.incomingMessage
    * @param res Express response object
    */
-  @safe
+  @Safe()
   async refresh(req: Request, res: IResponse, next: (e?: Error) => void): Promise<void> {
     const refreshTokenRepository = getRepository(RefreshToken);
     const userRepository = getCustomRepository(UserRepository);

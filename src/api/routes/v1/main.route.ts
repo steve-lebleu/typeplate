@@ -20,8 +20,19 @@ export class MainRouter extends Router {
      * @apiGroup Info
      * @apiPermission public
      *
+     * @apiHeader {String="application/json"} Content-Type   Mime-type
+
+     *
+     * @apiHeaderExample {json} Request headers
+     * {
+     *    "Content-Type": "application/json",
+     *    "Origin": "https://your-host.com"
+     * }
+     *
      * @apiSuccess (Ok 200) {String} OK string success
      *
+     * @apiError (Not acceptable 406) Content-Type Must be application/json or multipart-form/data
+     * @apiError (Not acceptable 406) Origin Should be specified
      * @apiError (Internal server error 500) Internal API is down
      */
     this.router.route('/status').get(MainController.status);

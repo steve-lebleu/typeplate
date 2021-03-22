@@ -6,8 +6,8 @@
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-informational?logo=typeorm&color=696969)](https://typeorm.io/#/)
 [![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational?logo=mocha&color=696969)](https://mochajs.org)
 
-[![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm)
-[![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm?branch=master)
+[![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
+[![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm-boilerplate?branch=master)
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/konfer-be/ts-express-typeorm/master)
 ![Requires.io (branch)](https://img.shields.io/requires/github/konfer-be/ts-express-typeorm/master)
 ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/konfer-be/ts-express-typeorm)
@@ -36,11 +36,13 @@ Small but badass & ready to use RESTful API boilerplate builded with [Express.js
 * **Customizable image resizing** designed for front-end requirements with [Jimp](https://www.npmjs.com/package/jimp).
 * **Automatic changelog completion** with [auto-changelog](https://www.npmjs.com/package/auto-changelog).
 * **Easy API testing** with included unit and e2e test sets builded with [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/), [Sinon](https://sinonjs.org/) and [Supertest](https://github.com/visionmedia/supertest).
-* **Easy generation of documentation** with [api-doc](https://apidocjs.com/) and [typedoc](https://typedoc.org/). 
+* **Easy generation of documentation** with [api-doc](https://apidocjs.com/) and [typedoc](https://typedoc.org/).
+* **Easy entity generation** (controller, route, repository, model, validations, test, fixture) with [rsgen](https://github.com/konfer-be/rsgen).
 
 ## > Table of contents
 
 * [Getting started](#getting-started)
+* [Entity generation](#entity-generation)
 * [Documentation](#documentation)
 * [Tests](#tests)
 * [Continuous integration](#continuous-integration)
@@ -61,7 +63,7 @@ When you're ready with that, starting your project is a matter of minutes.
 ### Step 1: install
 
 ```bash
-$ git clone https://github.com/konfer-be/ts-express-typeorm-boilerplate.git path-to/your-project-name/
+$ git clone https://github.com/konfer-be/ts-express-typeorm.git path-to/your-project-name/
 ```
 
 ### Step 2: go to your project
@@ -88,7 +90,7 @@ Open the *./package.json* file and edit *version*, *author*, *name*, *descriptio
 
 ### Step 6: setup environment variables
 
-Environment variables are defined in *.env* files. Open *./dist/env/development.env* and fill the required values (uncommented in the file). See [env variables list](https://github.com/konfer-be/ts-express-typeorm-boilerplate/wiki/Environment-variables) for more informations.
+Environment variables are defined in *.env* files. Open *./dist/env/development.env* and fill the required values (uncommented in the file). See [env variables list](https://github.com/konfer-be/ts-express-typeorm/wiki/Environment-variables) for more informations.
 
 ```bash
 # CORS authorized domains
@@ -149,6 +151,27 @@ $ tsc
 ```bash
 $ nodemon
 ```
+
+## > Entity generation
+
+Some repetitive tasks such as creating resources can be done easily with [rsgen](https://github.com/konfer-be/rsgen). This small tool allow you to generate a complete set of resources who are linked to an entity:
+
+- Controller
+- Routes
+- Repository
+- Model
+- Validations
+- E2e tests
+- Fixtures
+
+```bash
+$ cd path-to-the-root
+$ rsgen
+```
+
+Your resources has been created in *./src/api/resources/[entity]*. If you wish create resources for the core, choose 'Core members' at the first prompt, your files should be generated in dedicated directories in *./src/api/[type]/[entity].xxx.ts*.
+
+Obviously, you have to fill some parts by hand, by example members of your entity, etc ...
 
 ## > Documentation
 

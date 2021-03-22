@@ -562,7 +562,7 @@ export class Environment {
        * @default false
        */
       TYPEORM_SYNC: (value: string): boolean => {
-        return this.environment === ENVIRONMENT.production ? false : !!parseInt(value, 10) || false
+        return this.environment === ENVIRONMENT.production ? false : this.environment === ENVIRONMENT.test ? true : !!parseInt(value, 10) || false
       },
 
       /**
@@ -814,9 +814,15 @@ export class Environment {
         LOG: this.variables.TYPEORM_LOG,
         CACHE: !this.variables.MEMORY_CACHE && this.variables.TYPEORM_CACHE,
         CACHE_DURATION: !this.variables.MEMORY_CACHE && this.variables.TYPEORM_CACHE ? this.variables.TYPEORM_CACHE_DURATION : 0,
-        ENTITIES: `${process.cwd()}/${this.base}/api/models/**/*.js`,
+        ENTITIES: [
+          `${process.cwd()}/${this.base}/api/core/models/**/*.model.js`,
+          `${process.cwd()}/${this.base}/api/resources/**/*.model.js`
+        ],
         MIGRATIONS: `${process.cwd()}/${this.base}/migrations/**/*.js`,
-        SUBSCRIBERS: `${process.cwd()}/${this.base}/api/subscribers/**/*.subscriber.js`
+        SUBSCRIBERS: [
+          `${process.cwd()}/${this.base}/api/core/subscribers/**/*.subscriber.js`,
+          `${process.cwd()}/${this.base}/api/resources/**/*.subscriber.js`
+        ]
       },
       UPLOAD: {
         MAX_FILE_SIZE: this.variables.UPLOAD_MAX_FILE_SIZE,

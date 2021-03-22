@@ -93,6 +93,7 @@ class Guard {
    * @dependency passport
    * @see http://www.passportjs.org/
    */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   authentify = ( req, res, next, roles, callback ) => authenticate('jwt', { session: false }, callback(req, res, next, roles) ) (req, res, next)
 
   /**
@@ -107,6 +108,7 @@ class Guard {
    * @dependency passport
    * @see http://www.passportjs.org/
    */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   oAuthentify = ( req, res, next, service, callback ) => authenticate(service, { session: false }, callback(req, res, next) ) (req, res, next)
 
   /**
@@ -114,6 +116,7 @@ class Guard {
    *
    * @param roles
    */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   authorize = ( roles ) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => this.authentify(req, res, next, roles, this.handleJWT );
 
   /**
@@ -121,6 +124,7 @@ class Guard {
    *
    * @param service OAuthProvider
    */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   oAuth = (service: OAuthProvider) => authenticate(service, { session: false });
 
   /**
@@ -128,6 +132,7 @@ class Guard {
    *
    * @param service OAuthProvider
    */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   oAuthCallback = (service: OAuthProvider) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => this.oAuthentify(req, res, next, service, this.handleOauth );
 
 }

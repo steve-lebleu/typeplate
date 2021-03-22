@@ -26,7 +26,7 @@ export class Database {
       username: options.USER,
       password: options.PWD,
       database: options.DB,
-      entities: [ options.ENTITIES ],
+      entities: options.ENTITIES,
       subscribers: [ options.SUBSCRIBERS ],
       synchronize: options.SYNC,
       logging: options.LOG,

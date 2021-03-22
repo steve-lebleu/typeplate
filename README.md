@@ -6,8 +6,8 @@
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-informational?logo=typeorm&color=696969)](https://typeorm.io/#/)
 [![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational?logo=mocha&color=696969)](https://mochajs.org)
 
-[![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm)
-[![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm?branch=master)
+[![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate)
+[![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm-boilerplate?branch=master)
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/konfer-be/ts-express-typeorm/master)
 ![Requires.io (branch)](https://img.shields.io/requires/github/konfer-be/ts-express-typeorm/master)
 ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/konfer-be/ts-express-typeorm)
@@ -16,9 +16,11 @@
 
 Small but badass & ready to use RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript)  [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘
 
+Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boilerplate](https://github.com/danielfsousa/express-rest-boilerplate) :beer: :beer: :beer:
 ## > Features
 
 * **Clear code architecture** with classic layers such controllers, services, repositories, models, ...
+* **Easy entity generation** (controller, route, repository, model, validations, test, fixture) with [rsgen](https://github.com/konfer-be/rsgen).
 * **Object Relational Mapping** with [Typeorm](https://typeorm.io/#/).
 * **SSL secure connection** with native [HTTPS node module](https://nodejs.org/docs/latest-v14.x/api/https.html).
 * **Cross Oigin Resource Sharing** with [CORS](https://expressjs.com/en/resources/middleware/cors.html).
@@ -36,15 +38,17 @@ Small but badass & ready to use RESTful API boilerplate builded with [Express.js
 * **Customizable image resizing** designed for front-end requirements with [Jimp](https://www.npmjs.com/package/jimp).
 * **Automatic changelog completion** with [auto-changelog](https://www.npmjs.com/package/auto-changelog).
 * **Easy API testing** with included unit and e2e test sets builded with [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/), [Sinon](https://sinonjs.org/) and [Supertest](https://github.com/visionmedia/supertest).
-* **Easy generation of documentation** with [api-doc](https://apidocjs.com/) and [typedoc](https://typedoc.org/). 
+* **Easy generation of documentation** with [api-doc](https://apidocjs.com/) and [typedoc](https://typedoc.org/).
 
 ## > Table of contents
 
 * [Getting started](#getting-started)
+* [Entity generation](#entity-generation)
 * [Documentation](#documentation)
 * [Tests](#tests)
 * [Continuous integration](#continuous-integration)
 * [Deployment](#deployment)
+* [Related links](#related-links)
 * [Licence](#licence)
 
 ## > Getting started
@@ -56,12 +60,12 @@ Small but badass & ready to use RESTful API boilerplate builded with [Express.js
 * NPM >= 6.14.0 or yarn
 * A database engine
 
-When you're ready with that, starting your project is a matter of minutes.
+When you're ready with that, starting your project is a matter of minutes. :clock12:
 
 ### Step 1: install
 
 ```bash
-$ git clone https://github.com/konfer-be/ts-express-typeorm-boilerplate.git path-to/your-project-name/
+$ git clone https://github.com/konfer-be/ts-express-typeorm.git path-to/your-project-name/
 ```
 
 ### Step 2: go to your project
@@ -88,7 +92,7 @@ Open the *./package.json* file and edit *version*, *author*, *name*, *descriptio
 
 ### Step 6: setup environment variables
 
-Environment variables are defined in *.env* files. Open *./dist/env/development.env* and fill the required values (uncommented in the file). See [env variables list](https://github.com/konfer-be/ts-express-typeorm-boilerplate/wiki/Environment-variables) for more informations.
+Environment variables are defined in *.env* files. Open *./dist/env/development.env* and fill the required values (uncommented in the file). See [env variables list](https://github.com/konfer-be/ts-express-typeorm/wiki/Environment-variables) for more informations.
 
 ```bash
 # CORS authorized domains
@@ -122,33 +126,31 @@ TYPEORM_PWD = ""
 TYPEORM_PORT = "3306"
 ```
 
-### Step 7: setup your Typescript environment
-
-If you don't wish specify particular Typescript settings, skip this step.
-
-Otherwise, edit Typescript configuration provided in [./tsconfig.json](tsconfig.json).
-
-More info about [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html).
-
-### Step 8: setup Typeorm cli
-
-If you don't wish to use Typeorm with CLI, skip this step.
-
-Otherwise, edit [./ormconfig.json](ormconfig.json) and fill it with the same parameters as in your environment file.
-
-More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeorm cli](https://typeorm.io/#/using-cli/installing-cli).
-
-### Step 9: compile
+### Step 7: compile
 
 ```bash
 $ tsc
 ```
 
-### Step 10: run & enjoy
+### Step 8: run & enjoy
 
 ```bash
 $ nodemon
 ```
+
+## > Entity generation
+
+Some repetitive tasks such as creating resources can be done easily with [rsgen](https://github.com/konfer-be/rsgen). This small tool allow you to generate a complete set of resources who are linked to an entity:
+
+- Controller
+- Routes
+- Repository
+- Model
+- Validations
+- E2e tests
+- Fixtures
+
+See the [documentation](https://github.com/konfer-be/ts-express-typeorm/wiki/Entity-generation) about it.
 
 ## > Documentation
 
@@ -245,6 +247,11 @@ $ pm2 deploy production exec "pm2 reload all"
 ```
 
 More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/) and [PM2 deploy](https://pm2.io/doc/en/runtime/guide/easy-deploy-with-ssh/).
+
+## > Related links
+
+- More info about [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
+- More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeorm cli](https://typeorm.io/#/using-cli/installing-cli)
 
 ## > License
 

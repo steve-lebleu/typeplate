@@ -1,5 +1,5 @@
-const { ErrorFactory } = require(process.cwd() + '/dist/api/factories/error.factory');
-const { ServerError } = require(process.cwd() + '/dist/api/types/errors/server.error');
+const { ErrorFactory } = require(process.cwd() + '/dist/api/core/factories/error.factory');
+const { ServerError } = require(process.cwd() + '/dist/api/core/types/errors/server.error');
 
 const expect = require('chai').expect;
 

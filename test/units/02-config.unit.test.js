@@ -4,9 +4,7 @@ const fs = require('fs');
 
 const { clone } = require('lodash');
 
-const { Environment } = require(process.cwd() + '/dist/api/config/environment.config');
-
-const { TYPEORM } = require(process.cwd() + '/dist/api/config/environment.config');
+const { Environment, TYPEORM } = require(process.cwd() + '/dist/api/config/environment.config');
 const { Database } = require(process.cwd() + '/dist/api/config/database.config');
 const { LoggerConfiguration } = require(process.cwd() + '/dist/api/config/logger.config');
 

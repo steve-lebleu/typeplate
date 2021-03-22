@@ -2,9 +2,9 @@ const expect = require('chai').expect;
 const sinon = require('sinon');
 
 const { CacheConfiguration } = require(process.cwd() + '/dist/api/config/cache.config');
-const { CacheService } = require(process.cwd() + '/dist/api/services/cache.service');
-const { Cache } = require(process.cwd() + '/dist/api/middlewares/cache.middleware');
-const { Uploader } = require(process.cwd() + '/dist/api/middlewares/uploader.middleware');
+const { CacheService } = require(process.cwd() + '/dist/api/core/services/cache.service');
+const { Cache } = require(process.cwd() + '/dist/api/core/middlewares/cache.middleware');
+const { Uploader } = require(process.cwd() + '/dist/api/core/middlewares/uploader.middleware');
 
 describe('Middlewares', () => {
 

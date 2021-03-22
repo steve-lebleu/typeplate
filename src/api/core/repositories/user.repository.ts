@@ -105,7 +105,7 @@ export class UserRepository extends Repository<User>  {
    */
   async oAuthLogin(options: IRegistrable): Promise<User> {
 
-    const { email, username, password } = options;
+    const { email, username, password, apikey } = options;
 
     const userRepository = getRepository(User);
 
@@ -125,7 +125,7 @@ export class UserRepository extends Repository<User>  {
       return user;
     }
 
-    user = userRepository.create({ email, password, username });
+    user = userRepository.create({ email, password, username, apikey });
 
     return userRepository.save(user);
   }

@@ -1,12 +1,13 @@
 import { User } from '@models/user.model';
-import { Request } from 'express';
 import { IMedia } from '@interfaces';
+import { IRequest } from '@interfaces/IRequest.interface';
 
-export interface IMediaRequest extends Request {
-  user?: User;
-  files?: IMedia[];
-  file?: IMedia;
-  doc?: any;
-  params: Record<string,string>;
+/**
+ * @description
+ */
+export interface IMediaRequest extends IRequest {
   body: { files?: IMedia[], file?: IMedia }
+  file?: IMedia;
+  files?: IMedia[];
+  user?: User;
 }

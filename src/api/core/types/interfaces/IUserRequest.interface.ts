@@ -1,7 +1,9 @@
-import { Request } from 'express';
+import { IRequest } from '@interfaces/IRequest.interface';
 
-export interface IUserRequest extends Request {
-    user?: any;
-    logIn?: (user, { session }) => Promise<void>,
-    params: Record<string,string>;
+/**
+ * @description
+ */
+export interface IUserRequest extends IRequest {
+  user?: any;
+  logIn?: (user, { session }) => Promise<void>,
 }

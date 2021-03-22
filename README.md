@@ -16,9 +16,11 @@
 
 Small but badass & ready to use RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript)  [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘
 
+Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boilerplate](https://github.com/danielfsousa/express-rest-boilerplate) :beer: :beer: :beer:
 ## > Features
 
 * **Clear code architecture** with classic layers such controllers, services, repositories, models, ...
+* **Easy entity generation** (controller, route, repository, model, validations, test, fixture) with [rsgen](https://github.com/konfer-be/rsgen).
 * **Object Relational Mapping** with [Typeorm](https://typeorm.io/#/).
 * **SSL secure connection** with native [HTTPS node module](https://nodejs.org/docs/latest-v14.x/api/https.html).
 * **Cross Oigin Resource Sharing** with [CORS](https://expressjs.com/en/resources/middleware/cors.html).
@@ -37,7 +39,6 @@ Small but badass & ready to use RESTful API boilerplate builded with [Express.js
 * **Automatic changelog completion** with [auto-changelog](https://www.npmjs.com/package/auto-changelog).
 * **Easy API testing** with included unit and e2e test sets builded with [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/), [Sinon](https://sinonjs.org/) and [Supertest](https://github.com/visionmedia/supertest).
 * **Easy generation of documentation** with [api-doc](https://apidocjs.com/) and [typedoc](https://typedoc.org/).
-* **Easy entity generation** (controller, route, repository, model, validations, test, fixture) with [rsgen](https://github.com/konfer-be/rsgen).
 
 ## > Table of contents
 
@@ -47,6 +48,7 @@ Small but badass & ready to use RESTful API boilerplate builded with [Express.js
 * [Tests](#tests)
 * [Continuous integration](#continuous-integration)
 * [Deployment](#deployment)
+* [Related links](#related-links)
 * [Licence](#licence)
 
 ## > Getting started
@@ -58,7 +60,7 @@ Small but badass & ready to use RESTful API boilerplate builded with [Express.js
 * NPM >= 6.14.0 or yarn
 * A database engine
 
-When you're ready with that, starting your project is a matter of minutes.
+When you're ready with that, starting your project is a matter of minutes. :clock12:
 
 ### Step 1: install
 
@@ -124,29 +126,13 @@ TYPEORM_PWD = ""
 TYPEORM_PORT = "3306"
 ```
 
-### Step 7: setup your Typescript environment
-
-If you don't wish specify particular Typescript settings, skip this step.
-
-Otherwise, edit Typescript configuration provided in [./tsconfig.json](tsconfig.json).
-
-More info about [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html).
-
-### Step 8: setup Typeorm cli
-
-If you don't wish to use Typeorm with CLI, skip this step.
-
-Otherwise, edit [./ormconfig.json](ormconfig.json) and fill it with the same parameters as in your environment file.
-
-More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeorm cli](https://typeorm.io/#/using-cli/installing-cli).
-
-### Step 9: compile
+### Step 7: compile
 
 ```bash
 $ tsc
 ```
 
-### Step 10: run & enjoy
+### Step 8: run & enjoy
 
 ```bash
 $ nodemon
@@ -164,14 +150,7 @@ Some repetitive tasks such as creating resources can be done easily with [rsgen]
 - E2e tests
 - Fixtures
 
-```bash
-$ cd path-to-the-root
-$ rsgen
-```
-
-Your resources has been created in *./src/api/resources/[entity]*. If you wish create resources for the core, choose 'Core members' at the first prompt, your files should be generated in dedicated directories in *./src/api/[type]/[entity].xxx.ts*.
-
-Obviously, you have to fill some parts by hand, by example members of your entity, etc ...
+See the [documentation](https://github.com/konfer-be/ts-express-typeorm/wiki/Entity-generation) about it.
 
 ## > Documentation
 
@@ -268,6 +247,11 @@ $ pm2 deploy production exec "pm2 reload all"
 ```
 
 More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/) and [PM2 deploy](https://pm2.io/doc/en/runtime/guide/easy-deploy-with-ssh/).
+
+## > Related links
+
+- More info about [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
+- More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeorm cli](https://typeorm.io/#/using-cli/installing-cli)
 
 ## > License
 

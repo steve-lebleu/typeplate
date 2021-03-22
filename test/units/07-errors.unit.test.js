@@ -1,4 +1,4 @@
-const { MySQLError } = require(process.cwd() + '/dist/api/types/errors/mysql.error');
+const { MySQLError } = require(process.cwd() + '/dist/api/core/types/errors/mysql.error');
 
 const expect = require('chai').expect;
 

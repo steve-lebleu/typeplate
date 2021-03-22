@@ -1,11 +1,11 @@
 const expect = require('chai').expect;
 
-const { MEDIA } = require(process.cwd() + '/dist/api/types/enums/media-type.enum');
+const { MEDIA } = require(process.cwd() + '/dist/api/core/types/enums/media-type.enum');
 
-const { getAge } = require(process.cwd() + '/dist/api/utils/date.util');
-const { getErrorStatusCode } = require(process.cwd() + '/dist/api/utils/error.util');
-const { list } = require(process.cwd() + '/dist/api/utils/enum.util');
-const { getTypeOfMedia, getMimeTypesOfType, hash, encrypt, decrypt, shuffle, base64Decode, base64Encode } = require(process.cwd() + '/dist/api/utils/string.util');
+const { getAge } = require(process.cwd() + '/dist/api/core/utils/date.util');
+const { getErrorStatusCode } = require(process.cwd() + '/dist/api/core/utils/error.util');
+const { list } = require(process.cwd() + '/dist/api/core/utils/enum.util');
+const { getTypeOfMedia, getMimeTypesOfType, hash, encrypt, decrypt, shuffle, base64Decode, base64Encode } = require(process.cwd() + '/dist/api/core/utils/string.util');
 
 var fs = require('fs');
 

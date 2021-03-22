@@ -13,7 +13,7 @@ import { RefreshToken } from '@models/refresh-token.model';
 
 import { IOauthResponse } from '@interfaces';
 
-import { hash } from '@utils/string.util';
+import { hash, encrypt } from '@utils/string.util';
 
 /**
  * @description
@@ -72,12 +72,14 @@ class AuthService {
    */
   async oAuth(token: string, refreshToken: string, profile: IOauthResponse, next: (e?: Error, v?: User|boolean) => void): Promise<void> {
     try {
+      const email = profile.emails ? profile.emails.filter(mail => ( mail.hasOwnProperty('verified') && mail.verified ) || !mail.hasOwnProperty('verified') ).slice().shift().value : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}@externalprovider.com`;
       const iRegistrable = {
         id: profile.id,
         username: profile.username ? profile.username : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}`,
-        email: profile.emails ? profile.emails.filter(email => ( email.hasOwnProperty('verified') && email.verified ) || !email.hasOwnProperty('verified') ).slice().shift().value : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}@externalprovider.com`,
+        email,
         picture: profile.photos.slice().shift()?.value,
-        password: hash('email', 16)
+        password: hash(email, 16),
+        apikey: encrypt(email)
       }
       const userRepository = getCustomRepository(UserRepository);
       const user = await userRepository.oAuthLogin(iRegistrable);

@@ -25,7 +25,8 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
    * @description Called before user insertion.
    */
   beforeInsert(event: InsertEvent<User>): void {
-    event.entity.apikey = encrypt(event.entity.email);
+    console.log('beforeInsert', event.entity);
+    event.entity.apikey = !event.entity.apikey ? encrypt(event.entity.email) : event.entity.apikey;
     event.entity.createdAt = Moment( new Date() ).utc(true).toDate();
   }
 
@@ -34,6 +35,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
    */
   afterInsert(event: InsertEvent<User>): void {
     CacheService.refresh('users');
+    console.log('afterInsert', event.entity);
   }
 
   /**

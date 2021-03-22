@@ -8,13 +8,13 @@ const Jimp = require('jimp');
 
 const fixtures = require(process.cwd() + '/test/utils/fixtures');
 
-const { User } = require(process.cwd() + '/dist/api/models/user.model');
+const { User } = require(process.cwd() + '/dist/api/core/models/user.model');
 
-const { SanitizeService } = require(process.cwd() + '/dist/api/services/sanitizer.service');
-const { AuthService } = require(process.cwd() + '/dist/api/services/auth.service');
-const { MediaService} = require(process.cwd() + '/dist/api/services/media.service');
-const { CacheService } = require(process.cwd() + '/dist/api/services/cache.service');
-const { Logger } = require(process.cwd() + '/dist/api/services/logger.service');
+const { SanitizeService } = require(process.cwd() + '/dist/api/core/services/sanitizer.service');
+const { AuthService } = require(process.cwd() + '/dist/api/core/services/auth.service');
+const { MediaService} = require(process.cwd() + '/dist/api/core/services/media.service');
+const { CacheService } = require(process.cwd() + '/dist/api/core/services/cache.service');
+const { Logger } = require(process.cwd() + '/dist/api/core/services/logger.service');
 const { CacheConfiguration } = require(process.cwd() + '/dist/api/config/cache.config');
 
 describe('Services', () => {

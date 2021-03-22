@@ -188,18 +188,18 @@ export class AuthRouter extends Router {
      *    "apikey": "$2b$10$sYFWFtKOR1QKm8/z6TxhQOgXCxvpZ.L13Xv3Lx496rH.L.EhobhJS"
      * }
      *
-     * @apiSuccess (Success 200) {Object}      token               Token main object
-     * @apiSuccess (Success 200) {String}      token.tokenType     Access Token's type
-     * @apiSuccess (Success 200) {String}      token.accessToken   Authorization Token
-     * @apiSuccess (Success 200) {String}      token.refreshToken  Token to get a new accessToken after expiration time
-     * @apiSuccess (Success 200) {Date}        token.expiresIn     Access Token's expiration data
-     * @apiSuccess (Success 200) {User}        user                Current user
-     * @apiSuccess (Success 200) {String}      user.id             User id
-     * @apiSuccess (Success 200) {String}      user.username       User name
-     * @apiSuccess (Success 200) {String}      user.email          User email
-     * @apiSuccess (Success 200) {String}      user.role           User role
-     * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
-     * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
+     * @apiSuccess (Created 201) {Object}      token               Token main object
+     * @apiSuccess (Created 201) {String}      token.tokenType     Access Token's type
+     * @apiSuccess (Created 201) {String}      token.accessToken   Authorization Token
+     * @apiSuccess (Created 201) {String}      token.refreshToken  Token to get a new accessToken after expiration time
+     * @apiSuccess (Created 201) {Date}        token.expiresIn     Access Token's expiration data
+     * @apiSuccess (Created 201) {User}        user                Current user
+     * @apiSuccess (Created 201) {String}      user.id             User id
+     * @apiSuccess (Created 201) {String}      user.username       User name
+     * @apiSuccess (Created 201) {String}      user.email          User email
+     * @apiSuccess (Created 201) {String}      user.role           User role
+     * @apiSuccess (Created 201) {Date}        user.createdAt      User creation date
+     * @apiSuccess (Created 201) {Date}        user.updatedAt      User updating date
      *
      * @apiSuccessExample {json} Success response
      * {

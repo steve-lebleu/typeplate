@@ -9,13 +9,13 @@ const { expect } = require('chai');
 // --- API server
 
 let { server } = require(process.cwd() + '/dist/api/app.bootstrap');
-const { User } = require(process.cwd() + '/dist/api/models/user.model');
+const { User } = require(process.cwd() + '/dist/api/core/models/user.model');
 
-const Guard = require(process.cwd() + '/dist/api/middlewares/guard.middleware');
+const Guard = require(process.cwd() + '/dist/api/core/middlewares/guard.middleware');
 
 // --- API utils
 
-const { encrypt } = require(process.cwd() + '/dist/api/utils/string.util');
+const { encrypt } = require(process.cwd() + '/dist/api/core/utils/string.util');
 
 // --- Test utils
 
@@ -38,7 +38,7 @@ describe('Authentification routes', function () {
       doRequest(agent, 'post', '/api/v1/auth/register', null, null, credentials, function(err, res) {
         expect(res.statusCode).to.eqls(201);
         token = res.body.token.accessToken;
-        doRequest(agent, 'post', '/api/v1/auth/register', null, null, fixtures.user.entity('user', password), function(err, res) {
+        doRequest(agent, 'post', '/api/v1/auth/register', null, null, fixtures.user.entity('user', password, apikey), function(err, res) {
           expect(res.statusCode).to.eqls(201);
           unauthorizedToken = res.body.token.accessToken;
           user = res.body.user;
@@ -179,7 +179,6 @@ describe('Authentification routes', function () {
         expect(res.body.token).to.have.all.keys(['tokenType', 'accessToken', 'refreshToken', 'expiresIn']);
         expect(res.body.user).to.not.haveOwnProperty('password');
         expect(res.body.user).to.not.haveOwnProperty('apikey');
-        refreshToken = res.body.token.refreshToken;
         done();
       });
     });

@@ -8,7 +8,7 @@ import * as Helmet from 'helmet';
 
 import { notAcceptable } from '@hapi/boom';
 
-import { ENVIRONMENT } from '@enums';
+import { ENVIRONMENT } from '@enums/environment.enum';
 
 import { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, ENV, UPLOAD } from '@config/environment.config';
 

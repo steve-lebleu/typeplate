@@ -10,7 +10,7 @@ export class ServerError implements Error, IHTTPError {
   /**
    * @description Error.message implementation
    */
-   message: string;
+  message: string;
 
   /**
    * @description HTTP response status code

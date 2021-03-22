@@ -22,9 +22,12 @@ export class MainRouter extends Router {
      *
      * @apiHeader {String="application/json"} Content-Type   Mime-type
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> release/v1.2.6
+=======
+>>>>>>> release/v1.2.7
      *
      * @apiHeaderExample {json} Request headers
      * {

@@ -6,8 +6,8 @@
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-informational?logo=typeorm&color=696969)](https://typeorm.io/#/)
 [![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational?logo=mocha&color=696969)](https://mochajs.org)
 
-[![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm)
-[![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm?branch=master)
+[![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm-boilerplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm)
+[![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm?branch=master)
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/konfer-be/ts-express-typeorm/master)
 ![Requires.io (branch)](https://img.shields.io/requires/github/konfer-be/ts-express-typeorm/master)
 ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/konfer-be/ts-express-typeorm)

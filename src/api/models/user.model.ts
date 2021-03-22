@@ -98,7 +98,7 @@ export class User implements IModel {
       this.password = await Bcrypt.hash(this.password, 10);
       return true;
     } catch (error) {
-      throw badImplementation(error.message);
+      throw badImplementation();
     }
   }
 

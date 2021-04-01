@@ -30,9 +30,6 @@ export class Media implements IModel {
   @Column()
   path: string;
 
-  @Column()
-  url: string;
-
   @Column({
     type: 'enum',
     enum: MIME_TYPE
@@ -82,13 +79,11 @@ export class Media implements IModel {
       'id',
       'fieldname',
       'filename',
-      'path',
       'mimetype',
-      'url',
       'size',
+      'owner',
       'createdAt',
-      'updatedAt',
-      'owner'
+      'updatedAt'
     ];
   }
 

@@ -65,6 +65,7 @@ export class Environment {
     return [
       'API_VERSION',
       'AUTHORIZED',
+      'CDN',
       'CONTENT_TYPE',
       'DOMAIN',
       'FACEBOOK_CONSUMER_ID',
@@ -146,6 +147,19 @@ export class Environment {
           this.errors.push('AUTHORIZED bad value: please fill a single host as string or multiple hosts separated by coma (ie: http://my-domain.com or http://my-domain-1.com,http://my-domain-2.com, ...');
         }
         return value ? value.trim().toLowerCase() : null;
+      },
+
+      /**
+       * @description Content delivery network location
+       *
+       * @default null
+       */
+      CDN: (value: string) => {
+        const regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}(:[0-9]{1,5})|\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+        if (value && regex.test(value) === false) {
+          this.errors.push('CDN bad value: please fill a valid CDN url');
+        }
+        return value || null;
       },
 
       /**
@@ -737,6 +751,7 @@ export class Environment {
     this.cluster = {
       API_VERSION: this.variables.API_VERSION,
       AUTHORIZED: this.variables.AUTHORIZED,
+      CDN: this.variables.CDN,
       CONTENT_TYPE: this.variables.CONTENT_TYPE,
       DOMAIN: this.variables.DOMAIN,
       ENV: this.environment,
@@ -866,6 +881,7 @@ if (!environment.isValid()) environment.exit(environment.errors);
 
 const API_VERSION   = environment.cluster.API_VERSION as string;
 const AUTHORIZED    = environment.cluster.AUTHORIZED as string;
+const CDN           = environment.cluster.CDN as string;
 const CONTENT_TYPE  = environment.cluster.CONTENT_TYPE as string;
 const DOMAIN        = environment.cluster.DOMAINE as string;
 const ENV           = environment.cluster.ENV as string;
@@ -884,4 +900,4 @@ const TYPEORM       = environment.cluster.TYPEORM as EnvTypeorm;
 const UPLOAD        = environment.cluster.UPLOAD as EnvUpload;
 const URL           = environment.cluster.URL as string;
 
-export { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, ENV, FACEBOOK, GITHUB, GOOGLE, LINKEDIN, JWT, LOGS, MEMORY_CACHE, PORT, REFRESH_TOKEN, SCALING, SSL, TYPEORM, UPLOAD, URL }
+export { API_VERSION, AUTHORIZED, CDN, CONTENT_TYPE, DOMAIN, ENV, FACEBOOK, GITHUB, GOOGLE, LINKEDIN, JWT, LOGS, MEMORY_CACHE, PORT, REFRESH_TOKEN, SCALING, SSL, TYPEORM, UPLOAD, URL }

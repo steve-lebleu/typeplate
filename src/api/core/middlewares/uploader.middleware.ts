@@ -63,10 +63,12 @@ import { getTypeOfMedia } from '@utils/string.util';
 
     middleware(req, res, (err: Error) => {
       if(err) {
-        // console.log('ERR', err);
         return next(err instanceof MulterError ? err : new MulterError(err.message) );
       } else if (typeof req.files === 'undefined') {
-        return next(new Error('Binary data cannot be found'));
+        if (req.url.includes('medias')) {
+          return next(new Error('Binary data cannot be found'));
+        }
+        return next();
       }
       req.body.files = req.files
         .slice(0, this.options.maxFiles)

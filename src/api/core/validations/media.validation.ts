@@ -33,8 +33,7 @@ const insertMedia = {
         path: path().required(),
         mimetype: mimetype(MIME_TYPE_LIST).required(),
         size: Joi.number().required(),
-        owner: Joi.number().required(),
-        url: Joi.string().required()
+        owner: Joi.number().required()
       })
     )
   })
@@ -59,8 +58,7 @@ const replaceMedia = {
       path: path().required(),
       mimetype: mimetype(MIME_TYPE_LIST).required(),
       size: Joi.number().required(),
-      owner: Joi.number().required(),
-      url: Joi.string().required()
+      owner: Joi.number().required()
     }
   })
 };
@@ -77,8 +75,7 @@ const updateMedia = {
       path: path(),
       mimetype: mimetype(MIME_TYPE_LIST),
       size: Joi.number(),
-      owner: Joi.number(),
-      url: Joi.string()
+      owner: Joi.number()
     }
   })
 };

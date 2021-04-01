@@ -12,7 +12,7 @@ let { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 // --- Test utils
 
 const fixtures = require(process.cwd() + '/test/utils/fixtures');
-const { doRequest, doQueryRequest, dataOk, pools } = require(process.cwd() + '/test/utils');
+const { doRequest, doQueryRequest, doFormRequest, dataOk, pools } = require(process.cwd() + '/test/utils');
 
 describe('User routes', function () {
   
@@ -330,6 +330,40 @@ describe('User routes', function () {
       });
     });
   
+    it('400 - fieldname not valid and should be avatar', function (done) {
+      const user = fixtures.user.entity('admin');
+      agent['put'](`/api/v1/users/${authenticatedUser.id}`)
+        .set('Authorization', 'Bearer ' + token)
+        .set('Accept', process.env.CONTENT_TYPE)
+        .set('Content-Type', 'multipart/form-data')
+        .set('Origin', process.env.ORIGIN)
+        .field('username', user.username)
+        .field('email', user.email)
+        .field('password', user.password)
+        .attach('pictures', process.cwd() + '/test/utils/fixtures/files/javascript.jpg')
+        .end(function(err, res) {
+          expect(res.statusCode).to.eqls(400);
+          done();
+        });
+    });
+
+    it('400 - mimetype not valid and should be img mimetype', function (done) {
+      const user = fixtures.user.entity('admin');
+      agent['put'](`/api/v1/users/${authenticatedUser.id}`)
+        .set('Authorization', 'Bearer ' + token)
+        .set('Accept', process.env.CONTENT_TYPE)
+        .set('Content-Type', 'multipart/form-data')
+        .set('Origin', process.env.ORIGIN)
+        .field('username', user.username)
+        .field('email', user.email)
+        .field('password', user.password)
+        .attach('avatar', process.cwd() + '/test/utils/fixtures/files/documents.rar')
+        .end(function(err, res) {
+          expect(res.statusCode).to.eqls(400);
+          done();
+        });
+    });
+
     it('403 - no bearer', function (done) {
       const user = fixtures.user.entity('user');
       doRequest(agent, 'put', '/api/v1/users/', authenticatedUser.id, null, user, function(err, res) {
@@ -369,6 +403,24 @@ describe('User routes', function () {
         dataOk(res, 'user', 'update');
         done();
       });
+    });
+
+    it('200 - data ok with avatar by admin', function (done) {
+      const user = fixtures.user.entity('admin');
+      agent['put'](`/api/v1/users/${authenticatedUser.id}`)
+        .set('Authorization', 'Bearer ' + token)
+        .set('Accept', process.env.CONTENT_TYPE)
+        .set('Content-Type', 'multipart/form-data')
+        .set('Origin', process.env.ORIGIN)
+        .field('username', user.username)
+        .field('email', user.email)
+        .field('password', user.password)
+        .attach('avatar', process.cwd() + '/test/utils/fixtures/files/javascript.jpg')
+        .end(function(err, res) {
+          expect(res.statusCode).to.eqls(200);
+          dataOk( { body: res.body }, 'user', 'update')
+          done();
+        });
     });
 
   });
@@ -414,6 +466,40 @@ describe('User routes', function () {
       });
     });
   
+    it('400 - fieldname not valid and should be avatar', function (done) {
+      const user = fixtures.user.entity('admin');
+      agent['patch'](`/api/v1/users/${authenticatedUser.id}`)
+        .set('Authorization', 'Bearer ' + token)
+        .set('Accept', process.env.CONTENT_TYPE)
+        .set('Content-Type', 'multipart/form-data')
+        .set('Origin', process.env.ORIGIN)
+        .field('username', user.username)
+        .field('email', user.email)
+        .field('password', user.password)
+        .attach('pictures', process.cwd() + '/test/utils/fixtures/files/javascript.jpg')
+        .end(function(err, res) {
+          expect(res.statusCode).to.eqls(400);
+          done();
+        });
+    });
+
+    it('400 - mimetype not valid and should be img mimetype', function (done) {
+      const user = fixtures.user.entity('admin');
+      agent['patch'](`/api/v1/users/${authenticatedUser.id}`)
+        .set('Authorization', 'Bearer ' + token)
+        .set('Accept', process.env.CONTENT_TYPE)
+        .set('Content-Type', 'multipart/form-data')
+        .set('Origin', process.env.ORIGIN)
+        .field('username', user.username)
+        .field('email', user.email)
+        .field('password', user.password)
+        .attach('avatar', process.cwd() + '/test/utils/fixtures/files/documents.rar')
+        .end(function(err, res) {
+          expect(res.statusCode).to.eqls(400);
+          done();
+        });
+    });
+
     it('403 - no bearer', function (done) {
       const user = fixtures.user.entity('admin');
       doRequest(agent, 'patch', '/api/v1/users/', authenticatedUser.id, null, user, function(err, res) {
@@ -453,6 +539,24 @@ describe('User routes', function () {
         dataOk(res, 'user', 'update');
         done();
       });
+    });
+
+    it('200 - data ok with avatar by admin', function (done) {
+      const user = fixtures.user.entity('admin');
+      agent['patch'](`/api/v1/users/${authenticatedUser.id}`)
+        .set('Authorization', 'Bearer ' + token)
+        .set('Accept', process.env.CONTENT_TYPE)
+        .set('Content-Type', 'multipart/form-data')
+        .set('Origin', process.env.ORIGIN)
+        .field('username', user.username)
+        .field('email', user.email)
+        .field('password', user.password)
+        .attach('avatar', process.cwd() + '/test/utils/fixtures/files/javascript.jpg')
+        .end(function(err, res) {
+          expect(res.statusCode).to.eqls(200);
+          dataOk( { body: res.body }, 'user', 'update')
+          done();
+        });
     });
 
   });

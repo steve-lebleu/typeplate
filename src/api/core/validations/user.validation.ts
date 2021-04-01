@@ -3,10 +3,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import * as Joi from 'joi';
-import { ROLE } from '@enums';
+import { ROLE, FIELDNAME } from '@enums';
 import { list } from '@utils/enum.util';
 
-import { email, id, pagination, username, password } from '@schemas';
+import { email, id, pagination, username, password, file } from '@schemas';
 
 // GET api/v1/users
 const listUsers = {
@@ -15,7 +15,8 @@ const listUsers = {
     perPage: pagination('perPage'),
     username: username(),
     email: email(),
-    role: Joi.any().valid(...list(ROLE))
+    role: Joi.any().valid(...list(ROLE)),
+    confirmed: Joi.boolean()
   })
 };
 
@@ -43,7 +44,8 @@ const replaceUser = {
   body: Joi.object({
     username: username().required(),
     email: email().required(),
-    password: password('user').required()
+    password: password('user').required(),
+    files: Joi.array().items( file( FIELDNAME.avatar ) ).max(1).optional()
   })
 };
 
@@ -55,7 +57,8 @@ const updateUser = {
   body: Joi.object({
     username: username().required(),
     email: email().required(),
-    password: password('user').required()
+    password: password('user').required(),
+    files: Joi.array().items( file( FIELDNAME.avatar ) ).max(1).optional()
   })
 };
 

@@ -1,9 +1,11 @@
 import { Router } from '@classes';
 import { UserController } from '@controllers/user.controller';
 import { Guard } from '@middlewares/guard.middleware';
+import { Uploader } from '@middlewares/uploader.middleware';
 import { Validator } from '@middlewares/validator.middleware';
-import { ROLE } from '@enums';
+import { IMAGE_MIME_TYPE, ROLE } from '@enums';
 import { listUsers, getUser, createUser, replaceUser, updateUser, removeUser } from '@validations/user.validation';
+import { list } from '@utils/enum.util';
 
 export class UserRouter extends Router {
 
@@ -384,7 +386,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .put(Guard.authorize([ROLE.admin]), Validator.check(replaceUser), UserController.update)
+      .put(Guard.authorize([ROLE.admin, ROLE.user]),  Uploader.upload( { wildcards: list(IMAGE_MIME_TYPE) } ), Validator.check(replaceUser), UserController.update)
 
       /**
        * @api {patch} /users/:id Update user
@@ -481,7 +483,7 @@ export class UserRouter extends Router {
        * }
        *
        */
-      .patch(Guard.authorize([ROLE.admin]), Validator.check(updateUser), UserController.update)
+      .patch(Guard.authorize([ROLE.admin, ROLE.user]),  Uploader.upload( { wildcards: list(IMAGE_MIME_TYPE) } ), Validator.check(updateUser), UserController.update)
 
       /**
        * @api {patch} /users/:id Delete user

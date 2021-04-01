@@ -174,11 +174,6 @@ export class ExpressConfiguration {
     this.application.use( LoggerConfiguration.writeStream() as any );
 
     /**
-     * Define CDN location for static resources
-     */
-    this.application.use('/cdn', RateLimit(this.options.rate), Express.static(`${__dirname}/../../${UPLOAD.PATH}`));
-
-    /**
      * Lifecyle of a classic request
      *
      * - RateLimit

@@ -3,7 +3,7 @@ require('module-alias/register');
 import * as Moment from 'moment-timezone';
 import * as Jwt from 'jwt-simple';
 import * as Bcrypt from 'bcrypt';
-import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, AfterLoad, BeforeInsert, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, AfterLoad, BeforeInsert, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 import { badImplementation } from '@hapi/boom';
 
 import { JWT } from '@config/environment.config';
@@ -24,11 +24,20 @@ export class User implements IModel {
   })
   username: string;
 
+  @OneToOne(() => Media, { nullable: true })
+  @JoinColumn()
+  avatar: Media;
+
   @Column({
     length: 128,
     unique: true
   })
   email: string;
+
+  @Column({
+    default: false
+  })
+  confirmed: boolean;
 
   @Column({
     length: 128
@@ -130,6 +139,7 @@ export class User implements IModel {
     return [
       'id',
       'username',
+      'avatar',
       'email',
       'role',
       'createdAt' ,

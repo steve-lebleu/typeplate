@@ -3,8 +3,8 @@ import { Guard } from '@middlewares/guard.middleware';
 import { Validator } from '@middlewares/validator.middleware';
 import { Uploader } from '@middlewares/uploader.middleware';
 import { MediaController } from '@controllers/media.controller';
-import { ROLE } from '@enums';
-
+import { ROLE, MIME_TYPE } from '@enums';
+import { list } from '@utils/enum.util';
 import { listMedias, insertMedia, getMedia, replaceMedia, updateMedia, removeMedia } from '@validations/media.validation';
 
 export class MediaRouter extends Router {
@@ -190,7 +190,7 @@ export class MediaRouter extends Router {
        * }
        *
        */
-      .post(Guard.authorize([ROLE.admin, ROLE.user]), Uploader.upload(), Validator.check(insertMedia), MediaController.create);
+      .post(Guard.authorize([ROLE.admin, ROLE.user]), Uploader.upload( { wildcards: list(MIME_TYPE) } ), Validator.check(insertMedia), MediaController.create);
 
     this.router.route('/:mediaId')
 
@@ -358,7 +358,7 @@ export class MediaRouter extends Router {
        *    ]
        * }
        */
-      .put(Guard.authorize([ROLE.admin, ROLE.user]), Validator.check(replaceMedia), MediaController.get, Uploader.upload(), Validator.check(insertMedia), MediaController.update)
+      .put(Guard.authorize([ROLE.admin, ROLE.user]), Validator.check(replaceMedia), MediaController.get, Uploader.upload( { wildcards: list(MIME_TYPE) } ), Validator.check(insertMedia), MediaController.update)
 
       /**
        * @api {patch} api/v1/medias/:id Update media
@@ -441,7 +441,7 @@ export class MediaRouter extends Router {
        *    ]
        * }
        */
-      .patch(Guard.authorize([ROLE.admin, ROLE.user]), Validator.check(updateMedia), MediaController.get, Uploader.upload(), MediaController.update)
+      .patch(Guard.authorize([ROLE.admin, ROLE.user]), Validator.check(updateMedia), MediaController.get, Uploader.upload( { wildcards: list(MIME_TYPE) } ), MediaController.update)
 
       /**
        * @api {patch} api/v1/medias/:id Delete media

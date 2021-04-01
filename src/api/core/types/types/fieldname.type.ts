@@ -1,0 +1,1 @@
+export type Fieldname = 'avatar' | 'screenshot' | 'media';

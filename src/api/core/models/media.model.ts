@@ -3,11 +3,11 @@ require('module-alias/register');
 import * as Moment from 'moment';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
-import { MIME_TYPE } from '@enums';
+import { MIME_TYPE, FIELDNAME } from '@enums';
 import { User } from '@models/user.model';
 import { IModel } from '@interfaces';
 
-import { MimeType } from '@types';
+import { MimeType, Fieldname } from '@types';
 
 @Entity()
 export class Media implements IModel {
@@ -16,10 +16,10 @@ export class Media implements IModel {
   id: number;
 
   @Column({
-    type: String,
-    length: 32
+    type: 'enum',
+    enum: FIELDNAME
   })
-  fieldname;
+  fieldname: Fieldname;
 
   @Column({
     type: String,

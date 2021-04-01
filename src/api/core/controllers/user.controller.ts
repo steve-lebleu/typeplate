@@ -7,6 +7,8 @@ import { Safe } from '@decorators/safe.decorator';
 
 /**
  * Manage incoming requests for api/{version}/users
+ *
+ * @todo A change on email address or password must be with an email confirmation process
  */
 class UserController {
 

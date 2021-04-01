@@ -30,6 +30,8 @@ exports.credentials = () => {
 
 exports.entity = (role, pwd, apiKey) => {
   return {
+    avatar: null,
+    confirmed: false,
     username: chance.string({ length: 16, pool: pool.username }),
     email: shuffle(chars).slice(0,10) + chance.email({domain: 'example.com'}),
     password: pwd || chance.hash({ length: 8 }),

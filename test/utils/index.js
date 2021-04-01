@@ -125,13 +125,10 @@ exports.dataOk = (res, entity, method) => {
     {
       name: 'media',
       expect: () => {
-        expect(res.body).to.have.all.keys(['id', 'fieldname', 'filename', 'path', 'mimetype', 'size', 'url', 'createdAt', 'updatedAt', 'owner']);
-        expect(res.body.owner).to.have.not.keys(['password', 'apikey']);
+        expect(res.body).to.have.all.keys(['id', 'fieldname', 'filename', 'mimetype', 'size', 'createdAt', 'updatedAt', 'owner']);
         expect(res.body.id).to.be.a('number');
         expect(res.body.fieldname).to.be.a('string');
         expect(res.body.filename).to.be.a('string');
-        expect(res.body.path).to.be.a('string');
-        expect(existsSync(res.body.path)).to.eqls(true);
         expect(res.body.mimetype).to.be.a('string');
         expect(res.body.size).to.be.a('number');
         expect(res.body.createdAt).to.be.a('string');

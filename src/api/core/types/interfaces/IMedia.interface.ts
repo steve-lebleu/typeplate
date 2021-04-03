@@ -9,6 +9,6 @@ export interface IMedia {
   destination: string;
   mimetype: MimeType;
   originalname?: string;
-  url?: string;
+  fieldname?: string;
   owner?: number | User | DeepPartial<User>;
 }

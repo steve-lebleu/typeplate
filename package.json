@@ -38,7 +38,7 @@
   },
   "scripts": {
     "build": "npm-run-all -s build:*",
-    "build:directories": "mkdir -p ./dist/env ./dist/logs ./dist/public/archives ./dist/public/documents ./dist/public/images/master-copy ./dist/public/images/rescale/xs ./dist/public/images/rescale/sm ./dist/public/images/rescale/md ./dist/public/images/rescale/lg ./dist/public/images/rescale/xl ./dist/public/audios ./dist/public/videos",
+    "build:directories": "mkdir -p ./dist/env ./dist/logs ./dist/public",
     "build:env": "cp -r ./src/env/template.env ./dist/env/development.env && cp -r ./src/env/template.env ./dist/env/test.env && cp -r ./src/env/template.env ./dist/env/staging.env && cp -r ./src/env/template.env ./dist/env/production.env",
     "build:repo": "git init && git add . --all && git commit -m \"First commit\"",
     "ci:coverage": "nyc --reporter=lcov --report-dir=./reports/coverage npm-run-all -s test:* && cat ./reports/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./reports/coverage",

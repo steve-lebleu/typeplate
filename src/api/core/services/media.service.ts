@@ -61,7 +61,7 @@ class MediaService {
             image
               .clone()
               .resize(this.OPTIONS.SIZES[size.toUpperCase()], Jimp.AUTO)
-              .write(`${media.path.split('/').slice(0, -1).join('/').replace(this.OPTIONS.PATH_MASTER, this.OPTIONS.PATH_SCALE)}/${size}/${media.filename as string}`, (err: Error) => {
+              .write(`${media.path.split('/').slice(0, -1).join('/').replace(this.OPTIONS.PATH_MASTER, this.OPTIONS.PATH_SCALE)}/${size}/${media.fieldname}/${media.filename as string}`, (err: Error) => {
                 if(err) throw expectationFailed(err.message);
               });
           });

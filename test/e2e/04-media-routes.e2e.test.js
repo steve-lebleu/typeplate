@@ -50,14 +50,14 @@ describe('Media routes', function () {
     });
   
     it('400 - file too large', function (done) {
-      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/Vue-Handbook.pdf' }, function(err, res) {
+      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'invoice', path: process.cwd() + '/test/utils/fixtures/files/Vue-Handbook.pdf' }, function(err, res) {
         expect(res.statusCode).to.eqls(400);
         done();
       });
     });
   
     it('400 - not supported mimetype', function (done) {
-      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/tags.tif' }, function(err, res) {
+      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'avatar', path: process.cwd() + '/test/utils/fixtures/files/tags.tif' }, function(err, res) {
         expect(res.statusCode).to.eqls(400);
         done();
       });
@@ -78,7 +78,7 @@ describe('Media routes', function () {
     });
   
     it('201 - audio - file(s) exists + data ok', function (done) {
-      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/kill-bill-vol-1-the-whistle-song.mp3' }, function(err, res) {
+      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'song', path: process.cwd() + '/test/utils/fixtures/files/kill-bill-vol-1-the-whistle-song.mp3' }, function(err, res) {
         expect(res.statusCode).to.eqls(201);
         expect(res.body).to.be.an('array');
         expect(res.body).satisfy(function(value) {
@@ -90,7 +90,7 @@ describe('Media routes', function () {
     });
   
     it('201 - archive - file(s) exists + data ok', function (done) {
-      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/documents.rar' }, function(err, res) {
+      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'back-up', path: process.cwd() + '/test/utils/fixtures/files/documents.rar' }, function(err, res) {
         expect(res.statusCode).to.eqls(201);
         expect(res.body).to.be.an('array');
         expect(res.body).satisfy(function(value) {
@@ -102,7 +102,7 @@ describe('Media routes', function () {
     });
   
     it('201 - document - file(s) exists + data ok', function (done) {
-      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/Responsive_Webdesign.pdf' }, function(err, res) {
+      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'invoice', path: process.cwd() + '/test/utils/fixtures/files/Responsive_Webdesign.pdf' }, function(err, res) {
         expect(res.statusCode).to.eqls(201);
         expect(res.body).to.be.an('array');
         expect(res.body).satisfy(function(value) {
@@ -114,7 +114,7 @@ describe('Media routes', function () {
     });
   
     it('201 - image - file(s) exists + data ok', function (done) {
-      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/javascript.jpg' }, function(err, res) {
+      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'avatar', path: process.cwd() + '/test/utils/fixtures/files/javascript.jpg' }, function(err, res) {
         expect(res.statusCode).to.eqls(201);
         expect(res.body).to.be.an('array');
         expect(res.body).satisfy(function(value) {
@@ -126,7 +126,7 @@ describe('Media routes', function () {
     });
   
     it('201 - video - file(s) exists + data ok', function (done) {
-      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/electric-bulb-2.mp4' }, function(err, res) {
+      doFormRequest(agent, 'post', '/api/v1/medias/', null, token, { name: 'teaser', path: process.cwd() + '/test/utils/fixtures/files/electric-bulb-2.mp4' }, function(err, res) {
         expect(res.statusCode).to.eqls(201);
         expect(res.body).to.be.an('array');
         expect(res.body).satisfy(function(value) {
@@ -200,11 +200,11 @@ describe('Media routes', function () {
     });
   
     it('200 - results matches fieldname query param', function (done) {
-      doQueryRequest(agent, '/api/v1/medias/', null, token, { fieldname: 'media' }, function(err, res) {
+      doQueryRequest(agent, '/api/v1/medias/', null, token, { fieldname: 'invoice' }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
         expect(res.body).satisfy(function(value) {
           return value.map( (entry) => { 
-            expect(entry.fieldname).to.equals('media');
+            expect(entry.fieldname).to.equals('invoice');
           })
         });
         done();
@@ -333,14 +333,14 @@ describe('Media routes', function () {
     });
   
     it('400 - file too large', function (done) {
-      doFormRequest(agent, 'put', '/api/v1/medias/', documents[0].id, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/Vue-Handbook.pdf' }, function(err, res) {
+      doFormRequest(agent, 'put', '/api/v1/medias/', documents[0].id, token, { name: 'invoice', path: process.cwd() + '/test/utils/fixtures/files/Vue-Handbook.pdf' }, function(err, res) {
         expect(res.statusCode).to.eqls(400);
         done();
       });
     });
   
     it('400 - not supported mimetype', function (done) {
-      doFormRequest(agent, 'put', '/api/v1/medias/', documents[0].id, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/electric-bulb.mp4' }, function(err, res) {
+      doFormRequest(agent, 'put', '/api/v1/medias/', documents[0].id, token, { name: 'avatar', path: process.cwd() + '/test/utils/fixtures/files/tags.tif' }, function(err, res) {
         expect(res.statusCode).to.eqls(400);
         done();
       });
@@ -361,7 +361,7 @@ describe('Media routes', function () {
     });
   
     it('200 - file(s) exists + data ok', function (done) {
-      doFormRequest(agent, 'put', '/api/v1/medias/', documents[0].id, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/documents.rar' },function(err, res) {
+      doFormRequest(agent, 'put', '/api/v1/medias/', documents[0].id, token, { name: 'back-up', path: process.cwd() + '/test/utils/fixtures/files/documents.rar' },function(err, res) {
         expect(res.statusCode).to.eqls(200);
         dataOk( res, 'media', 'update')
         done();
@@ -380,14 +380,14 @@ describe('Media routes', function () {
     });
   
     it('400 - file too large', function (done) {
-      doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/Vue-Handbook.pdf' },function(err, res) {
+      doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'invoice', path: process.cwd() + '/test/utils/fixtures/files/Vue-Handbook.pdf' },function(err, res) {
         expect(res.statusCode).to.eqls(400);
         done();
       });
     });
   
     it('400 - not supported mimetype', function (done) {
-      doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/tags.tif' }, function(err, res) {
+      doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'avatar', path: process.cwd() + '/test/utils/fixtures/files/tags.tif' }, function(err, res) {
         expect(res.statusCode).to.eqls(400);
         done();
       });
@@ -408,7 +408,7 @@ describe('Media routes', function () {
     });
   
     it('200 - file(s) exists + data ok', function (done) {
-      doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'media', path: process.cwd() + '/test/utils/fixtures/files/documents.rar' }, function(err, res) {
+      doFormRequest(agent, 'patch', '/api/v1/medias/', documents[0].id, token, { name: 'back-up', path: process.cwd() + '/test/utils/fixtures/files/documents.rar' }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
         dataOk( res, 'media', 'update')
         done();

@@ -1,5 +1,9 @@
 export enum FIELDNAME {
   'avatar' = 'avatar',
   'screenshot' = 'screenshot',
-  'media' = 'media'
+  'banner' = 'banner',
+  'invoice' = 'invoice',
+  'teaser' = 'teaser',
+  'back-up' = 'back-up',
+  'song' = 'song'
 }

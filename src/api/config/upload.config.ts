@@ -1,6 +1,6 @@
 import * as Multer from 'multer';
 import * as filenamify from 'filenamify';
-
+import { existsSync, mkdirSync } from 'fs';
 import { unsupportedMediaType } from '@hapi/boom';
 
 import { UPLOAD, SCALING } from '@config/environment.config';
@@ -8,7 +8,8 @@ import { UPLOAD, SCALING } from '@config/environment.config';
 import { IUploadMulterOptions, IUploadOptions, IMedia, IStorage, IUpload } from '@interfaces';
 
 import { foldername, extension, getTypeOfMedia } from '@utils/string.util';
-import { IMAGE_MIME_TYPE } from '@enums';
+import { FIELDNAME, IMAGE_MIME_TYPE } from '@enums';
+import { list } from '@utils/enum.util';
 
 class UploadConfiguration {
 
@@ -74,6 +75,10 @@ class UploadConfiguration {
         let towards = `${destination}/${getTypeOfMedia(file.mimetype)}s`;
         if (IMAGE_MIME_TYPE[file.mimetype]) {
           towards += `/${SCALING.PATH_MASTER}`;
+        }
+        towards += `/${file.fieldname}`;
+        if ( list(FIELDNAME).includes(file.fieldname) && !existsSync(towards) ) {
+          mkdirSync(towards);
         }
         next(null, towards);
       },

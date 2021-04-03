@@ -73,9 +73,7 @@ import { getTypeOfMedia } from '@utils/string.util';
       req.body.files = req.files
         .slice(0, this.options.maxFiles)
         .map( ( media: IMedia ) => {
-          const type = Pluralize(getTypeOfMedia(media.mimetype)) as string;
           media.owner = req.user.id;
-          media.url = `${type}s/${type === 'image' ? `${SCALING.PATH_MASTER}/` : ''}${media.filename}`
           return media;
         }) || [];
       next();

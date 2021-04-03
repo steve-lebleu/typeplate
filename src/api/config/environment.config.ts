@@ -1,4 +1,4 @@
-import { existsSync } from 'fs';
+import { existsSync, mkdirSync } from 'fs';
 
 import { config as Dotenv } from 'dotenv';
 
@@ -45,6 +45,22 @@ export class Environment {
    * @description Env variables
    */
   variables: Record<string,unknown>;
+
+  /**
+   * @description Files directories
+   */
+  readonly dirs: string[] = [
+    'archives/',
+    'documents',
+    'images/master-copy',
+    'images/rescale/xs',
+    'images/rescale/sm',
+    'images/rescale/md',
+    'images/rescale/lg',
+    'images/rescale/xl',
+    'audios',
+    'videos'
+  ];
 
   private constructor() {}
 
@@ -852,6 +868,20 @@ export class Environment {
   }
 
   /**
+   * @description Creates files directories if not exists
+   */
+  directories(): Environment {
+    this.dirs.forEach(dir => {
+      const u = this.cluster.UPLOAD as { PATH: string };
+      const p = `${u.PATH}/${dir}`;
+      if ( !existsSync(p) ) {
+        mkdirSync(p);
+      }
+    });
+    return this;
+  }
+
+  /**
    * @description Say if current environment is valid or not
    */
   isValid(): boolean {
@@ -875,7 +905,8 @@ const environment = Environment
   .loads(process.versions.node)
   .extracts(process.env)
   .validates()
-  .aggregates();
+  .aggregates()
+  .directories();
 
 if (!environment.isValid()) environment.exit(environment.errors);
 

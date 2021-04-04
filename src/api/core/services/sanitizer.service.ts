@@ -67,7 +67,8 @@ class SanitizeService {
     Object.keys(entity)
       .map( (key) => {
         if (entity.whitelist.includes(key) || entity.whitelist.includes(Pluralize(key))) {
-          output[key] = this.isSanitizable( entity[key] ) ? this.sanitize(entity[key]) : entity[key];
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          output[key] = this.isSanitizable( entity[key] ) ? Array.isArray(entity[key]) ? entity[key].length > 0 ? entity[key].map(e => this.sanitize(e)) : [] : this.sanitize(entity[key]) : entity[key];
         }
     });
     return output;

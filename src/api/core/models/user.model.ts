@@ -7,8 +7,8 @@ import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, AfterLoad, Before
 import { badImplementation } from '@hapi/boom';
 
 import { JWT } from '@config/environment.config';
-import { ROLE } from '@enums';
-import { Role } from '@types';
+import { ROLE, STATUS } from '@enums';
+import { Role, Status } from '@types';
 import { Media } from '@models/media.model';
 import { IModel } from '@interfaces';
 
@@ -35,9 +35,11 @@ export class User implements IModel {
   email: string;
 
   @Column({
-    default: false
+    type: 'enum',
+    enum: STATUS,
+    default: STATUS.REGISTERED
   })
-  confirmed: boolean;
+  status: Status;
 
   @Column({
     length: 128

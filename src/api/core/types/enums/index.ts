@@ -8,8 +8,24 @@ import { FIELDNAME } from './fieldname.enum';
 import { IMAGE_MIME_TYPE } from './image-mime-type.enum';
 import { MEDIA_TYPE } from './media-type.enum';
 import { ROLE } from './role.enum';
+import { STATUS } from './status.enum';
 import { VIDEO_MIME_TYPE } from './video-mime-type.enum';
 
 import { MIME_TYPE, MIME_TYPE_LIST } from './mime-type.enum';
 
-export { ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, CONTENT_TYPE, DATABASE_ENGINE, DOCUMENT_MIME_TYPE, ENVIRONMENT, FIELDNAME, IMAGE_MIME_TYPE, MEDIA_TYPE, MIME_TYPE, MIME_TYPE_LIST, ROLE, VIDEO_MIME_TYPE }
+export {
+  ARCHIVE_MIME_TYPE,
+  AUDIO_MIME_TYPE,
+  CONTENT_TYPE,
+  DATABASE_ENGINE,
+  DOCUMENT_MIME_TYPE,
+  ENVIRONMENT,
+  FIELDNAME,
+  IMAGE_MIME_TYPE,
+  MEDIA_TYPE,
+  MIME_TYPE,
+  MIME_TYPE_LIST,
+  ROLE,
+  STATUS,
+  VIDEO_MIME_TYPE
+}

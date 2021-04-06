@@ -3,6 +3,7 @@
 const request = require('supertest');
 const chance = require('chance').Chance();
 const sinon = require('sinon');
+
 const { clone } = require('lodash');
 const { expect } = require('chai');
 

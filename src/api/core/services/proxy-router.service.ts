@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { IRoute } from '@interfaces/IRoute.interface';
+import { IRoute } from '@interfaces';
 
 import { MainRouter } from '@routes/main.route';
 import { AuthRouter } from '@routes/auth.route';

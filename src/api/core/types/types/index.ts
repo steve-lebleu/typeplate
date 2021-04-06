@@ -9,8 +9,33 @@ import { MediaType } from './media-type.type';
 import { MomentUnit } from './moment-unit.type';
 import { OAuthProvider } from './oauth-provider.type';
 import { Role } from './role.type';
+import { Status } from './status.type';
 import { VideoMimeType } from './video-mime-type.type';
 import { EnvOauth, EnvJWT, EnvMemoryCache, EnvSSL, EnvTypeorm, EnvLog, EnvUpload, EnvImageScaling, EnvRefreshToken } from './environment-cluster.type';
 import { MimeType } from './mime-type.type';
 
-export { ArchiveMimeType, AudioMimeType, ContentType, DatabaseEngine, DocumentMimeType, Fieldname, ImageMimeType, MediaType, MimeType, MomentUnit, OAuthProvider, Role, VideoMimeType, EnvOauth, EnvJWT, EnvMemoryCache, EnvSSL, EnvTypeorm, EnvLog, EnvUpload, EnvImageScaling, EnvRefreshToken }
+export {
+  ArchiveMimeType,
+  AudioMimeType,
+  ContentType,
+  DatabaseEngine,
+  DocumentMimeType,
+  Fieldname,
+  ImageMimeType,
+  MediaType,
+  MimeType,
+  MomentUnit,
+  OAuthProvider,
+  Role,
+  Status,
+  VideoMimeType,
+  EnvOauth,
+  EnvJWT,
+  EnvMemoryCache,
+  EnvSSL,
+  EnvTypeorm,
+  EnvLog,
+  EnvUpload,
+  EnvImageScaling,
+  EnvRefreshToken
+}

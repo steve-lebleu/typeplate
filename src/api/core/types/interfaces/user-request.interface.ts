@@ -1,4 +1,4 @@
-import { IRequest } from '@interfaces/IRequest.interface';
+import { IRequest } from '@interfaces';
 
 /**
  * @description

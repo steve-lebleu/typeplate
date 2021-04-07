@@ -57,9 +57,9 @@ const updateUser = {
     userId: id(),
   }),
   body: Joi.object({
-    username: username().required(),
-    email: email().required(),
-    password: password('user').required(),
+    username: username(),
+    email: email(),
+    password: password('user'),
     files: Joi.array().items( file( FIELDNAME.avatar ) ).max(1).optional(),
     status: Joi.any().valid(...list(STATUS)).optional(),
   })

@@ -8,6 +8,7 @@ import { RefreshToken } from '@models/refresh-token.model';
 import { UserRepository } from '@repositories/user.repository';
 import { AuthService } from '@services/auth.service';
 import { Safe } from '@decorators/safe.decorator';
+import { ROLE } from '@enums';
 
 /**
  * Manage incoming requests from api/{version}/auth
@@ -41,6 +42,7 @@ class AuthController {
   async register(req: Request, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = new User(req.body);
+    user.role = ROLE.user;
     await repository.insert(user);
     const token = await AuthService.generateTokenResponse(user, user.token());
     res.locals.data = { token, user };

@@ -15,7 +15,7 @@ let { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 const { user } = require(process.cwd() + '/test/utils/fixtures');
 const { doRequest, doQueryRequest, dataOk, pools } = require(process.cwd() + '/test/utils');
 
-describe.only('User routes', function () {
+describe('User routes', function () {
   
   let agent, password, token, unauthorizedToken, _user, _authenticatedUser;
 

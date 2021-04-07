@@ -42,7 +42,10 @@ class AuthController {
   async register(req: Request, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = new User(req.body);
-    user.role = ROLE.user;
+    const count = await repository.count();
+    if (count === 0) {
+      user.role = ROLE.admin;
+    }
     await repository.insert(user);
     const token = await AuthService.generateTokenResponse(user, user.token());
     res.locals.data = { token, user };

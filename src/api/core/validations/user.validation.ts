@@ -16,7 +16,8 @@ const listUsers = {
     username: username(),
     email: email(),
     role: Joi.any().valid(...list(ROLE)),
-    status: Joi.any().valid(...list(STATUS))
+    status: Joi.any().valid(...list(STATUS)),
+    website: Joi.string().uri()
   })
 };
 
@@ -34,6 +35,8 @@ const createUser = {
     email: email().required(),
     password: password('user').required(),
     status: Joi.any().valid(...list(STATUS)).optional(),
+    avatar: file( FIELDNAME.avatar ).allow(null),
+    role: Joi.any().valid(...list(ROLE))
   })
 };
 
@@ -46,8 +49,9 @@ const replaceUser = {
     username: username().required(),
     email: email().required(),
     password: password('user').required(),
-    files: Joi.array().items( file( FIELDNAME.avatar ) ).max(1).optional(),
-    status: Joi.any().valid(...list(STATUS)).required()
+    status: Joi.any().valid(...list(STATUS)).required(),
+    avatar: file( FIELDNAME.avatar ).allow(null),
+    role: Joi.any().valid(...list(ROLE)).required()
   })
 };
 
@@ -60,8 +64,9 @@ const updateUser = {
     username: username(),
     email: email(),
     password: password('user'),
-    files: Joi.array().items( file( FIELDNAME.avatar ) ).max(1).optional(),
     status: Joi.any().valid(...list(STATUS)).optional(),
+    avatar: file( FIELDNAME.avatar ).allow(null),
+    role: Joi.any().valid(...list(ROLE))
   })
 };
 

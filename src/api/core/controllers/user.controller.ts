@@ -2,14 +2,13 @@ import { getRepository, getCustomRepository } from 'typeorm';
 
 import { User } from '@models/user.model';
 import { UserRepository } from '@repositories/user.repository';
-import { IUserRequest, IResponse } from '@interfaces';
+import { IUserRequest, IResponse, IMedia } from '@interfaces';
 import { Safe } from '@decorators/safe.decorator';
-import { ROLE } from '@enums';
+import { Media } from '@models/media.model';
+import { FIELDNAME } from '@enums';
 
 /**
  * Manage incoming requests for api/{version}/users
- *
- * @todo A change on email address or password must be with an email confirmation process
  */
 class UserController {
 
@@ -63,10 +62,6 @@ class UserController {
   async create (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = new User(req.body);
-    const { role } = req.user as { role: ROLE };
-    if (role !== ROLE.admin) { // Simple user cannot create admin account
-      user.role = ROLE.user;
-    }
     const savedUser = await repository.save(user);
     res.locals.data = savedUser;
   }

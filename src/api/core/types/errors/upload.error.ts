@@ -1,16 +1,12 @@
+import * as HTTP_STATUS from 'http-status';
+
 import { IError, IHTTPError } from '@interfaces';
+import { TypeplateError } from '@errors';
 
 /**
- * @description Type upload error
+ * @description Custom type upload error
  */
-export class UploadError implements Error, IHTTPError {
-
-  readonly name = 'UploadError';
-
-  /**
-   * @description Error.message implementation
-   */
-   message: string;
+export class UploadError extends TypeplateError implements IHTTPError {
 
   /**
    * @description HTTP response status code
@@ -27,16 +23,10 @@ export class UploadError implements Error, IHTTPError {
    */
   errors: Array<string>;
 
-  /**
-   * @description Error stack
-   */
-  stack: string;
-
   constructor(error: IError) {
+    super('File upload was failed');
     this.statusCode = 400;
     this.statusText = error.name;
-    this.errors = [error.message];
-    this.stack = error?.stack;
+    this.errors = [ error.message ];
   }
-
 }

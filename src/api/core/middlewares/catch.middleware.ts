@@ -3,7 +3,7 @@ import { notify } from 'node-notifier';
 
 import { Logger } from '@services/logger.service';
 import { ErrorFactory } from '@factories/error.factory';
-import { IHTTPError } from '@interfaces';
+import { IHTTPError, IRequest } from '@interfaces';
 
 /**
  * Error catch/output middleware
@@ -71,11 +71,15 @@ class Catch {
    * @param res Express response object
    * @param next Callback function
    */
-  log(err: IHTTPError, req: Request, res: Response, next: (e: IHTTPError, req, res) => void): void {
-    Logger.log('error', `${req.headers['x-forwarded-for'] as string || req.connection.remoteAddress} HTTP/${req.httpVersion} ${err.statusCode} ${req.method} ${req.url} ${err.stack ? '\n' + err.stack : err.errors.slice().shift()}`);
+   log(err: IHTTPError, req: IRequest, res: Response, next: (e: IHTTPError, req, res) => void): void {
+    const { user } = req as { user: { id: number } };
+    if (err.statusCode >= 500) {
+      Logger.log('error', `${req.headers['x-forwarded-for'] as string || req.connection.remoteAddress} HTTP/${req.httpVersion} ${err.statusCode} ${req.method} ${req.url} - ${err.message} (#${user ? user.id : 'unknown'}) : ${err.stack ? '\n  ' + err.stack : ''} ${req.body ? '\n  Payload :' + JSON.stringify(req.body) : ''}`);
+    } else {
+      Logger.log('error', `${req.headers['x-forwarded-for'] as string || req.connection.remoteAddress} HTTP/${req.httpVersion} ${err.statusCode} ${req.method} ${req.url} - ${err.statusText} (#${user ? user.id : 'unknown'}) : ${err.errors.slice().shift()} ${req.body ? '\n  Payload :' + JSON.stringify(req.body) : ''}`);
+    }
     next(err, req, res);
   }
-
   /**
    * @description Display clean error for final user
    *

@@ -1,5 +1,5 @@
 import { badImplementation } from '@hapi/boom';
-import { MySQLError, NotFoundError, UploadError, ValidationError, ServerError } from '@errors';
+import { MySQLError, NotFoundError, UploadError, ValidationError, ServerError, BusinessError } from '@errors';
 import { IError, IHTTPError } from '@interfaces';
 import { getErrorStatusCode } from '@utils/error.util';
 
@@ -26,6 +26,8 @@ export class ErrorFactory {
         return new NotFoundError(error);
       case 'ValidationError':
         return new ValidationError(error);
+      case 'BusinessError':
+        return error as BusinessError;
     }
 
     // JS native errors ( Error | EvalError | RangeError | SyntaxError | TypeError | URIError )

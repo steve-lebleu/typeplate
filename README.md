@@ -14,7 +14,7 @@
 
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
-Small but badass & ready to use RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript)  [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘
+Ready to use RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript)  [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘
 
 Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boilerplate](https://github.com/danielfsousa/express-rest-boilerplate) :beer: :beer: :beer:
 ## > Features
@@ -23,7 +23,7 @@ Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boil
 * **Easy entity generation** (controller, route, repository, model, validations, test, fixture) with [rsgen](https://github.com/konfer-be/rsgen).
 * **Object Relational Mapping** with [Typeorm](https://typeorm.io/#/).
 * **SSL secure connection** with native [HTTPS node module](https://nodejs.org/docs/latest-v14.x/api/https.html).
-* **Cross Oigin Resource Sharing** with [CORS](https://expressjs.com/en/resources/middleware/cors.html).
+* **Cross Origin Resource Sharing** with [CORS](https://expressjs.com/en/resources/middleware/cors.html).
 * **Securized HTTP headers** with [Helmet](https://helmetjs.github.io/).
 * **HTTP header pollution** preventing with [Hpp](https://www.npmjs.com/package/hpp).
 * **API request rate limit** with [Express rate limit](https://www.npmjs.com/package/express-rate-limit).

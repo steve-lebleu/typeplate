@@ -4,9 +4,9 @@ import { IError, IHTTPError } from '@interfaces';
 import { TypeplateError } from '@errors';
 
 /**
- * @description Custom NotFoundError
+ * @description Custom BusinessError
  */
-export class NotFoundError extends TypeplateError implements IHTTPError {
+export class BusinessError extends TypeplateError implements IHTTPError {
 
   /**
    * @description IError HTTP response status code
@@ -24,9 +24,9 @@ export class NotFoundError extends TypeplateError implements IHTTPError {
   errors: Array<string>;
 
   constructor(error: IError) {
-    super('A resource was not found');
-    this.statusCode = 404;
-    this.statusText = 'Resource not found';
+    super('Business validation failed');
+    this.statusCode = error.statusCode;
+    this.statusText = 'Business validation failed';
     this.errors = [ error.message ];
   }
 }

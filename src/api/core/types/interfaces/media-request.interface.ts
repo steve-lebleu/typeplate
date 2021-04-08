@@ -1,6 +1,5 @@
 import { User } from '@models/user.model';
-import { IMedia } from '@interfaces';
-import { IRequest } from '@interfaces/IRequest.interface';
+import { IMedia, IRequest } from '@interfaces';
 
 /**
  * @description

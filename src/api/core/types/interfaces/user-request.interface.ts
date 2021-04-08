@@ -1,4 +1,4 @@
-import { IRequest } from '@interfaces/IRequest.interface';
+import { IRequest, IMedia } from '@interfaces';
 
 /**
  * @description
@@ -6,4 +6,5 @@ import { IRequest } from '@interfaces/IRequest.interface';
 export interface IUserRequest extends IRequest {
   user?: any;
   logIn?: (user, { session }) => Promise<void>,
+  files?: IMedia[]
 }

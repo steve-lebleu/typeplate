@@ -5,6 +5,7 @@ import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, R
 import { User } from '@models/user.model';
 import { encrypt } from '@utils/string.util';
 import { CacheService } from '@services/cache.service';
+import { STATUS } from '@enums';
 
 /**
  *
@@ -26,6 +27,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
    */
   beforeInsert(event: InsertEvent<User>): void {
     event.entity.apikey = !event.entity.apikey ? encrypt(event.entity.email) : event.entity.apikey;
+    event.entity.status = STATUS.REGISTERED;
     event.entity.createdAt = Moment( new Date() ).utc(true).toDate();
   }
 

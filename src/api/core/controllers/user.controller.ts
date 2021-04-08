@@ -2,13 +2,13 @@ import { getRepository, getCustomRepository } from 'typeorm';
 
 import { User } from '@models/user.model';
 import { UserRepository } from '@repositories/user.repository';
-import { IUserRequest, IResponse } from '@interfaces';
+import { IUserRequest, IResponse, IMedia } from '@interfaces';
 import { Safe } from '@decorators/safe.decorator';
+import { Media } from '@models/media.model';
+import { FIELDNAME } from '@enums';
 
 /**
  * Manage incoming requests for api/{version}/users
- *
- * @todo A change on email address or password must be with an email confirmation process
  */
 class UserController {
 

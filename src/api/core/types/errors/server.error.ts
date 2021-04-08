@@ -1,16 +1,12 @@
+import * as HTTP_STATUS from 'http-status';
+
 import { IError, IHTTPError } from '@interfaces';
+import { TypeplateError } from '@errors';
 
 /**
  * @description Type native error
  */
-export class ServerError implements Error, IHTTPError {
-
-  readonly name = 'ServerError';
-
-  /**
-   * @description Error.message implementation
-   */
-  message: string;
+export class ServerError extends TypeplateError implements IHTTPError {
 
   /**
    * @description HTTP response status code
@@ -27,16 +23,11 @@ export class ServerError implements Error, IHTTPError {
    */
   errors: Array<string>;
 
-  /**
-   * @description Error stack
-   */
-  stack: string;
-
   constructor(error: IError) {
+    super(error.message)
     this.statusCode = 500;
     this.statusText = 'Ooops... server seems to be broken';
-    this.errors = ['Looks like someone\'s was not there while the meeting\''];
-    this.stack = error?.stack;
+    this.errors = [ 'Looks like someone\'s was not there while the meeting\'' ];
   }
 
 }

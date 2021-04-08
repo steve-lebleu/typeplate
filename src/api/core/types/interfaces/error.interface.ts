@@ -68,7 +68,7 @@ export interface IError {
   /**
    * @description Error details
    */
-  errors?: { field, types, messages }[];
+  errors?: { field, types, messages }[] | string[];
 
   /**
    * @description Validation error details

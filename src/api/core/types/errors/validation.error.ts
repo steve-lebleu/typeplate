@@ -1,18 +1,13 @@
 import { ValidationErrorItem } from 'joi';
+import * as HTTP_STATUS from 'http-status';
 
 import { IError, IHTTPError } from '@interfaces';
+import { TypeplateError } from '@errors';
 
 /**
  * Type upload error
  */
-export class ValidationError implements Error, IHTTPError {
-
-  readonly name = 'ValidationError';
-
-  /**
-   * @description Error.message implementation
-   */
-  message: string;
+export class ValidationError extends TypeplateError implements IHTTPError {
 
   /**
    * @description HTTP response status code
@@ -29,16 +24,11 @@ export class ValidationError implements Error, IHTTPError {
    */
   errors: Array<string>;
 
-  /**
-   * @description Error stack
-   */
-   stack: string;
-
   constructor(error: IError) {
+    super('A validation error was occurred')
     this.statusCode = 400;
-    this.statusText = 'Validation error';
+    this.statusText = 'Validation failed';
     this.errors = this.convertError(error.details);
-    this.stack = error?.stack;
   }
 
   /**

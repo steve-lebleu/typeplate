@@ -1,5 +1,6 @@
-let { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 let request = require('supertest');
+
+let { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 
 describe('Routes resolving', () => {
 
@@ -74,9 +75,5 @@ describe('Routes resolving', () => {
     });
     
   });
-
-
-
-
 
 });

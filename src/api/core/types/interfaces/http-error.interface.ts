@@ -18,6 +18,12 @@ export interface IHTTPError {
    */
   errors: Array<string>;
 
+
+  /**
+   *
+   */
+  message?: string;
+
   /**
    *
    */

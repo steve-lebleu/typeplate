@@ -1,57 +1,46 @@
 import * as HTTP_STATUS from 'http-status';
 
 import { IError, IHTTPError } from '@interfaces';
+import { TypeplateError } from '@errors';
 
 /**
  * @description Custom type MySQL error
  */
-export class MySQLError implements Error, IHTTPError {
-
-  readonly name = 'MySQLError';
+export class MySQLError extends TypeplateError implements IHTTPError {
 
   /**
-   * @description Error.message implementation
-   */
-  message: string;
-
-  /**
-   * @description IError HTTP response status code
+   * @description HTTP response status code
    */
   statusCode: number;
 
   /**
-   * @description IError HTTP response status message
+   * @description HTTP response status message
    */
   statusText: string;
 
   /**
-   * @description Ierror HTTP response errors
+   * @description HTTP response errors
    */
   errors: Array<string>;
 
-  /**
-   * @description Error stack
-   */
-   stack: string;
-
   constructor(error: IError) {
+    super('MySQL engine was failed');
     const converted = this.convertError(error.errno, error.message);
     this.statusCode = converted.statusCode;
-    this.statusText = 'MySQL error';
-    this.errors = [converted.error];
-    this.stack = error?.stack;
+    this.statusText = converted.statusText;
+    this.errors = [ converted.error ];
   }
 
   /**
    * @description Fallback MySQL error when creating / updating fail
    *
-   * @param error
+   * @param errno
+   * @param message
    *
    * @example 1052 ER_NON_UNIQ_ERROR
    * @example 1054 ER_BAD_FIELD_ERROR
    * @example 1062 DUPLICATE_ENTRY
    * @example 1452 ER_NO_REFERENCED_ROW_2
-   *
    * @example 1364 ER_NO_DEFAULT_FOR_FIELD
    * @example 1406 ER_DATA_TOO_LONG
    */

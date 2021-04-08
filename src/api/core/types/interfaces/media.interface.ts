@@ -7,6 +7,7 @@ export interface IMedia {
   filename: string;
   size: number;
   destination: string;
+  encoding?: string;
   mimetype: MimeType;
   originalname?: string;
   fieldname?: string;

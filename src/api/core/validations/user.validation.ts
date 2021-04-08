@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import * as Joi from 'joi';
-import { ROLE, FIELDNAME } from '@enums';
+import { ROLE, FIELDNAME, STATUS } from '@enums';
 import { list } from '@utils/enum.util';
 
 import { email, id, pagination, username, password, file } from '@schemas';
@@ -16,7 +16,8 @@ const listUsers = {
     username: username(),
     email: email(),
     role: Joi.any().valid(...list(ROLE)),
-    confirmed: Joi.boolean()
+    status: Joi.any().valid(...list(STATUS)),
+    website: Joi.string().uri()
   })
 };
 
@@ -32,7 +33,10 @@ const createUser = {
   body: Joi.object({
     username: username().required(),
     email: email().required(),
-    password: password('user').required()
+    password: password('user').required(),
+    status: Joi.any().valid(...list(STATUS)).optional(),
+    avatar: file( FIELDNAME.avatar ).allow(null),
+    role: Joi.any().valid(...list(ROLE))
   })
 };
 
@@ -45,7 +49,9 @@ const replaceUser = {
     username: username().required(),
     email: email().required(),
     password: password('user').required(),
-    files: Joi.array().items( file( FIELDNAME.avatar ) ).max(1).optional()
+    status: Joi.any().valid(...list(STATUS)).required(),
+    avatar: file( FIELDNAME.avatar ).allow(null),
+    role: Joi.any().valid(...list(ROLE)).required()
   })
 };
 
@@ -55,10 +61,12 @@ const updateUser = {
     userId: id(),
   }),
   body: Joi.object({
-    username: username().required(),
-    email: email().required(),
-    password: password('user').required(),
-    files: Joi.array().items( file( FIELDNAME.avatar ) ).max(1).optional()
+    username: username(),
+    email: email(),
+    password: password('user'),
+    status: Joi.any().valid(...list(STATUS)).optional(),
+    avatar: file( FIELDNAME.avatar ).allow(null),
+    role: Joi.any().valid(...list(ROLE))
   })
 };
 

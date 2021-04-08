@@ -70,7 +70,7 @@ const updateMedia = {
   }),
   body: Joi.object({
     file: {
-      fieldname:  fieldname(),
+      fieldname: fieldname(),
       filename: filename(),
       path: path(),
       mimetype: mimetype(MIME_TYPE_LIST),

@@ -4,11 +4,12 @@
 
 import * as Joi from 'joi';
 
-import { email, password } from '@schemas';
+import { email, password, username } from '@schemas';
 
 // POST api/v1/auth/register
 const register = {
   body: Joi.object({
+    username: username(),
     email: email().required(),
     password: password('user').required()
   })
@@ -31,7 +32,8 @@ const login = {
       is: null,
       then: Joi.string().length(64).required(),
       otherwise: Joi.optional()
-    })
+    }),
+    refreshToken: Joi.string().min(82).max(88)
   })
 };
 

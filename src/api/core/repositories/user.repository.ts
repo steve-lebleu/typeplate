@@ -105,11 +105,11 @@ export class UserRepository extends Repository<User>  {
    *
    * @param options
    *
-   * FIXME: user should always retrieved from her email address. If not, possible collision on username value
+   * @fixme user should always retrieved from her email address. If not, possible collision on username value
    */
   async oAuthLogin(options: IRegistrable): Promise<User> {
 
-    const { email, username, password, apikey } = options;
+    const { email, username, password } = options;
 
     const userRepository = getRepository(User);
 
@@ -129,7 +129,7 @@ export class UserRepository extends Repository<User>  {
       return user;
     }
 
-    user = userRepository.create({ email, password, username, apikey });
+    user = userRepository.create({ email, password, username });
 
     return userRepository.save(user);
   }

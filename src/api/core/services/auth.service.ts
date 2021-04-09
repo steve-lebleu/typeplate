@@ -78,8 +78,7 @@ class AuthService {
         username: profile.username ? profile.username : `${profile.name.givenName.toLowerCase()}${profile.name.familyName.toLowerCase()}`,
         email,
         picture: profile.photos.slice().shift()?.value,
-        password: hash(email, 16),
-        apikey: encrypt(email)
+        password: hash(email, 16)
       }
       const userRepository = getCustomRepository(UserRepository);
       const user = await userRepository.oAuthLogin(iRegistrable);

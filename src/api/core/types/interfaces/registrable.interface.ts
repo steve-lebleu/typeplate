@@ -18,10 +18,5 @@ export interface IRegistrable {
   /**
    *
    */
-  apikey: string;
-
-  /**
-   *
-   */
   picture?: string;
 }

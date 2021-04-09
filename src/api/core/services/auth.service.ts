@@ -1,4 +1,4 @@
-import * as Moment from 'moment-timezone';
+import * as Dayjs from 'dayjs';
 
 import { badData } from '@hapi/boom';
 import { getCustomRepository, getRepository } from 'typeorm';
@@ -13,7 +13,7 @@ import { RefreshToken } from '@models/refresh-token.model';
 
 import { IOauthResponse } from '@interfaces';
 
-import { hash, encrypt } from '@utils/string.util';
+import { hash } from '@utils/string.util';
 
 /**
  * @description
@@ -56,7 +56,7 @@ class AuthService {
       await getRepository(RefreshToken).remove(oldToken)
     }
     const refreshToken = getCustomRepository(RefreshTokenRepository).generate(user).token;
-    const expiresIn = Moment().add(JWT.EXPIRATION, 'minutes');
+    const expiresIn = Dayjs().add(JWT.EXPIRATION, 'minutes');
     return { tokenType, accessToken, refreshToken, expiresIn };
   }
 

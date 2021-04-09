@@ -1,4 +1,4 @@
-import * as Moment from 'moment-timezone';
+import * as Dayjs from 'dayjs';
 
 import { Repository, EntityRepository, getRepository } from 'typeorm';
 import { omitBy, isNil } from 'lodash';
@@ -93,7 +93,7 @@ export class UserRepository extends Repository<User>  {
       throw notFound('User not found');
     } else if (password && await user.passwordMatches(password) === false) {
       throw unauthorized('Password must match to authorize a token generating');
-    } else if (refreshToken && refreshToken.user.email === email && Moment(refreshToken.expires).isBefore()) {
+    } else if (refreshToken && refreshToken.user.email === email && Dayjs(refreshToken.expires).isBefore( Dayjs() )) {
       throw unauthorized('Invalid refresh token');
     }
 

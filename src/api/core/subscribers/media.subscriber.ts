@@ -1,6 +1,6 @@
 require('module-alias/register');
 
-import * as Moment from 'moment-timezone';
+import * as Dayjs from 'dayjs';
 
 import { CacheService } from '@services/cache.service';
 
@@ -23,7 +23,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
    * @description Called before media insertion.
    */
   beforeInsert(event: InsertEvent<Media>): void {
-    event.entity.createdAt = Moment( new Date() ).utc(true).toDate();
+    event.entity.createdAt = Dayjs( new Date() ).toDate();
   }
 
   /**
@@ -38,7 +38,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
    * @description Called before media update.
    */
   beforeUpdate(event: UpdateEvent<Media>): void {
-    event.entity.updatedAt = Moment( new Date() ).utc(true).toDate();
+    event.entity.updatedAt = Dayjs( new Date() ).toDate();
   }
 
   /**

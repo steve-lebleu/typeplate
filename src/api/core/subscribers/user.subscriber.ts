@@ -1,6 +1,6 @@
 require('module-alias/register');
 
-import * as Moment from 'moment-timezone';
+import * as Dayjs from 'dayjs';
 import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, RemoveEvent } from 'typeorm';
 import { User } from '@models/user.model';
 import { encrypt } from '@utils/string.util';
@@ -28,7 +28,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
   beforeInsert(event: InsertEvent<User>): void {
     event.entity.apikey = !event.entity.apikey ? encrypt(event.entity.email) : event.entity.apikey;
     event.entity.status = STATUS.REGISTERED;
-    event.entity.createdAt = Moment( new Date() ).utc(true).toDate();
+    event.entity.createdAt = Dayjs( new Date() ).toDate();
   }
 
   /**
@@ -43,7 +43,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
    */
   beforeUpdate(event: UpdateEvent<User>): void {
     event.entity.apikey = encrypt(event.entity.email)
-    event.entity.updatedAt = Moment( new Date() ).utc(true).toDate();
+    event.entity.updatedAt = Dayjs( new Date() ).toDate();
   }
 
   /**

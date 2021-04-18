@@ -3,7 +3,7 @@ import * as Dayjs from 'dayjs';
 import { badData } from '@hapi/boom';
 import { getCustomRepository, getRepository } from 'typeorm';
 
-import { JWT } from '@config/environment.config';
+import { ACCESS_TOKEN } from '@config/environment.config';
 
 import { UserRepository } from '@repositories/user.repository';
 import { RefreshTokenRepository } from '@repositories/refresh-token.repository';
@@ -56,8 +56,26 @@ class AuthService {
       await getRepository(RefreshToken).remove(oldToken)
     }
     const refreshToken = getCustomRepository(RefreshTokenRepository).generate(user).token;
-    const expiresIn = Dayjs().add(JWT.EXPIRATION, 'minutes');
+    const expiresIn = Dayjs().add(ACCESS_TOKEN.DURATION, 'minutes');
     return { tokenType, accessToken, refreshToken, expiresIn };
+  }
+
+  /**
+   * @description Revoke a refresh token
+   *
+   * @param user
+   */
+  async revokeRefreshToken(user: User): Promise<void|Error> {
+
+    if (!user || !(user instanceof User) || !user.id) {
+      return badData('User is not an instance of User');
+    }
+
+    const oldToken = await getRepository(RefreshToken).findOne({ where : { user } });
+
+    if (oldToken) {
+      await getRepository(RefreshToken).remove(oldToken)
+    }
   }
 
   /**

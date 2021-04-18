@@ -20,9 +20,10 @@ Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boil
 ## > Features
 
 * **Clear code architecture** with classic layers such controllers, services, repositories, models, ...
-* **Easy entity generation** (controller, route, repository, model, validations, test, fixture) with [rsgen](https://github.com/konfer-be/rsgen).
 * **Object Relational Mapping** with [Typeorm](https://typeorm.io/#/).
 * **SSL secure connection** with native [HTTPS node module](https://nodejs.org/docs/latest-v14.x/api/https.html).
+* **Entity generation** (controller, route, repository, model, validations, test, fixture) with [rsgen](https://github.com/konfer-be/rsgen).
+* **Sending transactional emails** with [cliam](https://github.com/konfer-be/cliam).
 * **Cross Origin Resource Sharing** with [CORS](https://expressjs.com/en/resources/middleware/cors.html).
 * **Securized HTTP headers** with [Helmet](https://helmetjs.github.io/).
 * **HTTP header pollution** preventing with [Hpp](https://www.npmjs.com/package/hpp).
@@ -95,14 +96,14 @@ Open the *./package.json* file and edit *version*, *author*, *name*, *descriptio
 Environment variables are defined in *.env* files. Open *./dist/env/development.env* and fill the required values (uncommented in the file). See [env variables list](https://github.com/konfer-be/ts-express-typeorm/wiki/Environment-variables) for more informations.
 
 ```bash
+# Access token Secret passphrase
+ACCESS_TOKEN_SECRET = "your-secret"
+
 # CORS authorized domains
 AUTHORIZED = "http://localhost:4200"
 
 # API domain
 DOMAIN = "localhost"
-
-# JWT Secret passphrase
-JWT_SECRET = "your-secret"
 
 # Application port.
 PORT = 8101
@@ -126,13 +127,23 @@ TYPEORM_PWD = ""
 TYPEORM_PORT = "3306"
 ```
 
-### Step 7: compile
+### Step 7: setup cliamrc.json for sending transactional email
+
+Sending transactional email is provided by [cliam](https://github.com/konfer-be/cliam).  Currently supported providers are Mailgun, Mailjet, Postmark, Sendgrid, Sendinblue and Sparkpost. If you're not with they, you can use a simple SMTP server.
+
+Open the *.cliamrc.json* and fill the [required configuration](https://github.com/konfer-be/cliam/wiki/Configuration) according your sending mode. 
+
+See [Cliam official documentation](https://github.com/konfer-be/cliam/wiki) for more information about configuration of this file.
+
+Note that sandbox is set to true by default and emails are not send. Pass this value to false when you're ready.
+
+### Step 8: compile
 
 ```bash
 $ tsc
 ```
 
-### Step 8: run & enjoy
+### Step 9: run & enjoy
 
 ```bash
 $ nodemon

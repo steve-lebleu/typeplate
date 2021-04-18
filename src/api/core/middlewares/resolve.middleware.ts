@@ -38,8 +38,9 @@ import { CacheService } from '@services/cache.service';
    async write(req: Request, res: IResponse, next: (e?: Error) => void): Promise<void> {
 
     const hasContent = typeof res.locals?.data !== 'undefined';
+    const hasNullContent = res.locals.data === null;
     const hasStatusCodeOnResponse = typeof res.statusCode !== 'undefined';
-    const status = getStatusCode(req.method, hasContent);
+    const status = getStatusCode(req.method, ( hasContent && !hasNullContent ));
 
     if ( req.method === 'DELETE' ) {
       // As trick but necessary because if express don't match route we can't give a 204/404 on DELETE

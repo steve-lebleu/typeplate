@@ -2,7 +2,7 @@ import { existsSync, mkdirSync } from 'fs';
 
 import { config as Dotenv } from 'dotenv';
 
-import { DatabaseEngine, MomentUnit, EnvOauth, EnvJWT, EnvMemoryCache, EnvSSL, EnvTypeorm, EnvLog, EnvUpload, EnvImageScaling, EnvRefreshToken } from '@types';
+import { DatabaseEngine, MomentUnit, EnvAccessToken, EnvOauth, EnvMemoryCache, EnvSSL, EnvTypeorm, EnvLog, EnvUpload, EnvImageScaling, EnvRefreshToken } from '@types';
 import { DATABASE_ENGINE, ENVIRONMENT, ARCHIVE_MIME_TYPE, AUDIO_MIME_TYPE, DOCUMENT_MIME_TYPE, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE, CONTENT_TYPE as CONTENT_TYPE_ENUM } from '@enums';
 
 import { list } from '@utils/enum.util';
@@ -79,6 +79,8 @@ export class Environment {
    */
   get keys(): string[] {
     return [
+      'ACCESS_TOKEN_SECRET',
+      'ACCESS_TOKEN_DURATION',
       'API_VERSION',
       'AUTHORIZED',
       'CDN',
@@ -90,8 +92,6 @@ export class Environment {
       'GITHUB_CONSUMER_SECRET',
       'GOOGLE_CONSUMER_ID',
       'GOOGLE_CONSUMER_SECRET',
-      'JWT_EXPIRATION_MINUTES',
-      'JWT_SECRET',
       'LINKEDIN_CONSUMER_ID',
       'LINKEDIN_CONSUMER_SECRET',
       'LOGS_PATH',
@@ -100,6 +100,7 @@ export class Environment {
       'MEMORY_CACHE_DURATION',
       'PORT',
       'REFRESH_TOKEN_DURATION',
+      'REFRESH_TOKEN_SECRET',
       'REFRESH_TOKEN_UNIT',
       'RESIZE_IS_ACTIVE',
       'RESIZE_PATH_MASTER',
@@ -136,6 +137,31 @@ export class Environment {
   get rules(): Record<string,any> {
 
     return {
+
+      /**
+       * @description Access token secret phrase
+       */
+      ACCESS_TOKEN_SECRET: (value: string): string => {
+        if (!value) {
+          this.errors.push('ACCESS_TOKEN_SECRET not found: please fill an access token secret value in your .env file to strengthen the encryption.');
+        }
+        if (value && value.toString().length < 32) {
+          this.errors.push('ACCESS_TOKEN_SECRET bad value: please fill an access token secret which have a length >= 32.');
+        }
+        return value ? value.toString() : null;
+      },
+
+      /**
+       * @description Access token duration in minutes
+       *
+       * @default 60
+       */
+      ACCESS_TOKEN_DURATION: (value: string): number => {
+        if (value && isNaN( parseInt(value, 10) )) {
+          this.errors.push('ACCESS_TOKEN_DURATION bad value: please fill a duration expressed as a number');
+        }
+        return parseInt(value, 10) || 60;
+      },
 
       /**
        * @description Current api version
@@ -272,33 +298,6 @@ export class Environment {
       },
 
       /**
-       * @description JWT exiration duration in minutes
-       *
-       * @default 120960
-       */
-      JWT_EXPIRATION_MINUTES: (value: string): number => {
-        if (value && isNaN(parseInt(value, 10))) {
-          this.errors.push('JWT_EXPIRATION_MINUTES bad value: please fill a duration expressed as a number');
-        }
-        return parseInt(value, 10) || 120960;
-      },
-
-      /**
-       * @description JWT secret token
-       *
-       * @default null
-       */
-      JWT_SECRET: (value: string): string => {
-        if (!value) {
-          this.errors.push('JWT_SECRET not found: please fill a jwt secret value in your .env file to strengthen the encryption.');
-        }
-        if (value && value.toString().length < 32) {
-          this.errors.push('JWT_SECRET bad value: please fill a jwt secret which have a length >= 32.');
-        }
-        return value ? value.toString() : null;
-      },
-
-      /**
        * @description Linkedin application id
        *
        * @default null
@@ -379,7 +378,20 @@ export class Environment {
         if (value && isNaN(parseInt(value, 10))) {
           this.errors.push('REFRESH_TOKEN_DURATION bad value: duration must be a number expressed in minutes.');
         }
-        return parseInt(value, 10) || 30
+        return parseInt(value, 10) || 30;
+      },
+
+      /**
+       * @description Refresh token secret phrase
+       */
+      REFRESH_TOKEN_SECRET: (value: string): string => {
+        if (!value) {
+          this.errors.push('REFRESH_TOKEN_SECRET not found: please fill a refresh token secret value in your .env file to strengthen the encryption.');
+        }
+        if (value && value.toString().length < 32) {
+          this.errors.push('REFRESH_TOKEN_SECRET bad value: please fill a refresh token secret which have a length >= 32.');
+        }
+        return value ? value.toString() : null;
       },
 
       /**
@@ -714,10 +726,10 @@ export class Environment {
         this.base = 'dist';
       break;
       case ENVIRONMENT.staging:
-        this.base = '';
+        this.base = 'dist';
       break;
       case ENVIRONMENT.production:
-        this.base = '';
+        this.base = 'dist';
       break;
       case ENVIRONMENT.test:
         this.base = 'dist';
@@ -765,16 +777,16 @@ export class Environment {
    */
   aggregates(): Environment {
     this.cluster = {
+      ACCESS_TOKEN: {
+        SECRET: this.variables.ACCESS_TOKEN_SECRET,
+        DURATION: this.variables.ACCESS_TOKEN_DURATION
+      },
       API_VERSION: this.variables.API_VERSION,
       AUTHORIZED: this.variables.AUTHORIZED,
       CDN: this.variables.CDN,
       CONTENT_TYPE: this.variables.CONTENT_TYPE,
       DOMAIN: this.variables.DOMAIN,
       ENV: this.environment,
-      JWT: {
-        SECRET: this.variables.JWT_SECRET,
-        EXPIRATION: this.variables.JWT_EXPIRATION_MINUTES
-      },
       FACEBOOK: {
         KEY: 'facebook',
         IS_ACTIVE: this.variables.FACEBOOK_CONSUMER_ID !== null && this.variables.FACEBOOK_CONSUMER_SECRET !== null,
@@ -814,6 +826,7 @@ export class Environment {
       PORT: this.variables.PORT,
       REFRESH_TOKEN: {
         DURATION: this.variables.REFRESH_TOKEN_DURATION,
+        SECRET: this.variables.REFRESH_TOKEN_SECRET,
         UNIT: this.variables.REFRESH_TOKEN_UNIT
       },
       SCALING: {
@@ -910,6 +923,7 @@ const environment = Environment
 
 if (!environment.isValid()) environment.exit(environment.errors);
 
+const ACCESS_TOKEN  = environment.cluster.ACCESS_TOKEN as EnvAccessToken;
 const API_VERSION   = environment.cluster.API_VERSION as string;
 const AUTHORIZED    = environment.cluster.AUTHORIZED as string;
 const CDN           = environment.cluster.CDN as string;
@@ -919,7 +933,6 @@ const ENV           = environment.cluster.ENV as string;
 const FACEBOOK      = environment.cluster.FACEBOOK as EnvOauth;
 const GITHUB        = environment.cluster.GITHUB as EnvOauth;
 const GOOGLE        = environment.cluster.GOOGLE as EnvOauth;
-const JWT           = environment.cluster.JWT as EnvJWT;
 const LINKEDIN      = environment.cluster.LINKEDIN as EnvOauth;
 const LOGS          = environment.cluster.LOGS as EnvLog;
 const MEMORY_CACHE  = environment.cluster.MEMORY_CACHE as EnvMemoryCache;
@@ -931,4 +944,4 @@ const TYPEORM       = environment.cluster.TYPEORM as EnvTypeorm;
 const UPLOAD        = environment.cluster.UPLOAD as EnvUpload;
 const URL           = environment.cluster.URL as string;
 
-export { API_VERSION, AUTHORIZED, CDN, CONTENT_TYPE, DOMAIN, ENV, FACEBOOK, GITHUB, GOOGLE, LINKEDIN, JWT, LOGS, MEMORY_CACHE, PORT, REFRESH_TOKEN, SCALING, SSL, TYPEORM, UPLOAD, URL }
+export { ACCESS_TOKEN, API_VERSION, AUTHORIZED, CDN, CONTENT_TYPE, DOMAIN, ENV, FACEBOOK, GITHUB, GOOGLE, LINKEDIN, LOGS, MEMORY_CACHE, PORT, REFRESH_TOKEN, SCALING, SSL, TYPEORM, UPLOAD, URL }

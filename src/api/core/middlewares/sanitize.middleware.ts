@@ -43,7 +43,7 @@ import { SanitizeService } from '@services/sanitizer.service';
       return next();
     }
 
-    if ( !SanitizeService.hasEligibleMember(res.locals.data) ) {
+    if ( res.locals.data === null || !SanitizeService.hasEligibleMember(res.locals.data) ) {
       return next();
     }
 

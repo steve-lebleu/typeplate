@@ -6,6 +6,7 @@ import { User } from '@models/user.model';
 import { encrypt } from '@utils/string.util';
 import { CacheService } from '@services/cache.service';
 import { STATUS } from '@enums';
+import { EmailEmitter } from '@events';
 
 /**
  *
@@ -36,6 +37,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
    */
   afterInsert(event: InsertEvent<User>): void {
     CacheService.refresh('users');
+    EmailEmitter.emit('user.confirm', event.entity);
   }
 
   /**
@@ -51,6 +53,9 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
    */
   afterUpdate(event: UpdateEvent<User>): void {
     CacheService.refresh('users');
+    if (event.entity.status === STATUS.CONFIRMED && event.databaseEntity.status === STATUS.REGISTERED) {
+      EmailEmitter.emit('user.welcome', event.databaseEntity);
+    }
   }
 
   /**

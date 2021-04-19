@@ -47,7 +47,7 @@ export class User implements IModel {
   password: string;
 
   @Column({
-    length: 64,
+    length: 128,
     unique: true
   })
   apikey: string;

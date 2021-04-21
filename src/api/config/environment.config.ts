@@ -50,8 +50,9 @@ export class Environment {
    * @description Files directories
    */
   readonly dirs: string[] = [
-    'archives/',
+    'archives',
     'documents',
+    'images',
     'images/master-copy',
     'images/rescale',
     'audios',

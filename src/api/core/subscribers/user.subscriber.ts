@@ -46,6 +46,9 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
   beforeUpdate(event: UpdateEvent<User>): void {
     event.entity.apikey = encrypt(event.entity.email)
     event.entity.updatedAt = Dayjs( new Date() ).toDate();
+    if (event.entity.email !== event.databaseEntity.email) {
+      event.entity.status = STATUS.REVIEWED;
+    }
   }
 
   /**
@@ -55,6 +58,9 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
     CacheService.refresh('users');
     if (event.entity.status === STATUS.CONFIRMED && event.databaseEntity.status === STATUS.REGISTERED) {
       EmailEmitter.emit('user.welcome', event.databaseEntity);
+    }
+    if (event.entity.email !== event.databaseEntity.email) {
+      EmailEmitter.emit('user.confirm', event.entity);
     }
   }
 

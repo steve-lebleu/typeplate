@@ -53,11 +53,7 @@ export class Environment {
     'archives/',
     'documents',
     'images/master-copy',
-    'images/rescale/xs',
-    'images/rescale/sm',
-    'images/rescale/md',
-    'images/rescale/lg',
-    'images/rescale/xl',
+    'images/rescale',
     'audios',
     'videos'
   ];

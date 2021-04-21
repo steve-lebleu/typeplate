@@ -3,7 +3,6 @@ import { MulterError } from 'multer';
 import { UploadConfiguration } from '@config/upload.config'
 import { Media } from '@models/media.model';
 import { IMediaRequest, IResponse, IUploadOptions, IMedia } from '@interfaces';
-import { object } from 'joi';
 
 /**
  * @description

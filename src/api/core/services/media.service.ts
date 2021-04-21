@@ -80,7 +80,7 @@ class MediaService {
       void ulink(media.path.toString());
     } else {
       const promises = this.SIZES
-        .map( size => media.path.toString().replace(this.OPTIONS.PATH_MASTER, `${this.OPTIONS.PATH_SCALE}/${size}`) )
+        .map( size => media.path.toString().replace(`${this.OPTIONS.PATH_MASTER}/${media.fieldname}`, `${this.OPTIONS.PATH_SCALE}/${media.fieldname}/${size}`) )
         .filter( path => existsSync(path) )
         .map( path => ulink(path) );
       void Promise.all( [ existsSync(media.path.toString()) ? ulink( media.path.toString() ) : Promise.resolve() ].concat( promises ) );

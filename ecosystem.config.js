@@ -4,7 +4,8 @@ module.exports = {
     name: 'API',
     script: './api/app.bootstrap.js',
     args: 'one two',
-    instances: 1,
+    exec_mode: 'cluster',
+    instances: -1,
     autorestart: true,
     watch: false,
     max_memory_restart: '1G',
@@ -24,16 +25,20 @@ module.exports = {
       host : '212.83.163.1',
       ref  : 'origin/master',
       repo : 'git@github.com:repo.git',
+      ssh_options: ['StrictHostKeyChecking=no', 'PasswordAuthentication=yes', 'ForwardAgent=yes'],
       path : '/var/www/staging',
-      'post-deploy' : 'npm install && npm run distify && tsc && pm2 reload ecosystem.config.js --env staging'
+        'post-setup' : 'npm run kickstart:staging && pm2 reload ecosystem.config.js --env staging',
+        'post-deploy' : 'npm i && tsc && pm2 reload ecosystem.config.js --env staging'
     },
     production : {
       user : 'node',
       host : '212.83.163.1',
       ref  : 'origin/master',
       repo : 'git@github.com:repo.git',
+      ssh_options: ['StrictHostKeyChecking=no', 'PasswordAuthentication=yes', 'ForwardAgent=yes'],
       path : '/var/www/production',
-      'post-deploy' : 'npm install && npm run distify && tsc && pm2 reload ecosystem.config.js --env production'
+        'post-setup' : 'npm run kickstart:production && pm2 reload ecosystem.config.js --env production',
+        'post-deploy' : 'npm i && tsc && pm2 reload ecosystem.config.js --env production'
     }
   }
 };

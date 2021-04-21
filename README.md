@@ -6,11 +6,11 @@
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-informational?logo=typeorm&color=E8352B)](https://typeorm.io/#/)
 [![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational?logo=mocha&color=8A6343)](https://mochajs.org)
 
-[![Build Status](https://travis-ci.com/konfer-be/ts-express-typeorm.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/ts-express-typeorm)
-[![Coverage Status](https://coveralls.io/repos/github/konfer-be/ts-express-typeorm/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/ts-express-typeorm?branch=master)
-![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/konfer-be/ts-express-typeorm/master)
-![Requires.io (branch)](https://img.shields.io/requires/github/konfer-be/ts-express-typeorm/master)
-![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/konfer-be/ts-express-typeorm)
+[![Build Status](https://travis-ci.com/konfer-be/typeplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/typeplate)
+[![Coverage Status](https://coveralls.io/repos/github/konfer-be/typeplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/typeplate?branch=master)
+![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/konfer-be/typeplate/master)
+![Requires.io (branch)](https://img.shields.io/requires/github/konfer-be/typeplate/master)
+![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/konfer-be/typeplate)
 
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
@@ -66,7 +66,7 @@ When you're ready with that, starting your project is a matter of minutes. :cloc
 ### Step 1: install
 
 ```bash
-$ git clone https://github.com/konfer-be/ts-express-typeorm.git path-to/your-project-name/
+$ git clone https://github.com/konfer-be/typeplate.git path-to/your-project-name/
 ```
 
 ### Step 2: go to your project
@@ -93,7 +93,7 @@ Open the *./package.json* file and edit *version*, *author*, *name*, *descriptio
 
 ### Step 6: setup environment variables
 
-Environment variables are defined in *.env* files. Open *./dist/env/development.env* and fill the required values (uncommented in the file). See [env variables list](https://github.com/konfer-be/ts-express-typeorm/wiki/Environment-variables) for more informations.
+Environment variables are defined in *.env* files. Open *./dist/env/development.env* and fill the required values (uncommented in the file). See [env variables list](https://github.com/konfer-be/typeplate/wiki/Environment-variables) for more informations.
 
 ```bash
 # Access token Secret passphrase
@@ -135,7 +135,7 @@ Open the *.cliamrc.json* and fill the [required configuration](https://github.co
 
 See [Cliam official documentation](https://github.com/konfer-be/cliam/wiki) for more information about configuration of this file.
 
-Note that sandbox is set to true by default and emails are not send. Pass this value to false when you're ready.
+Sandbox is set to true by default and emails are not send. Pass this value to false when you're ready.
 
 ### Step 8: compile
 
@@ -161,7 +161,7 @@ Some repetitive tasks such as creating resources can be done easily with [rsgen]
 - E2e tests
 - Fixtures
 
-See the [documentation](https://github.com/konfer-be/ts-express-typeorm/wiki/Entity-generation) about it.
+See the [documentation](https://github.com/konfer-be/typeplate/wiki/Entity-generation) about it.
 
 ## > Documentation
 

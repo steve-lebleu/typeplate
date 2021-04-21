@@ -5,7 +5,7 @@ import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import { Strategy as GithubStrategy } from 'passport-github2';
 import { Strategy as LinkedInStrategy } from 'passport-linkedin-oauth2';
 
-import { JWT, FACEBOOK, GOOGLE, GITHUB, LINKEDIN } from '@config/environment.config';
+import { ACCESS_TOKEN, FACEBOOK, GOOGLE, GITHUB, LINKEDIN } from '@config/environment.config';
 import { AuthService } from '@services/auth.service';
 
 const ExtractJwtAlias = ExtractJwt as { fromAuthHeaderWithScheme: (type: string) => string };
@@ -25,7 +25,7 @@ class Authentication {
    */
   private options = {
     jwt: {
-      secretOrKey: JWT.SECRET,
+      secretOrKey: ACCESS_TOKEN.SECRET,
       jwtFromRequest: ExtractJwtAlias.fromAuthHeaderWithScheme('Bearer')
     }
   };

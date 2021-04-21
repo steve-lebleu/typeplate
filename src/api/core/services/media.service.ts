@@ -61,7 +61,7 @@ class MediaService {
             image
               .clone()
               .resize(this.OPTIONS.SIZES[size.toUpperCase()], Jimp.AUTO)
-              .write(`${media.path.split('/').slice(0, -1).join('/').replace(this.OPTIONS.PATH_MASTER, this.OPTIONS.PATH_SCALE)}/${size}/${media.fieldname}/${media.filename as string}`, (err: Error) => {
+              .write(`${media.path.split('/').slice(0, -1).join('/').replace(this.OPTIONS.PATH_MASTER, this.OPTIONS.PATH_SCALE)}/${size}/${media.filename as string}`, (err: Error) => {
                 if(err) throw expectationFailed(err.message);
               });
           });
@@ -80,7 +80,7 @@ class MediaService {
       void ulink(media.path.toString());
     } else {
       const promises = this.SIZES
-        .map( size => media.path.toString().replace(this.OPTIONS.PATH_MASTER, `${this.OPTIONS.PATH_SCALE}/${size}`) )
+        .map( size => media.path.toString().replace(`${this.OPTIONS.PATH_MASTER}/${media.fieldname}`, `${this.OPTIONS.PATH_SCALE}/${media.fieldname}/${size}`) )
         .filter( path => existsSync(path) )
         .map( path => ulink(path) );
       void Promise.all( [ existsSync(media.path.toString()) ? ulink( media.path.toString() ) : Promise.resolve() ].concat( promises ) );

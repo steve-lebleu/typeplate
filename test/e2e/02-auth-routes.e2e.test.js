@@ -25,7 +25,7 @@ const { doRequest, doQueryRequest } = require(process.cwd() + '/test/utils');
 
 describe('Authentification routes', function () {
   
-  let agent, _token, _refreshToken, _user, _apikey;
+  let agent, _token, _loggedAccessToken, _loggedRefreshToken, _refreshToken, _user, _apikey;
   
   before(function (done) {
 
@@ -36,7 +36,11 @@ describe('Authentification routes', function () {
       doRequest(agent, 'post', '/api/v1/auth/register', null, null, user.register('passw0rd'), function(err, res) {
         _user = res.body.user;
         _apikey = encrypt(_user.email);
-        done();
+        doRequest(agent, 'post', '/api/v1/auth/register', null, null, user.register('passw0rd'), function(err, res) {
+          _loggedAccessToken = res.body.token.accessToken;
+          _loggedRefreshToken = res.body.token.refreshToken;
+          done();
+        })
       });
     });
     
@@ -175,6 +179,26 @@ describe('Authentification routes', function () {
     
   });
 
+  describe('POST /api/v1/auth/logout', function() {
+
+    const route = '/api/v1/auth/logout';
+  
+    it('403 - no user to logout', function(done) {
+      doRequest(agent, 'post', route, null, null, {}, function(err, res) {
+        expect(res.statusCode).to.eqls(403);
+        done();
+      });
+    });
+
+    it('204 - refresh token revoked', function(done) {
+      doRequest(agent, 'post', route, null, _loggedAccessToken, {}, function(err, res) {
+        expect(res.statusCode).to.eqls(204);
+        done();
+      });
+    });
+
+  });
+
   ['facebook', 'github', 'google', 'linkedin'].forEach(provider => {
 
     describe(`GET /api/v1/auth/${provider}`, function() {
@@ -293,6 +317,67 @@ describe('Authentification routes', function () {
         expect(res.body.token).to.have.all.keys(['tokenType', 'accessToken', 'refreshToken', 'expiresIn']);
         done();
       });
+    });
+
+  });
+
+  describe('PATCH /api/v1/auth/confirm', function() {
+
+    const route = '/api/v1/auth/confirm';
+  
+    it('400 - token is required', function(done) {
+      doRequest(agent, 'patch', route, null, null, {}, function(err, res) {
+        expect(res.statusCode).to.eqls(400);
+        done();
+      });
+    });
+
+    it('400 - token not valid', function(done) {
+      doRequest(agent, 'patch', route, null, null, { token: 777 }, function(err, res) {
+        expect(res.statusCode).to.eqls(400);
+        done();
+      });
+    });
+
+    it('400 - token not valid', function(done) {
+
+      doRequest(agent, 'patch', route, null, null, { token: 'readmeimatoken' }, function(err, res) {
+        expect(res.statusCode).to.eqls(400);
+        done();
+      });
+
+    });
+
+    it('200 - user status confirmed', function(done) {
+      doRequest(agent, 'patch', route, null, null, { token: _loggedAccessToken }, function(err, res) {
+        expect(res.statusCode).to.eqls(200);
+        done();
+      });
+    });
+
+  });
+
+  describe('GET /api/v1/auth/request-password', function() {
+
+    const route = '/api/v1/auth/request-password';
+  
+    it('400 - email is required', function(done) {
+
+      doRequest(agent, 'get', route, null, null, {}, function(err, res) {
+        expect(res.statusCode).to.eqls(400);
+        done();
+      });
+
+    });
+
+    it('400 - email should be well formed email address', function(done) {
+
+      doRequest(agent, 'get', route, null, null, { email: 'imnotanemail' }, function(err, res) {
+        expect(res.statusCode).to.eqls(400);
+        done();
+      });
+
+
     });
 
   });

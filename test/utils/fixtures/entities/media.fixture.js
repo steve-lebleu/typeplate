@@ -1,8 +1,10 @@
+const { UPLOAD } =  require(process.cwd() + '/dist/api/config/environment.config');
+
 exports.image = (owner) => {
   return {
-    fieldname: 'image',
+    fieldname: 'banner',
     filename: 'javascript.jpg',
-    path: process.cwd() + '/dist/public/images/master-copy/javascript.jpg',
+    path: UPLOAD.PATH + '/images/master-copy/banner/javascript.jpg',
     mimetype: 'image/jpeg',
     size: '',
     owner: owner.id
@@ -13,7 +15,7 @@ exports.document = (owner) => {
   return {
     fieldname: 'document',
     filename: 'invoice.pdf',
-    path: process.cwd() + '/dist/public/documents/invoice.jpg',
+    path: UPLOAD.PATH + '/documents/invoice.jpg',
     mimetype: 'application/pdf',
     size: '',
     owner: owner.id
@@ -24,7 +26,7 @@ exports.archive = (owner) => {
   return {
     fieldname: 'archive',
     filename: 'documents.rar',
-    path: process.cwd() + '/dist/public/archives/documents.rar',
+    path: UPLOAD.PATH + '/archives/documents.rar',
     mimetype: 'archive/rar',
     size: '',
     owner: owner.id

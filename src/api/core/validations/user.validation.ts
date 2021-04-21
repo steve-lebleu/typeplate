@@ -63,7 +63,18 @@ const updateUser = {
   body: Joi.object({
     username: username(),
     email: email(),
+    isUpdatePassword: Joi.boolean().optional(),
     password: password('user'),
+    passwordConfirmation: Joi.when('password', {
+      is: password('user').required(),
+      then: Joi.any().equal( Joi.ref('password') ).required().label('Confirm password').messages({ 'any.only': '{{#label}} does not match' }),
+      otherwise: Joi.optional()
+    }),
+    passwordToRevoke: Joi.when('isUpdatePassword', {
+      is: Joi.any().equal(true).required(),
+      then: password('user').required(),
+      otherwise: Joi.optional()
+    }),
     status: Joi.any().valid(...list(STATUS)).optional(),
     avatar: file( FIELDNAME.avatar ).allow(null),
     role: Joi.any().valid(...list(ROLE))

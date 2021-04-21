@@ -1,6 +1,6 @@
 require('module-alias/register');
 
-import * as Moment from 'moment';
+import * as Dayjs from 'dayjs';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 import { MIME_TYPE, FIELDNAME } from '@enums';
@@ -48,7 +48,7 @@ export class Media implements IModel {
 
   @Column({
     type: Date,
-    default: Moment( new Date() ).format('YYYY-MM-DD HH:ss')
+    default: Dayjs( new Date() ).format('YYYY-MM-DD HH:ss')
   })
   createdAt;
 

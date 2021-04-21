@@ -11,7 +11,7 @@ import { OAuthProvider } from './oauth-provider.type';
 import { Role } from './role.type';
 import { Status } from './status.type';
 import { VideoMimeType } from './video-mime-type.type';
-import { EnvOauth, EnvJWT, EnvMemoryCache, EnvSSL, EnvTypeorm, EnvLog, EnvUpload, EnvImageScaling, EnvRefreshToken } from './environment-cluster.type';
+import { EnvOauth, EnvAccessToken, EnvMemoryCache, EnvSSL, EnvTypeorm, EnvLog, EnvUpload, EnvImageScaling, EnvRefreshToken } from './environment-cluster.type';
 import { MimeType } from './mime-type.type';
 
 export {
@@ -29,8 +29,8 @@ export {
   Role,
   Status,
   VideoMimeType,
+  EnvAccessToken,
   EnvOauth,
-  EnvJWT,
   EnvMemoryCache,
   EnvSSL,
   EnvTypeorm,

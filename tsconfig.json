@@ -14,6 +14,8 @@
       "@enums/*": ["api/core/types/enums/*"],
       "@errors": ["api/core/types/errors"],
       "@errors/*": ["api/core/types/errors/*"],
+      "@events": ["api/core/types/events"],
+      "@events/*": ["api/core/types/events/*"],
       "@factories/*": ["api/core/factories/*"],
       "@interfaces": ["api/core/types/interfaces"],
       "@interfaces/*": ["api/core/types/interfaces/*"],

@@ -53,4 +53,19 @@ const oauthCb = {
   })
 };
 
-export { register, login, refresh, oauthCb };
+// PATCH api/v1/auth/confirm
+const confirm = {
+  body: Joi.object({
+    token: Joi.string().min(64).required()
+  })
+};
+
+// GET api/v1/auth/request-password
+const requestPassword = {
+  query: Joi.object({
+    email: Joi.string().email().required()
+  })
+};
+
+
+export { register, login, refresh, oauthCb, confirm, requestPassword };

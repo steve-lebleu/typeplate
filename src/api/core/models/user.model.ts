@@ -1,12 +1,12 @@
 require('module-alias/register');
 
-import * as Moment from 'moment-timezone';
+import * as Dayjs from 'dayjs';
 import * as Jwt from 'jwt-simple';
 import * as Bcrypt from 'bcrypt';
 import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, AfterLoad, BeforeInsert, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 import { badImplementation } from '@hapi/boom';
 
-import { JWT } from '@config/environment.config';
+import { ACCESS_TOKEN } from '@config/environment.config';
 import { ROLE, STATUS } from '@enums';
 import { Role, Status } from '@types';
 import { Media } from '@models/media.model';
@@ -47,7 +47,7 @@ export class User implements IModel {
   password: string;
 
   @Column({
-    length: 64,
+    length: 128,
     unique: true
   })
   apikey: string;
@@ -66,7 +66,7 @@ export class User implements IModel {
 
   @Column({
     type: Date,
-    default: Moment( new Date() ).format('YYYY-MM-DD HH:ss')
+    default: Dayjs( new Date() ).format('YYYY-MM-DD HH:ss')
   })
   createdAt;
 
@@ -123,15 +123,15 @@ export class User implements IModel {
   }
 
   /**
-   * @description Generate JWT token
+   * @description Generate JWT access token
    */
-  token(): string {
+   token(duration: number = null): string {
     const payload = {
-      exp: Moment().add(JWT.EXPIRATION, 'minutes').unix(),
-      iat: Moment().unix(),
+      exp: Dayjs().add(duration || ACCESS_TOKEN.DURATION, 'minutes').unix(),
+      iat: Dayjs().unix(),
       sub: this.id
     };
-    return Jwt.encode(payload, JWT.SECRET);
+    return Jwt.encode(payload, ACCESS_TOKEN.SECRET);
   }
 
   /**

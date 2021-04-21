@@ -16,6 +16,7 @@ const { MediaService} = require(process.cwd() + '/dist/api/core/services/media.s
 const { CacheService } = require(process.cwd() + '/dist/api/core/services/cache.service');
 const { Logger } = require(process.cwd() + '/dist/api/core/services/logger.service');
 const { CacheConfiguration } = require(process.cwd() + '/dist/api/config/cache.config');
+const { UPLOAD } = require(process.cwd() + '/dist/api/config/environment.config');
 
 describe('Services', () => {
 
@@ -242,19 +243,29 @@ describe('Services', () => {
 
       it('should remove all scaled images', (done) => {
         const image = fixtures.media.image({id:1});
-        fs.copyFileSync(`${process.cwd()}/test/utils/fixtures/files/${image.filename}`, `${process.cwd()}/dist/public/images/master-copy/${image.filename}`);
+        if (!fs.existsSync(`${UPLOAD.PATH}/images/master-copy/${image.fieldname}`)) { 
+          fs.mkdirSync(`${UPLOAD.PATH}/images/master-copy/${image.fieldname}`) 
+        }
+        if (!fs.existsSync(`${UPLOAD.PATH}/images/rescale/${image.fieldname}`)) { 
+          fs.mkdirSync(`${UPLOAD.PATH}/images/rescale/${image.fieldname}`);
+          ['xs', 'sm', 'md', 'lg', 'xl'].forEach(size => {
+            fs.mkdirSync(`${UPLOAD.PATH}/images/rescale/${image.fieldname}/${size}`);
+          });
+        }
+        fs.copyFileSync(`${process.cwd()}/test/utils/fixtures/files/${image.filename}`, `${UPLOAD.PATH}/images/master-copy/${image.fieldname}/${image.filename}`);
         ['xs', 'sm', 'md', 'lg', 'xl'].forEach(size => {
-          fs.copyFileSync(`${process.cwd()}/test/utils/fixtures/files/${image.filename}`, `${process.cwd()}/dist/public/images/rescale/${size}/${image.filename}`);
+          fs.copyFileSync(`${process.cwd()}/test/utils/fixtures/files/${image.filename}`, `${UPLOAD.PATH}/images/rescale/${image.fieldname}/${size}/${image.filename}`);
         });
         MediaService.remove(fixtures.media.image({id:1}));
         setTimeout(() => {
-          expect(fs.existsSync(`${process.cwd()}/dist/public/images/master-copy/${image.filename}`)).to.be.false;
+          expect(fs.existsSync(`${UPLOAD.PATH}/images/master-copy/${image.fieldname}/${image.filename}`)).to.be.false;
           ['xs', 'sm', 'md', 'lg', 'xl'].forEach(size => {
-            expect(fs.existsSync(`${process.cwd()}/dist/public/images/rescale/${size}/${image.filename}`)).to.be.false;
+            expect(fs.existsSync(`${UPLOAD.PATH}/images/rescale/${image.fieldname}/${size}/${image.filename}`)).to.be.false;
           });
           done();
         }, 500)
       });
+
 
     });
 

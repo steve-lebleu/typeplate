@@ -2,10 +2,9 @@ import { getRepository, getCustomRepository } from 'typeorm';
 
 import { User } from '@models/user.model';
 import { UserRepository } from '@repositories/user.repository';
-import { IUserRequest, IResponse, IMedia } from '@interfaces';
+import { IUserRequest, IResponse } from '@interfaces';
 import { Safe } from '@decorators/safe.decorator';
-import { Media } from '@models/media.model';
-import { FIELDNAME } from '@enums';
+import { forbidden } from '@hapi/boom';
 
 /**
  * Manage incoming requests for api/{version}/users
@@ -76,6 +75,12 @@ class UserController {
   async update (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getRepository(User);
     const user = await repository.findOneOrFail(req.params.userId);
+    if (req.body.password && req.body.isUpdatePassword) {
+      const pwdMatch = await user.passwordMatches(req.body.passwordToRevoke);
+      if (!pwdMatch) {
+        throw forbidden('Password to revoke does not match');
+      }
+    }
     repository.merge(user, req.body);
     await repository.save(user);
     res.locals.data = user;

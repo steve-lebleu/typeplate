@@ -474,6 +474,41 @@ describe('User routes', function () {
       });
     });
   
+    it('400 - confirm password is required', function (done) {
+      const params = clone(user.entity('passw0rd'));
+      params.password = 'a1b2c3d4';
+      doRequest(agent, 'patch', '/api/v1/users/', _createdByAdminUser.id, _adminToken, params, function(err, res) {
+        expect(res.body.statusCode).to.eqls(400);
+        expect(res.body.errors[0]).to.eqls('\'Confirm password\' is required');
+        done();
+      });
+    });
+
+    it('400 - password to revoke is required', function (done) {
+      const params = clone(user.entity('passw0rd'));
+      params.password = 'a1b2c3d4';
+      params.passwordConfirmation = 'a1b2c3d4';
+      params.isUpdatePassword = true;
+      doRequest(agent, 'patch', '/api/v1/users/', _createdByAdminUser.id, _adminToken, params, function(err, res) {
+        expect(res.body.statusCode).to.eqls(400);
+        expect(res.body.errors[0]).to.eqls('\'passwordToRevoke\' is required');
+        done();
+      });
+    });
+
+    it('400 - password to revoke does not match', function (done) {
+      const params = clone(user.entity('passw0rd'));
+      params.password = 'a1b2c3d4';
+      params.passwordConfirmation = 'a1b2c3d4';
+      params.passwordToRevoke = 'passw1rd';
+      params.isUpdatePassword = true;
+      doRequest(agent, 'patch', '/api/v1/users/', _createdByAdminUser.id, _adminToken, params, function(err, res) {
+        expect(res.body.statusCode).to.eqls(403);
+        expect(res.body.errors[0]).to.eqls('Password to revoke does not match');
+        done();
+      });
+    });
+
     it('400 - fieldname not valid and should be avatar', function (done) {
       const params = clone(user.entity('passw0rd'));
       agent['patch'](`/api/v1/users/${_createdByAdminUser.id}`)
@@ -484,6 +519,7 @@ describe('User routes', function () {
         .field('username', params.username)
         .field('email', params.email)
         .field('password', params.password)
+        .field('passwordConfirmation', params.password)
         .attach('pictures', process.cwd() + '/test/utils/fixtures/files/javascript.jpg')
         .end(function(err, res) {
           expect(res.statusCode).to.eqls(400);
@@ -501,6 +537,7 @@ describe('User routes', function () {
         .field('username', params.username)
         .field('email', params.email)
         .field('password', params.password)
+        .field('passwordConfirmation', params.password)
         .attach('avatar', process.cwd() + '/test/utils/fixtures/files/documents.rar')
         .end(function(err, res) {
           expect(res.statusCode).to.eqls(400);
@@ -526,6 +563,7 @@ describe('User routes', function () {
   
     it('404 - user not found', function (done) {
       const params = clone(user.entity('passw0rd'));
+      params.passwordConfirmation = params.password;
       doRequest(agent, 'patch', '/api/v1/users/', 9999, _adminToken, params, function(err, res) {
         expect(res.statusCode).to.eqls(404);
         done();
@@ -542,6 +580,7 @@ describe('User routes', function () {
   
     it('200 - data ok', function (done) {
       const params = clone(user.entity('passw0rd'));
+      params.passwordConfirmation = params.password;
       doRequest(agent, 'patch', '/api/v1/users/', _createdByAdminUser.id, _adminToken, params, function(err, res) {
         expect(res.statusCode).to.eqls(200);
         dataOk(res, 'user', 'update');
@@ -559,6 +598,7 @@ describe('User routes', function () {
         .field('username', params.username)
         .field('email', params.email)
         .field('password', params.password)
+        .field('passwordConfirmation', params.password)
         .attach('avatar', process.cwd() + '/test/utils/fixtures/files/javascript.jpg')
         .end(function(err, res) {
           expect(res.statusCode).to.eqls(200);

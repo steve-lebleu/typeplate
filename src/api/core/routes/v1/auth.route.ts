@@ -17,74 +17,6 @@ export class AuthRouter extends Router {
   define(): void {
 
     /**
-     *
-     * @apiDefine BaseHeaderSimple
-     *
-     * @apiHeader {String="application/json"} Content-Type   Mime-type
-     * @apiHeader {String} Origin             Origin url
-     *
-     * @apiHeaderExample {json} Request headers
-     * {
-     *    "Content-Type": "application/json",
-     *    "Origin": "https://your-host.com"
-     * }
-     *
-     */
-
-    /**
-     *
-     * @apiDefine BaseHeader
-     *
-     * @apiHeader {String="application/json"} Content-Type   Mime-type
-     * @apiHeader {String}                    Origin         Origin url
-     * @apiHeader {String}                    Authorization  Bearer access token
-     *
-     * @apiHeaderExample {json} Request headers
-     * {
-     *    "Content-Type": "application/json",
-     *    "Origin": "https://your-host.com",
-     *    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzI2ODQ3MjgsImlhdCI6MTU2NTQyNzEyOCwic3ViIjoxfQ.h9OfTyJbzRmBtGcM1DOqtwkYlcFzoLjdVKHMV22tGBY"
-     * }
-     */
-
-    /**
-     *
-     * @apiDefine MultipartHeader
-     *
-     * @apiHeader {String="multipart/form-data"}  Content-Type   Mime-type
-     * @apiHeader {String}                        Origin         Origin url
-     * @apiHeader {String}                        Authorization  Bearer access token
-     *
-     * @apiHeaderExample {json} Request headers
-     * {
-     *    "Content-Type": "multipart/form-data",
-     *    "Origin": "https://your-host.com",
-     *    "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzI2ODQ3MjgsImlhdCI6MTU2NTQyNzEyOCwic3ViIjoxfQ.h9OfTyJbzRmBtGcM1DOqtwkYlcFzoLjdVKHMV22tGBY"
-     * }
-     */
-
-    /**
-     * @apiDefine SuccessToken
-     *
-     * @apiSuccess {Object}   token                Main token object
-     * @apiSuccess {String}   token.tokenType      Access Token's type
-     * @apiSuccess {String}   token.accessToken    Authorization Token
-     * @apiSuccess {String}   token.refreshToken   Token to get a new accessToken after expiration time
-     * @apiSuccess {Date}     token.expiresIn      Access Token's expiration date
-     *
-     * @apiSuccessExample {json} Success response
-     * {
-     *    "token": {
-     *      "tokenType": "Bearer"
-     *      "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzMyMDk2ODMsImlhdCI6MTU2NTk1MjA4Mywic3ViIjoxfQ.sbh-vFdVGvDfqsA1MFAG-lNJ-Fjoi24dlHNSqzZLqok",
-     *      "refreshToken": "1.6df01971a1ce4dbe4b8752963e50b61632db5685e9c5c9dccedd93ec04b46cf25f40799dedeb926f",
-     *      "expiresIn": "2019-11-08T10:41:23.619Z"
-     *    }
-     * }
-     *
-     */
-
-    /**
      * @api {post} /auth/register Register
      * @apiDescription Register a new user.
      * @apiVersion 1.0.0
@@ -105,65 +37,23 @@ export class AuthRouter extends Router {
      *    "password": "lo1Rs9#q"
      * }
      *
-     * @apiSuccess (Created 201) {Object}      token               Token main object
-     * @apiSuccess (Created 201) {String}      token.tokenType     Access Token's type
-     * @apiSuccess (Created 201) {String}      token.accessToken   Authorization Token
-     * @apiSuccess (Created 201) {String}      token.refreshToken  Token to get a new accessToken after expiration time
-     * @apiSuccess (Created 201) {Date}        token.expiresIn     Access Token's expiration date
-     * @apiSuccess (Created 201) {User}        user                Current user
-     * @apiSuccess (Created 201) {String}      user.id             User id
-     * @apiSuccess (Created 201) {String}      user.username       User name
-     * @apiSuccess (Created 201) {String}      user.email          User email
-     * @apiSuccess (Created 201) {String}      user.role           User role
-     * @apiSuccess (Created 201) {Date}        user.createdAt      User creation date
-     * @apiSuccess (Created 201) {Date}        user.updatedAt      User updating date
+     * @apiUse SuccessTokenWithUser
      *
-     * @apiSuccessExample {json} Success response
-     * {
-     *    "token": {
-     *      "tokenType": "Bearer"
-     *      "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzMyMDk2ODMsImlhdCI6MTU2NTk1MjA4Mywic3ViIjoxfQ.sbh-vFdVGvDfqsA1MFAG-lNJ-Fjoi24dlHNSqzZLqok",
-     *      "refreshToken": "1.6df01971a1ce4dbe4b8752963e50b61632db5685e9c5c9dccedd93ec04b46cf25f40799dedeb926f",
-     *      "expiresIn": "2019-11-08T10:41:23.619Z"
-     *    },
-     *    "user": {
-     *      "id": 1,
-     *      "username": "johndoe",
-     *      "email": "contact@john-doe.com",
-     *      "role": "user",
-     *      "createdAt": "2019-08-10T08:22:00.000Z",
-     *      "updatedAt": null
-     *    }
-     * }
+     * @apiError (400 Bad Request)   InvalidUsername Usernamee is required as alphanumeric string of 32 characters max.
+     * @apiError (400 Bad Request)   InvalidEmail Email is required as valid email address.
+     * @apiError (400 Bad Request)   InvalidPassword Password is required and must have length between 8 and 16 characters.
+     * @apiUse BadRequest
      *
-     * @apiError (Bad Request 400)  ValidationError   Some parameters may contain invalid values
-     * @apiError (Conflict 409)     MySQLError        Some parameters are already presents in database (username or email)
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
      *
-     * @apiErrorExample {json} ValidationError
-     * {
-     *    "statusCode": 400,
-     *    "statusText": "Bad request",
-     *    "errors": [
-     *      {
-     *        "field": "email",
-     *        "types": [
-     *          "string.email"
-     *        ],
-     *        "messages": [
-     *          "\"email\" must be a valid email address"
-     *        ]
-     *      }
-     *    ]
-     * }
+     * @apiError (409 Conflict) MySQLError Some parameters are already presents in database (username or email)
+     * @apiUse Conflict
      *
-     * @apiErrorExample {json} MySQLError
-     * {
-     *    "statusCode": 409,
-     *    "statusText": "Conflict",
-     *    "errors": [
-     *      "MySQL validation error"
-     *    ]
-     * }
+     * @apiError (422 Unprocessable Entity) CorruptedUser Given user is not an instance of user.
+     * @apiError (422 Unprocessable Entity) LostAccessToken Access token cannot be retrieved.
+     * @apiUse UnprocessableEntity
      *
      */
     this.router
@@ -182,83 +72,38 @@ export class AuthRouter extends Router {
      *
      * @apiParam  (With credentials)  {String}            email     User email address
      * @apiParam  (With credentials)  {String{8..16}}     password  User password
-     * @apiParam  (With API key)      {String{64}}        apikey    User apikey
+     * @apiParam  (With API key)      {String{64..128}}   apikey    User apikey
      *
-     * @apiParamExample {json} Payload example
+     * @apiParamExample {json} With credentials payload example
+     * {
+     *    "email": "john.doe@website.com",
+     *    "password": "passw0rd"
+     * }
+     *
+     * @apiParamExample {json} With API key payload example
      * {
      *    "apikey": "$2b$10$sYFWFtKOR1QKm8/z6TxhQOgXCxvpZ.L13Xv3Lx496rH.L.EhobhJS"
      * }
      *
-     * @apiSuccess (Created 201) {Object}      token               Token main object
-     * @apiSuccess (Created 201) {String}      token.tokenType     Access Token's type
-     * @apiSuccess (Created 201) {String}      token.accessToken   Authorization Token
-     * @apiSuccess (Created 201) {String}      token.refreshToken  Token to get a new accessToken after expiration time
-     * @apiSuccess (Created 201) {Date}        token.expiresIn     Access Token's expiration data
-     * @apiSuccess (Created 201) {User}        user                Current user
-     * @apiSuccess (Created 201) {String}      user.id             User id
-     * @apiSuccess (Created 201) {String}      user.username       User name
-     * @apiSuccess (Created 201) {String}      user.email          User email
-     * @apiSuccess (Created 201) {String}      user.role           User role
-     * @apiSuccess (Created 201) {Date}        user.createdAt      User creation date
-     * @apiSuccess (Created 201) {Date}        user.updatedAt      User updating date
+     * @apiUse SuccessTokenWithUser
      *
-     * @apiSuccessExample {json} Success response
-     * {
-     *    "token": {
-     *      "tokenType": "Bearer"
-     *      "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzMyMDk2ODMsImlhdCI6MTU2NTk1MjA4Mywic3ViIjoxfQ.sbh-vFdVGvDfqsA1MFAG-lNJ-Fjoi24dlHNSqzZLqok",
-     *      "refreshToken": "1.6df01971a1ce4dbe4b8752963e50b61632db5685e9c5c9dccedd93ec04b46cf25f40799dedeb926f",
-     *      "expiresIn": "2019-11-08T10:41:23.619Z"
-     *    },
-     *    "user": {
-     *      "id": 1,
-     *      "username": "johndoe",
-     *      "email": "contact@john-doe.com",
-     *      "role": "user",
-     *      "createdAt": "2019-08-10T08:22:00.000Z",
-     *      "updatedAt": "2019-08-10T08:22:03.000Z"
-     *    }
-     * }
+     * @apiError (400 Bad Request)   InvalidEmail Email is required as valid email address.
+     * @apiError (400 Bad Request)   InvalidPassword Password is required and must have length between 8 and 16 characters.
+     * @apiUse BadRequest
      *
-     * @apiError (Bad Request 400)   ValidationError    Some parameters may contain invalid values
-     * @apiError (Unauthorized 401)  Unauthorized       Incorrect password
-     * @apiError (Not found 404)     Notfound           API key or email not found
+     * @apiError (401 Unauthorized)  Unauthorized Incorrect password.
+     * @apiUse Unauthorized
      *
-     * @apiErrorExample {json} ValidationError
-     * {
-     *    "statusCode": 400,
-     *    "statusText": "Bad request",
-     *    "errors": [
-     *      {
-     *        "field": "email",
-     *        "types": [
-     *          "string.email"
-     *        ],
-     *        "messages": [
-     *          "\"email\" must be a valid email address"
-     *        ]
-     *      }
-     *    ]
-     * }
+     * @apiError (404 Not Found)     UserNotfound API key or email address not found.
+     * @apiUse NotFound
      *
-     * @apiErrorExample {json} Unauthorized
-     * {
-     *    "statusCode": 401,
-     *    "statusText": "Unauthorized",
-     *    "errors": [
-     *      "Password must match to authorize a token generating"
-     *    ]
-     * }
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
      *
-     * @apiErrorExample {json} NotFound
-     * {
-     *    "statusCode": 404,
-     *    "statusText": "Not Found",
-     *    "errors": [
-     *     "User not found"
-     *    ]
-     * }
-     *
+     * @apiError (422 Unprocessable Entity) CorruptedUser Given user is not an instance of user.
+     * @apiError (422 Unprocessable Entity) LostAccessToken Access token cannot be retrieved.
+     * @apiUse UnprocessableEntity
      */
     this.router
       .route('/login')
@@ -270,11 +115,20 @@ export class AuthRouter extends Router {
      * @apiVersion 1.0.0
      * @apiName Logout
      * @apiGroup Auth
-     * @apiPermission public
+     * @apiPermission user
      *
      * @apiUse BaseHeaderSimple
      *
-     * @apiSuccess (No Content 204) Successfully disconnected
+     * @apiSuccess (200 OK) / User disconnected
+     * @apiSuccessExample {json} Success response example
+     *  HTTP/1.1 200 OK
+     *
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
+     *
+     * @apiError (422 Unprocessable Entity)  User  Given user is not an instance of user.
+     * @apiUse UnprocessableEntity
      */
      this.router
       .route('/logout')
@@ -282,7 +136,7 @@ export class AuthRouter extends Router {
 
     /**
      * @api {patch} /auth/confirm Confirm account
-     * @apiDescription Confirm account after click on link in transactional email.
+     * @apiDescription Confirm account by email address verifying.
      * @apiVersion 1.0.0
      * @apiName Confirm
      * @apiGroup Auth
@@ -290,109 +144,58 @@ export class AuthRouter extends Router {
      *
      * @apiUse BaseHeaderSimple
      *
-     * @apiParam  {String}            token     Json Web Token
-     *
+     * @apiParam  {String}  token  Json Web Token
      * @apiParamExample {json} Payload example
      * {
      *    "token": "$2b$10$sYFWFtKOR1QKm8/z6TxhQOgXCxvpZ.L13Xv3Lx496rH.L.EhobhJS"
      * }
      *
-     * @apiSuccess (OK 200) {Object}      token               Token main object
-     * @apiSuccess (OK 200) {String}      token.tokenType     Access Token's type
-     * @apiSuccess (OK 200) {String}      token.accessToken   Authorization Token
-     * @apiSuccess (OK 200) {String}      token.refreshToken  Token to get a new accessToken after expiration time
-     * @apiSuccess (OK 200) {Date}        token.expiresIn     Access Token's expiration data
-     * @apiSuccess (OK 200) {User}        user                Current user
-     * @apiSuccess (OK 200) {String}      user.id             User id
-     * @apiSuccess (OK 200) {String}      user.username       User name
-     * @apiSuccess (OK 200) {String}      user.email          User email
-     * @apiSuccess (OK 200) {String}      user.role           User role
-     * @apiSuccess (OK 200) {Date}        user.createdAt      User creation date
-     * @apiSuccess (OK 200) {Date}        user.updatedAt      User updating date
+     * @apiUse SuccessTokenWithUser
      *
-     * @apiSuccessExample {json} Success response
-     * {
-     *    "token": {
-     *      "tokenType": "Bearer"
-     *      "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzMyMDk2ODMsImlhdCI6MTU2NTk1MjA4Mywic3ViIjoxfQ.sbh-vFdVGvDfqsA1MFAG-lNJ-Fjoi24dlHNSqzZLqok",
-     *      "refreshToken": "1.6df01971a1ce4dbe4b8752963e50b61632db5685e9c5c9dccedd93ec04b46cf25f40799dedeb926f",
-     *      "expiresIn": "2019-11-08T10:41:23.619Z"
-     *    },
-     *    "user": {
-     *      "id": 1,
-     *      "username": "johndoe",
-     *      "email": "contact@john-doe.com",
-     *      "role": "user",
-     *      "createdAt": "2019-08-10T08:22:00.000Z",
-     *      "updatedAt": "2019-08-10T08:22:03.000Z"
-     *    }
-     * }
+     * @apiError (400 Bad Request)  ValidationError Token must be a valid token.
+     * @apiError (400 Bad Request)  BusinessError User status cannot be set to CONFIRMED because is not set to REGISTERED.
+     * @apiUse BadRequest
      *
-     * @apiError (Bad Request 400)   ValidationError    Some parameters may contain invalid values
-     * @apiError (Unauthorized 401)  Unauthorized       Invalid token
-     * @apiError (Not found 404)     Notfound           Token not found
+     * @apiError (Unauthorized 401)  Unauthorized Invalid Json Web Token.
+     * @apiUse Unauthorized
      *
-     * @apiErrorExample {json} ValidationError
-     * {
-     *    "statusCode": 400,
-     *    "statusText": "Bad request",
-     *    "errors": [
-     *      {
-     *        "field": "email",
-     *        "types": [
-     *          "string.email"
-     *        ],
-     *        "messages": [
-     *          "\"email\" must be a valid email address"
-     *        ]
-     *      }
-     *    ]
-     * }
+     * @apiError (Not Found 404)  UserNotFound User cannot be retrieved from given JWT.
+     * @apiUse NotFound
      *
-     * @apiErrorExample {json} Unauthorized
-     * {
-     *    "statusCode": 401,
-     *    "statusText": "Unauthorized",
-     *    "errors": [
-     *      "Password must match to authorize a token generating"
-     *    ]
-     * }
-     *
-     * @apiErrorExample {json} NotFound
-     * {
-     *    "statusCode": 404,
-     *    "statusText": "Not Found",
-     *    "errors": [
-     *     "User not found"
-     *    ]
-     * }
-     *
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
      */
-    this.router
+     this.router
       .route('/confirm')
         .patch(Validator.check(confirm), AuthController.confirm);
 
     /**
-     * @api {get} /auth/request-password Request new password
-     * @apiDescription Request a lost / forgotten password by sending email.
+     * @api {get} /auth/request-password?email=:email Request password
+     * @apiDescription Request a lost or forgotten password.
      * @apiVersion 1.0.0
-     * @apiName RequestNewPassword
+     * @apiName RequestPassword
      * @apiGroup Auth
      * @apiPermission public
      *
      * @apiUse BaseHeaderSimple
      *
-     * @apiParam  {String}            email     User email address
+     * @apiParam {String} email User email address
+     * @apiParamExample {string} Param example
+     *  email=john.doe@website.com
      *
-     * @apiParamExample {json} Payload example
-     * {
-     *    "email": "john.doe@website.com"
-     * }
+     * @apiSuccess (200 OK) / Password successfuly requested.
+     * @apiSuccessExample {json} Success response example
+     *  HTTP/1.1 200 OK
      *
-     * @apiSuccess (OK 200) Successfuly requested
+     * @apiError (400 Bad Request)  ValidationError Email must be a valid email address.
+     * @apiUse BadRequest
      *
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
      */
-    this.router
+     this.router
       .route('/request-password')
         .get(Validator.check(requestPassword), AuthController.requestPassword);
 
@@ -418,43 +221,27 @@ export class AuthRouter extends Router {
      *
      * @apiUse SuccessToken
      *
-     * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
-     * @apiError (Not found 404)    NotFound         Refresh token not found
+     * @apiError (400 Bad Request)  ValidationError  Refresh token must be a valid token.
+     * @apiUse BadRequest
      *
-     * @apiErrorExample {json} ValidationError
-     * {
-     *    "statusCode": 400,
-     *    "statusText": "Bad request",
-     *    "errors": [
-     *      {
-     *        "field": "token.refreshToken",
-     *        "types": [
-     *          "string.min"
-     *        ],
-     *        "messages": [
-     *          "\"refreshToken\" length must be at least 82 characters long"
-     *        ]
-     *      }
-     *    ]
-     * }
+     * @apiError (401 Unauthorized)  InvalidPassword  Password must match to authorize a token generating.
+     * @apiError (401 Unauthorized)  InvalidToken     Invalid or revoked refresh token.
+     * @apiUse Unauthorized
      *
-     * @apiErrorExample {json} NotFound
-     * {
-     *    "statusCode": 404,
-     *    "statusText": "Not Found",
-     *    "errors": [
-     *     "RefreshObject not found"
-     *    ]
-     * }
+     * @apiError (404 Not Found)  NotFound  Refresh token not found.
+     * @apiUse NotFound
      *
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
      */
     this.router
       .route('/refresh-token')
         .post(Validator.check(refresh), AuthController.refresh);
 
     /**
-     * @api {get} /auth/facebook Facebook oAuth
-     * @apiDescription Login with facebook. Obtains facebook authorization for oAuth
+     * @api {get} /auth/facebook Oauth Facebook
+     * @apiDescription Login with facebook.
      * @apiVersion 1.0.0
      * @apiName FacebookOauth
      * @apiGroup Auth
@@ -462,32 +249,47 @@ export class AuthRouter extends Router {
      *
      * @apiUse BaseHeaderSimple
      *
-     * @apiUse SuccessToken
+     * @apiUse SuccessOauth
      *
-     * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
-     * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
-     *
-     *
-     * @apiErrorExample {json} Unauthorized example
-     * {
-     *    "statusCode": 401,
-     *    "statusText": "Unauthorized",
-     *    "errors": [
-     *      "Invalid access token"
-     *    ]
-     * }
-     *
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
      */
     this.router
       .route('/facebook')
         .get( Guard.oAuth('facebook') );
 
+    /**
+     * @api {get} /auth/facebook/callback?code=:code Oauth FacebookCallback
+     * @apiDescription Oauth Facebook callback function after user confirmation.
+     * @apiVersion 1.0.0
+     * @apiName FacebookOauthCb
+     * @apiGroup Auth
+     * @apiPermission public
+     *
+     * @apiUse BaseHeaderSimple
+     *
+     * @apiUse SuccessTokenWithUser
+     *
+     * @apiError (400 Bad request) InvalidCode Code passed by supplier is not valid.
+     * @apiUse BadRequest
+     *
+     * @apiError (403 Forbidden)  ForbiddenRole Forbidden area for current user role.
+     * @apiUse Forbidden
+     *
+     * @apiError (404 Not Found)  UserNotFound  User not found.
+     * @apiUse NotFound
+     *
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
+     */
     this.router
      .route('/facebook/callback')
        .get( Validator.check(oauthCb), Guard.oAuthCallback('facebook'), AuthController.oAuth );
 
     /**
-     * @api {get} /auth/google Google oAuth
+     * @api {get} /auth/google Oauth Google
      * @apiDescription Login with google.
      * @apiVersion 1.0.0
      * @apiName GoogleOauth
@@ -496,67 +298,142 @@ export class AuthRouter extends Router {
      *
      * @apiUse BaseHeaderSimple
      *
-     * @apiUse SuccessToken
+     * @apiUse SuccessOauth
      *
-     * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
-     * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
-     *
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
      */
     this.router
       .route('/google')
        .get( Guard.oAuth('google'), AuthController.oAuth );
 
+    /**
+     * @api {get} /auth/google/callback?code=:code Oauth GoogleCallback
+     * @apiDescription Oauth Google callback function after user confirmation.
+     * @apiVersion 1.0.0
+     * @apiName GoogleOauthCb
+     * @apiGroup Auth
+     * @apiPermission public
+     *
+     * @apiUse BaseHeaderSimple
+     *
+     * @apiUse SuccessTokenWithUser
+     *
+     * @apiError (400 Bad request) InvalidCode Code passed by supplier is not valid.
+     * @apiUse BadRequest
+     *
+     * @apiError (403 Forbidden)  ForbiddenRole Forbidden area for current user role.
+     * @apiUse Forbidden
+     *
+     * @apiError (404 Not Found)  UserNotFound  User not found.
+     * @apiUse NotFound
+     *
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
+     */
     this.router
      .route('/google/callback')
        .get( Validator.check(oauthCb), Guard.oAuthCallback('google'), AuthController.oAuth );
 
-  /**
-   * @api {get} /auth/github Github oAuth
-   * @apiDescription Login with Github.
-   * @apiVersion 1.0.0
-   * @apiName GithubOauth
-   * @apiGroup Auth
-   * @apiPermission public
-   *
-   * @apiUse BaseHeaderSimple
-   *
-   * @apiUse SuccessToken
-   *
-   * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
-   * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
-   *
-   */
+    /**
+     * @api {get} /auth/github Oauth Github
+     * @apiDescription Login with Github.
+     * @apiVersion 1.0.0
+     * @apiName GithubOauth
+     * @apiGroup Auth
+     * @apiPermission public
+     *
+     * @apiUse BaseHeaderSimple
+     *
+     * @apiUse SuccessOauth
+     *
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
+     */
     this.router
       .route('/github')
         .get( Guard.oAuth('github'), AuthController.oAuth );
 
+    /**
+     * @api {get} /auth/github/callback?code=:code Oauth GithubCallback
+     * @apiDescription Oauth github callback function after user confirmation.
+     * @apiVersion 1.0.0
+     * @apiName GithubOauthCb
+     * @apiGroup Auth
+     * @apiPermission public
+     *
+     * @apiUse BaseHeaderSimple
+     *
+     * @apiUse SuccessTokenWithUser
+     *
+     * @apiError (400 Bad request) InvalidCode Code passed by supplier is not valid.
+     * @apiUse BadRequest
+     *
+     * @apiError (403 Forbidden)  ForbiddenRole Forbidden area for current user role.
+     * @apiUse Forbidden
+     *
+     * @apiError (404 Not Found)  UserNotFound  User not found.
+     * @apiUse NotFound
+     *
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
+     */
     this.router
       .route('/github/callback')
         .get( Validator.check(oauthCb), Guard.oAuthCallback('github'), AuthController.oAuth );
 
-  /**
-   * @api {get} /auth/linkedin Linkedin oAuth
-   * @apiDescription Login with Linkedin.
-   * @apiVersion 1.0.0
-   * @apiName LinkedinOauth
-   * @apiGroup Auth
-   * @apiPermission public
-   *
-   * @apiUse BaseHeaderSimple
-   *
-   * @apiUse SuccessToken
-   *
-   * @apiError (Bad Request 400)    ValidationError   Some parameters may contain invalid values
-   * @apiError (Unauthorized 401)   Unauthorized      Incorrect access_token
-   *
-   */
-    this.router
-      .route('/linkedin')
-        .get( Guard.oAuth('linkedin'), AuthController.oAuth );
+    /**
+     * @api {get} /auth/linkedin Oauth Linkedin
+     * @apiDescription Login with Linkedin.
+     * @apiVersion 1.0.0
+     * @apiName LinkedinOauth
+     * @apiGroup Auth
+     * @apiPermission public
+     *
+     * @apiUse BaseHeaderSimple
+     *
+     * @apiUse SuccessOauth
+     *
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
+     */
+      this.router
+        .route('/linkedin')
+          .get( Guard.oAuth('linkedin'), AuthController.oAuth );
 
-    this.router
-      .route('/linkedin/callback')
-        .get( Validator.check(oauthCb), Guard.oAuthCallback('linkedin'), AuthController.oAuth );
+    /**
+     * @api {get} /auth/linkedin/callback?code=:code Oauth LinkedinCallback
+     * @apiDescription Oauth Linkedin callback function after user confirmation.
+     * @apiVersion 1.0.0
+     * @apiName LinkedinOauthCb
+     * @apiGroup Auth
+     * @apiPermission public
+     *
+     * @apiUse BaseHeaderSimple
+     *
+     * @apiUse SuccessTokenWithUser
+     *
+     * @apiError (400 Bad request) InvalidCode Code passed by supplier is not valid.
+     * @apiUse BadRequest
+     *
+     * @apiError (403 Forbidden)  ForbiddenRole Forbidden area for current user role.
+     * @apiUse Forbidden
+     *
+     * @apiError (404 Not Found)  UserNotFound  User not found.
+     * @apiUse NotFound
+     *
+     * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+     * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+     * @apiUse NotAcceptable
+     */
+      this.router
+        .route('/linkedin/callback')
+          .get( Validator.check(oauthCb), Guard.oAuthCallback('linkedin'), AuthController.oAuth );
 
   }
 }

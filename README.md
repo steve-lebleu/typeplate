@@ -218,23 +218,25 @@ Configure the *./ecosystem.config.js* file with your environments informations.
 ```javascript
 deploy : {
   staging : {
-    path : 'path-to-your-SSH-public-key',
-    user : 'node',
-    host : '212.83.163.1',
-    ref  : 'origin/master',
-    repo : 'git@github.com:repo.git',
-    path : '/var/www/staging',
-    'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env staging'
-  },
-  production : {
-    path : 'path-to-your-SSH-public-key',
-    user : 'node',
-    host : '212.83.163.1',
-    ref  : 'origin/master',
-    repo : 'git@github.com:repo.git',
-    path : '/var/www/production',
-    'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production'
-  }
+      user : 'node',
+      host : '212.83.163.1',
+      ref  : 'origin/master',
+      repo : 'git@github.com:repo.git',
+      ssh_options: ['StrictHostKeyChecking=no', 'PasswordAuthentication=yes', 'ForwardAgent=yes'],
+      path : '/var/www/staging',
+        'post-setup' : 'npm run kickstart:staging && pm2 reload ecosystem.config.js --env staging',
+        'post-deploy' : 'npm i && tsc && pm2 reload ecosystem.config.js --env staging'
+    },
+    production : {
+      user : 'node',
+      host : '212.83.163.1',
+      ref  : 'origin/master',
+      repo : 'git@github.com:repo.git',
+      ssh_options: ['StrictHostKeyChecking=no', 'PasswordAuthentication=yes', 'ForwardAgent=yes'],
+      path : '/var/www/production',
+        'post-setup' : 'npm run kickstart:production && pm2 reload ecosystem.config.js --env production',
+        'post-deploy' : 'npm i && tsc && pm2 reload ecosystem.config.js --env production'
+    }
 }
 ```
 More info about PM2 [ecosystem.config.js](https://pm2.io/doc/en/runtime/reference/ecosystem-file/) file.

@@ -31,22 +31,21 @@ export class MediaRouter extends Router {
        * @apiUse BaseHeader
        *
        * @apiParam  {Number{1-}}         [page=1]     List page
-       * @apiParam  {Number{1-100}}      [perPage=1]  Medias's per page
-       * @apiParam  {String}             [fieldname]  Medias's fieldname
-       * @apiParam  {String}             [filename]   Medias's filename
-       * @apiParam  {String}             [path]       Medias's path
-       * @apiParam  {Number}             [size]       Medias's size
-       * @apiParam  {String}             [mimetype]   Medias's mime type
+       * @apiParam  {Number{1-100}}      [perPage=1]  Medias per page
+       * @apiParam  {String}             [fieldname]  Medias fieldname
+       * @apiParam  {String}             [filename]   Medias filename
+       * @apiParam  {String}             [path]       Medias path
+       * @apiParam  {Number}             [size]       Medias size
+       * @apiParam  {String}             [mimetype]   Medias mime type
        *
-       * @apiSuccess {Medias[]}     media                Medias instance
-       * @apiSuccess {Number}       media.id             Medias id
-       * @apiSuccess {String}       media.fieldname      Medias fieldname
-       * @apiSuccess {String}       media.filename       Medias filename
-       * @apiSuccess {String}       media.path           Medias path
-       * @apiSuccess {Number}       media.size           Medias file size
-       * @apiSuccess {User}         media.owner          Medias owner user
-       * @apiSuccess {Date}         media.createdAt      Medias creation date
-       * @apiSuccess {Date}         media.updatedAt      Medias updating date
+       * @apiSuccess (200 OK) {Medias[]}     media                Media instances
+       * @apiSuccess (200 OK) {Number}       media.id             Media id
+       * @apiSuccess (200 OK) {String}       media.fieldname      Media fieldname
+       * @apiSuccess (200 OK) {String}       media.filename       Media filename
+       * @apiSuccess (200 OK) {Number}       media.size           Media file size
+       * @apiSuccess (200 OK) {User}         media.owner          Media owner user
+       * @apiSuccess (200 OK) {Date}         media.createdAt      Media creation date
+       * @apiSuccess (200 OK) {Date}         media.updatedAt      Media updating date
        *
        * @apiSuccessExample {json} Success response
        *  [
@@ -54,7 +53,6 @@ export class MediaRouter extends Router {
        *      "id": 1,
        *      "fieldname": "cover",
        *      "filename": "javascript-1566722515926.jpg",
-       *      "path": "/var/www/project/api/dist/uploads/images/master-copy/javascript-1566722515926.jpg",
        *      "mimetype": "image/jpeg",
        *      "size": 36118,
        *      "createdAt": "2019-08-23T08:49:00.000Z",
@@ -64,7 +62,6 @@ export class MediaRouter extends Router {
        *      "id": 2,
        *      "fieldname": "avatar",
        *      "filename": "picture-1566722515926.jpg",
-       *      "path": "/var/www/project/api/dist/uploads/images/master-copy/picture-1566722515926.jpg",
        *      "mimetype": "image/jpeg",
        *      "size": 4789,
        *      "createdAt": "2019-08-23T08:49:00.000Z",
@@ -72,45 +69,18 @@ export class MediaRouter extends Router {
        *    }
        *  ]
        *
-       * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
-       * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
-       * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
+       * @apiError (400 Bad Request)   ValidationError    Some parameters may contain invalid values
+       * @apiUse BadRequest
        *
-       * @apiErrorExample {json} ValidationError
-       * {
-       *    "statusCode": 400,
-       *    "statusText": "Bad request",
-       *    "errors": [
-       *      {
-       *        "field": "filename",
-       *        "types": [
-       *          "string.base"
-       *        ],
-       *        "messages": [
-       *          "\"filename\" must be a string"
-       *        ]
-       *      }
-       *    ]
-       * }
+       * @apiError (401 Unauthorized)  Unauthorized Only authenticated users can access the data
+       * @apiUse Unauthorized
        *
-       * @apiErrorExample {json} Unauthorized
-       * {
-       *    "statusCode": 401,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "Forbidden area"
-       *    ]
-       * }
+       * @apiError (403 Forbidden) Forbidden Only owner or admin can access the data
+       * @apiUse Forbidden
        *
-       * @apiErrorExample {json} Forbidden
-       * {
-       *    "statusCode": 403,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "You can't access to this ressource"
-       *    ]
-       * }
-       *
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
        */
       .get(Guard.authorize([ROLE.admin, ROLE.user]), Validator.check(listMedias), MediaController.list)
 
@@ -130,7 +100,6 @@ export class MediaRouter extends Router {
        * @apiSuccess (Created 201) {Number}       media.id             Media id
        * @apiSuccess (Created 201) {String}       media.fieldname      Media fieldname
        * @apiSuccess (Created 201) {String}       media.filename       Media filename
-       * @apiSuccess (Created 201) {String}       media.path           Media path
        * @apiSuccess (Created 201) {Number}       media.size           Media file size
        * @apiSuccess (Created 201) {User}         media.owner          Media owner user
        * @apiSuccess (Created 201) {Date}         media.createdAt      Media creation date
@@ -142,7 +111,6 @@ export class MediaRouter extends Router {
        *      "id": 1,
        *      "fieldname": "cover",
        *      "filename": "javascript-1566722515926.jpg",
-       *      "path": "/var/www/project/api/dist/uploads/images/master-copy/javascript-1566722515926.jpg",
        *      "mimetype": "image/jpeg",
        *      "size": 36118,
        *      "createdAt": "2019-08-23T08:49:00.000Z",
@@ -152,7 +120,6 @@ export class MediaRouter extends Router {
        *      "id": 2,
        *      "fieldname": "avatar",
        *      "filename": "picture-1566722515926.jpg",
-       *      "path": "/var/www/project/api/dist/uploads/images/master-copy/picture-1566722515926.jpg",
        *      "mimetype": "image/jpeg",
        *      "size": 4789,
        *      "createdAt": "2019-08-23T08:49:00.000Z",
@@ -160,35 +127,15 @@ export class MediaRouter extends Router {
        *    }
        *  ]
        *
-       * @apiError (Bad request 400)    ValidationError   Some parameters may contain invalid values
-       * @apiError (Forbidden 403)      Forbidden         Only authenticated users can insert the data
+       * @apiError (400 Bad Request)   ValidationError    Some parameters may contain invalid values
+       * @apiUse BadRequest
        *
-       * @apiErrorExample {json} ValidationError
-       * {
-       *    "statusCode": 400,
-       *    "statusText": "Bad request",
-       *    "errors": [
-       *      {
-       *        "field": "filename",
-       *        "types": [
-       *          "string.base"
-       *        ],
-       *        "messages": [
-       *          "\"filename\" must be a string"
-       *        ]
-       *      }
-       *    ]
-       * }
+       * @apiError (401 Unauthorized)  Unauthorized Only authenticated users can access the data
+       * @apiUse Unauthorized
        *
-       * @apiErrorExample {json} Forbidden
-       * {
-       *    "statusCode": 403,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "You can't access to this ressource"
-       *    ]
-       * }
-       *
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
        */
       .post(Guard.authorize([ROLE.admin, ROLE.user]), Uploader.upload( { wildcards: list(MIME_TYPE) } ), Validator.check(insertMedia), MediaController.create);
 
@@ -204,11 +151,10 @@ export class MediaRouter extends Router {
        *
        * @apiUse BaseHeader
        *
-       * @apiSuccess {Media}     media                Media instance
+       * @apiSuccess {Media}        media                Media instance
        * @apiSuccess {Number}       media.id             Media id
        * @apiSuccess {String}       media.fieldname      Media fieldname
        * @apiSuccess {String}       media.filename       Media filename
-       * @apiSuccess {String}       media.path           Media path
        * @apiSuccess {Number}       media.size           Media file size
        * @apiSuccess {User}         media.owner          Media owner user
        * @apiSuccess {Date}         media.createdAt      Media creation date
@@ -219,61 +165,30 @@ export class MediaRouter extends Router {
        *      "id": 1,
        *      "fieldname": "cover",
        *      "filename": "javascript-1566722515926.jpg",
-       *      "path": "/var/www/project/api/dist/uploads/images/master-copy/javascript-1566722515926.jpg",
        *      "mimetype": "image/jpeg",
        *      "size": 36118,
        *      "createdAt": "2019-08-23T08:49:00.000Z",
        *      "updatedAt": null
        *    }
        *
-       * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
-       * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
-       * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
-       * @apiError (Not Found 404)     NotFound           Media does not exist
+       * @apiError (400 Bad Request)   ValidationError    Some parameters may contain invalid values
+       * @apiUse BadRequest
        *
-       * @apiErrorExample {json} ValidationError
-       * {
-       *    "statusCode": 400,
-       *    "statusText": "Bad request",
-       *    "errors": [
-       *      {
-       *        "field": "documentId",
-       *        "types": [
-       *          "string.base"
-       *        ],
-       *        "messages": [
-       *          "\"documentId\" must be a number"
-       *        ]
-       *      }
-       *    ]
-       * }
+       * @apiError (401 Unauthorized)  Unauthorized Only authenticated users can access the data
+       * @apiUse Unauthorized
        *
-       * @apiErrorExample {json} Unauthorized
-       * {
-       *    "statusCode": 401,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "Forbidden area"
-       *    ]
-       * }
+       * @apiError (403 Forbidden) Forbidden Only owner or admin can access the data
+       * @apiUse Forbidden
        *
-       * @apiErrorExample {json} Forbidden
-       * {
-       *    "statusCode": 403,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "You can't access to this ressource"
-       *    ]
-       * }
+       * @apiError (404 Not Found) NotFound User does not exist
+       * @apiUse NotFound
        *
-       * @apiErrorExample {json} NotFound
-       * {
-       *    "statusCode": 404,
-       *    "statusText": "Not found",
-       *    "errors": [
-       *      "Media not found"
-       *    ]
-       * }
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
+       *
+       * @apiError (417 Expectation Failed) ExpectationFailed The id parameters failed to match
+       * @apiUse ExpectationFailed
        */
       .get(Guard.authorize([ROLE.admin, ROLE.user]), Validator.check(getMedia), MediaController.get)
 
@@ -287,11 +202,10 @@ export class MediaRouter extends Router {
        *
        * @apiUse MultipartHeader
        *
-       * @apiSuccess {Media}     media                Media instance
+       * @apiSuccess {Media}        media                Media instance
        * @apiSuccess {Number}       media.id             Media id
        * @apiSuccess {String}       media.fieldname      Media fieldname
        * @apiSuccess {String}       media.filename       Media filename
-       * @apiSuccess {String}       media.path           Media path
        * @apiSuccess {Number}       media.size           Media file size
        * @apiSuccess {User}         media.owner          Media owner user
        * @apiSuccess {Date}         media.createdAt      Media creation date
@@ -302,61 +216,30 @@ export class MediaRouter extends Router {
        *      "id": 1,
        *      "fieldname": "cover",
        *      "filename": "javascript-1566722515926.jpg",
-       *      "path": "/var/www/project/api/dist/uploads/images/master-copy/javascript-1566722515926.jpg",
        *      "mimetype": "image/jpeg",
        *      "size": 36118,
        *      "createdAt": "2019-08-23T08:49:00.000Z",
        *      "updatedAt": null
        *    }
        *
-       * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
-       * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
-       * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
-       * @apiError (Not Found 404)     NotFound           Media does not exist
+       * @apiError (400 Bad Request)   ValidationError    Some parameters may contain invalid values
+       * @apiUse BadRequest
        *
-       * @apiErrorExample {json} ValidationError
-       * {
-       *    "statusCode": 400,
-       *    "statusText": "Bad request",
-       *    "errors": [
-       *      {
-       *        "field": "documentId",
-       *        "types": [
-       *          "string.base"
-       *        ],
-       *        "messages": [
-       *          "\"documentId\" must be a number"
-       *        ]
-       *      }
-       *    ]
-       * }
+       * @apiError (401 Unauthorized)  Unauthorized Only authenticated users can access the data
+       * @apiUse Unauthorized
        *
-       * @apiErrorExample {json} Unauthorized
-       * {
-       *    "statusCode": 401,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "Forbidden area"
-       *    ]
-       * }
+       * @apiError (403 Forbidden) Forbidden Only owner or admin can access the data
+       * @apiUse Forbidden
        *
-       * @apiErrorExample {json} Forbidden
-       * {
-       *    "statusCode": 403,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "You can't access to this ressource"
-       *    ]
-       * }
+       * @apiError (404 Not Found) NotFound User does not exist
+       * @apiUse NotFound
        *
-       * @apiErrorExample {json} NotFound
-       * {
-       *    "statusCode": 404,
-       *    "statusText": "Not found",
-       *    "errors": [
-       *      "Media not found"
-       *    ]
-       * }
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
+       *
+       * @apiError (417 Expectation Failed) ExpectationFailed The id parameters failed to match
+       * @apiUse ExpectationFailed
        */
       .put(Guard.authorize([ROLE.admin, ROLE.user]), Validator.check(replaceMedia), MediaController.get, Uploader.upload( { wildcards: list(MIME_TYPE) } ), Validator.check(insertMedia), MediaController.update)
 
@@ -370,11 +253,10 @@ export class MediaRouter extends Router {
        *
        * @apiUse MultipartHeader
        *
-       * @apiSuccess {Media}     media                Media instance
+       * @apiSuccess {Media}        media                Media instance
        * @apiSuccess {Number}       media.id             Media id
        * @apiSuccess {String}       media.fieldname      Media fieldname
        * @apiSuccess {String}       media.filename       Media filename
-       * @apiSuccess {String}       media.path           Media path
        * @apiSuccess {Number}       media.size           Media file size
        * @apiSuccess {User}         media.owner          Media owner user
        * @apiSuccess {Date}         media.createdAt      Media creation date
@@ -385,66 +267,35 @@ export class MediaRouter extends Router {
        *      "id": 1,
        *      "fieldname": "cover",
        *      "filename": "javascript-1566722515926.jpg",
-       *      "path": "/var/www/project/api/dist/uploads/images/master-copy/javascript-1566722515926.jpg",
        *      "mimetype": "image/jpeg",
        *      "size": 36118,
        *      "createdAt": "2019-08-23T08:49:00.000Z",
        *      "updatedAt": null
        *    }
        *
-       * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
-       * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
-       * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
-       * @apiError (Not Found 404)     NotFound           Media does not exist
+       * @apiError (400 Bad Request)   ValidationError    Some parameters may contain invalid values
+       * @apiUse BadRequest
        *
-       * @apiErrorExample {json} ValidationError
-       * {
-       *    "statusCode": 400,
-       *    "statusText": "Bad request",
-       *    "errors": [
-       *      {
-       *        "field": "documentId",
-       *        "types": [
-       *          "string.base"
-       *        ],
-       *        "messages": [
-       *          "\"documentId\" must be a number"
-       *        ]
-       *      }
-       *    ]
-       * }
+       * @apiError (401 Unauthorized)  Unauthorized Only authenticated users can access the data
+       * @apiUse Unauthorized
        *
-       * @apiErrorExample {json} Unauthorized
-       * {
-       *    "statusCode": 401,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "Forbidden area"
-       *    ]
-       * }
+       * @apiError (403 Forbidden) Forbidden Only owner or admin can access the data
+       * @apiUse Forbidden
        *
-       * @apiErrorExample {json} Forbidden
-       * {
-       *    "statusCode": 403,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "You can't access to this ressource"
-       *    ]
-       * }
+       * @apiError (404 Not Found) NotFound User does not exist
+       * @apiUse NotFound
        *
-       * @apiErrorExample {json} NotFound
-       * {
-       *    "statusCode": 404,
-       *    "statusText": "Not found",
-       *    "errors": [
-       *      "Media not found"
-       *    ]
-       * }
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
+       *
+       * @apiError (417 Expectation Failed) ExpectationFailed The id parameters failed to match
+       * @apiUse ExpectationFailed
        */
       .patch(Guard.authorize([ROLE.admin, ROLE.user]), Validator.check(updateMedia), MediaController.get, Uploader.upload( { wildcards: list(MIME_TYPE) } ), MediaController.update)
 
       /**
-       * @api {patch} api/v1/medias/:id Delete media
+       * @api {patch} /medias/:id Delete media
        * @apiDescription Delete a media
        * @apiVersion 1.0.0
        * @apiName DeleteDocument
@@ -453,54 +304,23 @@ export class MediaRouter extends Router {
        *
        * @apiUse BaseHeader
        *
-       * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
-       * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
-       * @apiError (Forbidden 403)     Forbidden          Only admins can access the data
-       * @apiError (Not Found 404)     NotFound           Media does not exist
+       * @apiSuccess (204 No Content) / media successfully deleted
        *
-       * @apiErrorExample {json} ValidationError
-       * {
-       *    "statusCode": 400,
-       *    "statusText": "Bad request",
-       *    "errors": [
-       *      {
-       *        "field": "documentId",
-       *        "types": [
-       *          "string.base"
-       *        ],
-       *        "messages": [
-       *          "\"documentId\" must be a number"
-       *        ]
-       *      }
-       *    ]
-       * }
+       * @apiError (401 Unauthorized)  Unauthorized Only authenticated users can access the data
+       * @apiUse Unauthorized
        *
-       * @apiErrorExample {json} Unauthorized
-       * {
-       *    "statusCode": 401,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "Forbidden area"
-       *    ]
-       * }
+       * @apiError (403 Forbidden) Forbidden Only user with same id or admins can access the data
+       * @apiUse Forbidden
        *
-       * @apiErrorExample {json} Forbidden
-       * {
-       *    "statusCode": 403,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "You can't access to this ressource"
-       *    ]
-       * }
+       * @apiError (404 Not Found) NotFound User does not exist
+       * @apiUse NotFound
        *
-       * @apiErrorExample {json} NotFound
-       * {
-       *    "statusCode": 404,
-       *    "statusText": "Not found",
-       *    "errors": [
-       *      "Media not found"
-       *    ]
-       * }
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
+       *
+       * @apiError (417 Expectation Failed) ExpectationFailed The id parameters failed to match
+       * @apiUse ExpectationFailed
        */
       .delete(Guard.authorize([ROLE.admin, ROLE.user]), Validator.check(removeMedia), MediaController.get, MediaController.remove);
 

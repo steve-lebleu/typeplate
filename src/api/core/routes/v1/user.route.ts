@@ -37,20 +37,31 @@ export class UserRouter extends Router {
        * @apiParam  {String}             [email]      User email
        * @apiParam  {String=admin,user}  [role]       User role
        *
-       * @apiSuccess (Success 200) {User[]}      user[]              User's who's match with query params
-       * @apiSuccess (Success 200) {String}      user.id             User id
-       * @apiSuccess (Success 200) {String}      user.username       User name
-       * @apiSuccess (Success 200) {String}      user.email          User email
-       * @apiSuccess (Success 200) {String}      user.role           User role
-       * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
-       * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
+       * @apiSuccess (200 OK) {User[]}      user[]              User's who's match with query params
+       * @apiSuccess (200 OK) {Number}      user.id             User id
+       * @apiSuccess (200 OK) {String}      user.username       User name
+       * @apiSuccess (200 OK) {Media}       user.avatar         User profile picture
+       * @apiSuccess (200 OK) {String}      user.email          User email
+       * @apiSuccess (200 OK) {String}      user.role           User role
+       * @apiSuccess (200 OK) {String}      user.status         User status
+       * @apiSuccess (200 OK) {Date}        user.createdAt      User creation date
+       * @apiSuccess (200 OK) {Date}        user.updatedAt      User updating date
        *
        * @apiSuccessExample {json} Success response example
        * [
        *  {
        *    "id": 1,
        *    "username": "johndoe",
+       *    "avatar": {
+       *      "id": 1,
+       *      "fieldname": "avatar",
+       *      "size": 4500,
+       *      "mimetype": "image/jpg",
+       *      "filename": "picture.jpg",
+       *      "owner": 1
+       *    }
        *    "email": "contact@john-doe.com",
+       *    "status": "REGISTERED",
        *    "role": "user",
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
@@ -58,42 +69,31 @@ export class UserRouter extends Router {
        *  {
        *    "id": 2,
        *    "username": "johnpoe",
+       *    "avatar": {
+       *      "id": 1,
+       *      "fieldname": "avatar",
+       *      "size": 4500,
+       *      "mimetype": "image/jpg",
+       *      "filename": "picture.jpg",
+       *      "owner": 1
+       *    }
        *    "email": "contact@john-poe.com",
        *    "role": "user",
+       *    "status": "REGISTERED",
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
        *  }
        * ]
        *
-       * @apiError (Bad Request 400)   ValidationError    Some parameters may contain invalid values
-       * @apiError (Unauthorized 403)  Forbidden          Incorrect token or unsuffisant access rights
+       * @apiError (400 Bad Request)   ValidationError  Some parameters may contain invalid values
+       * @apiUse BadRequest
        *
-       * @apiErrorExample {json} ValidationError
-       * {
-       *    "statusCode": 400,
-       *    "statusText": "Bad request",
-       *    "errors": [
-       *      {
-       *        "field": "email",
-       *        "types": [
-       *          "string.email"
-       *        ],
-       *        "messages": [
-       *          "\"email\" must be a valid email address"
-       *        ]
-       *      }
-       *    ]
-       * }
+       * @apiError (403 Forbidden) Forbidden Only admins can list the data
+       * @apiUse Forbidden
        *
-       * @apiErrorExample {json} Forbidden
-       * {
-       *    "statusCode": 403,
-       *    "statusText": "Forbidden",
-       *    "errors": [
-       *      "You can't access to this ressource"
-       *    ]
-       * }
-       *
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
        */
       .get(Guard.authorize([ROLE.admin]), Validator.check(listUsers), UserController.list)
 
@@ -109,68 +109,55 @@ export class UserRouter extends Router {
        *
        * @apiParam  {String}          email         User email
        * @apiParam  {String{8..16}}   password      User password
-       * @apiParam  {String{..32}}    username      User username
-       * @apiParam  {Provider[]}      [providers]   User providers
-       * @apiParam  {Smtp[]}          [smtps]       User smtps
-       * @apiParam  {String=admin}    [role]        User role
+       * @apiParam  {String{..32}}    username      Username
+       * @apiParam  {Media}           avatar        Profile picture
+       * @apiParam  {String="REGISTERED", "REVIEWED", "CONFIRMED", "BANNED"} status User status
+       * @apiParam  {String="admin", "user"} [role] User role
        *
-       * @apiSuccess (Success 200) {User}        user                User
-       * @apiSuccess (Success 200) {String}      user.username       User name
-       * @apiSuccess (Success 200) {String}      user.username       User name
-       * @apiSuccess (Success 200) {String}      user.email          User email
-       * @apiSuccess (Success 200) {Smtp[]}      user.smtps          User smtp's
-       * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
-       * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
+       * @apiSuccess (201 Created) {User}        user                Created user
+       * @apiSuccess (201 Created) {String}      user.id             User id
+       * @apiSuccess (201 Created) {String}      user.username       Username
+       * @apiSuccess (201 Created) {Media}       user.avatar         Profile picture
+       * @apiSuccess (201 Created) {String}      user.email          Email address
+       * @apiSuccess (201 Created) {String}      user.status         Account status
+       * @apiSuccess (201 Created) {String}      user.role           User role
+       * @apiSuccess (201 Created) {Date}        user.createdAt      User creation date
+       * @apiSuccess (201 Created) {Date}        user.updatedAt      User updating date
        *
        * @apiSuccessExample {json} Success response example
-       *  {
-       *    "id": 25,
+       * {
+       *    "id": 1,
        *    "username": "johndoe",
+       *    "avatar": {
+       *      "id": 1,
+       *      "fieldname": "avatar",
+       *      "size": 4500,
+       *      "mimetype": "image/jpg",
+       *      "filename": "picture.jpg",
+       *      "owner": 1
+       *    }
        *    "email": "contact@john-doe.com",
+       *    "status": "CONFIRMED",
        *    "role": "user",
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
-       *  }
-       *
-       * @apiError (Bad Request 400)   ValidationError  Some parameters may contain invalid values
-       * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users can create the data
-       * @apiError (Forbidden 403)     Forbidden        Only admins can create the data
-       *
-       * @apiErrorExample {json} ValidationError
-       * {
-       *    "statusCode": 400,
-       *    "statusText": "Bad request",
-       *    "errors": [
-       *      {
-       *        "field": "email",
-       *        "types": [
-       *          "string.email"
-       *        ],
-       *        "messages": [
-       *          "\"email\" must be a valid email address"
-       *        ]
-       *      }
-       *    ]
        * }
        *
-       * @apiErrorExample {json} Unauthorized
-       * {
-       *    "statusCode": 401,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "Forbidden area"
-       *    ]
-       * }
+       * @apiError (400 Bad Request)   ValidationError  Some parameters may contain invalid values
+       * @apiUse BadRequest
        *
-       * @apiErrorExample {json} Forbidden
-       * {
-       *    "statusCode": 403,
-       *    "statusText": "Forbidden",
-       *    "errors": [
-       *      "No auth token"
-       *    ]
-       * }
+       * @apiError (401 Unauthorized)  Unauthorized     Only authenticated users can create the data
+       * @apiUse Unauthorized
        *
+       * @apiError (403 Forbidden)     Forbidden        Only admins can create the data
+       * @apiUse Forbidden
+       *
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
+       *
+       * @apiError (409 Conflict) MySQLError Some parameters are already presents in database (username or email)
+       * @apiUse Conflict
        */
       .post(Guard.authorize([ROLE.admin]), Validator.check(createUser), UserController.create);
 
@@ -187,34 +174,43 @@ export class UserRouter extends Router {
        *
        * @apiUse BaseHeader
        *
-       * @apiSuccess (Success 200) {User}        user                User
-       * @apiSuccess (Success 200) {String}      user.username       User name
-       * @apiSuccess (Success 200) {String}      user.username       User name
-       * @apiSuccess (Success 200) {String}      user.email          User email
-       * @apiSuccess (Success 200) {String}      user.role           User role
-       * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
-       * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
+       * @apiSuccess (200 OK) {User}        user                User
+       * @apiSuccess (200 OK) {Media}       user.avatar         User profile picture
+       * @apiSuccess (200 OK) {String}      user.username       User name
+       * @apiSuccess (200 OK) {String}      user.email          User email
+       * @apiSuccess (200 OK) {String}      user.role           User role
+       * @apiSuccess (200 OK) {String}      user.status         User status
+       * @apiSuccess (200 OK) {Date}        user.createdAt      User creation date
+       * @apiSuccess (200 OK) {Date}        user.updatedAt      User updating date
        *
-       * @apiSuccessExample {json} Success response
-       *  {
-       *    "id": 25,
+       * @apiSuccessExample {json} Success response example
+       * {
+       *    "id": 1,
        *    "username": "johndoe",
+       *    "avatar": {
+       *      "id": 1,
+       *      "fieldname": "avatar",
+       *      "size": 4500,
+       *      "mimetype": "image/jpg",
+       *      "filename": "picture.jpg",
+       *      "owner": 1
+       *    }
        *    "email": "contact@john-doe.com",
+       *    "status": "CONFIRMED",
        *    "role": "user",
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
-       *  }
-       *
-       * @apiError (Unauthorized 401)  Unauthorized  Only authenticated Users can access the data
-       *
-       * @apiErrorExample {json} Unauthorized
-       * {
-       *    "statusCode": 401,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "Forbidden area"
-       *    ]
        * }
+       *
+       * @apiError (401 Unauthorized)         Unauthorized        Only authenticated users can access the data
+       * @apiUse Unauthorized
+       *
+       * @apiError (404 Not Found)            NotFound            User does not exist
+       * @apiUse NotFound
+       *
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
        */
       .get(Guard.authorize([ROLE.admin,ROLE.user]), UserController.loggedIn);
 
@@ -231,65 +227,49 @@ export class UserRouter extends Router {
        *
        * @apiUse BaseHeader
        *
-       * @apiSuccess (Success 200) {User}        user                User
-       * @apiSuccess (Success 200) {String}      user.username       User name
-       * @apiSuccess (Success 200) {String}      user.username       User name
-       * @apiSuccess (Success 200) {String}      user.email          User email
-       * @apiSuccess (Success 200) {String}      user.role           User role
-       * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
-       * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
+       * @apiSuccess (200 OK) {User}        user                User
+       * @apiSuccess (200 OK) {Media}       user.avatar         User profile picture
+       * @apiSuccess (200 OK) {String}      user.username       User name
+       * @apiSuccess (200 OK) {String}      user.email          User email
+       * @apiSuccess (200 OK) {String}      user.role           User role
+       * @apiSuccess (200 OK) {String}      user.status         User status
+       * @apiSuccess (200 OK) {Date}        user.createdAt      User creation date
+       * @apiSuccess (200 OK) {Date}        user.updatedAt      User updating date
        *
-       * @apiSuccessExample {json} Success response
-       *  {
-       *    "id": 25,
+       * @apiSuccessExample {json} Success response example
+       * {
+       *    "id": 1,
        *    "username": "johndoe",
+       *    "avatar": {
+       *      "id": 1,
+       *      "fieldname": "avatar",
+       *      "size": 4500,
+       *      "mimetype": "image/jpg",
+       *      "filename": "picture.jpg",
+       *      "owner": 1
+       *    }
        *    "email": "contact@john-doe.com",
+       *    "status": "CONFIRMED",
        *    "role": "user",
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
-       *  }
-       *
-       * @apiError (Unauthorized 401) Unauthorized  Only authenticated users can access the data
-       * @apiError (Forbidden 403)    Forbidden     Only user with same id or admins can access the data
-       * @apiError (Not Found 404)    NotFound      User does not exist
-       * @apiError (Expectation failed 417)   ExpectationFailed   The id parameters failed to match
-       *
-       * @apiErrorExample {json} Unauthorized
-       * {
-       *    "statusCode": 401,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "Forbidden area"
-       *    ]
        * }
        *
-       * @apiErrorExample {json} Forbidden
-       * {
-       *    "statusCode": 403,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "You can't access to this ressource"
-       *    ]
-       * }
+       * @apiError (401 Unauthorized)         Unauthorized        Only authenticated users can access the data
+       * @apiUse Unauthorized
        *
-       * @apiErrorExample {json} NotFound
-       * {
-       *    "statusCode": 404,
-       *    "statusText": "Not found",
-       *    "errors": [
-       *      "User not found"
-       *    ]
-       * }
+       * @apiError (403 Forbidden)            Forbidden           Only user with same id or admins can access the data
+       * @apiUse Forbidden
        *
-       * @apiErrorExample {json} ExpectationFailed
-       * {
-       *    "statusCode": 417,
-       *    "statusText": "Expectation failed",
-       *    "errors": [
-       *      ":userId parameter must be a number"
-       *    ]
-       * }
+       * @apiError (404 Not Found)            NotFound            User does not exist
+       * @apiUse NotFound
        *
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
+       *
+       * @apiError (417 Expectation Failed)   ExpectationFailed   The id parameters failed to match
+       * @apiUse ExpectationFailed
        */
       .get(Guard.authorize([ROLE.admin]), Validator.check(getUser), UserController.get)
 
@@ -303,90 +283,64 @@ export class UserRouter extends Router {
        *
        * @apiUse BaseHeader
        *
-       * @apiParam  {String}          [email]         User email
-       * @apiParam  {String{8..16}}   [password]      User password
-       * @apiParam  {String{..32}}    [username]      User username
-       * @apiParam  {String=admin}    [role]          User role
+       * @apiParam  {String} email User email
+       * @apiParam  {String{8..16}} password User password
+       * @apiParam  {String{..32}} username User username
+       * @apiParam  {String=admin,user,ghost} role User role
+       * @apiParam  {Media} avatar User profile picture
+       * @apiParam  {String=REGISTERED,CONFIRMED,REVIEWED,BANNED} status User status
        *
-       * @apiSuccess (Success 200) {User}        user                User
-       * @apiSuccess (Success 200) {String}      user.username       User name
-       * @apiSuccess (Success 200) {String}      user.username       User name
-       * @apiSuccess (Success 200) {String}      user.email          User email
-       * @apiSuccess (Success 200) {String}      user.role           User role
-       * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
-       * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
+       * @apiSuccess (200 OK) {User}        user                User
+       * @apiSuccess (200 OK) {Media}       user.avatar         User profile picture
+       * @apiSuccess (200 OK) {String}      user.username       User name
+       * @apiSuccess (200 OK) {String}      user.email          User email
+       * @apiSuccess (200 OK) {String}      user.role           User role
+       * @apiSuccess (200 OK) {String}      user.status         User status
+       * @apiSuccess (200 OK) {Date}        user.createdAt      User creation date
+       * @apiSuccess (200 OK) {Date}        user.updatedAt      User updating date
        *
-       * @apiSuccessExample {json} Success response
-       *  {
-       *    "id": 25,
+       * @apiSuccessExample {json} Success response example
+       * {
+       *    "id": 1,
        *    "username": "johndoe",
+       *    "avatar": {
+       *      "id": 1,
+       *      "fieldname": "avatar",
+       *      "size": 4500,
+       *      "mimetype": "image/jpg",
+       *      "filename": "picture.jpg",
+       *      "owner": 1
+       *    }
        *    "email": "contact@john-doe.com",
+       *    "status": "CONFIRMED",
        *    "role": "user",
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
-       *  }
-       *
-       * @apiError (Bad Request 400)  ValidationError   Some parameters may contain invalid values
-       * @apiError (Unauthorized 401) Unauthorized      Only authenticated users can access the data
-       * @apiError (Forbidden 403)    Forbidden         Only user with same id or admins can access the data
-       * @apiError (Not Found 404)    NotFound          User does not exist
-       * @apiError (Expectation failed 417)   ExpectationFailed   The id parameters failed to match
-       *
-       * @apiErrorExample {json} ValidationError
-       * {
-       *    "statusCode": 400,
-       *    "statusText": "Bad request",
-       *    "errors": [
-       *      {
-       *        "field": "email",
-       *        "types": [
-       *          "string.email"
-       *        ],
-       *        "messages": [
-       *          "\"email\" must be a valid email address"
-       *        ]
-       *      }
-       *    ]
        * }
        *
-       * @apiErrorExample {json} Unauthorized
-       * {
-       *    "statusCode": 401,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "Forbidden area"
-       *    ]
-       * }
+       * @apiError (400 Bad Request)   ValidationError  Some parameters may contain invalid values
+       * @apiUse BadRequest
        *
-       * @apiErrorExample {json} Forbidden
-       * {
-       *    "statusCode": 403,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "You can't access to this ressource"
-       *    ]
-       * }
+       * @apiError (401 Unauthorized)  Unauthorized     Only authenticated users can udpate the data
+       * @apiUse Unauthorized
        *
-       * @apiErrorExample {json} NotFound
-       * {
-       *    "statusCode": 404,
-       *    "statusText": "Not found",
-       *    "errors": [
-       *      "User not found"
-       *    ]
-       * }
+       * @apiError (403 Forbidden)  Forbidden     Only user with same id or admins can access the data
+       * @apiUse Forbidden
        *
-       * @apiErrorExample {json} ExpectationFailed
-       * {
-       *    "statusCode": 417,
-       *    "statusText": "Expectation failed",
-       *    "errors": [
-       *      ":userId parameter must be a number"
-       *    ]
-       * }
+       * @apiError (404 Not Found)     UserNotFound     User not found
+       * @apiUse Forbidden
        *
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
+       *
+       * @apiError (409 Conflict) MySQLError Some parameters are already presents in database (username or email)
+       * @apiUse Conflict
+       *
+       * @apiError (417 Expectation Failed)   ExpectationFailed   The id parameters failed to match
+       * @apiUse ExpectationFailed
        */
-      .put(Guard.authorize([ROLE.admin, ROLE.user]),  Uploader.upload( { wildcards: list(IMAGE_MIME_TYPE) } ), Validator.check(replaceUser), UserController.update)
+      .put(Guard.authorize([ROLE.admin, ROLE.user]),  Uploader.upload( { wildcards: list(IMAGE_MIME_TYPE) } ),  Validator.check(replaceUser), UserController.update)
 
       /**
        * @api {patch} /users/:id Update user
@@ -398,90 +352,62 @@ export class UserRouter extends Router {
        *
        * @apiUse BaseHeader
        *
-       * @apiParam  {String}          [email]         User email
-       * @apiParam  {String{8..16}}   [password]      User password
-       * @apiParam  {String{..32}}    [username]      User username
-       * @apiParam  {String=admin}    [role]          User role
+       * @apiParam  {String} [email] User email
+       * @apiParam  {String{8..16}} [password] User password
+       * @apiParam  {String{..32}} [username] User username
+       * @apiParam  {String=admin,user,ghost} [role] User role
+       * @apiParam  {Media} [avatar] User profile picture
+       * @apiParam  {String=REGISTERED,CONFIRMED,REVIEWED,BANNED} [status] User status
        *
-       * @apiSuccess (Success 200) {User}        user                User
-       * @apiSuccess (Success 200) {String}      user.username       User name
-       * @apiSuccess (Success 200) {String}      user.username       User name
-       * @apiSuccess (Success 200) {String}      user.email          User email
-       * @apiSuccess (Success 200) {String}      user.role           User role
-       * @apiSuccess (Success 200) {Date}        user.createdAt      User creation date
-       * @apiSuccess (Success 200) {Date}        user.updatedAt      User updating date
+       * @apiSuccess (200 OK) {User}        user                User
+       * @apiSuccess (200 OK) {Media}       user.avatar         User profile picture
+       * @apiSuccess (200 OK) {String}      user.username       User name
+       * @apiSuccess (200 OK) {String}      user.email          User email
+       * @apiSuccess (200 OK) {String}      user.role           User role
+       * @apiSuccess (200 OK) {String}      user.status         User status
+       * @apiSuccess (200 OK) {Date}        user.createdAt      User creation date
+       * @apiSuccess (200 OK) {Date}        user.updatedAt      User updating date
        *
-       * @apiSuccessExample {json} Success response
-       *  {
-       *    "id": 25,
+       * @apiSuccessExample {json} Success response example
+       * {
+       *    "id": 1,
        *    "username": "johndoe",
+       *    "avatar": {
+       *      "id": 1,
+       *      "fieldname": "avatar",
+       *      "size": 4500,
+       *      "mimetype": "image/jpg",
+       *      "filename": "picture.jpg",
+       *      "owner": 1
+       *    }
        *    "email": "contact@john-doe.com",
+       *    "status": "CONFIRMED",
        *    "role": "user",
-       *    "providers": Provider[],
-       *    "smtps": Smtp[],
        *    "createdAt": "2019-08-10T08:22:00.000Z",
        *    "updatedAt": "2019-08-10T08:22:03.000Z"
-       *  }
-       *
-       * @apiError (Bad Request 400)  ValidationError   Some parameters may contain invalid values
-       * @apiError (Unauthorized 401) Unauthorized      Only authenticated users can access the data
-       * @apiError (Forbidden 403)    Forbidden         Only user with same id or admins can access the data
-       * @apiError (Not Found 404)    NotFound          User does not exist
-       * @apiError (Expectation failed 417)   ExpectationFailed   The id parameters failed to match
-       *
-       * @apiErrorExample {json} ValidationError
-       * {
-       *    "statusCode": 400,
-       *    "statusText": "Bad request",
-       *    "errors": [
-       *      {
-       *        "field": "email",
-       *        "types": [
-       *          "string.email"
-       *        ],
-       *        "messages": [
-       *          "\"email\" must be a valid email address"
-       *        ]
-       *      }
-       *    ]
        * }
        *
-       * @apiErrorExample {json} Unauthorized
-       * {
-       *    "statusCode": 401,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "Forbidden area"
-       *    ]
-       * }
+       * @apiError (400 Bad Request)   ValidationError  Some parameters may contain invalid values
+       * @apiUse BadRequest
        *
-       * @apiErrorExample {json} Forbidden
-       * {
-       *    "statusCode": 403,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "You can't access to this ressource"
-       *    ]
-       * }
+       * @apiError (401 Unauthorized)  Unauthorized     Only authenticated users can udpate the data
+       * @apiUse Unauthorized
        *
-       * @apiErrorExample {json} NotFound
-       * {
-       *    "statusCode": 404,
-       *    "statusText": "Not found",
-       *    "errors": [
-       *      "User not found"
-       *    ]
-       * }
+       * @apiError (403 Forbidden)  Forbidden     Only user with same id or admins can access the data
+       * @apiUse Forbidden
        *
-       * @apiErrorExample {json} ExpectationFailed
-       * {
-       *    "statusCode": 417,
-       *    "statusText": "Expectation failed",
-       *    "errors": [
-       *      ":userId parameter must be a number"
-       *    ]
-       * }
+       * @apiError (404 Not Found)     UserNotFound     User not found
+       * @apiUse Forbidden
        *
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
+       *
+       * @apiError (409 Conflict) MySQLError Some parameters are already presents in database (username or email)
+       * @apiUse Conflict
+       *
+       * @apiError (417 Expectation Failed)   ExpectationFailed   The id parameters failed to match
+       * @apiUse ExpectationFailed
        */
       .patch(Guard.authorize([ROLE.admin, ROLE.user]),  Uploader.upload( { wildcards: list(IMAGE_MIME_TYPE) } ), Validator.check(updateUser), UserController.update)
 
@@ -495,66 +421,23 @@ export class UserRouter extends Router {
        *
        * @apiUse BaseHeader
        *
-       * @apiSuccess (No Content 204) Successfully deleted
+       * @apiSuccess (204 No Content) / User successfully deleted
        *
-       * @apiError (Unauthorized 401)         Unauthorized        Only authenticated users can access the data
-       * @apiError (Forbidden 403)            Forbidden           Only user with same id or admins can access the data
-       * @apiError (Not Found 404)            NotFound            User does not exist
-       * @apiError (Expectation failed 417)   ExpectationFailed   The id parameters failed to match
+       * @apiError (401 Unauthorized)  Unauthorized Only authenticated users can access the data
+       * @apiUse Unauthorized
        *
-       * @apiErrorExample {json} ValidationError
-       * {
-       *    "statusCode": 400,
-       *    "statusText": "Bad request",
-       *    "errors": [
-       *      {
-       *        "field": "email",
-       *        "types": [
-       *          "string.email"
-       *        ],
-       *        "messages": [
-       *          "\"email\" must be a valid email address"
-       *        ]
-       *      }
-       *    ]
-       * }
+       * @apiError (403 Forbidden) Forbidden Only user with same id or admins can access the data
+       * @apiUse Forbidden
        *
-       * @apiErrorExample {json} Unauthorized
-       * {
-       *    "statusCode": 401,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "Forbidden area"
-       *    ]
-       * }
+       * @apiError (404 Not Found) NotFound User does not exist
+       * @apiUse NotFound
        *
-       * @apiErrorExample {json} Forbidden
-       * {
-       *    "statusCode": 403,
-       *    "statusText": "Unauthorized",
-       *    "errors": [
-       *      "You can't access to this ressource"
-       *    ]
-       * }
+       * @apiError (406 Not Acceptable)  Content-Type Content-Type header must be "application/json".
+       * @apiError (406 Not Acceptable)  Origin Origin header must be "https://*".
+       * @apiUse NotAcceptable
        *
-       * @apiErrorExample {json} NotFound
-       * {
-       *    "statusCode": 404,
-       *    "statusText": "Not found",
-       *    "errors": [
-       *      "User not found"
-       *    ]
-       * }
-       *
-       * @apiErrorExample {json} ExpectationFailed
-       * {
-       *    "statusCode": 417,
-       *    "statusText": "Expectation failed",
-       *    "errors": [
-       *      ":userId parameter must be a number"
-       *    ]
-       * }
-       *
+       * @apiError (417 Expectation Failed) ExpectationFailed The id parameters failed to match
+       * @apiUse ExpectationFailed
        */
       .delete(Guard.authorize([ROLE.admin]), Validator.check(removeUser), UserController.remove);
 

@@ -27,6 +27,7 @@
       "@schemas": ["api/core/types/schemas"],
       "@schemas/*": ["api/core/types/schemas/*"],
       "@services/*": ["api/core/services/*"],
+      "@shared/*": ["api/shared/*"],
       "@types": ["api/core/types/types"],
       "@types/*": ["api/core/types/types/*"],
       "@utils/*": ["api/core/utils/*"],

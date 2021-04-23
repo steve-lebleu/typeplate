@@ -4,6 +4,7 @@ import { ContentType } from './content-type.type';
 import { DatabaseEngine } from './database-engine.type';
 import { DocumentMimeType } from './document-mime-type.type';
 import { Fieldname } from './fieldname.type';
+import { HttpMethod } from './http-method.type';
 import { ImageMimeType } from './image-mime-type.type';
 import { MediaType } from './media-type.type';
 import { MomentUnit } from './moment-unit.type';
@@ -21,6 +22,7 @@ export {
   DatabaseEngine,
   DocumentMimeType,
   Fieldname,
+  HttpMethod,
   ImageMimeType,
   MediaType,
   MimeType,

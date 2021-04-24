@@ -21,7 +21,7 @@ export class MediaRouter extends Router {
     this.router.route('/')
 
       /**
-       * @api {get} api/v1/medias List medias
+       * @api {get} /medias List medias
        * @apiDescription Get a list of medias
        * @apiVersion 1.0.0
        * @apiName ListMedias
@@ -85,7 +85,7 @@ export class MediaRouter extends Router {
       .get(Guard.authorize([ROLE.admin, ROLE.user]), Validator.check(listMedias), MediaController.list)
 
       /**
-       * @api {post} api/v1/medias Create media(s)
+       * @api {post} /medias Create media(s)
        * @apiDescription Create one or many new media(s)
        * @apiVersion 1.0.0
        * @apiName CreateMedia
@@ -142,7 +142,7 @@ export class MediaRouter extends Router {
     this.router.route('/:mediaId')
 
       /**
-       * @api {get} api/v1/medias/:id Get one media
+       * @api {get} /medias/:id Get one media
        * @apiDescription Get media
        * @apiVersion 1.0.0
        * @apiName GetMedia
@@ -193,7 +193,7 @@ export class MediaRouter extends Router {
       .get(Guard.authorize([ROLE.admin, ROLE.user]), Validator.check(getMedia), MediaController.get)
 
       /**
-       * @api {put} api/v1/medias/:id Replace media
+       * @api {put} /medias/:id Replace media
        * @apiDescription Replace the whole media with a new one
        * @apiVersion 1.0.0
        * @apiName ReplaceDocument
@@ -244,7 +244,7 @@ export class MediaRouter extends Router {
       .put(Guard.authorize([ROLE.admin, ROLE.user]), Validator.check(replaceMedia), MediaController.get, Uploader.upload( { wildcards: list(MIME_TYPE) } ), Validator.check(insertMedia), MediaController.update)
 
       /**
-       * @api {patch} api/v1/medias/:id Update media
+       * @api {patch} /medias/:id Update media
        * @apiDescription Update some fields of a media
        * @apiVersion 1.0.0
        * @apiName UpdateDocument

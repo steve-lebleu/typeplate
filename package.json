@@ -1,5 +1,5 @@
 {
-  "version": "1.4.3",
+  "version": "1.4.4",
   "engines": {
     "node": ">=14.16",
     "npm": ">=6.14.11"
@@ -85,7 +85,7 @@
     "axios": "0.21.1",
     "bcrypt": "5.0.0",
     "body-parser": "1.19.0",
-    "cliam": "^1.0.10",
+    "cliam": "^1.0.11",
     "compression": "1.7.4",
     "cors": "2.8.5",
     "dayjs": "^1.10.4",
@@ -115,7 +115,7 @@
     "passport-linkedin-oauth2": "2.0.0",
     "pluralize": "8.0.0",
     "reflect-metadata": "0.1.13",
-    "typeorm": "0.2.31",
+    "typeorm": "^0.2.32",
     "uuid": "8.3.2",
     "winston": "3.3.3"
   },
@@ -127,7 +127,7 @@
     "@types/uuid": "8.3.0",
     "@typescript-eslint/eslint-plugin": "4.18.0",
     "@typescript-eslint/parser": "4.18.0",
-    "apidoc": "0.26.0",
+    "apidoc": "^0.27.0",
     "auto-changelog": "2.2.1",
     "chai": "4.3.4",
     "chance": "1.1.7",

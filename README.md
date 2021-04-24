@@ -3,7 +3,7 @@
 [![Node](https://img.shields.io/badge/Node-14.16.0-informational?logo=node.js&color=43853D)](https://nodejs.org/docs/latest-v14.x/api/index.html)
 [![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-informational?logo=typescript&color=2F74C0)](https://www.typescriptlang.org/)
 [![Express](https://img.shields.io/badge/Express-4.16.4-informational?logo=express&color=B1B1B1)](https://expressjs.com/)
-[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.31-informational?logo=typeorm&color=E8352B)](https://typeorm.io/#/)
+[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.32-informational?logo=typeorm&color=FFAB00)](https://typeorm.io/#/)
 [![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational?logo=mocha&color=8A6343)](https://mochajs.org)
 
 [![Build Status](https://travis-ci.com/konfer-be/typeplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/typeplate)
@@ -19,27 +19,33 @@ Ready to use RESTful API boilerplate builded with [Express.js](http://expressjs.
 Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boilerplate](https://github.com/danielfsousa/express-rest-boilerplate) :beer: :beer: :beer:
 ## > Features
 
-* **Clear code architecture** with classic layers such controllers, services, repositories, models, ...
-* **Object Relational Mapping** with [Typeorm](https://typeorm.io/#/).
-* **SSL secure connection** with native [HTTPS node module](https://nodejs.org/docs/latest-v14.x/api/https.html).
-* **Entity generation** (controller, route, repository, model, validations, test, fixture) with [rsgen](https://github.com/konfer-be/rsgen).
-* **Sending transactional emails** with [cliam](https://github.com/konfer-be/cliam).
-* **Cross Origin Resource Sharing** with [CORS](https://expressjs.com/en/resources/middleware/cors.html).
-* **Securized HTTP headers** with [Helmet](https://helmetjs.github.io/).
-* **HTTP header pollution** preventing with [Hpp](https://www.npmjs.com/package/hpp).
-* **API request rate limit** with [Express rate limit](https://www.npmjs.com/package/express-rate-limit).
-* **HTTP friendly errors** based on a custom pipe with [boom](https://github.com/hapijs/boom) and [http-status](https://www.npmjs.com/package/http-status).
-* **Logs management** with [Morgan](https://github.com/expressjs/morgan) and [Winston](https://github.com/winstonjs/winston).
-* **HTTP request cache** with [memory-cache](https://www.npmjs.com/package/memory-cache).
-* **Database query cache** with [typeorm caching](https://github.com/typeorm/typeorm/blob/master/docs/caching.md).
-* **JWT authentication process** with [passport.js](http://www.passportjs.org/).
-* **oAuth authentication process** with [passport.js](http://www.passportjs.org/).
-* **Route validation** with [Joi](https://github.com/hapijs/joi).
-* **Customizable file upload** with [Multer](https://www.npmjs.com/package/multer).
-* **Customizable image resizing** designed for front-end requirements with [Jimp](https://www.npmjs.com/package/jimp).
-* **Automatic changelog completion** with [auto-changelog](https://www.npmjs.com/package/auto-changelog).
-* **Easy API testing** with included unit and e2e test sets builded with [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/), [Sinon](https://sinonjs.org/) and [Supertest](https://github.com/visionmedia/supertest).
-* **Easy generation of documentation** with [api-doc](https://apidocjs.com/) and [typedoc](https://typedoc.org/).
+- **Basics**
+  - **Clear & clean code architecture** with classic layers such controllers, services, repositories, models, ...
+  - **Business validation** with business service and business rule interface.
+  - **Object Relational Mapping** with [typeorm](https://typeorm.io/#/).
+  - **Entity generation** (controller, route, repository, model, validations, interfaces, subscriber, test, fixture) with [rsgen](https://github.com/konfer-be/rsgen).
+  - **Logs management** with [morgan](https://github.com/expressjs/morgan) and [winston](https://github.com/winstonjs/winston).
+  - **Changelog completion** with [auto-changelog](https://www.npmjs.com/package/auto-changelog).
+  - **Testing** with included unit and e2e test sets builded with [mocha](https://mochajs.org/), [chai](https://www.chaijs.com/), [sinon](https://sinonjs.org/) and [supertest](https://github.com/visionmedia/supertest).
+  - **Documentation** with [api-doc](https://apidocjs.com/) and [typedoc](https://typedoc.org/).
+- **Security**
+  - **SSL secure connection** with native [HTTPS node module](https://nodejs.org/docs/latest-v14.x/api/https.html).
+  - **Cross Origin Resource Sharing** with [CORS](https://expressjs.com/en/resources/middleware/cors.html).
+  - **Securized HTTP headers** with [helmet](https://helmetjs.github.io/).
+  - **HTTP header pollution** preventing with [hpp](https://www.npmjs.com/package/hpp).
+  - **API request rate limit** with [express-rate-limit](https://www.npmjs.com/package/express-rate-limit).
+  - **Route validation** with [joi](https://github.com/hapijs/joi).
+  - **HTTP friendly errors** with obfuscated messages based on a custom pipe with [boom](https://github.com/hapijs/boom) and [http-status](https://www.npmjs.com/package/http-status).
+- **Authentication**
+  - **JWT authentication process** with [passport.js](http://www.passportjs.org/).
+  - **oAuth authentication process** with [passport.js](http://www.passportjs.org/). 
+  - **Sending transactional emails** with [cliam](https://github.com/konfer-be/cliam).
+- **Performances**
+  - **HTTP request cache** with [memory-cache](https://www.npmjs.com/package/memory-cache).
+  - **Database query cache** with [typeorm caching](https://github.com/typeorm/typeorm/blob/master/docs/caching.md).
+- **Assets management**
+  - **Customizable file upload** with [multer](https://www.npmjs.com/package/multer).
+  - **Customizable image resizing** designed for front-end requirements with [jimp](https://www.npmjs.com/package/jimp).
 
 ## > Table of contents
 
@@ -49,7 +55,6 @@ Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boil
 * [Tests](#tests)
 * [Continuous integration](#continuous-integration)
 * [Deployment](#deployment)
-* [Related links](#related-links)
 * [Licence](#licence)
 
 ## > Getting started
@@ -58,10 +63,10 @@ Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boil
 
 * Git
 * Node.js >= 14.16.0
-* NPM >= 6.14.0 or yarn
-* A database engine
+* NPM >= 6.14.0
+* A database engine with a dedicated database
 
-When you're ready with that, starting your project is a matter of minutes. :clock12:
+When you're with that, starting your project is a matter of minutes. :clock12:
 
 ### Step 1: install
 
@@ -89,11 +94,11 @@ $ rm -rf ./.git && npm run build:repo
 
 ### Step 5: setup package.json
 
-Open the *./package.json* file and edit *version*, *author*, *name*, *description*, *homepage*, *repository* and *bugs* fields with your own values.
+Open the *./package.json* file and edit it with your own values.
 
 ### Step 6: setup environment variables
 
-Environment variables are defined in *.env* files. Open *./dist/env/development.env* and fill the required values (uncommented in the file). See [env variables list](https://github.com/konfer-be/typeplate/wiki/Environment-variables) for more informations.
+Open *./dist/env/development.env* and fill the required env variables (uncommented in the file). See [env variables list](https://github.com/konfer-be/typeplate/wiki/Environment-variables) for more informations.
 
 ```bash
 # Access token Secret passphrase
@@ -107,6 +112,9 @@ DOMAIN = "localhost"
 
 # Application port.
 PORT = 8101
+
+# Refresh token Secret passphrase
+REFRESH_TOKEN_SECRET = "your-secret"
 
 # Database engine
 TYPEORM_TYPE = "mysql"
@@ -129,11 +137,9 @@ TYPEORM_PORT = "3306"
 
 ### Step 7: setup cliamrc.json for sending transactional email
 
-Sending transactional email is provided by [cliam](https://github.com/konfer-be/cliam).  Currently supported providers are Mailgun, Mailjet, Postmark, Sendgrid, Sendinblue and Sparkpost. If you're not with they, you can use a simple SMTP server.
+Transactional emails are used in authentication process, to confirm an account or execute a new password request. Currently supported providers are Mailgun, Mailjet, Postmark, Sendgrid, Sendinblue and Sparkpost. If you're not with them, you can use a simple SMTP server (default with [ethereal](https://ethereal.email/)).
 
-Open the *.cliamrc.json* and fill the [required configuration](https://github.com/konfer-be/cliam/wiki/Configuration) according your sending mode. 
-
-See [Cliam official documentation](https://github.com/konfer-be/cliam/wiki) for more information about configuration of this file.
+Open the *.cliamrc.json* and fill the [required configuration](https://github.com/konfer-be/cliam/wiki/Configuration) according your sending mode. See Cliam official [documentation](https://github.com/konfer-be/cliam/wiki) for more information.
 
 Sandbox is set to true by default and emails are not send. Pass this value to false when you're ready.
 
@@ -151,17 +157,9 @@ $ nodemon
 
 ## > Entity generation
 
-Some repetitive tasks such as creating resources can be done easily with [rsgen](https://github.com/konfer-be/rsgen). This small tool allow you to generate a complete set of resources who are linked to an entity:
+Some repetitive tasks such as creating resources can be done easily with [rsgen](https://github.com/konfer-be/rsgen). This small tool allow you to generate a complete set of resources who are linked to an entity. 
 
-- Controller
-- Routes
-- Repository
-- Model
-- Validations
-- E2e tests
-- Fixtures
-
-See the [documentation](https://github.com/konfer-be/typeplate/wiki/Entity-generation) about it.
+See the [entity generation](https://github.com/konfer-be/typeplate/wiki/Entity-generation) wiki section to see the complete list of generated elements and how to.
 
 ## > Documentation
 
@@ -203,9 +201,9 @@ Basic Travis-CI configuration is provided in *./.travis.yml* file.
 
 ## > Deployment
 
-Project implements a basic [PM2](https://github.com/Unitech/PM2/) configuration to allow easy deployment.
+Project implements a basic [PM2](https://github.com/Unitech/PM2/) configuration to allow deployment.
 
-First, install PM2 globaly :
+Install PM2 globaly :
 
 ```bash
 $ npm i pm2 -g
@@ -213,30 +211,22 @@ $ npm i pm2 -g
 
 ### Configuration
 
-Configure the *./ecosystem.config.js* file with your environments informations.
+Configure the *./ecosystem.config.js* file with your env informations.
 
 ```javascript
-deploy : {
-  staging : {
-      user : 'node',
-      host : '212.83.163.1',
-      ref  : 'origin/master',
-      repo : 'git@github.com:repo.git',
-      ssh_options: ['StrictHostKeyChecking=no', 'PasswordAuthentication=yes', 'ForwardAgent=yes'],
-      path : '/var/www/staging',
-        'post-setup' : 'npm run kickstart:staging && pm2 reload ecosystem.config.js --env staging',
-        'post-deploy' : 'npm i && tsc && pm2 reload ecosystem.config.js --env staging'
-    },
-    production : {
-      user : 'node',
-      host : '212.83.163.1',
-      ref  : 'origin/master',
-      repo : 'git@github.com:repo.git',
-      ssh_options: ['StrictHostKeyChecking=no', 'PasswordAuthentication=yes', 'ForwardAgent=yes'],
-      path : '/var/www/production',
-        'post-setup' : 'npm run kickstart:production && pm2 reload ecosystem.config.js --env production',
-        'post-deploy' : 'npm i && tsc && pm2 reload ecosystem.config.js --env production'
-    }
+{
+  deploy : {
+    staging : {
+        user : 'node',
+        host : '212.83.163.1',
+        ref  : 'origin/master',
+        repo : 'git@github.com:repo.git',
+        ssh_options: ['StrictHostKeyChecking=no', 'PasswordAuthentication=yes', 'ForwardAgent=yes'],
+        path : '/var/www/staging',
+          'post-setup' : 'npm run kickstart:staging && pm2 reload ecosystem.config.js --env staging',
+          'post-deploy' : 'npm i && tsc && pm2 reload ecosystem.config.js --env staging'
+      }
+  }
 }
 ```
 More info about PM2 [ecosystem.config.js](https://pm2.io/doc/en/runtime/reference/ecosystem-file/) file.
@@ -254,9 +244,6 @@ $ pm2 deploy production update
 
 # Revert to -1 deployment
 $ pm2 deploy production revert 1
-
-# execute a command on remote servers
-$ pm2 deploy production exec "pm2 reload all"
 ```
 
 More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/) and [PM2 deploy](https://pm2.io/doc/en/runtime/guide/easy-deploy-with-ssh/).

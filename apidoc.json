@@ -1,11 +1,11 @@
 {
-  "name": "Your project",
+  "name": "Typeplate",
   "version": "1.0.0",
-  "description": "Final user documentation",
-  "title": "API final user documentation",
-  "url": "https://www.your-project.com/docs/apidoc",
+  "description": "REST API consumer documentation.",
+  "title": "[Typeplate] API consumer documentation",
+  "url": "https://www.your-project.com/api/v1",
   "order": [
-    "Info",
+    "Main",
     "Auth",
     "User",
     "Media"

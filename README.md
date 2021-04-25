@@ -21,13 +21,13 @@ Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boil
 
 - **Basics**
   - **Clear & clean code architecture** with classic layers such controllers, services, repositories, models, ...
-  - **Business validation** with business service and business rule interface.
   - **Object Relational Mapping** with [typeorm](https://typeorm.io/#/).
-  - **Entity generation** (controller, route, repository, model, validations, interfaces, subscriber, test, fixture) with [rsgen](https://github.com/konfer-be/rsgen).
+  - **Entity generation** with [rsgen](https://github.com/konfer-be/rsgen).
+  - **Business validation** with self designed business members.
   - **Logs management** with [morgan](https://github.com/expressjs/morgan) and [winston](https://github.com/winstonjs/winston).
   - **Changelog completion** with [auto-changelog](https://www.npmjs.com/package/auto-changelog).
   - **Testing** with included unit and e2e test sets builded with [mocha](https://mochajs.org/), [chai](https://www.chaijs.com/), [sinon](https://sinonjs.org/) and [supertest](https://github.com/visionmedia/supertest).
-  - **Documentation** with [api-doc](https://apidocjs.com/) and [typedoc](https://typedoc.org/).
+  - **Documentation** with [api-doc](https://apidocjs.com/).
 - **Security**
   - **SSL secure connection** with native [HTTPS node module](https://nodejs.org/docs/latest-v14.x/api/https.html).
   - **Cross Origin Resource Sharing** with [CORS](https://expressjs.com/en/resources/middleware/cors.html).
@@ -35,7 +35,7 @@ Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boil
   - **HTTP header pollution** preventing with [hpp](https://www.npmjs.com/package/hpp).
   - **API request rate limit** with [express-rate-limit](https://www.npmjs.com/package/express-rate-limit).
   - **Route validation** with [joi](https://github.com/hapijs/joi).
-  - **HTTP friendly errors** with obfuscated messages based on a custom pipe with [boom](https://github.com/hapijs/boom) and [http-status](https://www.npmjs.com/package/http-status).
+  - **HTTP friendly errors** with [boom](https://github.com/hapijs/boom) and [http-status](https://www.npmjs.com/package/http-status).
 - **Authentication**
   - **JWT authentication process** with [passport.js](http://www.passportjs.org/).
   - **oAuth authentication process** with [passport.js](http://www.passportjs.org/). 
@@ -45,7 +45,7 @@ Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boil
   - **Database query cache** with [typeorm caching](https://github.com/typeorm/typeorm/blob/master/docs/caching.md).
 - **Assets management**
   - **Customizable file upload** with [multer](https://www.npmjs.com/package/multer).
-  - **Customizable image resizing** designed for front-end requirements with [jimp](https://www.npmjs.com/package/jimp).
+  - **Customizable image resizing** with [jimp](https://www.npmjs.com/package/jimp).
 
 ## > Table of contents
 
@@ -74,7 +74,7 @@ When you're with that, starting your project is a matter of minutes. :clock12:
 $ git clone https://github.com/konfer-be/typeplate.git path-to/your-project-name/
 ```
 
-### Step 2: go to your project
+### Step 2: go to
 
 ```bash
 $ cd path-to/your-project-name/
@@ -83,20 +83,14 @@ $ cd path-to/your-project-name/
 ### Step 3: build
 
 ```bash
-$ npm run kickstart
+$ npm run kickstart:dev
 ```
 
-### Step 4: setup git
-
-```bash
-$ rm -rf ./.git && npm run build:repo
-```
-
-### Step 5: setup package.json
+### Step 4: setup package.json
 
 Open the *./package.json* file and edit it with your own values.
 
-### Step 6: setup environment variables
+### Step 5: setup environment
 
 Open *./dist/env/development.env* and fill the required env variables (uncommented in the file). See [env variables list](https://github.com/konfer-be/typeplate/wiki/Environment-variables) for more informations.
 
@@ -135,21 +129,13 @@ TYPEORM_PWD = ""
 TYPEORM_PORT = "3306"
 ```
 
-### Step 7: setup cliamrc.json for sending transactional email
+### Step 6: setup cliamrc.json
 
-Transactional emails are used in authentication process, to confirm an account or execute a new password request. Currently supported providers are Mailgun, Mailjet, Postmark, Sendgrid, Sendinblue and Sparkpost. If you're not with them, you can use a simple SMTP server (default with [ethereal](https://ethereal.email/)).
-
-Open the *.cliamrc.json* and fill the [required configuration](https://github.com/konfer-be/cliam/wiki/Configuration) according your sending mode. See Cliam official [documentation](https://github.com/konfer-be/cliam/wiki) for more information.
+Transactional emails are send with [cliam](https://github.com/konfer-be/cliam) behind the scene. Open the *.cliamrc.json* and fill the [required configuration](https://github.com/konfer-be/cliam/wiki/Configuration) according your sending mode. See Cliam official [documentation](https://github.com/konfer-be/cliam/wiki) for more information.
 
 Sandbox is set to true by default and emails are not send. Pass this value to false when you're ready.
 
-### Step 8: compile
-
-```bash
-$ tsc
-```
-
-### Step 9: run & enjoy
+### Step 7: run
 
 ```bash
 $ nodemon
@@ -157,33 +143,19 @@ $ nodemon
 
 ## > Entity generation
 
-Some repetitive tasks such as creating resources can be done easily with [rsgen](https://github.com/konfer-be/rsgen). This small tool allow you to generate a complete set of resources who are linked to an entity. 
+Some repetitive tasks such as creating resources can be done easily with [rsgen](https://github.com/konfer-be/rsgen).
 
-See the [entity generation](https://github.com/konfer-be/typeplate/wiki/Entity-generation) wiki section to see the complete list of generated elements and how to.
+See [entity generation](https://github.com/konfer-be/typeplate/wiki/Entity-generation) wiki section to learn more about generated elements and how to use.
 
 ## > Documentation
-
-```bash
-$ npm run doc:apidoc
-```
-
-Generate API documentation website into *./docs/apidoc/*.
-
-See [apidoc](http://apidocjs.com/) for more informations about customization.
-
-```bash
-$ npm run doc:typedoc
-```
-
-Generate code documentation website into *./docs/typedoc/*.
-
-See [typedoc](https://typedoc.org/) for more informations about customization.
 
 ```bash
 $ npm run doc
 ```
 
-Generate api and code documentation websites into *./docs/*.
+Generate API documentation website into *./docs/apidoc/*.
+
+See [apidoc](http://apidocjs.com/) for more informations about customization.
 
 ## > Tests
 
@@ -241,17 +213,9 @@ $ pm2 deploy production setup
 
 # Update remote version
 $ pm2 deploy production update
-
-# Revert to -1 deployment
-$ pm2 deploy production revert 1
 ```
 
 More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/) and [PM2 deploy](https://pm2.io/doc/en/runtime/guide/easy-deploy-with-ssh/).
-
-## > Related links
-
-- More info about [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
-- More info about [ormconfig file](http://typeorm.io/#/using-ormconfig) and [typeorm cli](https://typeorm.io/#/using-cli/installing-cli)
 
 ## > License
 

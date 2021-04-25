@@ -4,7 +4,7 @@ node_js:
 services: mysql
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS typeplate_test;'
-script: mkdir -p ./dist/logs ./dist/env ./dist/public/archives ./dist/public/documents ./dist/public/audios ./dist/public/videos ./dist/public/images/master-copy ./dist/public/images/rescale && cp ./src/env/template.env ./dist/env/test.env && npm i typescript -g && npm i typeorm -g && npm i && tsc && typeorm schema:sync && npm run ci:test
+script: mkdir -p ./dist/env && cp ./src/env/template.env ./dist/env/test.env && npm i typescript -g && npm i typeorm -g && npm i && tsc && typeorm schema:sync && npm run ci:coverage
 after_success: npm run ci:coverage
 cache:
   directories:

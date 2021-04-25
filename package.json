@@ -47,10 +47,9 @@
     "ci:test": "npm-run-all -s test:*",
     "doc": "npm-run-all -s doc:*",
     "doc:apidoc": "apidoc -i src/ -o docs/apidoc/",
-    "doc:typedoc": "typedoc --name 'API documentation' --defaultCategory 'Root' --categorizeByGroup  --out ./docs/typedoc ./src",
     "kickstart": "npm i typescript@4.2.2 -g && npm i typeorm@0.2.31 -g && npm i rsgen -g && npm i && npm run build && npm run doc",
-    "kickstart:staging": "npm i typescript@4.2.2 -g && npm i typeorm@0.2.31 -g && npm i && npm run build",
-    "kickstart:production": "npm i typescript@4.2.2 -g && npm i typeorm@0.2.31 -g && npm i && npm run build:production && tsc",
+    "kickstart:staging": "npm i typescript@4.2.2 -g && npm i typeorm@0.2.32 -g && npm i && npm run build",
+    "kickstart:production": "npm i typescript@4.2.2 -g && npm i typeorm@0.2.32 -g && npm i && npm run build:production && tsc",
     "test": "nyc --reporter=html --report-dir=./reports/nyc-coverage npm-run-all -s test:*",
     "test:unit": "./node_modules/.bin/mocha ./test/units/00-application.unit.test.js --exit --reporter spec --timeout 10000 --env test",
     "test:e2e": "typeorm schema:drop && typeorm schema:sync && ./node_modules/.bin/mocha ./test/e2e/00-api.e2e.test.js --exit --reporter spec --timeout 10000 --env test",
@@ -146,7 +145,6 @@
     "rsgen": "^0.3.0",
     "sinon": "9.2.4",
     "supertest": "6.1.3",
-    "typedoc": "0.20.32",
     "typescript": "4.2.2",
     "typescript-eslint": "0.0.1-alpha.0"
   }

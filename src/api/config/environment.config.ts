@@ -24,7 +24,7 @@ export class Environment {
   /**
    * @description Current root dir
    */
-  base: string;
+  base = 'dist';
 
   /**
    * @description Cluster with aggregated data
@@ -718,21 +718,6 @@ export class Environment {
       this.environment = ENVIRONMENT[process.argv[process.argv.indexOf('--env') + 1]] as string || process.env.NODE_ENV || ENVIRONMENT.development;
     }
 
-    switch (this.environment) {
-      case ENVIRONMENT.development:
-        this.base = 'dist';
-      break;
-      case ENVIRONMENT.staging:
-        this.base = 'dist';
-      break;
-      case ENVIRONMENT.production:
-        this.base = 'dist';
-      break;
-      case ENVIRONMENT.test:
-        this.base = 'dist';
-      break;
-    }
-
     const path = `${process.cwd()}/${this.base}/env/${this.environment}.env`;
 
     if (!existsSync(path)) {
@@ -881,11 +866,18 @@ export class Environment {
    * @description Creates files directories if not exists
    */
   directories(): Environment {
+    const log = this.cluster.LOGS as { PATH: string };
+    if ( !existsSync(log.PATH) ) {
+      mkdirSync(log.PATH);
+    }
+    const upload = this.cluster.UPLOAD as { PATH: string };
+    if ( !existsSync(upload.PATH) ) {
+      mkdirSync(upload.PATH);
+    }
     this.dirs.forEach(dir => {
-      const u = this.cluster.UPLOAD as { PATH: string };
-      const p = `${u.PATH}/${dir}`;
-      if ( !existsSync(p) ) {
-        mkdirSync(p);
+      const path = `${upload.PATH}/${dir}`;
+      if ( !existsSync(path) ) {
+        mkdirSync(path);
       }
     });
     return this;

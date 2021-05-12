@@ -94,7 +94,7 @@ class SanitizeService {
       return false;
     }
 
-    if ( Util.types.isDate(value) || typeof value === 'string' || typeof value === 'number') {
+    if ( Util.types.isDate(value) || typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
       return false;
     }
 

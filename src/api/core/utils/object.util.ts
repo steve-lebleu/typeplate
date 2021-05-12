@@ -3,6 +3,6 @@
  *
  * @param val
  */
-const isObject = (val: unknown): boolean => typeof val === 'object';
+const isObject = (val: unknown): boolean => typeof val === 'object' && val !== null;
 
 export { isObject }

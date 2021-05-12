@@ -8,6 +8,8 @@ import { Safe } from '@decorators/safe.decorator';
 import { MediaRepository } from '@repositories/media.repository';
 import { Media } from '@models/media.model';
 
+import { paginate } from '@utils/pagination.util';
+
 /**
  * Manage incoming requests for api/{version}/medias
  */
@@ -54,8 +56,12 @@ class MediaController {
   @Safe()
   async list (req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(MediaRepository);
-    const medias = await repository.list(req.query);
-    res.locals.data = medias;
+    const response = await repository.list(req.query);
+    res.locals.data = response.result;
+    res.locals.meta = {
+      total: response.total,
+      pagination: paginate( parseInt(req.query.page, 10), parseInt(req.query.perPage, 10), response.total )
+    }
   }
 
   /**

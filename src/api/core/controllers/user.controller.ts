@@ -1,10 +1,11 @@
 import { getRepository, getCustomRepository } from 'typeorm';
+import { forbidden } from '@hapi/boom';
 
 import { User } from '@models/user.model';
 import { UserRepository } from '@repositories/user.repository';
 import { IUserRequest, IResponse } from '@interfaces';
 import { Safe } from '@decorators/safe.decorator';
-import { forbidden } from '@hapi/boom';
+import { paginate } from '@utils/pagination.util';
 
 /**
  * Manage incoming requests for api/{version}/users
@@ -95,8 +96,12 @@ class UserController {
   @Safe()
   async list (req: IUserRequest, res: IResponse): Promise<void> {
     const repository = getCustomRepository(UserRepository);
-    const users = await repository.list(req.query);
-    res.locals.data = users;
+    const response = await repository.list(req.query);
+    res.locals.data = response.result;
+    res.locals.meta = {
+      total: response.total,
+      pagination: paginate( parseInt(req.query.page, 10), parseInt(req.query.perPage, 10), response.total )
+    }
   }
 
   /**

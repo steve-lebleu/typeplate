@@ -33,7 +33,7 @@ const login = {
       then: Joi.string().length(64).required(),
       otherwise: Joi.optional()
     }),
-    refreshToken: Joi.string().min(82).max(88)
+    refreshToken: Joi.string()
   })
 };
 
@@ -41,7 +41,7 @@ const login = {
 const refresh = {
   body: Joi.object({
     token: Joi.object().keys({
-      refreshToken: Joi.string().min(82).max(88).required(),
+      refreshToken: Joi.string().required(),
     }).required()
   })
 };
@@ -49,7 +49,7 @@ const refresh = {
 // GEET api/v1/auth/:service/callback
 const oauthCb = {
   query: Joi.object({
-    code: Joi.string().min(8).max(88).required(),
+    code: Joi.string().required(),
   })
 };
 

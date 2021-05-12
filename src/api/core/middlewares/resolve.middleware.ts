@@ -63,9 +63,12 @@ import { CacheService } from '@services/cache.service';
         CacheService.engine.put( CacheService.key(req), res.locals.data, CacheService.duration );
       }
       res.status( status );
-      res.json(res.locals.data);
+      if (res.locals.meta) {
+        res.json(res.locals);
+      } else {
+        res.json(res.locals.data);
+      }
     }
-
   }
 }
 

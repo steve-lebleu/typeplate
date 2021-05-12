@@ -296,8 +296,8 @@ describe('Authentification routes', function () {
       });
     });
 
-    it('400 - refresh token length not valid', function (done) {
-      doRequest(agent, 'post', route, null, null, { token: { refreshToken: _refreshToken.substr(0,80) } }, function(err, res) {
+    it('400 - refresh token not valid', function (done) {
+      doRequest(agent, 'post', route, null, null, { token: { refreshToken: 123 } }, function(err, res) {
         expect(res.statusCode).to.eqls(400);
         done();
       });

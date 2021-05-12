@@ -39,7 +39,7 @@ export class UserRepository extends Repository<User>  {
   /**
    * @description Get a list of users according to current query parameters
    */
-  async list({ page = 1, perPage = 30, username, email, role, status }: IUserQueryString): Promise<User[]> {
+  async list({ page = 1, perPage = 30, username, email, role, status }: IUserQueryString): Promise<{result: User[], total: number}> {
 
     const repository = getRepository(User);
     const options = omitBy({ username, email, role, status }, isNil) as IUserQueryString;
@@ -64,12 +64,12 @@ export class UserRepository extends Repository<User>  {
       query.andWhere('status = :status', { status });
     }
 
-    const users = await query
+    const [ result, total ] = await query
       .skip( ( page - 1 ) * perPage )
       .take( perPage )
-      .getMany();
+      .getManyAndCount();
 
-    return users;
+    return { result, total };
   }
 
   /**

@@ -16,7 +16,7 @@ export class MediaRepository extends Repository<Media>  {
   /**
    * @description Get a list of files according to current query
    */
-  async list({ page = 1, perPage = 30, path, fieldname, filename, size, mimetype, owner, type }: IMediaQueryString): Promise<Media[]> {
+  async list({ page = 1, perPage = 30, path, fieldname, filename, size, mimetype, owner, type }: IMediaQueryString): Promise<{result: Media[], total: number}> {
 
     const repository = getRepository(Media);
 
@@ -46,9 +46,11 @@ export class MediaRepository extends Repository<Media>  {
       query.andWhere('size >= :size', { size: `%${options.size}%` });
     }
 
-    return query
+    const [ result, total ] = await query
       .skip( ( page - 1 ) * perPage )
       .take( perPage )
-      .getMany();
+      .getManyAndCount();
+
+    return { result, total }
   }
 }

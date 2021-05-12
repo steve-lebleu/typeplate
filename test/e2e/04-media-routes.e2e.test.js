@@ -185,7 +185,7 @@ describe('Media routes', function () {
     it('200 - pagination get 30 results by default', function (done) {
       doQueryRequest(agent, '/api/v1/medias/', null, _adminToken, {}, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body).length.lte(30);
+        expect(res.body.data).length.lte(30);
         done();
       });
     });
@@ -193,7 +193,7 @@ describe('Media routes', function () {
     it('200 - pagination get n results by query param', function (done) {
       doQueryRequest(agent, '/api/v1/medias/', null, _adminToken, { perPage: 50 }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body).length.lte(50);
+        expect(res.body.data).length.lte(50);
         done();
       });
     });
@@ -201,7 +201,7 @@ describe('Media routes', function () {
     it('200 - results matches fieldname query param', function (done) {
       doQueryRequest(agent, '/api/v1/medias/', null, _adminToken, { fieldname: 'invoice' }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body).satisfy(function(value) {
+        expect(res.body.data).satisfy(function(value) {
           return value.map( (entry) => { 
             expect(entry.fieldname).to.equals('invoice');
           })
@@ -213,7 +213,7 @@ describe('Media routes', function () {
     it('200 - results matches filename query param', function (done) {
       doQueryRequest(agent, '/api/v1/medias/', null, _adminToken, { filename: 'javascript' }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body).satisfy(function(value) {
+        expect(res.body.data).satisfy(function(value) {
           return value.map( (entry) => { 
             expect(entry.filename).to.matches(/javascript/);
           })
@@ -225,7 +225,7 @@ describe('Media routes', function () {
     it('200 - results matches mimetype query param', function (done) {
       doQueryRequest(agent, '/api/v1/medias/', null, _adminToken, { mimetype: 'application/pdf' }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body).satisfy(function(value) {
+        expect(res.body.data).satisfy(function(value) {
           return value.map( (entry) => { 
             expect(entry.mimetype).to.equals('application/pdf');
           })
@@ -238,7 +238,7 @@ describe('Media routes', function () {
     it('200 - results matches type query param', function (done) {
       doQueryRequest(agent, '/api/v1/medias/', null, _adminToken, { type: 'image' }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body).satisfy(function(value) {
+        expect(res.body.data).satisfy(function(value) {
           return value.map( (entry) => { 
             expect(['image/bmp' , 'image/gif' , 'image/jpg' , 'image/jpeg' , 'image/png'].includes(entry.mimetype)).to.be.true;
           })
@@ -250,7 +250,7 @@ describe('Media routes', function () {
     it('200 - results matches size query param', function (done) {
       doQueryRequest(agent, '/api/v1/medias/', null, _adminToken, { size: 30000 }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body).satisfy(function(value) {
+        expect(res.body.data).satisfy(function(value) {
           return value.map( (entry) => { 
             expect(entry.size).to.be.gte(3000);
           })
@@ -262,7 +262,7 @@ describe('Media routes', function () {
     it('200 - results matches multiple query params', function (done) {
       doQueryRequest(agent, '/api/v1/medias/', null, _adminToken, { filename: 'Facture', mimetype: 'application/pdf' }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body).satisfy(function(value) {
+        expect(res.body.data).satisfy(function(value) {
           return value.map( (entry) => { 
             expect(entry.filename).to.matches(/Facture/);
             expect(entry.mimetype).to.equals('application/pdf');
@@ -275,10 +275,10 @@ describe('Media routes', function () {
     it('200 - data ok', function (done) {
       doQueryRequest(agent, '/api/v1/medias/', null, _adminToken, {}, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body).satisfy(function(value) {
+        expect(res.body.data).satisfy(function(value) {
           return Array.isArray(value) && value.length > 0;
         });
-        expect(res.body).satisfy(function(value) {
+        expect(res.body.data).satisfy(function(value) {
           return value.map( (entry) => {
             dataOk({ body: entry }, 'media', 'read')
           })

@@ -119,7 +119,6 @@ describe('User routes', function () {
   });
   
   describe('GET /api/v1/users/profile', () => {
-
     it('403 - no bearer', function (done) {
       doQueryRequest(agent, '/api/v1/users/profile', null, null, {}, function(err, res) {
         expect(res.statusCode).to.eqls(403);
@@ -134,7 +133,10 @@ describe('User routes', function () {
         done();
       });
     });
-  
+  });
+
+  describe('GET /api/v1/users/:id', () => {
+
     it('403 - no bearer', function (done) {
       doQueryRequest(agent, '/api/v1/users/1', null, null, {}, function(err, res) {
         expect(res.statusCode).to.eqls(403);
@@ -170,7 +172,10 @@ describe('User routes', function () {
         done();
       });
     });
-  
+  });
+
+  describe('GET /api/v1/users', () => {
+
     it('400 - malformed email', function (done) {
       doQueryRequest(agent, '/api/v1/users', null, _adminToken, { email: 'thisisnotanemail' }, function(err, res) {
         expect(res.body.statusCode).to.eqls(400);
@@ -212,10 +217,10 @@ describe('User routes', function () {
     it('200 - data ok', function (done) {
       doQueryRequest(agent, '/api/v1/users', null, _adminToken, {}, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body).satisfy(function(value) {
+        expect(res.body.data).satisfy(function(value) {
           return Array.isArray(value) && value.length > 0;
         });
-        expect(res.body).satisfy(function(value) {
+        expect(res.body.data).satisfy(function(value) {
           return value.map( (entry) => {
             const data = { body: entry };
             dataOk(data, 'user', 'read')
@@ -228,7 +233,7 @@ describe('User routes', function () {
     it('200 - pagination get 30 results by default', function (done) {
       doQueryRequest(agent, '/api/v1/users', null, _adminToken, {}, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body).length.lte(30);
+        expect(res.body.data).length.lte(30);
         done();
       });
     });
@@ -236,7 +241,7 @@ describe('User routes', function () {
     it('200 - pagination get n results by query param', function (done) {
       doQueryRequest(agent, '/api/v1/users', null, _adminToken, { perPage: 50 }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body).length.lte(50);
+        expect(res.body.data).length.lte(50);
         done();
       });
     });
@@ -244,7 +249,7 @@ describe('User routes', function () {
     it('200 - results matches on username', function (done) {
       doQueryRequest(agent, '/api/v1/users', null, _adminToken, { username: _user.username }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body.shift().username).to.equals(_user.username);
+        expect(res.body.data.shift().username).to.equals(_user.username);
         done();
       });
     });
@@ -252,7 +257,7 @@ describe('User routes', function () {
     it('200 - results matches on email', function (done) {
       doQueryRequest(agent, '/api/v1/users', null, _adminToken, { email: _user.email }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body.shift().email).to.equals(_user.email);
+        expect(res.body.data.shift().email).to.equals(_user.email);
         done();
       });
     });
@@ -260,25 +265,7 @@ describe('User routes', function () {
     it('200 - results matches on role', function (done) {
       doQueryRequest(agent, '/api/v1/users', null, _adminToken, { role: _user.role }, function(err, res) {
         expect(res.statusCode).to.eqls(200);
-        expect(res.body.shift().role).to.equals(_user.role);
-        done();
-      });
-    });
-
-  });
-
-  describe('GET /api/v1/users/:id', () => {
-
-    it('403 - no bearer', function (done) {
-      doQueryRequest(agent, '/api/v1/users/', null, null, {}, function(err, res) {
-        expect(res.statusCode).to.eqls(403);
-        done();
-      });
-    });
-
-    it('403 - permission denied', function (done) {
-      doQueryRequest(agent, '/api/v1/users/', 10, _unauthorizedToken, {}, function(err, res) {
-        expect(res.statusCode).to.eqls(403);
+        expect(res.body.data.shift().role).to.equals(_user.role);
         done();
       });
     });

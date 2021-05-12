@@ -5,5 +5,6 @@ import { Request } from 'express';
  */
 export interface IRequest extends Request {
   user?: any;
+  query: Record<string,string>,
   params: Record<string,string>;
 }

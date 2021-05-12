@@ -36,6 +36,16 @@ import { CONTENT_TYPE as CONTENT_TYPE_ENUM } from '@enums';
    */
   validate(req: Request, res: Response, next: (e?: Error) => void): void {
 
+    if (req.method === 'OPTIONS') {
+      res.writeHead(200, {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': ['Content-Type', 'Authorization', 'Origin'],
+        'Access-Control-Allow-Methods': '*'
+      });
+      res.end();
+      return ;
+    }
+
     if (!req.headers['content-type']) {
       return next( notAcceptable(`Content-Type headers must be ${CONTENT_TYPE} or 'multipart/form-data', ${req.headers['content-type']} given`) );
     }

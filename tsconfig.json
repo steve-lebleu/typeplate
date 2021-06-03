@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "incremental": true,
+    "removeComments": true,
     "outDir": "./dist/api",
     "sourceMap": false,
     "baseUrl": "./src",
@@ -33,7 +35,7 @@
       "@utils/*": ["api/core/utils/*"],
       "@validations/*": ["api/core/validations/*"]
     },
-    "lib": ["dom", "ESNext"],
+    "lib": ["ESNext"],
     "target": "ESNext",
     "module": "CommonJS",
     "allowSyntheticDefaultImports": true,

@@ -1,7 +1,6 @@
 process.env.NODE_ENV = 'test';
 process.env.ENVIRONMENT = 'test';
 process.env.ORIGIN = 'http://localhost:4200';
-process.env.RUNNER = 'travis';
 process.env.CONTENT_TYPE = 'application/json';
 
 // --- API server

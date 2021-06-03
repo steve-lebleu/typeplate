@@ -1,0 +1,49 @@
+name: Typeplate CI / CD pipeline
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Github checkout
+        uses: actions/checkout@v1
+      - name: Setup node.js environment
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.16'
+      - name: Setup MySQL server
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '8.0' 
+          mysql database: 'typeplate_test'
+          mysql root password: passw0rd 
+      - name: Setup .env file
+        run: |
+          echo FACEBOOK_CONSUMER_ID = "${{ secrets.FACEBOOK_CONSUMER_ID }}" >> ./dist/env/test.env
+          echo FACEBOOK_CONSUMER_SECRET = "${{ secrets.FACEBOOK_CONSUMER_SECRET }}" >> ./dist/env/test.env
+          echo GITHUB_CONSUMER_ID = "${{ secrets.GTHB_CONSUMER_ID }}" >> ./dist/env/test.env
+          echo GITHUB_CONSUMER_SECRET = "${{ secrets.GTHB_CONSUMER_SECRET }}" >> ./dist/env/test.env
+          echo GOOGLE_CONSUMER_ID = "${{ secrets.GOOGLE_CONSUMER_ID }}" >> ./dist/env/test.env
+          echo GOOGLE_CONSUMER_SECRET = "${{ secrets.GOOGLE_CONSUMER_SECRET }}" >> ./dist/env/test.env
+          echo LINKEDIN_CONSUMER_ID = "${{ secrets.LINKEDIN_CONSUMER_ID }}" >> ./dist/env/test.env
+          echo LINKEDIN_CONSUMER_SECRET = "${{ secrets.LINKEDIN_CONSUMER_SECRET }}" >> ./dist/env/test.env
+          echo NODE_ENV = "${{ secrets.NODE_ENV }}" >> ./dist/env/test.env
+      - name: Create directories
+        run: mkdir -p ./dist/env && cp ./src/env/template.env ./dist/env/test.env
+      - name: Install global dependencies
+        run:  npm i typescript -g && npm i typeorm -g 
+      - name: Install local dependencies
+        run: npm i
+      - name: Compile Typescript files
+        run: tsc
+      - name: Synchronize database schema
+        run: typeorm schema:sync
+      - name: Execute tests sets
+        run: npm run ci:coverage
+      - name: Publish to coveralls.io
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./reports/coverage/lcov.info

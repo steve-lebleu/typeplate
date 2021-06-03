@@ -1,5 +1,5 @@
 import * as Events from 'events';
-import * as Cliam from 'cliam';
+import { Cliam } from 'cliam';
 
 import { URL } from '@config/environment.config';
 import { User } from '@models/user.model';

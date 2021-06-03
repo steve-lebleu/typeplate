@@ -3,7 +3,7 @@
     "incremental": true,
     "removeComments": true,
     "outDir": "./dist/api",
-    "sourceMap": false,
+    "sourceMap": true,
     "baseUrl": "./src",
     "paths": {
       "@core": ["api/core/*"],

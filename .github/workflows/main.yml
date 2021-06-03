@@ -16,7 +16,7 @@ jobs:
       - name: Setup MySQL server
         uses: mirromutth/mysql-action@v1.1
         with:
-          mysql version: '8.0' 
+          mysql version: '5.7' 
           mysql database: 'typeplate_test'
           mysql root password: passw0rd 
       - name: Create directories

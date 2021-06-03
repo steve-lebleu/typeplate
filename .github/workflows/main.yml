@@ -41,7 +41,7 @@ jobs:
       - name: Synchronize database schema
         run: typeorm schema:sync
       - name: Execute tests sets
-        run: npm run ci:coverage
+        run: npm run ci:test
       - name: Publish to coveralls.io
         uses: coverallsapp/github-action@v1.1.2
         with:

@@ -714,9 +714,12 @@ export class Environment {
       this.exit('The node version of the server is too low. Please consider at least v14.16.0.');
     }
 
-    console.log('procee', process.argv);
-    console.log('procee', process.env.NODE_ENV);
+    console.log('process.argv', process.argv);
+    console.log('process.env.NODE_ENV', process.env.NODE_ENV);
     if ( ( process.argv && process.argv.indexOf('--env') !== -1 ) || process.env.NODE_ENV ) {
+      console.log('IN', process.argv.indexOf('--env') + 1);
+      console.log('IN', process.argv[process.argv.indexOf('--env') + 1]);
+      console.log('IN', ENVIRONMENT[process.argv[process.argv.indexOf('--env') + 1]]);
       this.environment = ENVIRONMENT[process.argv[process.argv.indexOf('--env') + 1]] as string || process.env.NODE_ENV || ENVIRONMENT.development;
     }
 

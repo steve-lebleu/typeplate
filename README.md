@@ -1,9 +1,9 @@
 ![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/tbqXm9Q/header-ts-boilerplate-4.png)
 
 [![Node](https://img.shields.io/badge/Node-14.16.0-informational?logo=node.js&color=43853D)](https://nodejs.org/docs/latest-v14.x/api/index.html)
-[![TypeScript](https://img.shields.io/badge/Typescript-4.2.2-informational?logo=typescript&color=2F74C0)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/Typescript-4.2.3-informational?logo=typescript&color=2F74C0)](https://www.typescriptlang.org/)
 [![Express](https://img.shields.io/badge/Express-4.16.4-informational?logo=express&color=B1B1B1)](https://expressjs.com/)
-[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.32-informational?logo=typeorm&color=FFAB00)](https://typeorm.io/#/)
+[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.33-informational?logo=typeorm&color=FFAB00)](https://typeorm.io/#/)
 [![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational?logo=mocha&color=8A6343)](https://mochajs.org)
 
 [![Build Status](https://travis-ci.com/konfer-be/typeplate.svg?token=DmbPFqq91BhwsJKVDsHw&branch=master)](https://travis-ci.com/konfer-be/typeplate)

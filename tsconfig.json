@@ -35,10 +35,9 @@
       "@utils/*": ["api/core/utils/*"],
       "@validations/*": ["api/core/validations/*"]
     },
-    "lib": ["ESNext"],
+    "lib": ["dom", "ESNext"],
     "target": "ESNext",
     "module": "CommonJS",
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true

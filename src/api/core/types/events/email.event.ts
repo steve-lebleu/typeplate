@@ -1,7 +1,7 @@
 import * as Events from 'events';
+import * as Cliam from 'cliam';
 
 import { URL } from '@config/environment.config';
-import { Cliam } from 'cliam';
 import { User } from '@models/user.model';
 
 const EmailEmitter = new Events.EventEmitter();

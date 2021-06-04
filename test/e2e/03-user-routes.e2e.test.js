@@ -410,8 +410,6 @@ describe('User routes', function () {
         .field('password', params.password)
         .attach('avatar', process.cwd() + '/test/utils/fixtures/files/javascript.jpg')
         .end(function(err, res) {
-          console.log(err);
-          console.log(res.body);
           expect(res.statusCode).to.eqls(200);
           dataOk( { body: res.body }, 'user', 'update')
           done();

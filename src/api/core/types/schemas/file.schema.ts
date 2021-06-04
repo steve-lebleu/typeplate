@@ -13,7 +13,8 @@ const file = (field_name: Fieldname): AnySchema => {
     path: path().required(),
     mimetype: mimetype(MIME_TYPE_LIST).required(),
     size: Joi.number().required(),
-    owner: Joi.number().required()
+    owner: Joi.number().required(),
+    createdAt: Joi.date().optional(),
   });
 };
 

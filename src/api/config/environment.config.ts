@@ -714,14 +714,12 @@ export class Environment {
       this.exit('The node version of the server is too low. Please consider at least v14.16.0.');
     }
 
-    console.log('process.argv', process.argv);
-    console.log('process.env.NODE_ENV', process.env.NODE_ENV);
-    if ( ( process.argv && process.argv.indexOf('--env') !== -1 ) || process.env.NODE_ENV ) {
-      console.log('IN', process.argv.indexOf('--env') + 1);
-      console.log('IN', process.argv[process.argv.indexOf('--env') + 1]);
-      console.log('IN', ENVIRONMENT[process.argv[process.argv.indexOf('--env') + 1]]);
-      this.environment = ENVIRONMENT[process.argv[process.argv.indexOf('--env') + 1]] as string || process.env.NODE_ENV || ENVIRONMENT.development;
-      console.log('IN', this.environment);
+    if ( ( process.argv && process.argv.indexOf('--env') !== -1 ) ) {
+      this.environment = ENVIRONMENT[process.argv[process.argv.indexOf('--env') + 1]] as string || ENVIRONMENT.development;
+    } else if ( process.env.NODE_ENV) {
+      this.environment = ENVIRONMENT[process.env.NODE_ENV as ENVIRONMENT];
+    } else if ( process.env.RUNNER ) {
+      this.environment = ENVIRONMENT.test;
     }
 
     const path = `${process.cwd()}/${this.base}/env/${this.environment}.env`;

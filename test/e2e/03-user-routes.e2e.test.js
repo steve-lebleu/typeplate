@@ -25,8 +25,11 @@ describe('User routes', function () {
 
     // Log admin
     doRequest(agent, 'post', '/api/v1/auth/login', null, null, { email: 'admin@typeplatexample.com', password: 'passw0rd' }, function(err, res) {
+      console.log('Login response: ', res.body);
       _adminToken = res.body.token.accessToken;
       _admin = res.body.user;
+      console.log('_adminToken', _adminToken);
+      console.log('_admin', _admin);
       doRequest(agent, 'post', '/api/v1/auth/register', null, null, user.register('passw0rd'), function(err, res) {
         _unauthorizedToken = res.body.token.accessToken;
         _user = res.body.user;

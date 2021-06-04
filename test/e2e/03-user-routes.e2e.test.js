@@ -25,11 +25,8 @@ describe('User routes', function () {
 
     // Log admin
     doRequest(agent, 'post', '/api/v1/auth/login', null, null, { email: 'admin@typeplatexample.com', password: 'passw0rd' }, function(err, res) {
-      console.log('Login response: ', res.body);
       _adminToken = res.body.token.accessToken;
       _admin = res.body.user;
-      console.log('_adminToken', _adminToken);
-      console.log('_admin', _admin);
       doRequest(agent, 'post', '/api/v1/auth/register', null, null, user.register('passw0rd'), function(err, res) {
         _unauthorizedToken = res.body.token.accessToken;
         _user = res.body.user;
@@ -413,6 +410,8 @@ describe('User routes', function () {
         .field('password', params.password)
         .attach('avatar', process.cwd() + '/test/utils/fixtures/files/javascript.jpg')
         .end(function(err, res) {
+          console.log(err);
+          console.log(res.body);
           expect(res.statusCode).to.eqls(200);
           dataOk( { body: res.body }, 'user', 'update')
           done();

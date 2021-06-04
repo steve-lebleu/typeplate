@@ -14,7 +14,8 @@ const file = (field_name: Fieldname): AnySchema => {
     mimetype: mimetype(MIME_TYPE_LIST).required(),
     size: Joi.number().required(),
     owner: Joi.number().required(),
-    createdAt: Joi.date().optional(),
+    createdAt: Joi.date().optional().allow(null),
+    updatedAt: Joi.date().optional().allow(null),
   });
 };
 

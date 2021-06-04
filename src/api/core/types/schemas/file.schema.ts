@@ -7,6 +7,7 @@ import { Fieldname } from '@types';
 
 const file = (field_name: Fieldname): AnySchema => {
   return Joi.object().keys({
+    id: Joi.number().optional(),
     fieldname: Joi.string().valid(field_name).required(),
     filename: filename().required(),
     path: path().required(),

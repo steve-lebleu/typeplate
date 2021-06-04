@@ -5,6 +5,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      RUNNER: github
+      NODE_ENV: test
     steps:
       - name: Github checkout
         uses: actions/checkout@v1
@@ -30,8 +33,6 @@ jobs:
           echo GOOGLE_CONSUMER_SECRET = "${{ secrets.GOOGLE_CONSUMER_SECRET }}" >> ./dist/env/test.env
           echo LINKEDIN_CONSUMER_ID = "${{ secrets.LINKEDIN_CONSUMER_ID }}" >> ./dist/env/test.env
           echo LINKEDIN_CONSUMER_SECRET = "${{ secrets.LINKEDIN_CONSUMER_SECRET }}" >> ./dist/env/test.env
-          echo NODE_ENV = "${{ secrets.NODE_ENV }}" >> ./dist/env/test.env
-          echo RUNNER = "github" >> ./dist/env/test.env
       - name: Install global dependencies
         run:  npm i typescript -g && npm i typeorm -g 
       - name: Install local dependencies

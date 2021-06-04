@@ -716,10 +716,10 @@ export class Environment {
 
     if ( ( process.argv && process.argv.indexOf('--env') !== -1 ) ) {
       this.environment = ENVIRONMENT[process.argv[process.argv.indexOf('--env') + 1]] as string || ENVIRONMENT.development;
-    } else if ( process.env.NODE_ENV) {
-      this.environment = ENVIRONMENT[process.env.NODE_ENV as ENVIRONMENT];
     } else if ( process.env.RUNNER ) {
       this.environment = ENVIRONMENT.test;
+    } else if ( process.env.NODE_ENV ) {
+      this.environment = ENVIRONMENT[process.env.NODE_ENV as ENVIRONMENT];
     }
 
     const path = `${process.cwd()}/${this.base}/env/${this.environment}.env`;

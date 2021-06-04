@@ -1,7 +1,8 @@
 name: Typeplate CI / CD pipeline
 on:
   push:
-    branches: [ master ]
+    tags:
+      - v*
 jobs:
   build:
     runs-on: ubuntu-latest

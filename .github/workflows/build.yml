@@ -1,9 +1,10 @@
-name: Typeplate CI / CD pipeline
+name: Build
 on:
   push:
-    branches: [ master ]
+    branches: [ dev, main, hotfix/*, feature/*, release/* ]
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     env:
       RUNNER: github

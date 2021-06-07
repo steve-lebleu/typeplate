@@ -1,0 +1,74 @@
+name: Release
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      RUNNER: github
+      NODE_ENV: test
+    steps:
+      - name: Github checkout
+        uses: actions/checkout@v2
+      - name: Setup node.js environment
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.16'
+      - name: Setup MySQL server
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '5.7' 
+          mysql database: 'typeplate_test'
+          mysql root password: passw0rd 
+      - name: Create directories
+        run: mkdir -p ./dist/env && cp ./src/env/template.env ./dist/env/test.env
+      - name: Setup .env file
+        run: |
+          echo FACEBOOK_CONSUMER_ID = "${{ secrets.FACEBOOK_CONSUMER_ID }}" >> ./dist/env/test.env
+          echo FACEBOOK_CONSUMER_SECRET = "${{ secrets.FACEBOOK_CONSUMER_SECRET }}" >> ./dist/env/test.env
+          echo GITHUB_CONSUMER_ID = "${{ secrets.GTHB_CONSUMER_ID }}" >> ./dist/env/test.env
+          echo GITHUB_CONSUMER_SECRET = "${{ secrets.GTHB_CONSUMER_SECRET }}" >> ./dist/env/test.env
+          echo GOOGLE_CONSUMER_ID = "${{ secrets.GOOGLE_CONSUMER_ID }}" >> ./dist/env/test.env
+          echo GOOGLE_CONSUMER_SECRET = "${{ secrets.GOOGLE_CONSUMER_SECRET }}" >> ./dist/env/test.env
+          echo LINKEDIN_CONSUMER_ID = "${{ secrets.LINKEDIN_CONSUMER_ID }}" >> ./dist/env/test.env
+          echo LINKEDIN_CONSUMER_SECRET = "${{ secrets.LINKEDIN_CONSUMER_SECRET }}" >> ./dist/env/test.env
+      - name: Install global dependencies
+        run:  npm i typescript -g && npm i typeorm -g 
+      - name: Install local dependencies
+        run: npm i
+      - name: Compile Typescript files
+        run: tsc
+      - name: Synchronize database schema
+        run: typeorm schema:sync
+      - name: Execute tests sets
+        run: npm run ci:test
+      - name: Publish to coveralls.io
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./reports/coverage/lcov.info
+  release:
+    name: Release on Github
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: node-modules-${{ hashfiles('**/package-lock.json') }}
+      - name: Github checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup node.js environment
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.16'
+      - name: Create release
+        uses: konfer-be/action-create-release-from-tag@v1.0.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

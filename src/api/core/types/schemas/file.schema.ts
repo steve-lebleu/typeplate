@@ -16,7 +16,7 @@ const file = (field_name: Fieldname): AnySchema => {
     owner: Joi.number().required(),
     createdAt: Joi.date().optional().allow(null),
     updatedAt: Joi.date().optional().allow(null),
-    deletedAt: Joi.date().optional().allow(null),
+    deletedAt: Joi.date().optional().allow(null)
   });
 };
 

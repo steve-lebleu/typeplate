@@ -6,7 +6,7 @@
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.2.33-informational?logo=typeorm&color=FFAB00)](https://typeorm.io/#/)
 [![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational?logo=mocha&color=8A6343)](https://mochajs.org)
 
-[![Typeplate CI / CD pipeline](https://github.com/konfer-be/typeplate/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/konfer-be/typeplate/actions/workflows/main.yml)
+[![Build](https://github.com/konfer-be/typeplate/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/konfer-be/typeplate/actions/workflows/main.yml)
 [![Coverage Status](https://coveralls.io/repos/github/konfer-be/typeplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/typeplate?branch=master)
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/konfer-be/typeplate/master)
 ![Requires.io (branch)](https://img.shields.io/requires/github/konfer-be/typeplate/master)

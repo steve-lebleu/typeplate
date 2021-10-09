@@ -15,9 +15,9 @@ describe('Utils', () => {
 
     describe('getAge()', () => {
 
-      it('should return 41 as a number', function(done) {
+      it('should return 42 as a number', function(done) {
         const result = getAge(new Date(1979,7,28).toDateString());
-        expect(result).to.eqls(41);
+        expect(result).to.eqls(42);
         done();
       });
   

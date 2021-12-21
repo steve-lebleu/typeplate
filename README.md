@@ -1,10 +1,10 @@
 ![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/tbqXm9Q/header-ts-boilerplate-4.png)
 
-[![Node](https://img.shields.io/badge/Node-14.16.0-informational?logo=node.js&color=43853D)](https://nodejs.org/docs/latest-v14.x/api/index.html)
-[![TypeScript](https://img.shields.io/badge/Typescript-4.2.3-informational?logo=typescript&color=2F74C0)](https://www.typescriptlang.org/)
-[![Express](https://img.shields.io/badge/Express-4.16.4-informational?logo=express&color=B1B1B1)](https://expressjs.com/)
-[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.33-informational?logo=typeorm&color=FFAB00)](https://typeorm.io/#/)
-[![Mocha](https://img.shields.io/badge/Mocha-8.0.3-informational?logo=mocha&color=8A6343)](https://mochajs.org)
+[![Node](https://img.shields.io/badge/Node-16.6.2-informational?logo=node.js&color=43853D)](https://nodejs.org/docs/latest-v16.x/api/index.html)
+[![TypeScript](https://img.shields.io/badge/Typescript-4.5.4-informational?logo=typescript&color=2F74C0)](https://www.typescriptlang.org/)
+[![Express](https://img.shields.io/badge/Express-4.17.2-informational?logo=express&color=B1B1B1)](https://expressjs.com/)
+[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.41-informational?logo=typeorm&color=FFAB00)](https://typeorm.io/#/)
+[![Mocha](https://img.shields.io/badge/Mocha-9.1.3-informational?logo=mocha&color=8A6343)](https://mochajs.org)
 
 [![Build](https://github.com/konfer-be/typeplate/actions/workflows/release.yml/badge.svg)](https://github.com/konfer-be/typeplate/actions/workflows/release.yml)
 [![Coverage Status](https://coveralls.io/repos/github/konfer-be/typeplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/typeplate?branch=master)

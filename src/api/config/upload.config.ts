@@ -1,5 +1,5 @@
 import * as Multer from 'multer';
-import * as filenamify from 'filenamify';
+import filenamify from 'filenamify';
 import { existsSync, mkdirSync } from 'fs';
 import { unsupportedMediaType } from '@hapi/boom';
 

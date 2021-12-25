@@ -47,8 +47,8 @@ export class MediaRepository extends Repository<Media>  {
     }
 
     const [ result, total ] = await query
-      .skip( ( page - 1 ) * perPage )
-      .take( perPage )
+      .skip( ( parseInt(page as string, 10) - 1 ) * parseInt(perPage as string, 10) )
+      .take( parseInt(perPage as string, 10) )
       .getManyAndCount();
 
     return { result, total }

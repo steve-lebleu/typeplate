@@ -4,7 +4,7 @@ import { IRequest, IMedia, IUserQueryString } from '@interfaces';
  * @description
  */
 export interface IUserRequest extends IRequest {
-  user?: Record<string,unknown>;
+  user?: User|Record<string,unknown>;
   logIn: (user: User, done: (err: any) => void) => void,
   files?: IMedia[],
   body: {

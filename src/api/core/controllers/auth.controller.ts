@@ -5,7 +5,7 @@ import { badRequest, notFound } from '@hapi/boom';
 import * as Jwt from 'jwt-simple';
 
 import { ACCESS_TOKEN } from '@config/environment.config';
-import { IResponse, IUserRequest } from '@interfaces';
+import { IResponse, IUserRequest, ITokenOptions } from '@interfaces';
 import { User } from '@models/user.model';
 import { RefreshToken } from '@models/refresh-token.model';
 import { UserRepository } from '@repositories/user.repository';
@@ -45,7 +45,7 @@ class AuthController {
   @Safe()
   async register(req: Request, res: IResponse): Promise<void> {
     const repository = getRepository(User);
-    const user = new User(req.body);
+    const user = new User(req.body as Record<string,unknown>);
     const count = await repository.count();
     if (count === 0) {
       user.role = ROLE.admin;
@@ -64,7 +64,7 @@ class AuthController {
   @Safe()
   async login(req: Request, res: IResponse): Promise<void> {
     const repository = getCustomRepository(UserRepository);
-    const { user, accessToken } = await repository.findAndGenerateToken(req.body);
+    const { user, accessToken } = await repository.findAndGenerateToken(req.body as ITokenOptions);
     const token = await AuthService.generateTokenResponse(user, accessToken);
     res.locals.data = { token, user };
   }
@@ -77,7 +77,7 @@ class AuthController {
    */
   @Safe()
   async logout(req: IUserRequest, res: IResponse): Promise<void> {
-    await AuthService.revokeRefreshToken(req.user);
+    await AuthService.revokeRefreshToken(req.user as User);
     res.locals.data = null;
   }
 
@@ -143,7 +143,7 @@ class AuthController {
       throw badRequest('User token cannot be read');
     }
 
-    const user = await repository.findOneOrFail(decoded.sub);
+    const user = await repository.findOneOrFail(decoded.sub as string);
 
     if ( user.status !== STATUS.REGISTERED && user.status !== STATUS.REVIEWED ) {
       throw badRequest('User status cannot be confirmed');

@@ -15,15 +15,9 @@ describe('Utils', () => {
 
     describe('getAge()', () => {
 
-<<<<<<< HEAD
-      it('should return 42 as a number', function(done) {
-        const result = getAge(new Date(1979,7,28).toDateString());
-        expect(result).to.eqls(42);
-=======
       it('should return 41 as a number', function(done) {
         const result = getAge(new Date(1979,8,28).toDateString());
         expect(result).to.eqls(new Date().getUTCFullYear() - 1979);
->>>>>>> feature/update-dependencies
         done();
       });
   

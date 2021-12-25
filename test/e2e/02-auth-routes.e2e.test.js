@@ -23,7 +23,7 @@ const { encrypt } = require(process.cwd() + '/dist/api/core/utils/string.util');
 const { user } = require(process.cwd() + '/test/utils/fixtures');
 const { doRequest, doQueryRequest } = require(process.cwd() + '/test/utils');
 
-describe.only('Authentification routes', function () {
+describe('Authentification routes', function () {
   
   let agent, _token, _loggedAccessToken, _loggedRefreshToken, _refreshToken, _user, _apikey;
   

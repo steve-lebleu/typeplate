@@ -1,4 +1,4 @@
-import { authenticate } from 'passport';
+import * as passport from 'passport';
 import { promisify } from 'es6-promisify';
 import { forbidden, badRequest, notFound } from '@hapi/boom';
 
@@ -48,7 +48,8 @@ class Guard {
       if (error || !user) throw error;
       await logIn(user, { session: false });
     } catch (e) {
-      return next( forbidden(e) );
+      const scopedError = e as Error;
+      return next( forbidden(scopedError.message) );
     }
 
     if (!roles.includes(user.role)) {
@@ -93,8 +94,8 @@ class Guard {
    * @dependency passport
    * @see http://www.passportjs.org/
    */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  authentify = ( req, res, next, roles, callback ) => authenticate('jwt', { session: false }, callback(req, res, next, roles) ) (req, res, next)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+  authentify = ( req, res, next, roles, callback ) => passport.authenticate('jwt', { session: false }, callback(req, res, next, roles) ) (req, res, next)
 
   /**
    * @description
@@ -108,8 +109,8 @@ class Guard {
    * @dependency passport
    * @see http://www.passportjs.org/
    */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  oAuthentify = ( req, res, next, service, callback ) => authenticate(service, { session: false }, callback(req, res, next) ) (req, res, next)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+  oAuthentify = ( req, res, next, service, callback ) => passport.authenticate(service, { session: false }, callback(req, res, next) ) (req, res, next)
 
   /**
    * @description Authorize user access according to role(s) in arguments
@@ -124,8 +125,8 @@ class Guard {
    *
    * @param service OAuthProvider
    */
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  oAuth = (service: OAuthProvider) => authenticate(service, { session: false });
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+  oAuth = (service: OAuthProvider) => passport.authenticate(service, { session: false });
 
   /**
    * @description Authorize user access according to API rules

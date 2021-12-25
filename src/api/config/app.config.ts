@@ -112,7 +112,7 @@ export class ExpressConfiguration {
      * @see https://www.npmjs.com/package/body-parser
      */
     this.application.use( Express.urlencoded({ extended : false }) );
-    this.application.use( Express.json({ type: CONTENT_TYPE }) );
+    this.application.use( Express.json() );
 
     /**
      * Prevent request parameter pollution

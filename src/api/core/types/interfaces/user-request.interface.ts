@@ -1,3 +1,4 @@
+import { User } from '@models/user.model';
 import { IRequest, IMedia } from '@interfaces';
 
 /**
@@ -5,7 +6,7 @@ import { IRequest, IMedia } from '@interfaces';
  */
 export interface IUserRequest extends IRequest {
   user?: any;
-  logIn?: (user, { session }) => Promise<void>,
+  logIn: (user: User, done: (err: any) => void) => void,
   files?: IMedia[],
   body: {
     token?: string,
@@ -16,7 +17,7 @@ export interface IUserRequest extends IRequest {
   }
   query: {
     email?: string,
-    page?: any,
-    perPage?: any
+    page?: string,
+    perPage?: string
   }
 }

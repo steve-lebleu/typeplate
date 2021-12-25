@@ -27,6 +27,6 @@ export class UploadError extends TypeplateError implements IHTTPError {
     super('File upload was failed');
     this.statusCode = 400;
     this.statusText = error.name;
-    this.errors = [ error.message ];
+    this.errors = [ error.message || error.code];
   }
 }

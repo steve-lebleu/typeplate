@@ -6,6 +6,11 @@ import { ValidationErrorItem } from 'joi';
 export interface IError {
 
   /**
+   * @description Specific error message for some errors
+   */
+  code?: string;
+
+  /**
    * @description Error name
    */
   name: string;
@@ -58,7 +63,7 @@ export interface IError {
   /**
    * @description Joi error descriptor
    */
-   isJoi?: boolean;
+  isJoi?: boolean;
 
   /**
    * @description Validation error message

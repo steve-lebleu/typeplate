@@ -13,7 +13,7 @@ let { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 const { user } = require(process.cwd() + '/test/utils/fixtures');
 const { doRequest, doQueryRequest, doFormRequest, dataOk } = require(process.cwd() + '/test/utils');
 
-describe('Media routes', function () {
+describe.only('Media routes', function () {
   
   let agent, _adminToken, _unauthorizedToken, _archive, _audio, _document, _image, _video;
 

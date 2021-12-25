@@ -61,7 +61,7 @@ import { IMediaRequest, IResponse, IUploadOptions, IMedia } from '@interfaces';
 
     middleware(req, res, (err: Error) => {
       if(err) {
-        return next(err instanceof MulterError ? err : new MulterError(err.message) );
+        return next(err instanceof MulterError ? err : new MulterError(err.message) as Error);
       } else if (typeof req.files === 'undefined') {
         if (req.url.includes('medias')) {
           return next(new Error('Binary data cannot be found'));

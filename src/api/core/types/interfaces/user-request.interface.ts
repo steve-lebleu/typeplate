@@ -1,11 +1,10 @@
 import { User } from '@models/user.model';
-import { IRequest, IMedia } from '@interfaces';
-
+import { IRequest, IMedia, IUserQueryString } from '@interfaces';
 /**
  * @description
  */
 export interface IUserRequest extends IRequest {
-  user?: any;
+  user?: Record<string,unknown>;
   logIn: (user: User, done: (err: any) => void) => void,
   files?: IMedia[],
   body: {

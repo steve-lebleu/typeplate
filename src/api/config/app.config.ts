@@ -1,6 +1,5 @@
 import * as Express from 'express';
 import * as Hpp from 'hpp';
-import * as BodyParser from 'body-parser';
 import * as Cors from 'cors';
 import * as Compression from 'compression';
 import * as RateLimit from 'express-rate-limit';
@@ -112,8 +111,8 @@ export class ExpressConfiguration {
      *
      * @see https://www.npmjs.com/package/body-parser
      */
-    this.application.use( BodyParser.urlencoded({ extended : false }) );
-    this.application.use( BodyParser.json({ type: CONTENT_TYPE }) );
+    this.application.use( Express.urlencoded({ extended : false }) );
+    this.application.use( Express.json({ type: CONTENT_TYPE }) );
 
     /**
      * Prevent request parameter pollution

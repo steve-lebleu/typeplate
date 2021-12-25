@@ -62,16 +62,6 @@ export class Environment {
   private constructor() {}
 
   /**
-   * @description Environment singleton getter
-   */
-  static get(): Environment {
-    if (!Environment.instance) {
-      Environment.instance = new Environment();
-    }
-    return Environment.instance;
-  }
-
-  /**
    * @description Env variables exhaustive key list
    */
   get keys(): string[] {
@@ -701,6 +691,16 @@ export class Environment {
       }
 
     }
+  }
+
+  /**
+   * @description Environment singleton getter
+   */
+  static get(): Environment {
+    if (!Environment.instance) {
+      Environment.instance = new Environment();
+    }
+    return Environment.instance;
   }
 
   /**

@@ -49,7 +49,7 @@ class UserController {
    */
   @Safe()
   async loggedIn (req: IUserRequest, res: IResponse): Promise<void> {
-    res.locals.data = new User(req.user);
+    res.locals.data = new User(req.user as Record<string,unknown>);
   }
 
   /**

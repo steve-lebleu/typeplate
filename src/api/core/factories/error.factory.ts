@@ -22,6 +22,7 @@ export class ErrorFactory {
       case 'MulterError':
         return new UploadError(error);
       case 'EntityNotFound':
+      case 'EntityNotFoundError':
       case 'MustBeEntityError':
         return new NotFoundError(error);
       case 'ValidationError':

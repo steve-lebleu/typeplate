@@ -1,6 +1,5 @@
 import * as Express from 'express';
 import * as Hpp from 'hpp';
-import * as BodyParser from 'body-parser';
 import * as Cors from 'cors';
 import * as Compression from 'compression';
 import * as RateLimit from 'express-rate-limit';
@@ -42,9 +41,9 @@ export class ExpressConfiguration {
   /**
    * @description Middlewares options
    */
-  private options = {
+  private options: Record<string, unknown> = {
     cors: {
-      origin: (origin, callback: ( error: Error, status?: boolean ) => void) => {
+      origin: (origin: string, callback: ( error: Error, status?: boolean ) => void) => {
         if (AUTHORIZED.indexOf(origin) !== -1) {
           callback(null, true);
         } else {
@@ -112,8 +111,8 @@ export class ExpressConfiguration {
      *
      * @see https://www.npmjs.com/package/body-parser
      */
-    this.application.use( BodyParser.urlencoded({ extended : false }) );
-    this.application.use( BodyParser.json({ type: CONTENT_TYPE }) );
+    this.application.use( Express.urlencoded({ extended : false }) );
+    this.application.use( Express.json() );
 
     /**
      * Prevent request parameter pollution
@@ -155,7 +154,7 @@ export class ExpressConfiguration {
     /**
      * Plug available auth providers
      */
-     Authentication.plug();
+    Authentication.plug();
 
     /**
      * Configure API Rate limit
@@ -182,6 +181,7 @@ export class ExpressConfiguration {
      * - Sanitizer
      * - Resolver
      */
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     this.application.use(`/api/${API_VERSION}`, RateLimit(this.options.rate), Cache.read, ProxyRouter.map(), Sanitize.sanitize, Resolve.write);
 
     /**

@@ -1,4 +1,5 @@
 import { Controller } from '@classes';
+import { Media } from '@models/media.model';
 import { MediaService } from '@services/media.service';
 
 /**
@@ -20,10 +21,11 @@ const Safe = (): any => {
         result
           .then(() => next())
           .catch(e => {
+            const scopedError = e as Error;
             if (files && files.length > 0) {
-              files.map(f => MediaService.remove(f))
+              files.map((f: Media) => MediaService.remove(f))
             }
-            next(e);
+            next(scopedError);
           });
       }
     }

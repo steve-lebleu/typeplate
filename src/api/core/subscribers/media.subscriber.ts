@@ -45,7 +45,7 @@ export class MediaSubscriber implements EntitySubscriberInterface<Media> {
    * @description Called after media update.
    */
   afterUpdate(event: UpdateEvent<Media>): void {
-    MediaService.rescale(event.entity);
+    MediaService.rescale(event.entity as Media);
     MediaService.remove(event.databaseEntity);
     CacheService.refresh('medias');
   }

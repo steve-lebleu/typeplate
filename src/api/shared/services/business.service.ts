@@ -32,7 +32,7 @@ export abstract class BusinessService {
     return this.BUSINESS_RULES
       .filter(rule => rule.methods.includes(req.method as HttpMethod))
       .reduce((acc, current) => {
-        if (!current.check(req.user, entity, req)) {
+        if (!current.check(req.user as User, entity, req)) {
           throw new BusinessError( { name: 'BusinessError', statusCode: current.statusCode, message: current.description } );
         }
         return acc && true;

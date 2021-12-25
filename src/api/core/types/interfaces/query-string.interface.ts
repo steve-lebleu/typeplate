@@ -1,4 +1,4 @@
 export interface IQueryString {
-  page?: number;
-  perPage?: number;
+  page?: string|number;
+  perPage?: string|number;
 }

@@ -16,7 +16,7 @@ jobs:
       - name: Setup node.js environment
         uses: actions/setup-node@v1
         with:
-          node-version: '14.16'
+          node-version: '16.6.2'
       - name: Setup MySQL server
         uses: mirromutth/mysql-action@v1.1
         with:
@@ -67,7 +67,7 @@ jobs:
       - name: Setup node.js environment
         uses: actions/setup-node@v1
         with:
-          node-version: '14.16'
+          node-version: '16.6.2'
       - name: Create release
         uses: konfer-be/action-create-release-from-tag@v1.0.2
         with:

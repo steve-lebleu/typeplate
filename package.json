@@ -78,7 +78,7 @@
   },
   "dependencies": {
     "@hapi/boom": "9.1.4",
-    "axios": "0.24.0",
+    "axios": "1.6.0",
     "bcrypt": "5.0.1",
     "cliam": "1.2.6",
     "compression": "1.7.4",

@@ -110,7 +110,7 @@
     "passport-linkedin-oauth2": "2.0.0",
     "pluralize": "8.0.0",
     "reflect-metadata": "0.1.13",
-    "typeorm": "0.2.41",
+    "typeorm": "0.3.0",
     "uuid": "8.3.2",
     "winston": "3.3.3"
   },

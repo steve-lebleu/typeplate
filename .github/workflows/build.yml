@@ -13,9 +13,9 @@ jobs:
       - name: Github checkout
         uses: actions/checkout@v1
       - name: Setup node.js environment
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: '16.6.2'
+          node-version: '18.19.0'
       - name: Setup MySQL server
         uses: mirromutth/mysql-action@v1.1
         with:
@@ -35,7 +35,7 @@ jobs:
           echo LINKEDIN_CONSUMER_ID = "${{ secrets.LINKEDIN_CONSUMER_ID }}" >> ./dist/env/test.env
           echo LINKEDIN_CONSUMER_SECRET = "${{ secrets.LINKEDIN_CONSUMER_SECRET }}" >> ./dist/env/test.env
       - name: Install global dependencies
-        run:  npm i typescript -g && npm i typeorm -g 
+        run:  npm i typescript@5.3.3 -g && npm i typeorm@0.2.41 -g 
       - name: Install local dependencies
         run: npm i
       - name: Compile Typescript files

@@ -48,7 +48,7 @@ jobs:
     needs: [ build ]
     env:
       RUNNER: github
-      NODE_ENV: dev
+      NODE_ENV: test
     steps:
       - name: Github checkout
         uses: actions/checkout@v4

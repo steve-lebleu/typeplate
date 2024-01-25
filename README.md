@@ -11,8 +11,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/steve-lebleu/typeplate/badge)](https://www.codefactor.io/repository/github/steve-lebleu/typeplate)
 ![GitHub Release](https://img.shields.io/github/v/release/steve-lebleu/typeplate?logo=Github)
 ![Known Vulnerabilities](https://snyk.io/test/github/steve-lebleu/typeplate/badge.svg)
-
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+![GitHub License](https://img.shields.io/github/license/steve-lebleu/typeplate?color=%230A7BBC)
 
 Ready to use RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript)  [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘
 

@@ -49,7 +49,7 @@ jobs:
             dist
           retention-days: 3
   test:
-    name: E2E & Unit tests
+    name: Test
     runs-on: ubuntu-latest
     needs: [ build ]
     env:
@@ -62,7 +62,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18.19.0'
-      - name: Install local Node.js dependencies
+      - name: Install global dependencies
+        run:  npm i typescript@5.3.3 -g && npm i typeorm@0.2.41 -g 
+      - name: Install local dependencies
         run:  npm i
       - name: Create dist directory
         run: mkdir dist

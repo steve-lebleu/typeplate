@@ -55,6 +55,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18.19.0'
+      - name: Setup MySQL server
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '5.7' 
+          mysql database: 'typeplate_test'
+          mysql root password: passw0rd 
       - name: Install global dependencies
         run:  npm i typescript@5.3.3 -g && npm i typeorm@0.2.41 -g 
       - name: Install local dependencies
@@ -66,12 +72,6 @@ jobs:
         with:
           name: build-files
           path: dist
-      - name: Setup MySQL server
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          mysql version: '5.7' 
-          mysql database: 'typeplate_test'
-          mysql root password: passw0rd 
       - name: Synchronize database schema
         run: typeorm schema:sync
       - name: Execute tests suites

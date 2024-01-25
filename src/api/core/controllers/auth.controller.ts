@@ -143,7 +143,7 @@ class AuthController {
       throw badRequest('User token cannot be read');
     }
 
-    const user = await repository.findOneOrFail(decoded.sub as string);
+    const user = await repository.findOneOrFail(decoded.sub);
 
     if ( user.status !== STATUS.REGISTERED && user.status !== STATUS.REVIEWED ) {
       throw badRequest('User status cannot be confirmed');

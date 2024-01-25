@@ -21,13 +21,13 @@
     "es2017",
     "mocha"
   ],
-  "homepage": "https://github.com/konfer-be/typeplate#readme",
+  "homepage": "https://github.com/steve-lebleu/typeplate#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/konfer-be/typeplate.git"
+    "url": "git+https://github.com/steve-lebleu/typeplate.git"
   },
   "bugs": {
-    "url": "https://github.com/konfer-be/typeplate/issues"
+    "url": "https://github.com/steve-lebleu/typeplate/issues"
   },
   "main": "./dist/api/app.bootstrap.js",
   "auto-changelog": {
@@ -110,7 +110,7 @@
     "passport-linkedin-oauth2": "2.0.0",
     "pluralize": "8.0.0",
     "reflect-metadata": "^0.2.1",
-    "typeorm": "^0.2.31",
+    "typeorm": "^0.2.41",
     "uuid": "8.3.2",
     "winston": "^3.11.0"
   },

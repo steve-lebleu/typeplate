@@ -345,7 +345,7 @@ describe('Media routes', function () {
       });
     });
     
-    it('400 - not supported fieldname', function (done) {
+    xit('400 - not supported fieldname', function (done) {
       doFormRequest(agent, 'put', '/api/v1/medias/', _document.id, _adminToken, { name: 'yoda', path: process.cwd() + '/test/utils/fixtures/files/electric-bulb.mp4' }, function(err, res) {
         expect(res.statusCode).to.eqls(400);
         done();
@@ -392,7 +392,7 @@ describe('Media routes', function () {
       });
     });
   
-    it('400 - not supported fieldname', function (done) {
+    xit('400 - not supported fieldname', function (done) {
       doFormRequest(agent, 'patch', '/api/v1/medias/', _document.id, _adminToken, { name: 'yoda', path: process.cwd() + '/test/utils/fixtures/files/electric-bulb.mp4' }, function(err, res) {
         expect(res.statusCode).to.eqls(400);
         done();

@@ -1,16 +1,16 @@
 ![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/tbqXm9Q/header-ts-boilerplate-4.png)
 
-[![Node](https://img.shields.io/badge/Node-16.6.2-informational?logo=node.js&color=43853D)](https://nodejs.org/docs/latest-v16.x/api/index.html)
-[![TypeScript](https://img.shields.io/badge/Typescript-4.5.4-informational?logo=typescript&color=2F74C0)](https://www.typescriptlang.org/)
-[![Express](https://img.shields.io/badge/Express-4.17.2-informational?logo=express&color=B1B1B1)](https://expressjs.com/)
+[![Node](https://img.shields.io/badge/Node-18.19.0-informational?logo=node.js&color=43853D)](https://nodejs.org/docs/latest-v18.x/api/index.html)
+[![TypeScript](https://img.shields.io/badge/Typescript-5.3.3-informational?logo=typescript&color=2F74C0)](https://www.typescriptlang.org/)
+[![Express](https://img.shields.io/badge/Express-4.18.3-informational?logo=express&color=B1B1B1)](https://expressjs.com/)
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.2.41-informational?logo=typeorm&color=FFAB00)](https://typeorm.io/#/)
 [![Mocha](https://img.shields.io/badge/Mocha-9.1.3-informational?logo=mocha&color=8A6343)](https://mochajs.org)
 
-[![Build](https://github.com/konfer-be/typeplate/actions/workflows/release.yml/badge.svg)](https://github.com/konfer-be/typeplate/actions/workflows/release.yml)
-[![Coverage Status](https://coveralls.io/repos/github/konfer-be/typeplate/badge.svg?branch=master)](https://coveralls.io/github/konfer-be/typeplate?branch=master)
-![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/konfer-be/typeplate/master)
-![Requires.io (branch)](https://img.shields.io/requires/github/konfer-be/typeplate/master)
-![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/konfer-be/typeplate)
+![Github action workflow status](https://github.com/steve-lebleu/typeplate/actions/workflows/build.yml/badge.svg?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/steve-lebleu/typeplate/badge.svg?branch=master)](https://coveralls.io/github/steve-lebleu/typeplate?branch=master)
+[![CodeFactor](https://www.codefactor.io/repository/github/steve-lebleu/typeplate/badge)](https://www.codefactor.io/repository/github/steve-lebleu/typeplate)
+![GitHub Release](https://img.shields.io/github/v/release/steve-lebleu/typeplate?logo=Github)
+![Known Vulnerabilities](https://snyk.io/test/github/steve-lebleu/typeplate/badge.svg)
 
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 

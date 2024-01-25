@@ -17,12 +17,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18.19.0'
-      - name: Setup MySQL server
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          mysql version: '5.7' 
-          mysql database: 'typeplate_test'
-          mysql root password: passw0rd 
       - name: Create directories
         run: mkdir -p ./dist/env && cp ./src/env/template.env ./dist/env/test.env
       - name: Setup .env file
@@ -73,6 +67,12 @@ jobs:
         with:
           name: build-files
           path: dist
+      - name: Setup MySQL server
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '5.7' 
+          mysql database: 'typeplate_test'
+          mysql root password: passw0rd 
       - name: Synchronize database schema
         run: typeorm schema:sync
       - name: Execute tests suites

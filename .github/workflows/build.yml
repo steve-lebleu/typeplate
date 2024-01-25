@@ -1,7 +1,7 @@
 name: Build
 on:
   push:
-    branches: [ dev, main, hotfix/*, feature/*, release/* ]
+    branches: [ dev, master, hotfix/*, feature/*, release/* ]
 jobs:
   build:
     name: Build
@@ -11,7 +11,7 @@ jobs:
       NODE_ENV: test
     steps:
       - name: Github checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
       - name: Setup node.js environment
         uses: actions/setup-node@v4
         with:
@@ -40,9 +40,39 @@ jobs:
         run: npm i
       - name: Compile Typescript files
         run: tsc
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: |
+            dist
+          retention-days: 3
+  test:
+    name: E2E & Unit tests
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    env:
+      RUNNER: github
+      NODE_ENV: dev
+    steps:
+      - name: Github checkout
+        uses: actions/checkout@v4
+      - name: Setup node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.19.0'
+      - name: Install local Node.js dependencies
+        run:  npm i
+      - name: Create dist directory
+        run: mkdir dist
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: dist
       - name: Synchronize database schema
         run: typeorm schema:sync
-      - name: Execute tests sets
+      - name: Execute tests suites
         run: npm run ci:test
       - name: Publish to coveralls.io
         uses: coverallsapp/github-action@v1.1.2

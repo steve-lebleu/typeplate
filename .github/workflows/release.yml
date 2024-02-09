@@ -16,7 +16,7 @@ jobs:
       - name: Setup node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '18.19.0'
+          node-version: '20.9.0'
       - name: Create directories
         run: mkdir -p ./dist/env && cp ./src/env/template.env ./dist/env/test.env
       - name: Setup .env file
@@ -99,8 +99,8 @@ jobs:
       - name: Setup node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '16.19.0'
+          node-version: '20.9.0'
       - name: Create release
-        uses: konfer-be/action-create-release-from-tag@v1.0.2
+        uses: konfer-be/action-create-release-from-tag@v1.0.12
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

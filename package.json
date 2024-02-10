@@ -47,9 +47,10 @@
     "kickstart:staging": "npm run kickstart && cp ./src/env/staging.env ./dist/env/staging.env && tsc",
     "kickstart:production": "npm run kickstart && cp ./src/env/production.env ./dist/env/production.env && tsc",
     "kickstart:test": "npm run kickstart && cp ./src/env/test.env ./dist/env/test.env && tsc",
+    "start": "nodemon .",
     "test": "nyc --reporter=html --report-dir=./reports/nyc-coverage npm-run-all -s test:*",
     "test:unit": "./node_modules/.bin/mocha ./test/units/00-application.unit.test.js --exit --reporter spec --timeout 10000 --env test",
-    "test:e2e": "typeorm schema:drop && typeorm schema:sync && ./node_modules/.bin/mocha ./test/e2e/00-api.e2e.test.js --exit --reporter spec --timeout 10000 --env test",
+    "test:e2e": "./node_modules/.bin/mocha ./test/e2e/00-api.e2e.test.js --exit --reporter spec --timeout 10000 --env test",
     "version": "npm run todo && git add package.json && git add README.md && auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\" --no-verify"
   },
   "_moduleAliases": {

@@ -13,7 +13,7 @@ import { RefreshToken } from '@models/refresh-token.model';
 import { IOauthResponse } from '@interfaces';
 
 import { hash } from '@utils/string.util';
-import { Database } from '@config/database.config';
+import { ApplicationDataSource } from '@config/database.config';
 
 /**
  * @description
@@ -51,9 +51,9 @@ class AuthService {
       return badData('Access token cannot be retrieved');
     }
     const tokenType = 'Bearer';
-    const oldToken = await Database.dataSource.getRepository(RefreshToken).findOne({ where : { user: { id: user.id } } });
+    const oldToken = await ApplicationDataSource.getRepository(RefreshToken).findOne({ where : { user: { id: user.id } } });
     if (oldToken) {
-      await Database.dataSource.getRepository(RefreshToken).remove(oldToken)
+      await ApplicationDataSource.getRepository(RefreshToken).remove(oldToken)
     }
     const refreshToken = RefreshTokenRepository.generate(user).token;
     const expiresIn = Dayjs().add(ACCESS_TOKEN.DURATION, 'minutes');
@@ -71,10 +71,10 @@ class AuthService {
       return badData('User is not an instance of User');
     }
 
-    const oldToken = await Database.dataSource.getRepository(RefreshToken).findOne({ where : { user: { id: user.id } } });
+    const oldToken = await ApplicationDataSource.getRepository(RefreshToken).findOne({ where : { user: { id: user.id } } });
 
     if (oldToken) {
-      await Database.dataSource.getRepository(RefreshToken).remove(oldToken)
+      await ApplicationDataSource.getRepository(RefreshToken).remove(oldToken)
     }
   }
 
@@ -98,7 +98,7 @@ class AuthService {
         picture: profile.photos.slice().shift()?.value,
         password: hash(email, 16)
       }
-      const user = await UserRepository.oAuthLogin(iRegistrable) as User;
+      const user = await UserRepository.oAuthLogin(iRegistrable);
       return next(null, user);
     } catch (err) {
       return next(err, false);
@@ -112,8 +112,8 @@ class AuthService {
    */
   async jwt(payload: { sub }, next: (e?: Error, v?: User|boolean) => void): Promise<void> {
     try {
-      const userRepository = Database.dataSource.getRepository(User);
-      const user = await userRepository.findOne( payload.sub ) as User;
+      const userRepository = ApplicationDataSource.getRepository(User);
+      const user = await userRepository.findOne( { where: { id: payload.sub } });
       if (user) {
         return next(null, user);
       }

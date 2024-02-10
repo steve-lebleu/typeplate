@@ -5,7 +5,7 @@ const fs = require('fs');
 const { clone } = require('lodash');
 
 const { Environment, TYPEORM } = require(process.cwd() + '/dist/api/config/environment.config');
-const { Database } = require(process.cwd() + '/dist/api/config/database.config');
+const { ApplicationDataSource } = require(process.cwd() + '/dist/api/config/database.config');
 const { LoggerConfiguration } = require(process.cwd() + '/dist/api/config/logger.config');
 
 describe('Config', function () {
@@ -160,7 +160,10 @@ describe('Config', function () {
           done();
         });
 
-        Database.connect(options);
+        ApplicationDataSource.initialize().then(() => {}).catch((error) => {
+          process.stdout.write(`error: ${error.message}`);
+          process.exit(1);
+        })
       })
 
     })

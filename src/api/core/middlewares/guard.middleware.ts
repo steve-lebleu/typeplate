@@ -54,7 +54,7 @@ class Guard {
 
     if (!roles.includes(user.role)) {
       return next( forbidden('Forbidden area') );
-    } else if (user.role !== ROLE.admin && ( req.params.userId && parseInt(req.params.userId, 10) !== user.id ) ) {
+    } else if (user.role as ROLE !== ROLE.admin && ( req.params.userId && parseInt(req.params.userId, 10) !== user.id ) ) {
       return next( forbidden('Forbidden area') );
     }
 

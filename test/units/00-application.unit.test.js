@@ -2,7 +2,7 @@ let { server } = require(process.cwd() + '/dist/api/app.bootstrap');
 
 describe('Units tests', () => {
 
-  before( () => {});
+  before( () => {} );
 
   after( () => {
     server.close();

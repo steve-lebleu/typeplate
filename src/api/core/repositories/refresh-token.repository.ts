@@ -1,9 +1,9 @@
 import { User } from '@models/user.model';
 import { RefreshToken } from '@models/refresh-token.model';
 import { RefreshTokenFactory } from '@factories/refresh-token.factory';
-import { Database } from '@config/database.config';
+import { ApplicationDataSource } from '@config/database.config';
 
-export const RefreshTokenRepository = Database.dataSource.getRepository(RefreshToken).extend({
+export const RefreshTokenRepository = ApplicationDataSource.getRepository(RefreshToken).extend({
   /**
    * @description Generate a new refresh token
    *
@@ -11,7 +11,7 @@ export const RefreshTokenRepository = Database.dataSource.getRepository(RefreshT
    */
   generate: (user: User): RefreshToken => {
     const refreshToken = RefreshTokenFactory.get(user);
-    void Database.dataSource.getRepository(RefreshToken).save(refreshToken);
+    void ApplicationDataSource.getRepository(RefreshToken).save(refreshToken);
     return refreshToken;
   }
 });

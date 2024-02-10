@@ -3,12 +3,12 @@ import { omitBy, isNil } from 'lodash';
 import { Media } from '@models/media.model';
 import { IMediaQueryString } from '@interfaces';
 import { getMimeTypesOfType } from '@utils/string.util';
-import { Database } from '@config/database.config';
+import { ApplicationDataSource } from '@config/database.config';
 
-export const MediaRepository = Database.dataSource.getRepository(Media).extend({
+export const MediaRepository = ApplicationDataSource.getRepository(Media).extend({
 
   list: async ({ page = 1, perPage = 30, path, fieldname, filename, size, mimetype, owner, type }: IMediaQueryString): Promise<{result: Media[], total: number}> => {
-    const repository = Database.dataSource.getRepository(Media);
+    const repository = ApplicationDataSource.getRepository(Media);
 
     const options = omitBy({ path, fieldname, filename, size, mimetype, owner, type }, isNil) as IMediaQueryString;
 

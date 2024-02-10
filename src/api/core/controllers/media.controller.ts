@@ -1,6 +1,6 @@
 import { clone } from 'lodash';
 
-import { Database } from '@config/database.config';
+import { ApplicationDataSource } from '@config/database.config';
 import { IMedia, IMediaRequest, IResponse } from '@interfaces';
 import { Safe } from '@decorators/safe.decorator';
 import { MediaRepository } from '@repositories/media.repository';
@@ -40,7 +40,7 @@ class MediaController {
    */
   @Safe()
   async get(req: IMediaRequest, res: IResponse): Promise<void> {
-    const repository = Database.dataSource.getRepository(Media);
+    const repository = ApplicationDataSource.getRepository(Media);
     const media = await repository.findOneOrFail({ where: { id: req.params.mediaId }, relations: ['owner'] }) as Media;
     res.locals.data = media;
   }
@@ -71,7 +71,7 @@ class MediaController {
    */
   @Safe()
   async create(req: IMediaRequest, res: IResponse): Promise<void> {
-    const repository = Database.dataSource.getRepository(Media);
+    const repository = ApplicationDataSource.getRepository(Media);
     const medias = [].concat(req.files).map( (file) => new Media(file as IMedia));
     await repository.save(medias);
     res.locals.data = medias;
@@ -87,7 +87,7 @@ class MediaController {
    */
   @Safe()
   async update(req: IMediaRequest, res: IResponse): Promise<void> {
-    const repository = Database.dataSource.getRepository(Media);
+    const repository = ApplicationDataSource.getRepository(Media);
     const media = clone(res.locals.data) as Media;
     repository.merge(media, req.files[0] as unknown);
     await repository.save(media);
@@ -104,7 +104,7 @@ class MediaController {
    */
   @Safe()
   async remove (req: IMediaRequest, res: IResponse): Promise<void> {
-    const repository = Database.dataSource.getRepository(Media);
+    const repository = ApplicationDataSource.getRepository(Media);
     const media = clone(res.locals.data) as Media;
     await repository.remove(media);
   }

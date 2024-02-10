@@ -1,11 +1,11 @@
-import { forbidden } from '@hapi/boom';
+import { forbidden, notFound } from '@hapi/boom';
 
 import { User } from '@models/user.model';
 import { UserRepository } from '@repositories/user.repository';
 import { IUserRequest, IResponse } from '@interfaces';
 import { Safe } from '@decorators/safe.decorator';
 import { paginate } from '@utils/pagination.util';
-import { Database } from '@config/database.config';
+import { ApplicationDataSource } from '@config/database.config';
 
 /**
  * Manage incoming requests for api/{version}/users
@@ -59,7 +59,7 @@ class UserController {
    */
   @Safe()
   async create (req: IUserRequest, res: IResponse): Promise<void> {
-    const repository = Database.dataSource.getRepository(User);
+    const repository = ApplicationDataSource.getRepository(User);
     const user = new User(req.body);
     const savedUser = await repository.save(user);
     res.locals.data = savedUser;
@@ -73,8 +73,8 @@ class UserController {
    */
   @Safe()
   async update (req: IUserRequest, res: IResponse): Promise<void> {
-    const repository = Database.dataSource.getRepository(User);
-    const user = await repository.findOneOrFail(req.params.userId);
+    const repository = ApplicationDataSource.getRepository(User);
+    const user = await repository.findOneOrFail({ where: { id: req.params.userId } });
     if (req.body.password && req.body.isUpdatePassword) {
       const pwdMatch = await user.passwordMatches(req.body.passwordToRevoke);
       if (!pwdMatch) {
@@ -98,7 +98,7 @@ class UserController {
     res.locals.data = response.result;
     res.locals.meta = {
       total: response.total,
-      pagination: paginate( parseInt(req.query.page, 10), parseInt(req.query.perPage, 10), response.total as number )
+      pagination: paginate( parseInt(req.query.page, 10), parseInt(req.query.perPage, 10), response.total )
     }
   }
 
@@ -110,8 +110,13 @@ class UserController {
    */
   @Safe()
   async remove (req: IUserRequest, res: IResponse): Promise<void> {
-    const repository = Database.dataSource.getRepository(User);
-    const user = await repository.findOneOrFail(req.params.userId);
+    const repository = ApplicationDataSource.getRepository(User);
+    const user = await repository.findOneOrFail({ where: { id: req.params.userId } });
+
+    if (!user) {
+      throw notFound('User not found');
+    }
+
     void repository.remove(user);
   }
 }

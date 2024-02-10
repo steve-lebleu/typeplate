@@ -5,9 +5,9 @@ import { badRequest, notFound, unauthorized } from '@hapi/boom';
 
 import { User } from '@models/user.model';
 import { IRegistrable, ITokenOptions, IUserQueryString } from '@interfaces';
-import { Database } from '@config/database.config';
+import { ApplicationDataSource } from '@config/database.config';
 
-export const UserRepository = Database.dataSource.getRepository(User).extend({
+export const UserRepository = ApplicationDataSource.getRepository(User).extend({
   /**
    * @description Get one user
    *
@@ -16,12 +16,12 @@ export const UserRepository = Database.dataSource.getRepository(User).extend({
    */
   one: async (id: number): Promise<User> => {
 
-    const repository = Database.dataSource.getRepository(User);
+    const repository = ApplicationDataSource.getRepository(User);
     const options: { id: number } = omitBy({ id }, isNil) as { id: number };
 
     const user = await repository.findOne({
       where: options
-    }) as User;
+    });
 
     if (!user) {
       throw notFound('User not found');
@@ -35,7 +35,7 @@ export const UserRepository = Database.dataSource.getRepository(User).extend({
    */
   list: async ({ page = 1, perPage = 30, username, email, role, status }: IUserQueryString): Promise<{result: User[], total: number}> => {
 
-    const repository = Database.dataSource.getRepository(User);
+    const repository = ApplicationDataSource.getRepository(User);
     const options = omitBy({ username, email, role, status }, isNil) as IUserQueryString;
 
     const query = repository
@@ -79,7 +79,7 @@ export const UserRepository = Database.dataSource.getRepository(User).extend({
       throw badRequest('An email or an API key is required to generate a token')
     }
 
-    const user = await Database.dataSource.getRepository(User).findOne({
+    const user = await ApplicationDataSource.getRepository(User).findOne({
       where : email ? { email } : { apikey }
     });
 
@@ -105,11 +105,11 @@ export const UserRepository = Database.dataSource.getRepository(User).extend({
 
     const { email, username, password } = options;
 
-    const userRepository = Database.dataSource.getRepository(User);
+    const userRepository = ApplicationDataSource.getRepository(User);
 
     let user = await userRepository.findOne({
       where: [ { email }, { username } ],
-    }) as User;
+    });
 
     if (user) {
       if (!user.username) {

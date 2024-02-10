@@ -3,7 +3,7 @@ import { badRequest, notFound } from '@hapi/boom';
 
 import * as Jwt from 'jwt-simple';
 
-import { Database } from '@config/database.config';
+import { ApplicationDataSource } from '@config/database.config';
 import { ACCESS_TOKEN } from '@config/environment.config';
 import { IResponse, IUserRequest, ITokenOptions } from '@interfaces';
 import { User } from '@models/user.model';
@@ -44,7 +44,7 @@ class AuthController {
    */
   @Safe()
   async register(req: Request, res: IResponse): Promise<void> {
-    const repository = Database.dataSource.getRepository(User);
+    const repository = ApplicationDataSource.getRepository(User);
     const user = new User(req.body as Record<string,unknown>);
     const count = await repository.count();
     if (count === 0) {
@@ -102,7 +102,7 @@ class AuthController {
    */
   @Safe()
   async refresh(req: Request, res: IResponse, next: (e?: Error) => void): Promise<void> {
-    const refreshTokenRepository = Database.dataSource.getRepository(RefreshToken);
+    const refreshTokenRepository = ApplicationDataSource.getRepository(RefreshToken);
 
     const { token } = req.body as { token: { refreshToken?: string } };
 
@@ -134,7 +134,7 @@ class AuthController {
    @Safe()
    async confirm (req: IUserRequest, res: IResponse): Promise<void> {
 
-    const repository = Database.dataSource.getRepository(User);
+    const repository = ApplicationDataSource.getRepository(User);
 
     const decoded = Jwt.decode(req.body.token, ACCESS_TOKEN.SECRET) as { sub };
     if (!decoded) {
@@ -164,7 +164,7 @@ class AuthController {
    @Safe()
    async requestPassword (req: IUserRequest, res: IResponse): Promise<void> {
 
-    const repository = Database.dataSource.getRepository(User);
+    const repository = ApplicationDataSource.getRepository(User);
 
     const user = await repository.findOne( { where: { email: req.query.email } }) as User;
 

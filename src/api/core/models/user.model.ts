@@ -94,6 +94,21 @@ export class User implements IModel {
     Object.assign(this, payload);
   }
 
+  /**
+   * @description Filter on allowed entity fields
+   */
+  get whitelist(): string[] {
+    return [
+      'id',
+      'username',
+      'avatar',
+      'email',
+      'role',
+      'createdAt' ,
+      'updatedAt'
+    ]
+  }
+
   @AfterLoad()
   storeTemporaryPassword() : void {
     this.temporaryPassword = this.password;
@@ -125,7 +140,7 @@ export class User implements IModel {
   /**
    * @description Generate JWT access token
    */
-   token(duration: number = null): string {
+  token(duration: number = null): string {
     const payload = {
       exp: Dayjs().add(duration || ACCESS_TOKEN.DURATION, 'minutes').unix(),
       iat: Dayjs().unix(),
@@ -133,20 +148,4 @@ export class User implements IModel {
     };
     return Jwt.encode(payload, ACCESS_TOKEN.SECRET);
   }
-
-  /**
-   * @description Filter on allowed entity fields
-   */
-  get whitelist(): string[] {
-    return [
-      'id',
-      'username',
-      'avatar',
-      'email',
-      'role',
-      'createdAt' ,
-      'updatedAt'
-    ]
-  }
-
 }

@@ -42,7 +42,7 @@
     "init:repository": "rm -rf ./.git && git init && git add . --all && git commit -m \"First commit\"",
     "ci:test": "nyc --reporter=lcov --report-dir=./reports/coverage npm-run-all -s test:*",
     "doc": "apidoc -i src/ -o docs/apidoc/",
-    "kickstart": "npm i typescript@5.3.3 -g && npm i typeorm@0.2.32 -g && npm i rsgen -g && npm i && mkdir -p ./dist/env",
+    "kickstart": "npm i typescript@5.3.3 -g && npm i typeorm@0.3.20 -g && npm i rsgen -g && npm i && mkdir -p ./dist/env",
     "kickstart:dev": "npm run kickstart && npm run init && cp ./src/env/development.env ./dist/env/development.env  && cp ./src/env/test.env ./dist/env/test.env && tsc",
     "kickstart:staging": "npm run kickstart && cp ./src/env/staging.env ./dist/env/staging.env && tsc",
     "kickstart:production": "npm run kickstart && cp ./src/env/production.env ./dist/env/production.env && tsc",
@@ -50,7 +50,7 @@
     "start": "nodemon .",
     "test": "nyc --reporter=html --report-dir=./reports/nyc-coverage npm-run-all -s test:*",
     "test:unit": "./node_modules/.bin/mocha ./test/units/00-application.unit.test.js --exit --reporter spec --timeout 10000 --env test",
-    "test:e2e": "typeorm schema:drop -d dist/api/config/datasource.config.js && typeorm schema:sync -d dist/api/config/datasource.config.js && ./node_modules/.bin/mocha ./test/e2e/00-api.e2e.test.js --exit --reporter spec --timeout 10000 --env test",
+    "test:e2e": "mysql -u root -ppassw0rd -e 'DROP DATABASE typeplate_test; CREATE DATABASE typeplate_test' && ./node_modules/.bin/mocha ./test/e2e/00-api.e2e.test.js --exit --reporter spec --timeout 10000 --env test",
     "version": "npm run todo && git add package.json && git add README.md && auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\" --no-verify"
   },
   "_moduleAliases": {
@@ -140,6 +140,7 @@
     "rsgen": "^0.3.2",
     "sinon": "^17.0.1",
     "supertest": "^6.3.4",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "typescript-eslint": "0.0.1-alpha.0"
   }

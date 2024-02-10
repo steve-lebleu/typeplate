@@ -5,7 +5,7 @@ import { Database } from '@config/database.config';
 import { Server } from '@config/server.config';
 import { Application } from '@config/app.config';
 
-Database.connect(TYPEORM);
+const dataSource = Database.connect(TYPEORM);
 
 const application = Application;
 const server = Server.init(application).listen() as unknown;

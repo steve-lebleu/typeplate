@@ -1,7 +1,6 @@
 import * as Dayjs from 'dayjs';
 
 import { badData } from '@hapi/boom';
-import { getCustomRepository, getRepository } from 'typeorm';
 
 import { ACCESS_TOKEN } from '@config/environment.config';
 
@@ -14,6 +13,7 @@ import { RefreshToken } from '@models/refresh-token.model';
 import { IOauthResponse } from '@interfaces';
 
 import { hash } from '@utils/string.util';
+import { Database } from '@config/database.config';
 
 /**
  * @description
@@ -51,11 +51,11 @@ class AuthService {
       return badData('Access token cannot be retrieved');
     }
     const tokenType = 'Bearer';
-    const oldToken = await getRepository(RefreshToken).findOne({ where : { user } });
+    const oldToken = await Database.dataSource.getRepository(RefreshToken).findOne({ where : { user: { id: user.id } } });
     if (oldToken) {
-      await getRepository(RefreshToken).remove(oldToken)
+      await Database.dataSource.getRepository(RefreshToken).remove(oldToken)
     }
-    const refreshToken = getCustomRepository(RefreshTokenRepository).generate(user).token;
+    const refreshToken = RefreshTokenRepository.generate(user).token;
     const expiresIn = Dayjs().add(ACCESS_TOKEN.DURATION, 'minutes');
     return { tokenType, accessToken, refreshToken, expiresIn };
   }
@@ -71,10 +71,10 @@ class AuthService {
       return badData('User is not an instance of User');
     }
 
-    const oldToken = await getRepository(RefreshToken).findOne({ where : { user } });
+    const oldToken = await Database.dataSource.getRepository(RefreshToken).findOne({ where : { user: { id: user.id } } });
 
     if (oldToken) {
-      await getRepository(RefreshToken).remove(oldToken)
+      await Database.dataSource.getRepository(RefreshToken).remove(oldToken)
     }
   }
 
@@ -98,8 +98,7 @@ class AuthService {
         picture: profile.photos.slice().shift()?.value,
         password: hash(email, 16)
       }
-      const userRepository = getCustomRepository(UserRepository);
-      const user = await userRepository.oAuthLogin(iRegistrable);
+      const user = await UserRepository.oAuthLogin(iRegistrable) as User;
       return next(null, user);
     } catch (err) {
       return next(err, false);
@@ -113,14 +112,14 @@ class AuthService {
    */
   async jwt(payload: { sub }, next: (e?: Error, v?: User|boolean) => void): Promise<void> {
     try {
-      const userRepository = getRepository(User);
-      const user = await userRepository.findOne( payload.sub );
+      const userRepository = Database.dataSource.getRepository(User);
+      const user = await userRepository.findOne( payload.sub ) as User;
       if (user) {
         return next(null, user);
       }
       return next(null, false);
-    } catch (error) {
-      return next(error, false);
+    } catch (err) {
+      return next(err, false);
     }
   }
 }

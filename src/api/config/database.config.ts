@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { createConnection, Connection } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { ENV } from '@config/environment.config';
 import { Logger } from '@services/logger.service';
 
@@ -11,6 +11,8 @@ import { Logger } from '@services/logger.service';
  */
 export class Database {
 
+  static dataSource: DataSource = null;
+
   constructor () { }
 
   /**
@@ -18,26 +20,33 @@ export class Database {
    * @async
    */
   static connect(options: Record<string,unknown>): void {
-    createConnection({
-      type: options.TYPE,
-      name: options.NAME,
-      host: options.HOST,
-      port: options.PORT,
-      username: options.USER,
-      password: options.PWD,
-      database: options.DB,
-      entities: options.ENTITIES,
-      subscribers: options.SUBSCRIBERS,
-      synchronize: options.SYNC,
-      logging: options.LOG,
-      cache: options.CACHE
-    } as any)
-    .then( (connection: Connection) => {
-      Logger.log('info', `Connection to MySQL server established on port ${options.PORT as string} (${ENV})`);
-    })
-    .catch( (error: Error) => {
-      process.stdout.write(`error: ${error.message}`);
-      process.exit(1);
+    if (Database.dataSource) {
+      return;
+    }
+    // TODO Make proper instead of a scrappy typing on the fly
+    const dataSource = new DataSource({
+      type: options?.TYPE as 'mysql',
+      name: options.NAME as string,
+      host: options.HOST as string,
+      port: options.PORT as number,
+      username: options.USER as string,
+      password: options.PWD as string,
+      database: options.DB as string,
+      entities: options.ENTITIES as [],
+      subscribers: options.SUBSCRIBERS as [],
+      synchronize: options.SYNC as boolean,
+      logging: options.LOG as boolean,
+      cache: options.CACHE as boolean
     });
+
+    dataSource.initialize()
+      .then(() => {
+        Logger.log('info', `Connection to MySQL server established on port ${options.PORT as string} (${ENV})`);
+        Database.dataSource = dataSource;
+      })
+      .catch((error: Error) => {
+        process.stdout.write(`error: ${error.message}`);
+        process.exit(1);
+      });
   }
 }

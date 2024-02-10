@@ -1,47 +1,41 @@
 import * as Dayjs from 'dayjs';
 
-import { Repository, EntityRepository, getRepository } from 'typeorm';
 import { omitBy, isNil } from 'lodash';
 import { badRequest, notFound, unauthorized } from '@hapi/boom';
 
 import { User } from '@models/user.model';
 import { IRegistrable, ITokenOptions, IUserQueryString } from '@interfaces';
+import { Database } from '@config/database.config';
 
-@EntityRepository(User)
-export class UserRepository extends Repository<User>  {
-
-  constructor() {
-    super();
-  }
-
+export const UserRepository = Database.dataSource.getRepository(User).extend({
   /**
    * @description Get one user
    *
    * @param id - The id of user
    *
    */
-  async one(id: number): Promise<User> {
+  one: async (id: number): Promise<User> => {
 
-    const repository = getRepository(User);
+    const repository = Database.dataSource.getRepository(User);
     const options: { id: number } = omitBy({ id }, isNil) as { id: number };
 
     const user = await repository.findOne({
       where: options
-    });
+    }) as User;
 
     if (!user) {
       throw notFound('User not found');
     }
 
     return user;
-  }
+  },
 
   /**
    * @description Get a list of users according to current query parameters
    */
-  async list({ page = 1, perPage = 30, username, email, role, status }: IUserQueryString): Promise<{result: User[], total: number}> {
+  list: async ({ page = 1, perPage = 30, username, email, role, status }: IUserQueryString): Promise<{result: User[], total: number}> => {
 
-    const repository = getRepository(User);
+    const repository = Database.dataSource.getRepository(User);
     const options = omitBy({ username, email, role, status }, isNil) as IUserQueryString;
 
     const query = repository
@@ -70,14 +64,14 @@ export class UserRepository extends Repository<User>  {
       .getManyAndCount();
 
     return { result, total };
-  }
+  },
 
   /**
    * @description Find user by email and try to generate a JWT token
    *
    * @param options Payload data
    */
-  async findAndGenerateToken(options: ITokenOptions): Promise<{user: User, accessToken: string}> {
+  findAndGenerateToken: async (options: ITokenOptions): Promise<{user: User, accessToken: string}> => {
 
     const { email, password, refreshToken, apikey } = options;
 
@@ -85,7 +79,7 @@ export class UserRepository extends Repository<User>  {
       throw badRequest('An email or an API key is required to generate a token')
     }
 
-    const user = await this.findOne({
+    const user = await Database.dataSource.getRepository(User).findOne({
       where : email ? { email } : { apikey }
     });
 
@@ -98,7 +92,7 @@ export class UserRepository extends Repository<User>  {
     }
 
     return { user, accessToken: user.token() };
-  }
+  },
 
   /**
    * @description Create / save user for oauth connexion
@@ -107,15 +101,15 @@ export class UserRepository extends Repository<User>  {
    *
    * @fixme user should always retrieved from her email address. If not, possible collision on username value
    */
-  async oAuthLogin(options: IRegistrable): Promise<User> {
+  oAuthLogin: async (options: IRegistrable): Promise<User> => {
 
     const { email, username, password } = options;
 
-    const userRepository = getRepository(User);
+    const userRepository = Database.dataSource.getRepository(User);
 
     let user = await userRepository.findOne({
       where: [ { email }, { username } ],
-    });
+    }) as User;
 
     if (user) {
       if (!user.username) {
@@ -130,7 +124,8 @@ export class UserRepository extends Repository<User>  {
     }
 
     user = userRepository.create({ email, password, username });
+    user = await userRepository.save(user);
 
-    return userRepository.save(user);
+    return user;
   }
-}
+});

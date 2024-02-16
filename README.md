@@ -3,7 +3,7 @@
 [![Node](https://img.shields.io/badge/Node-18.19.0-informational?logo=node.js&color=43853D)](https://nodejs.org/docs/latest-v18.x/api/index.html)
 [![TypeScript](https://img.shields.io/badge/Typescript-5.3.3-informational?logo=typescript&color=2F74C0)](https://www.typescriptlang.org/)
 [![Express](https://img.shields.io/badge/Express-4.18.2-informational?logo=express&color=B1B1B1)](https://expressjs.com/)
-[![Typeorm](https://img.shields.io/badge/Typeorm-0.2.41-informational?logo=typeorm&color=FFAB00)](https://typeorm.io/#/)
+[![Typeorm](https://img.shields.io/badge/Typeorm-0.3.20-informational?logo=typeorm&color=FFAB00)](https://typeorm.io/#/)
 [![Mocha](https://img.shields.io/badge/Mocha-10.3.0-informational?logo=mocha&color=8A6343)](https://mochajs.org)
 
 ![Github action workflow status](https://github.com/steve-lebleu/typeplate/actions/workflows/build.yml/badge.svg?branch=master)
@@ -16,6 +16,7 @@
 Ready to use RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript)  [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘
 
 Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boilerplate](https://github.com/danielfsousa/express-rest-boilerplate) :beer: :beer: :beer:
+
 ## > Features
 
 - **Basics**

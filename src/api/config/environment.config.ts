@@ -34,7 +34,7 @@ export class Environment {
   /**
    * @description Current environment
    */
-  environment: string = ENVIRONMENT.development;
+  environment: ENVIRONMENT = ENVIRONMENT.development;
 
   /**
    * @description Errors staged on current environment
@@ -314,7 +314,7 @@ export class Environment {
        * @default dev
        */
       LOGS_TOKEN: (value: string): string => {
-        return this.environment === 'production' ? 'combined' : value || 'dev'
+        return this.environment === ENVIRONMENT.production ? 'combined' : value || 'dev'
       },
 
       /**
@@ -715,7 +715,7 @@ export class Environment {
     }
 
     if ( ( process.argv && process.argv.indexOf('--env') !== -1 ) ) {
-      this.environment = ENVIRONMENT[process.argv[process.argv.indexOf('--env') + 1]] as string || ENVIRONMENT.development;
+      this.environment = ENVIRONMENT[process.argv[process.argv.indexOf('--env') + 1]] as ENVIRONMENT || ENVIRONMENT.development;
     } else if ( process.env.RUNNER ) {
       this.environment = ENVIRONMENT.test;
     } else if ( process.env.NODE_ENV ) {

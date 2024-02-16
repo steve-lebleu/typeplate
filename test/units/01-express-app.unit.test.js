@@ -9,7 +9,7 @@ describe('Express application', () => {
     expect(typeof(application)).to.equal('function');
   });
 
-  it('Express server version is 4.18.3', () => {
+  it('Express server version is 4.18.2', () => {
     expect(pkgInfo.dependencies.express).to.equal('4.18.2');
   });
 

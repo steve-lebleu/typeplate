@@ -1,0 +1,116 @@
+import { Request } from 'express';
+
+import { ApplicationDataSource } from '@config/database.config';
+import { IRequest, IResponse } from '@interfaces';
+import { Safe } from '@decorators/safe.decorator';
+import { paginate } from '@utils/pagination.util';
+
+import { {{PASCAL_CASE}}Repository } from '{{REPOSITORY}}';
+import { {{PASCAL_CASE}} } from '{{MODEL}}';
+
+/**
+ * Manage incoming requests for api/{version}/{{LOWER_CASE_PLURAL}}
+ */
+class {{PASCAL_CASE}}Controller {
+
+  /**
+   * @description
+   */
+   private static instance: {{PASCAL_CASE}}Controller;
+
+   private constructor() {}
+
+    /**
+     * @description
+     */
+  static get(): {{PASCAL_CASE}}Controller {
+    if (!{{PASCAL_CASE}}Controller.instance) {
+      {{PASCAL_CASE}}Controller.instance = new {{PASCAL_CASE}}Controller();
+    }
+    return {{PASCAL_CASE}}Controller.instance;
+  }
+
+  /**
+   * @description Retrieve one {{CAMEL_CASE}} according to :{{CAMEL_CASE}}Id
+   *
+   * @param req Express request object derived from http.incomingMessage
+   * @param res Express response object
+   *
+   * @public
+   */
+  @Safe()
+  async get(req: IRequest, res: IResponse): Promise<void> {
+    const repository = ApplicationDataSource.getRepository({{PASCAL_CASE}});
+    const {{CAMEL_CASE}} = await repository.findOneOrFail({ where: { id: req.params.{{CAMEL_CASE}}Id } });
+    res.locals.data = {{CAMEL_CASE}};
+  }
+
+  /**
+   * @description Retrieve a list of {{CAMEL_CASE_PLURAL}}, according to some parameters
+   *
+   * @param req Express request object derived from http.incomingMessage
+   * @param res Express response object
+   */
+  @Safe()
+  async list (req: IRequest, res: IResponse): Promise<void> {
+    const response = await {{PASCAL_CASE}}Repository.list(req.query);
+    res.locals.data = response.result;
+    res.locals.meta = {
+      total: response.total,
+      pagination: paginate( parseInt(req.query.page, 10), parseInt(req.query.perPage, 10), response.total )
+    }
+  }
+
+  /**
+   * @description Create a new {{CAMEL_CASE}}
+   *
+   * @param req Express request object derived from http.incomingMessage
+   * @param res Express response object
+   *
+   * @public
+   */
+  @Safe()
+  async create(req: IRequest, res: IResponse): Promise<void> {
+    const repository = ApplicationDataSource.getRepository({{PASCAL_CASE}});
+    const {{CAMEL_CASE}} = new {{PASCAL_CASE}}(req.body);
+    const saved = await repository.save({{CAMEL_CASE}});
+    res.locals.data = saved;
+  }
+
+  /**
+   * @description Update one {{CAMEL_CASE}} according to :{{CAMEL_CASE}}Id
+   *
+   * @param req Express request object derived from http.incomingMessage
+   * @param res Express response object
+   *
+   * @public
+   */
+  @Safe()
+  async update(req: IRequest, res: IResponse): Promise<void> {
+    const repository = ApplicationDataSource.getRepository({{PASCAL_CASE}});    
+    const {{CAMEL_CASE}} = await repository.findOneOrFail({ where: { id: req.params.{{CAMEL_CASE}}Id } });
+    if ({{CAMEL_CASE}}) {
+      await repository.update(req.params.{{CAMEL_CASE}}Id, req.body);
+    }
+    res.locals.data = {{CAMEL_CASE}} ? req.body as {{PASCAL_CASE}} : undefined;
+  }
+
+  /**
+   * @description Delete one {{CAMEL_CASE}} according to :{{CAMEL_CASE}}Id
+   *
+   * @param req Express request object derived from http.incomingMessage
+   * @param res Express response object
+   *
+   * @public
+   */
+  @Safe()
+  async remove (req: IRequest, res: IResponse): Promise<void> {
+    const repository = ApplicationDataSource.getRepository({{PASCAL_CASE}});
+    const {{CAMEL_CASE}} = await repository.findOneOrFail({ where: { id: req.params.{{CAMEL_CASE}}Id } });
+    void repository.remove({{CAMEL_CASE}});
+  }
+}
+
+const {{CAMEL_CASE}}Controller = {{PASCAL_CASE}}Controller.get();
+
+export { {{CAMEL_CASE}}Controller as {{PASCAL_CASE}}Controller }

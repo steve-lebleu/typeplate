@@ -1,0 +1,8 @@
+import { IRequest, IMedia } from '@interfaces';
+
+/**
+ * @description
+ */
+export interface I{{PASCAL_CASE}}Request extends IRequest {
+  body: {}
+}

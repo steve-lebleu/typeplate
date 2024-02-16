@@ -1,0 +1,116 @@
+import { {{PASCAL_CASE}}Controller } from '{{CONTROLLER}}';
+import { Router } from '@classes/router.class';
+import { Guard } from '@middlewares/guard.middleware';
+import { Validator } from '@middlewares/validator.middleware';
+import { ROLE } from '@enums';
+import { list{{PASCAL_CASE_PLURAL}}, insert{{PASCAL_CASE}}, get{{PASCAL_CASE}}, replace{{PASCAL_CASE}}, update{{PASCAL_CASE}}, remove{{PASCAL_CASE}} } from '{{VALIDATION}}';
+
+export class {{PASCAL_CASE}}Router extends Router {
+
+  constructor(){
+    super();
+  }
+
+  /**
+   * @description Plug routes definitions
+   */
+  define(): void {
+
+    this.router.route('/')
+
+      /**
+       * @api {get} api/v1/{{HYPHEN_PLURAL}} List {{CAMEL_CASE_PLURAL}}
+       * @apiDescription Get a list of {{HYPHEN_PLURAL}}
+       * @apiVersion 1.0.0
+       * @apiName List{{PASCAL_CASE}}
+       * @apiGroup {{PASCAL_CASE}}
+       * @apiPermission ROLE.admin
+       *
+       * @apiUse BaseHeader
+       *
+       * @apiParam  {Number{1-}}         [page=1]     List page
+       * @apiParam  {Number{1-100}}      [perPage=1]  {{PASCAL_CASE}}'s per page
+       *
+       * TODO:
+       */
+      .get(Guard.authorize([{{PERMISSIONS}}]), Validator.check(list{{PASCAL_CASE_PLURAL}}), {{PASCAL_CASE}}Controller.list)
+
+      /**
+       * @api {post} api/v1/{{HYPHEN_PLURAL}} Create {{CAMEL_CASE_PLURAL}}
+       * @apiDescription Create one or many new {{CAMEL_CASE_PLURAL}}
+       * @apiVersion 1.0.0
+       * @apiName Create{{PASCAL_CASE}}
+       * @apiGroup {{PASCAL_CASE}}
+       * @apiPermission user
+       *
+       * @apiUse BaseHeader
+       *
+       * TODO:
+       */
+      .post(Guard.authorize([{{PERMISSIONS}}]), Validator.check(insert{{PASCAL_CASE}}), {{PASCAL_CASE}}Controller.create);
+
+    this.router.route('/:{{CAMEL_CASE}}Id')
+
+      /**
+       * @api {get} api/v1/{{HYPHEN_PLURAL}}/:id Get one {{CAMEL_CASE}}
+       * @apiDescription Get {{CAMEL_CASE}}
+       * @apiVersion 1.0.0
+       * @apiName Get{{PASCAL_CASE}}
+       * @apiGroup {{PASCAL_CASE}}
+       * @apiPermission user
+       *
+       * @apiUse BaseHeader
+       *
+       * TODO:
+       */
+      .get(Guard.authorize([{{PERMISSIONS}}]), Validator.check(get{{PASCAL_CASE}}), {{PASCAL_CASE}}Controller.get)
+
+      /**
+       * @api {put} api/v1/{{HYPHEN_PLURAL}}/:id Replace {{CAMEL_CASE}}
+       * @apiDescription Replace the whole {{CAMEL_CASE}} with a new one
+       * @apiVersion 1.0.0
+       * @apiName Replace{{PASCAL_CASE}}
+       * @apiGroup {{PASCAL_CASE}}
+       * @apiPermission user
+       *
+       * @apiUse BaseHeader
+       *
+       * TODO:
+       */
+      .put(Guard.authorize([{{PERMISSIONS}}]), Validator.check(replace{{PASCAL_CASE}}), {{PASCAL_CASE}}Controller.update)
+
+      /**
+       * @api {patch} api/v1/{{HYPHEN_PLURAL}}/:id Update {{CAMEL_CASE}}
+       * @apiDescription Update some fields of a {{CAMEL_CASE}}
+       * @apiVersion 1.0.0
+       * @apiName Update{{PASCAL_CASE}}
+       * @apiGroup {{PASCAL_CASE}}
+       * @apiPermission user
+       *
+       * @apiUse BaseHeader
+       *
+       * TODO:
+       */
+      .patch(Guard.authorize([{{PERMISSIONS}}]), Validator.check(update{{PASCAL_CASE}}), {{PASCAL_CASE}}Controller.update)
+
+      /**
+       * @api {patch} api/v1/{{HYPHEN_PLURAL}}/:id Delete {{CAMEL_CASE}}
+       * @apiDescription Delete a {{CAMEL_CASE}}
+       * @apiVersion 1.0.0
+       * @apiName Delete{{PASCAL_CASE}}
+       * @apiGroup {{PASCAL_CASE}}
+       * @apiPermission user
+       *
+       * @apiUse BaseHeader
+       *
+       * @apiError (Bad request 400)   ValidationError    Some parameters may contain invalid values
+       * @apiError (Unauthorized 401)  Unauthorized       Only authenticated users can access the data
+       * @apiError (Forbidden 403)     Forbidden          Only ROLE.admins can access the data
+       * @apiError (Not Found 404)     NotFound           {{PASCAL_CASE}} does not exist
+       *
+       * TODO:
+       */
+      .delete(Guard.authorize([{{PERMISSIONS}}]), Validator.check(remove{{PASCAL_CASE}}), {{PASCAL_CASE}}Controller.remove);
+
+  }
+}

@@ -1,10 +1,8 @@
-import { getRepository, getCustomRepository } from 'typeorm';
 import { clone } from 'lodash';
 
-import { IMediaRequest, IResponse } from '@interfaces';
-
+import { ApplicationDataSource } from '@config/database.config';
+import { IMedia, IMediaRequest, IResponse } from '@interfaces';
 import { Safe } from '@decorators/safe.decorator';
-
 import { MediaRepository } from '@repositories/media.repository';
 import { Media } from '@models/media.model';
 
@@ -42,8 +40,8 @@ class MediaController {
    */
   @Safe()
   async get(req: IMediaRequest, res: IResponse): Promise<void> {
-    const repository = getRepository(Media);
-    const media = await repository.findOneOrFail(req.params.mediaId, { relations: ['owner'] });
+    const repository = ApplicationDataSource.getRepository(Media);
+    const media = await repository.findOneOrFail({ where: { id: req.params.mediaId }, relations: ['owner'] }) as Media;
     res.locals.data = media;
   }
 
@@ -55,12 +53,11 @@ class MediaController {
    */
   @Safe()
   async list (req: IMediaRequest, res: IResponse): Promise<void> {
-    const repository = getCustomRepository(MediaRepository);
-    const response = await repository.list(req.query);
+    const response = await MediaRepository.list(req.query);
     res.locals.data = response.result;
     res.locals.meta = {
       total: response.total,
-      pagination: paginate( parseInt(req.query.page, 10), parseInt(req.query.perPage, 10), response.total )
+      pagination: paginate( parseInt(req.query.page, 10), parseInt(req.query.perPage, 10), response.total as number )
     }
   }
 
@@ -74,8 +71,8 @@ class MediaController {
    */
   @Safe()
   async create(req: IMediaRequest, res: IResponse): Promise<void> {
-    const repository = getRepository(Media);
-    const medias = [].concat(req.files).map( (file) => new Media(file));
+    const repository = ApplicationDataSource.getRepository(Media);
+    const medias = [].concat(req.files).map( (file) => new Media(file as IMedia));
     await repository.save(medias);
     res.locals.data = medias;
   }
@@ -90,7 +87,7 @@ class MediaController {
    */
   @Safe()
   async update(req: IMediaRequest, res: IResponse): Promise<void> {
-    const repository = getRepository(Media);
+    const repository = ApplicationDataSource.getRepository(Media);
     const media = clone(res.locals.data) as Media;
     repository.merge(media, req.files[0] as unknown);
     await repository.save(media);
@@ -107,7 +104,7 @@ class MediaController {
    */
   @Safe()
   async remove (req: IMediaRequest, res: IResponse): Promise<void> {
-    const repository = getRepository(Media);
+    const repository = ApplicationDataSource.getRepository(Media);
     const media = clone(res.locals.data) as Media;
     await repository.remove(media);
   }

@@ -1,24 +1,14 @@
-import { Repository, EntityRepository, getRepository } from 'typeorm';
 import { omitBy, isNil } from 'lodash';
 
 import { Media } from '@models/media.model';
 import { IMediaQueryString } from '@interfaces';
 import { getMimeTypesOfType } from '@utils/string.util';
+import { ApplicationDataSource } from '@config/database.config';
 
-@EntityRepository(Media)
-export class MediaRepository extends Repository<Media>  {
+export const MediaRepository = ApplicationDataSource.getRepository(Media).extend({
 
-  /** */
-  constructor() {
-    super();
-  }
-
-  /**
-   * @description Get a list of files according to current query
-   */
-  async list({ page = 1, perPage = 30, path, fieldname, filename, size, mimetype, owner, type }: IMediaQueryString): Promise<{result: Media[], total: number}> {
-
-    const repository = getRepository(Media);
+  list: async ({ page = 1, perPage = 30, path, fieldname, filename, size, mimetype, owner, type }: IMediaQueryString): Promise<{result: Media[], total: number}> => {
+    const repository = ApplicationDataSource.getRepository(Media);
 
     const options = omitBy({ path, fieldname, filename, size, mimetype, owner, type }, isNil) as IMediaQueryString;
 
@@ -53,4 +43,4 @@ export class MediaRepository extends Repository<Media>  {
 
     return { result, total }
   }
-}
+});

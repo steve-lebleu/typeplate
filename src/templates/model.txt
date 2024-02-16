@@ -1,0 +1,45 @@
+require('module-alias/register');
+
+import * as Moment from 'moment-timezone';
+
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { IModel } from '@interfaces';
+
+@Entity()
+export class {{PASCAL_CASE}} implements IModel {
+
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({
+    type: Date,
+    default: Moment( new Date() ).format('YYYY-MM-DD HH:ss')
+  })
+  createdAt;
+
+  @Column({
+    type: Date,
+    default: null
+  })
+  updatedAt;
+
+  @Column({
+    type: Date,
+    default: null
+  })
+  deletedAt;
+
+  /**
+   * @param payload Object data to assign
+   */
+  constructor(payload: Record<string, unknown>) {
+    Object.assign(this, payload);
+  }
+
+  /**
+   * @description Allowed fields
+   */
+  get whitelist(): string[] {
+    return [];
+  }
+}

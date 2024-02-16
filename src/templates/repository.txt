@@ -1,0 +1,53 @@
+import { omitBy, isNil } from 'lodash';
+import { notFound } from'@hapi/boom';
+
+import { ApplicationDataSource } from '@config/database.config';
+import { {{PASCAL_CASE}} } from '{{MODEL}}';
+
+export const {{PASCAL_CASE}}Repository = ApplicationDataSource.getRepository({{PASCAL_CASE}}).extend({
+
+  constructor() {
+    super();
+  }
+
+  /**
+   * @description Get one {{LOWER_CASE}}
+   *
+   * @param id - The id of {{LOWER_CASE}}
+   *
+   */
+  async one(id: number): Promise<{{PASCAL_CASE}}> {
+
+    const repository = ApplicationDataSource.getRepository({{PASCAL_CASE}});
+    const options: { id: number } = omitBy({ id }, isNil) as { id: number };
+
+    const {{CAMEL_CASE}} = await repository.findOne({
+      where: options
+    });
+
+    if (!{{CAMEL_CASE}}) {
+      throw notFound('{{PASCAL_CASE}} not found');
+    }
+
+    return {{CAMEL_CASE}};
+  }
+
+  /**
+   * Get a list of {{LOWER_CASE}}s according to current query parameters
+   *
+   * @public
+   */
+  async list({ page = 1, perPage = 30 }: { page: number, perPage: number }): Promise<{{PASCAL_CASE}}[]> {
+
+    const repository = ApplicationDataSource.getRepository({{PASCAL_CASE}});
+    const options = {}; /** @todo omitBy({}, isNil) **/
+
+    const [ result, total ] = await repository.find({
+      where: options,
+      skip: ( page - 1 ) * perPage,
+      take: perPage
+    });
+
+    return { result, total };
+  }
+})

@@ -67,7 +67,7 @@ export class Media implements IModel {
   /**
    * @param payload Object data to assign
    */
-  constructor(payload: Record<string,unknown>) {
+  constructor(payload: Record<string,any>) {
     Object.assign(this, payload);
   }
 

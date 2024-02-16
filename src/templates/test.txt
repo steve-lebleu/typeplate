@@ -1,0 +1,130 @@
+const request = require('supertest');
+const { expect } = require('chai');
+const { clone } = require('lodash');
+
+let { server } = require(process.cwd() + '/dist/api/app.bootstrap');
+
+const { user, {{CAMEL_CASE}} } = require(process.cwd() + '/test/utils/fixtures');
+const { doRequest, doQueryRequest } = require(process.cwd() + '/test/utils');
+
+describe("{{PASCAL_CASE}} routes", function () {
+  
+  let agent, token, unauthorizedToken, _{{CAMEL_CASE}};
+
+  before(function (done) {
+
+    agent = request(server);
+    
+    doRequest(agent, 'post', '/api/v1/auth/register', null, null, user.entity('admin', 'e2q2mak7'), function(err, res) {
+      token = res.body.token.accessToken;
+      doRequest(agent, 'post', '/api/v1/auth/register', null, null, user.entity('user', 'e2q2mak7'), function(err, res) {
+        unauthorizedToken = res.body.token.accessToken;
+        done();
+      });
+    });
+
+  });
+  
+  after(function () {
+    server.close();
+    delete server;
+  });
+
+  describe('POST /api/v1/{{HYPHEN_PLURAL}}', () => {
+
+    it('201 - succeed', function (done) {
+      const params = clone({{CAMEL_CASE}});
+      doRequest(agent, 'post', '/api/v1/{{HYPHEN_PLURAL}}', null, null, params, function(err, res) {
+        expect(res.statusCode).to.eqls(201);
+        _{{CAMEL_CASE}} = res.body;
+        done();
+      });
+    });
+
+  });
+
+  describe('GET /api/v1/{{HYPHEN_PLURAL}}', () => {
+
+    it('200 - ok', function (done) {
+      doQueryRequest(agent, '/api/v1/{{HYPHEN_PLURAL}}', null, null, {}, function(err, res) {
+        expect(res.statusCode).to.eqls(200);
+        done();
+      });
+    });
+
+  });
+
+  describe('GET /api/v1/{{HYPHEN_PLURAL}}/:id', () => {
+
+    it('200 - ok', function (done) {
+      doQueryRequest(agent, `/api/v1/{{HYPHEN_PLURAL}}/`, _{{CAMEL_CASE}}.id, null, {}, function(err, res) {
+        expect(res.statusCode).to.eqls(200);
+        done();
+      });
+    });
+
+  });
+
+  describe('PUT /api/v1/{{HYPHEN_PLURAL}}/:id', () => {
+
+    it('404 - not found', function (done) {
+      const params = clone({{CAMEL_CASE}});
+      doRequest(agent, 'put', '/api/v1/{{HYPHEN_PLURAL}}/', 2569, token, params, function(err, res) {
+        expect(res.statusCode).to.eqls(404);
+        done();
+      });
+    });
+
+    it('200 - ok', function (done) {
+      const params = clone({{CAMEL_CASE}});
+      doRequest(agent, 'put', '/api/v1/{{HYPHEN_PLURAL}}/', _{{CAMEL_CASE}}.id, token, params, function(err, res) {
+        expect(res.statusCode).to.eqls(200);
+        done();
+      });
+    });
+
+  });
+
+  describe('PATCH /api/v1/{{HYPHEN_PLURAL}}/:id', () => {
+
+    it('404 - not found', function (done) {
+      const params = clone({{CAMEL_CASE}});
+      doRequest(agent, 'patch', '/api/v1/{{HYPHEN_PLURAL}}/', 2569, token, params, function(err, res) {
+        expect(res.statusCode).to.eqls(404);
+        done();
+      });
+    });
+
+    it('200 - ok', function (done) {
+      const params = clone({{CAMEL_CASE}});
+      doRequest(agent, 'patch', '/api/v1/{{HYPHEN_PLURAL}}/', _{{CAMEL_CASE}}.id, null, params, function(err, res) {
+        expect(res.statusCode).to.eqls(200);
+        done();
+      });
+    });
+
+  });
+
+  describe('DELETE /api/v1/{{HYPHEN_PLURAL}}/:id', () => {
+
+    it('404 - not found', function (done) {
+      agent
+        .delete('/api/v1/{{HYPHEN_PLURAL}}/' + 2754)
+        .set('Authorization', 'Bearer ' + token)
+        .set('Origin', process.env.ORIGIN)
+        .set('Content-Type', process.env.CONTENT_TYPE)
+        .expect(404, done);
+    });
+
+    it('204', function (done) {
+      agent
+        .delete('/api/v1/{{HYPHEN_PLURAL}}/' + _{{CAMEL_CASE}}.id)
+        .set('Authorization', 'Bearer ' + token)
+        .set('Origin', process.env.ORIGIN)
+        .set('Content-Type', process.env.CONTENT_TYPE)
+        .expect(204, done);
+    });
+
+  });
+
+});

@@ -1,0 +1,50 @@
+require('module-alias/register');
+
+import * as Dayjs from 'dayjs';
+
+import { EventSubscriber, EntitySubscriberInterface, InsertEvent, UpdateEvent, RemoveEvent } from 'typeorm';
+import { {{PASCAL_CASE}} } from '@resources/{{LOWER_CASE}}/{{LOWER_CASE}}.model';
+
+/**
+ *
+ */
+@EventSubscriber()
+export class {{PASCAL_CASE}}Subscriber implements EntitySubscriberInterface<{{PASCAL_CASE}}> {
+
+  /**
+   * @description Indicates that this subscriber only listen to {{PASCAL_CASE}} events.
+   */
+  listenTo(): any {
+    return {{PASCAL_CASE}};
+  }
+
+  /**
+   * @description Called before {{PASCAL_CASE}} insertion.
+   */
+  beforeInsert(event: InsertEvent<{{PASCAL_CASE}}>): void {
+    event.entity.createdAt = Dayjs( new Date() ).toDate();
+  }
+
+  /**
+   * @description Called after {{PASCAL_CASE}} insertion.
+   */
+  afterInsert(event: InsertEvent<{{PASCAL_CASE}}>): void {}
+
+  /**
+   * @description Called before {{PASCAL_CASE}} update.
+   */
+  beforeUpdate(event: UpdateEvent<{{PASCAL_CASE}}>): void {
+    event.entity.updatedAt = Dayjs( new Date() ).toDate();
+  }
+
+  /**
+   * @description Called after {{PASCAL_CASE}} update.
+   */
+  afterUpdate(event: UpdateEvent<{{PASCAL_CASE}}>): void {}
+
+  /**
+   * @description Called after {{PASCAL_CASE}} deletion.
+   */
+  afterRemove(event: RemoveEvent<{{PASCAL_CASE}}>): void {}
+
+}

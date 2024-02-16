@@ -50,8 +50,11 @@
     "start": "nodemon .",
     "test": "nyc --reporter=html --report-dir=./reports/nyc-coverage npm-run-all -s test:*",
     "test:unit": "./node_modules/.bin/mocha ./test/units/00-application.unit.test.js --exit --reporter spec --timeout 10000 --env test",
-    "test:e2e": "mysql -u root -ppassw0rd -e 'DROP DATABASE typeplate_test; CREATE DATABASE typeplate_test' && ./node_modules/.bin/mocha ./test/e2e/00-api.e2e.test.js --exit --reporter spec --timeout 10000 --env test",
-    "version": "npm run todo && git add package.json && git add README.md && auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\" --no-verify"
+    "test:e2e": "npm run schema:drop && npm run schema:sync && ./node_modules/.bin/mocha ./test/e2e/00-api.e2e.test.js --exit --reporter spec --timeout 10000 --env test",
+    "version": "npm run todo && git add package.json && git add README.md && auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\" --no-verify",
+    "typeorm": "npx typeorm ",
+    "schema:drop": "npm run typeorm schema:drop -- -d dist/api/config/datasource.config.js",
+    "schema:sync": "npm run typeorm schema:drop -- -d dist/api/config/datasource.config.js"
   },
   "_moduleAliases": {
     "@core": "dist/api/core",

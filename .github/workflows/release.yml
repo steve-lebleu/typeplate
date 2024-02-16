@@ -30,7 +30,7 @@ jobs:
           echo LINKEDIN_CONSUMER_ID = "${{ secrets.LINKEDIN_CONSUMER_ID }}" >> ./dist/env/test.env
           echo LINKEDIN_CONSUMER_SECRET = "${{ secrets.LINKEDIN_CONSUMER_SECRET }}" >> ./dist/env/test.env
       - name: Install global dependencies
-        run:  npm i typescript@5.3.3 -g && npm i typeorm@0.2.41 -g 
+        run:  npm i typescript@5.3.3 -g
       - name: Install local dependencies
         run: npm i
       - name: Compile Typescript files
@@ -63,7 +63,7 @@ jobs:
           mysql database: 'typeplate_test'
           mysql root password: passw0rd 
       - name: Install global dependencies
-        run:  npm i typescript@5.3.3 -g && npm i typeorm@0.2.41 -g 
+        run:  npm i typescript@5.3.3 -g
       - name: Install local dependencies
         run:  npm i
       - name: Create dist directory
@@ -74,7 +74,7 @@ jobs:
           name: build-files
           path: dist
       - name: Synchronize database schema
-        run: typeorm schema:sync
+        run: npm run schema:sync
       - name: Execute tests suites
         run: npm run ci:test
       - name: Publish to coveralls.io

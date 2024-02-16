@@ -1,0 +1,3 @@
+import { IQueryString } from '@interfaces';
+
+export interface I{{PASCAL_CASE}}QueryString extends IQueryString {}

@@ -1,0 +1,52 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+import * as Joi from 'joi';
+
+// GET /v1/{{HYPHEN_PLURAL}}
+const list{{PASCAL_CASE_PLURAL}} = {
+  query: Joi.object({
+    filter: Joi.number().min(0).max(1),
+    page: Joi.number().min(1),
+    perPage: Joi.number().min(1).max(100),
+  })
+};
+
+// GET /v1/{{HYPHEN_PLURAL}}/:{{CAMEL_CASE}}Id
+const get{{PASCAL_CASE}} = {
+  params: Joi.object({
+    {{CAMEL_CASE}}Id: Joi.string().regex(/^[0-9]{1,4}$/).required()
+  })
+};
+
+// POST /v1/{{HYPHEN_PLURAL}}
+const insert{{PASCAL_CASE}} = {
+  body: Joi.object({})
+};
+
+// PUT /v1/{{HYPHEN_PLURAL}}/:{{CAMEL_CASE}}Id
+const replace{{PASCAL_CASE}} = {
+  body: Joi.object({}),
+  params: Joi.object({
+    {{CAMEL_CASE}}Id: Joi.string().regex(/^[0-9]{1,4}$/).required(),
+  })
+};
+
+// PATCH /v1/{{HYPHEN_PLURAL}}/:{{CAMEL_CASE}}Id
+const update{{PASCAL_CASE}} = {
+  body: Joi.object({}),
+  params: Joi.object({
+    {{CAMEL_CASE}}Id: Joi.string().regex(/^[0-9]{1,4}$/).required(),
+  })
+};
+
+// DELETE /v1/{{HYPHEN_PLURAL}}/:{{CAMEL_CASE}}Id
+const remove{{PASCAL_CASE}} = {
+  body: Joi.object({}),
+  params: Joi.object({
+    {{CAMEL_CASE}}Id: Joi.string().regex(/^[0-9]{1,4}$/).required(),
+  })
+};
+
+export { list{{PASCAL_CASE_PLURAL}}, get{{PASCAL_CASE}}, insert{{PASCAL_CASE}}, replace{{PASCAL_CASE}}, update{{PASCAL_CASE}}, remove{{PASCAL_CASE}} };

@@ -1,0 +1,104 @@
+import { ApplicationDataSource } from '@config/database.config';
+import { {{PASCAL_CASE}}Repository } from '@resources/{{LOWER_CASE}}/{{LOWER_CASE}}.repository';
+import { {{PASCAL_CASE}} } from '@resources/{{LOWER_CASE}}/{{LOWER_CASE}}.model';
+import { I{{PASCAL_CASE}}QueryString } from '@resources/{{LOWER_CASE}}/{{LOWER_CASE}}-query-string.interface';
+import { I{{PASCAL_CASE}}Request } from './{{LOWER_CASE}}-request.interface';
+import { paginate } from '@utils/pagination.util';
+
+/**
+ * @description
+ */
+class {{PASCAL_CASE}}DataLayerService {
+
+  /**
+   * @description
+   */
+  private static instance: {{PASCAL_CASE}}DataLayerService;
+
+  private constructor() {}
+
+  /**
+   * @description
+   */
+  static get(): {{PASCAL_CASE}}DataLayerService {
+    if (!{{PASCAL_CASE}}DataLayerService.instance) {
+    {{PASCAL_CASE}}DataLayerService.instance = new {{PASCAL_CASE}}DataLayerService();
+    }
+    return {{PASCAL_CASE}}DataLayerService.instance;
+  }
+
+  /**
+   * @description Retrieve one {{LOWER_CASE}} according to :{{LOWER_CASE}}Id
+   *
+   * @param {{LOWER_CASE}}Id
+   *
+   * @public
+   */
+  async get({{LOWER_CASE}}Id: string): Promise<{{PASCAL_CASE}}> {
+    const repository = ApplicationDataSource.getRepository({{PASCAL_CASE}});
+    const {{LOWER_CASE}} = await repository.findOneOrFail({{LOWER_CASE}}Id, { relations:  ] } );
+    return {{LOWER_CASE}};
+  }
+
+  /**
+   * @description Retrieve a list of {{LOWER_CASE_PLURAL}}, according to query parameters
+   *
+   * @param query
+   */
+  async list (query: I{{PASCAL_CASE}}QueryString): Promise<{{PASCAL_CASE}}[]> {
+    const response = await {{PASCAL_CASE}}Repository.list(query);
+    res.locals.data = response.result;
+    res.locals.meta = {
+      total: response.total,
+      pagination: paginate( parseInt(req.query.page, 10), parseInt(req.query.perPage, 10), response.total )
+    }
+    return {
+      data: res.locals.data,
+      meta: res.locals.meta
+    }
+  }
+
+  /**
+   * @description Create a new {{LOWER_CASE}}
+   *
+   * @param payload
+   *
+   * @public
+   */
+  async create( { body }: I{{PASCAL_CASE}}Request): Promise<{{PASCAL_CASE}}> {
+    const repository = ApplicationDataSource.getRepository({{PASCAL_CASE}});
+    const {{LOWER_CASE}} = new {{PASCAL_CASE}}(body);
+    const saved = await repository.save({{LOWER_CASE}});
+    return saved;
+  }
+
+  /**
+   * @description Update one {{LOWER_CASE}} according to :{{LOWER_CASE}}Id
+   *
+   * @param {{LOWER_CASE}}Id
+   * @param payload
+   *
+   * @public
+   */
+  async update({{LOWER_CASE}}: {{PASCAL_CASE}}, { body }: I{{PASCAL_CASE}}Request): Promise<{{PASCAL_CASE}}> {
+    const repository = ApplicationDataSource.getRepository({{PASCAL_CASE}});
+    repository.merge({{LOWER_CASE}}, body);
+    const saved = await repository.save({{LOWER_CASE}});
+    return saved;
+  }
+
+  /**
+   * @description Delete one {{LOWER_CASE}} according to :{{LOWER_CASE}}Id
+   *
+   * @param {{LOWER_CASE}}Id
+   *
+   * @public
+   */
+  async remove ({{LOWER_CASE}}: {{PASCAL_CASE}}): Promise<void> {
+    const repository = ApplicationDataSource.getRepository({{PASCAL_CASE}});
+    void repository.remove({{LOWER_CASE}});
+  }
+
+}
+
+export { {{PASCAL_CASE}}DataLayerService }

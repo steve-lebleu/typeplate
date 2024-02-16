@@ -1,0 +1,56 @@
+import { ROLE, STATUS } from '@enums';
+
+import { User } from '@models/user.model';
+
+import { {{PASCAL_CASE}} } from '@resources/{{LOWER_CASE}}/{{LOWER_CASE}}.model';
+import { I{{PASCAL_CASE}}Request } from '@resources/{{LOWER_CASE}}/{{LOWER_CASE}}-request.interface';
+
+import { BusinessRule } from '@shared/types/business-rule.type';
+import { BusinessService } from '@shared/services/business.service';
+
+/**
+ * @description
+ */
+ class {{PASCAL_CASE}}BusinessService extends BusinessService {
+
+  /**
+   * @description
+   */
+  private static instance: {{PASCAL_CASE}}BusinessService;
+
+  /**
+   * @description
+   */
+  readonly BUSINESS_RULES: BusinessRule[] = [
+    {
+      key: '{{UPPER_CASE}}_CAN_BE_SUBMITTED_BY_CONFIRMED_USER_ONLY',
+      description: 'A {{LOWER_CASE}} can be submitted by a confirmed user only.',
+      statusCode: 403,
+      methods: [
+        'POST'
+      ],
+      check:  (user: User, entity: {{PASCAL_CASE}}, payload: I{{PASCAL_CASE}}Request): boolean => {
+        if (user.status !== STATUS.CONFIRMED) {
+          return false;
+        }
+        return true;
+      }
+    }
+  ];
+
+  constructor() {
+    super();
+  }
+
+  /**
+   * @description
+   */
+  static get(): {{PASCAL_CASE}}BusinessService {
+    if (!{{PASCAL_CASE}}BusinessService.instance) {
+      {{PASCAL_CASE}}BusinessService.instance = new {{PASCAL_CASE}}BusinessService();
+    }
+    return {{PASCAL_CASE}}BusinessService.instance;
+  }
+}
+
+export { {{PASCAL_CASE}}BusinessService }

@@ -41,7 +41,7 @@ class MediaController {
   @Safe()
   async get(req: IMediaRequest, res: IResponse): Promise<void> {
     const repository = ApplicationDataSource.getRepository(Media);
-    const media = await repository.findOneOrFail({ where: { id: req.params.mediaId }, relations: ['owner'] }) as Media;
+    const media = await repository.findOneOrFail({ where: { id: req.params.mediaId }, relations: ['owner'] });
     res.locals.data = media;
   }
 
@@ -57,7 +57,7 @@ class MediaController {
     res.locals.data = response.result;
     res.locals.meta = {
       total: response.total,
-      pagination: paginate( parseInt(req.query.page, 10), parseInt(req.query.perPage, 10), response.total as number )
+      pagination: paginate( parseInt(req.query.page, 10), parseInt(req.query.perPage, 10), response.total )
     }
   }
 

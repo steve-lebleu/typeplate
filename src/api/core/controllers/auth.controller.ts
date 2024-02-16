@@ -64,7 +64,7 @@ class AuthController {
   @Safe()
   async login(req: Request, res: IResponse): Promise<void> {
     const { user, accessToken } = await UserRepository.findAndGenerateToken(req.body as ITokenOptions);
-    const token = await AuthService.generateTokenResponse(user as User, accessToken as string);
+    const token = await AuthService.generateTokenResponse(user, accessToken);
     res.locals.data = { token, user };
   }
 
@@ -118,7 +118,7 @@ class AuthController {
 
     // Get owner user of the token
     const { user, accessToken } = await UserRepository.findAndGenerateToken({ email: refreshToken.user.email , refreshToken });
-    const response = await AuthService.generateTokenResponse(user as User, accessToken as string);
+    const response = await AuthService.generateTokenResponse(user, accessToken);
 
     res.locals.data = { token: response };
   }
@@ -141,7 +141,7 @@ class AuthController {
       throw badRequest('User token cannot be read');
     }
 
-    const user = await repository.findOneOrFail(decoded.sub) as User;
+    const user = await repository.findOneOrFail({ where: { id: decoded.sub } });
 
     if ( user.status !== STATUS.REGISTERED && user.status !== STATUS.REVIEWED ) {
       throw badRequest('User status cannot be confirmed');
@@ -166,7 +166,7 @@ class AuthController {
 
     const repository = ApplicationDataSource.getRepository(User);
 
-    const user = await repository.findOne( { where: { email: req.query.email } }) as User;
+    const user = await repository.findOne( { where: { email: req.query.email } });
 
     if ( user && user.status === STATUS.CONFIRMED ) {
       void AuthService.revokeRefreshToken(user);

@@ -19,11 +19,17 @@ export const dataSource = new DataSource({
     'dist/api/core/models/**/*.model.js',
     'dist/api/resources/**/*.model.js'
   ],
+  migrations: [
+    'dist/migrations/**/*.js'
+  ],
   subscribers: [
     'dist/api/core/subscribers/**/*.subscriber.js',
     'dist/api/resources/**/*.subscriber.js'
   ],
   synchronize: false,
   logging: false,
-  cache: false
+  cache: false,
+  cli: {
+    migrationsDir: './dist/migrations'
+  }
 });

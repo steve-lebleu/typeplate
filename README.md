@@ -10,7 +10,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/steve-lebleu/typeplate/badge.svg?branch=master)](https://coveralls.io/github/steve-lebleu/typeplate?branch=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/steve-lebleu/typeplate/badge)](https://www.codefactor.io/repository/github/steve-lebleu/typeplate)
 ![GitHub Release](https://img.shields.io/github/v/release/steve-lebleu/typeplate?logo=Github)
-![Known Vulnerabilities](https://snyk.io/test/github/steve-lebleu/typeplate/badge.svg)
 ![GitHub License](https://img.shields.io/github/license/steve-lebleu/typeplate?color=%230A7BBC)
 
 Ready to use RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript)  [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘

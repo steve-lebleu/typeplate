@@ -1,5 +1,5 @@
 {
-  "version": "1.5.6",
+  "version": "1.5.7",
   "engines": {
     "node": ">=18.19.0",
     "npm": ">=10.2.3"
@@ -38,23 +38,20 @@
   },
   "scripts": {
     "init": "npm-run-all -s init:*",
-    "init:env": "cp ./src/env/template.env ./src/env/development.env && cp ./src/env/template.env ./src/env/test.env && cp ./src/env/template.env ./src/env/staging.env && cp ./src/env/template.env ./src/env/production.env && rm -rf ./src/env/template.env",
-    "init:repository": "rm -rf ./.git && git init && git add . --all && git commit -m \"First commit\"",
+    "init:install": "npm i typescript@5.3.3 -g && npm i typeorm@0.2.41 -g && npm i rsgen -g && npm i ",
+    "init:copy": "mkdir -p ./dist/env && cp ./src/env/template.env ./dist/env/development.env && cp ./src/env/template.env ./dist/env/test.env && cp ./src/env/template.env ./dist/env/staging.env && cp ./src/env/template.env ./dist/env/production.env",
+    "init:compile": "tsc",
+    "init:version": "rm -rf ./.git && git init && git add . --all && git commit -m \"First commit\"",
     "ci:test": "nyc --reporter=lcov --report-dir=./reports/coverage npm-run-all -s test:*",
     "doc": "apidoc -i src/ -o docs/apidoc/",
-    "kickstart": "npm i typescript@5.3.3 -g && npm i typeorm@0.3.20 -g && npm i rsgen -g && npm i && mkdir -p ./dist/env",
-    "kickstart:dev": "npm run kickstart && npm run init && cp ./src/env/development.env ./dist/env/development.env  && cp ./src/env/test.env ./dist/env/test.env && tsc",
-    "kickstart:staging": "npm run kickstart && cp ./src/env/staging.env ./dist/env/staging.env && tsc",
-    "kickstart:production": "npm run kickstart && cp ./src/env/production.env ./dist/env/production.env && tsc",
-    "kickstart:test": "npm run kickstart && cp ./src/env/test.env ./dist/env/test.env && tsc",
     "start": "nodemon .",
     "test": "nyc --reporter=html --report-dir=./reports/nyc-coverage npm-run-all -s test:*",
     "test:unit": "./node_modules/.bin/mocha ./test/units/00-application.unit.test.js --exit --reporter spec --timeout 10000 --env test",
     "test:e2e": "npm run schema:drop && npm run schema:sync && ./node_modules/.bin/mocha ./test/e2e/00-api.e2e.test.js --exit --reporter spec --timeout 10000 --env test",
-    "version": "npm run todo && git add package.json && git add README.md && auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\" --no-verify",
     "typeorm": "npx typeorm ",
     "schema:drop": "npm run typeorm schema:drop -- -d dist/api/config/datasource.config.js",
-    "schema:sync": "npm run typeorm schema:drop -- -d dist/api/config/datasource.config.js"
+    "schema:sync": "npm run typeorm schema:drop -- -d dist/api/config/datasource.config.js",
+    "version": "git add package.json && git add README.md && auto-changelog -p && git add CHANGELOG.md && git commit -m \"Update changelog\" --no-verify"
   },
   "_moduleAliases": {
     "@core": "dist/api/core",

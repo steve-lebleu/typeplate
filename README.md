@@ -140,7 +140,7 @@ Sandbox is set to true by default and emails are not send. Pass this value to fa
 $ nodemon
 ```
 
-## > Entity generation
+## Entity generation
 
 Some repetitive tasks such as creating resources can be done quickly with [rsgen](https://github.com/steve-lebleu/rsgen).
 

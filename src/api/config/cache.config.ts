@@ -24,6 +24,8 @@ class CacheConfiguration {
    */
   private engine: ICache;
 
+  private constructor() {}
+
   /**
    * @description
    */
@@ -40,8 +42,6 @@ class CacheConfiguration {
     }
     return this.engine;
   }
-
-  private constructor() {}
 
   static get(): CacheConfiguration {
     if (!CacheConfiguration.instance) {

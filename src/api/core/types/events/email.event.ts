@@ -7,7 +7,7 @@ import { User } from '@models/user.model';
 const EmailEmitter = new Events.EventEmitter();
 
 EmailEmitter.on('user.confirm', (user: User) => {
-  void Cliam.emit('user.confirm', {
+  void Cliam.mail('user.confirm', {
     meta: {
       subject: 'Confirm your account',
       to: [
@@ -24,7 +24,7 @@ EmailEmitter.on('user.confirm', (user: User) => {
 });
 
 EmailEmitter.on('user.welcome', (user: User) => {
-  void Cliam.emit('user.welcome', {
+  void Cliam.mail('user.welcome', {
     meta: {
       subject: `Welcome on board, ${user.username}`,
       to: [
@@ -40,7 +40,7 @@ EmailEmitter.on('user.welcome', (user: User) => {
 });
 
 EmailEmitter.on('password.request', (user: User) => {
-  void Cliam.emit('password.request', {
+  void Cliam.mail('password.request', {
     meta: {
       subject: 'Update password request',
       to: [

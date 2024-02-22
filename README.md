@@ -21,7 +21,7 @@ Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boil
 - **Basics**
   - **Clear & clean code architecture** with classic layers such controllers, services, repositories, models, ...
   - **Object Relational Mapping** with [typeorm](https://typeorm.io/#/).
-  - **Entity generation** with [rsgen](https://github.com/konfer-be/rsgen).
+  - **Entity generation** with [rsgen](https://github.com/steve-lebleu/rsgen).
   - **Business validation** with self designed business members.
   - **Logs management** with [morgan](https://github.com/expressjs/morgan) and [winston](https://github.com/winstonjs/winston).
   - **Changelog completion** with [auto-changelog](https://www.npmjs.com/package/auto-changelog).
@@ -38,7 +38,7 @@ Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boil
 - **Authentication**
   - **JWT authentication process** with [passport.js](http://www.passportjs.org/).
   - **oAuth authentication process** with [passport.js](http://www.passportjs.org/). 
-  - **Sending transactional emails** with [cliam](https://github.com/konfer-be/cliam).
+  - **Sending transactional emails** with [cliam](https://github.com/steve-lebleu/cliam).
 - **Performances**
   - **HTTP request cache** with [memory-cache](https://www.npmjs.com/package/memory-cache).
   - **Database query cache** with [typeorm caching](https://github.com/typeorm/typeorm/blob/master/docs/caching.md).

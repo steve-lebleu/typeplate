@@ -80,7 +80,7 @@
   "dependencies": {
     "@hapi/boom": "9.1.4",
     "bcrypt": "^5.1.1",
-    "cliam": "^2.2.8",
+    "cliam": "^2.2.10",
     "compression": "1.7.4",
     "cors": "2.8.5",
     "dayjs": "^1.11.10",

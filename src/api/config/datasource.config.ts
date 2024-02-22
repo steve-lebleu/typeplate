@@ -28,8 +28,5 @@ export const dataSource = new DataSource({
   ],
   synchronize: false,
   logging: false,
-  cache: false,
-  cli: {
-    migrationsDir: './dist/migrations'
-  }
+  cache: false
 });

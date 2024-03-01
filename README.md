@@ -14,7 +14,7 @@
 
 Ready to use RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript)  [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘
 
-Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boilerplate](https://github.com/danielfsousa/express-rest-boilerplate) :beer: :beer: :beer:
+Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boilerplate](https://github.com/danielfsousa/express-rest-boilerplate) :beer:
 
 ## > Features
 
@@ -128,11 +128,11 @@ TYPEORM_PWD = ""
 TYPEORM_PORT = "3306"
 ```
 
-### Step 6: setup cliamrc.json
+### Step 6: setup cliamrc.js
 
-Transactional emails are send with [cliam](https://github.com/steve-lebleu/cliam). Open the *.cliamrc.json* and fill the [required configuration](https://github.com/steve-lebleu/cliam/wiki/Configuration) according your sending mode. See Cliam official [documentation](https://github.com/steve-lebleu/cliam/wiki) for more information.
+Transactional emails are send with [cliam](https://github.com/steve-lebleu/cliam). Open the *.cliamrc.js* and fill the [required configuration](https://github.com/steve-lebleu/cliam/wiki/Configuration-with-cliamrc.js) according your sending mode. See Cliam official [documentation](https://github.com/steve-lebleu/cliam/wiki) for more information.
 
-Sandbox is set to true by default and emails are not send. Pass this value to false when you're ready.
+Sandbox is set to true by default.
 
 ### Step 7: run
 

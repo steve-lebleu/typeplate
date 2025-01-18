@@ -1,6 +1,6 @@
 ![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/dM2bhNJ/cover-typeplate.png)
 
-[![Node](https://img.shields.io/badge/Node-18.19.0-informational?logo=node.js&color=43853D)](https://nodejs.org/docs/latest-v18.x/api/index.html)
+[![Node](https://img.shields.io/badge/Node-20.18.0-informational?logo=node.js&color=43853D)](https://nodejs.org/docs/latest-v20.x/api/index.html)
 [![TypeScript](https://img.shields.io/badge/Typescript-5.7.2-informational?logo=typescript&color=2F74C0)](https://www.typescriptlang.org/)
 [![Express](https://img.shields.io/badge/Express-4.21.2-informational?logo=express&color=B1B1B1)](https://expressjs.com/)
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.3.20-informational?logo=typeorm&color=FFAB00)](https://typeorm.io/#/)
@@ -18,6 +18,9 @@ Thanks to Daniel F. Sousa for inspiration with his [ExpressREST API boilerplate]
 
 ## > Features
 
+- **Containerization**
+  - **Docker** with [Dockerfile](https://docs.docker.com/get-started/).
+  - **Docker compose** with [docker-compose.yml](https://docs.docker.com/compose/) with mariadb and phpmyadmin.
 - **Basics**
   - **Clear & clean code architecture** with classic layers such controllers, services, repositories, models, ...
   - **Object Relational Mapping** with [typeorm](https://typeorm.io/#/).
@@ -48,48 +51,48 @@ Thanks to Daniel F. Sousa for inspiration with his [ExpressREST API boilerplate]
 
 ## > Table of contents
 
-* [Getting started](#getting-started)
-* [Entity generation](#entity-generation)
-* [Documentation](#documentation)
-* [Tests](#tests)
-* [Continuous integration](#continuous-integration)
-* [Deployment](#deployment)
-* [Licence](#licence)
+- [Getting started](#getting-started)
+- [Entity generation](#entity-generation)
+- [Documentation](#documentation)
+- [Tests](#tests)
+- [Continuous integration](#continuous-integration)
+- [Deployment](#deployment)
+- [License](#license)
 
 ## Getting started
 
 ### Prerequisites
 
-* Git
-* Node.js >= 18.19.0
-* NPM >= 10.2.3
-* A database engine with a dedicated database
+- Git
+- Node.js >= 20.18.0
+- NPM >= 10.2.3
+- A database engine with a dedicated database (MariaDB, MySQL, PostgreSQL, ...) or Docker
 
 ### Step 1: install
 
-```bash
-$ git clone https://github.com/steve-lebleu/typeplate.git path-to/your-project-name/
-```
-
-### Step 2: go to
+#### Local
 
 ```bash
-$ cd path-to/your-project-name/
+git clone https://github.com/steve-lebleu/typeplate.git path-to/your-project-name/
+cd path-to/your-project-name/
+npm run init
 ```
 
-### Step 3: build
+#### Docker
 
 ```bash
-$ npm run init
+docker compose build
 ```
 
-### Step 4: setup package.json
+### Step 2: setup package.json
 
 Open the *./package.json* file and edit it with your own values.
 
-### Step 5: setup environment
+### Step 3: setup environment
 
-Open *./dist/env/development.env* and fill the required env variables (uncommented in the file). See wiki [env variables list](https://github.com/steve-lebleu/typeplate/wiki/Environment-variables) for more informations.
+Open *./dist/env/development.env* and fill the required env variables (uncommented in the file).
+
+See wiki [env variables list](https://github.com/steve-lebleu/typeplate/wiki/Environment-variables) for more informations.
 
 ```bash
 # Access token Secret passphrase
@@ -110,7 +113,7 @@ REFRESH_TOKEN_SECRET = "your-secret"
 # Database engine
 TYPEORM_TYPE = "mysql"
 
-# Database server host
+# Database server host. Use "db" with docker-compose, "localhost" otherwise.
 TYPEORM_HOST = "localhost"
 
 # Database name. Keep it different from your developement database.
@@ -126,16 +129,24 @@ TYPEORM_PWD = ""
 TYPEORM_PORT = "3306"
 ```
 
-### Step 6: setup cliamrc.js
+### Step 4: setup cliamrc.js
 
 Transactional emails are send with [cliam](https://github.com/steve-lebleu/cliam). Open the *.cliamrc.js* and fill the [required configuration](https://github.com/steve-lebleu/cliam/wiki/Configuration-with-cliamrc.js) according your sending mode. See Cliam official [documentation](https://github.com/steve-lebleu/cliam/wiki) for more information.
 
 Sandbox is set to true by default.
 
-### Step 7: run
+### Step 5: run
+
+#### Local run
 
 ```bash
-$ nodemon
+nodemon
+```
+
+#### Docker run
+
+```bash
+docker compose up -d
 ```
 
 ## Entity generation
@@ -147,7 +158,7 @@ See [entity generation](https://github.com/steve-lebleu/typeplate/wiki/Entity-ge
 ## Documentation
 
 ```bash
-$ npm run doc
+npm run doc
 ```
 
 Generate API documentation website into *./docs/apidoc/*.
@@ -157,7 +168,7 @@ See [apidoc](http://apidocjs.com/) for more informations about customization.
 ## Tests
 
 ```bash
-$ npm run test
+npm run test
 ```
 
 :warning: Because there are integration tests, you need a dedicated database to run the tests suites. It's already managed in CI/CD using Github actions, You need to mount it yourself in your local environment.
@@ -177,7 +188,7 @@ Project implements a basic [PM2](https://github.com/Unitech/PM2/) configuration 
 Install PM2 globaly :
 
 ```bash
-$ npm i pm2 -g
+npm i pm2 -g
 ```
 
 ### Configuration
@@ -200,6 +211,7 @@ Configure the *./ecosystem.config.js* file with your env informations.
   }
 }
 ```
+
 More info about PM2 [ecosystem.config.js](https://pm2.io/doc/en/runtime/reference/ecosystem-file/) file.
 
 ### Deploy
@@ -208,10 +220,10 @@ Pm 2 must be installed on the target server and your SSH public key granted.
 
 ```bash
 # Setup deployment at remote location
-$ pm2 deploy production setup
+pm2 deploy production setup
 
 # Update remote version
-$ pm2 deploy production update
+pm2 deploy production update
 ```
 
 More info about [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/) and [PM2 deploy](https://pm2.io/doc/en/runtime/guide/easy-deploy-with-ssh/).

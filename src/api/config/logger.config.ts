@@ -37,7 +37,7 @@ class LoggerConfiguration {
    * @description Output format
    */
   private formater = format.printf( ( { level, message, label, timestamp } ) => {
-    return `${timestamp as string} [${level}] ${message}`;
+    return `${timestamp as string} [${level}] ${message as string}`;
   });
 
   /**

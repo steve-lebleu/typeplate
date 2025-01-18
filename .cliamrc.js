@@ -17,7 +17,6 @@ module.exports = {
   transporters: [
     {
       id: 'smtp-transporter',
-      mode: 'smtp',
       auth: {
         username: "noemie2@ethereal.email",
         password: "5cDumYP68aFcpT15uV"

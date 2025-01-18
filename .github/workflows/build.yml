@@ -60,7 +60,7 @@ jobs:
         with:
           mysql version: '5.7' 
           mysql database: 'typeplate_test'
-          mysql root password: passw0rd!
+          mysql root password: passw0rd
       - name: Install global dependencies
         run:  npm i typescript@5.7.2 -g
       - name: Install local dependencies

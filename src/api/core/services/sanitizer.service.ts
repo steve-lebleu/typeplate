@@ -29,7 +29,7 @@ class SanitizeService {
    *
    * @param data
    */
-  hasEligibleMember(data: { [key: string]: SanitizableData }): boolean {
+  hasEligibleMember(data: { [key: string]: any }): boolean {
     return ( this.implementsWhitelist(data) && !Array.isArray(data) ) || ( Array.isArray(data) && [].concat(data).some(obj => this.implementsWhitelist(obj) ) || ( isObject(data) && Object.keys(data).some(key => this.implementsWhitelist(data[key]) ) ) )
   }
 

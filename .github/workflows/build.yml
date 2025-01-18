@@ -20,14 +20,14 @@ jobs:
         run: cp .env.example .env.test
       - name: Setup .env file
         run: |
-          echo FACEBOOK_CONSUMER_ID = "${{ secrets.FACEBOOK_CONSUMER_ID }}" >> ./dist/env/test.env
-          echo FACEBOOK_CONSUMER_SECRET = "${{ secrets.FACEBOOK_CONSUMER_SECRET }}" >> ./dist/env/test.env
-          echo GITHUB_CONSUMER_ID = "${{ secrets.GTHB_CONSUMER_ID }}" >> ./dist/env/test.env
-          echo GITHUB_CONSUMER_SECRET = "${{ secrets.GTHB_CONSUMER_SECRET }}" >> ./dist/env/test.env
-          echo GOOGLE_CONSUMER_ID = "${{ secrets.GOOGLE_CONSUMER_ID }}" >> ./dist/env/test.env
-          echo GOOGLE_CONSUMER_SECRET = "${{ secrets.GOOGLE_CONSUMER_SECRET }}" >> ./dist/env/test.env
-          echo LINKEDIN_CONSUMER_ID = "${{ secrets.LINKEDIN_CONSUMER_ID }}" >> ./dist/env/test.env
-          echo LINKEDIN_CONSUMER_SECRET = "${{ secrets.LINKEDIN_CONSUMER_SECRET }}" >> ./dist/env/test.env
+          echo FACEBOOK_CONSUMER_ID = "${{ secrets.FACEBOOK_CONSUMER_ID }}" >> .env.test
+          echo FACEBOOK_CONSUMER_SECRET = "${{ secrets.FACEBOOK_CONSUMER_SECRET }}" >> .env.test
+          echo GITHUB_CONSUMER_ID = "${{ secrets.GTHB_CONSUMER_ID }}" >> .env.test
+          echo GITHUB_CONSUMER_SECRET = "${{ secrets.GTHB_CONSUMER_SECRET }}" >> .env.test
+          echo GOOGLE_CONSUMER_ID = "${{ secrets.GOOGLE_CONSUMER_ID }}" >> .env.test
+          echo GOOGLE_CONSUMER_SECRET = "${{ secrets.GOOGLE_CONSUMER_SECRET }}" >> .env.test
+          echo LINKEDIN_CONSUMER_ID = "${{ secrets.LINKEDIN_CONSUMER_ID }}" >> .env.test
+          echo LINKEDIN_CONSUMER_SECRET = "${{ secrets.LINKEDIN_CONSUMER_SECRET }}" >> .env.test
       - name: Install global dependencies
         run:  npm i typescript@5.7.2 -g
       - name: Install local dependencies

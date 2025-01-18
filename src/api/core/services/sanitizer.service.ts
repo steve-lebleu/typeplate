@@ -3,6 +3,8 @@ import * as Pluralize from 'pluralize';
 import { IModel } from '@interfaces';
 import { isObject } from '@utils/object.util';
 
+type SanitizableData = Record<string, unknown> | unknown[] | string | number | boolean;
+
 class SanitizeService {
 
   /**
@@ -27,7 +29,7 @@ class SanitizeService {
    *
    * @param data
    */
-  hasEligibleMember(data: { [key: string]: any }): boolean {
+  hasEligibleMember(data: { [key: string]: SanitizableData }): boolean {
     return ( this.implementsWhitelist(data) && !Array.isArray(data) ) || ( Array.isArray(data) && [].concat(data).some(obj => this.implementsWhitelist(obj) ) || ( isObject(data) && Object.keys(data).some(key => this.implementsWhitelist(data[key]) ) ) )
   }
 
@@ -39,7 +41,9 @@ class SanitizeService {
   process(data: { [key: string]: any }) {
 
     if ( Array.isArray(data) ) {
-      return [].concat(data).map( (d: any ) => this.implementsWhitelist(d) ? this.sanitize(d as IModel) : d as Record<string,unknown>);
+      return []
+        .concat(data)
+        .map( (d: any ) => this.implementsWhitelist(d) ? this.sanitize(d as IModel) : d as Record<string,unknown>);
     }
 
     if ( this.implementsWhitelist(data) ) {

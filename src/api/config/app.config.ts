@@ -4,12 +4,13 @@ import * as Cors from 'cors';
 import * as Compression from 'compression';
 import { rateLimit as RateLimit } from 'express-rate-limit';
 import * as Helmet from 'helmet';
+import { Handler as MorganHandler } from 'morgan';
 
 import { notAcceptable } from '@hapi/boom';
 
 import { ENVIRONMENT } from '@enums/environment.enum';
 
-import { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, ENV, UPLOAD } from '@config/environment.config';
+import { API_VERSION, AUTHORIZED, DOMAIN, ENV } from '@config/environment.config';
 
 import { Authentication } from '@config/authentication.config';
 import { LoggerConfiguration } from '@config/logger.config';
@@ -173,7 +174,7 @@ export class ExpressConfiguration {
      * @see https://github.com/winstonjs/winston
      * @see https://github.com/expressjs/morgan
      */
-    this.application.use( LoggerConfiguration.writeStream() as any );
+    this.application.use( LoggerConfiguration.writeStream() as MorganHandler );
 
     /**
      * Lifecyle of a classic request

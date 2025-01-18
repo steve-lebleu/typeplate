@@ -20,7 +20,7 @@ class CacheService {
   /**
    * @description
    */
-   get engine(): ICache {
+  get engine(): ICache {
     return CacheConfiguration.start
   }
 
@@ -34,7 +34,7 @@ class CacheService {
   /**
    * @description
    */
-   get isActive(): boolean {
+  get isActive(): boolean {
     return CacheConfiguration.options.IS_ACTIVE;
   }
 

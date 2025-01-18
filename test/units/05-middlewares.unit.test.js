@@ -76,15 +76,11 @@ describe('Middlewares', () => {
   describe('Uploader', () => {
 
     it('should mix args options', (done) => {
-
-      Uploader.upload( { maxFiles: 2, filesize: 5000 } )( null, null, (e) => e )
-        .then(r => {
-          expect(Uploader.options.maxFiles).to.be.eqls(2);
-          expect(Uploader.options.filesize).to.be.eqls(5000);
-          done();
-        })
-        .catch(e => { done(e); });
-
+      Uploader.upload( { maxFiles: 2, filesize: 5000 } )( null, null, (e) => {
+        expect(Uploader.options.maxFiles).to.be.eqls(2);
+        expect(Uploader.options.filesize).to.be.eqls(5000);
+        done();
+      })
     });
 
   });

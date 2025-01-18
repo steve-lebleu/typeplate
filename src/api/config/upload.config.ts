@@ -1,6 +1,6 @@
 import * as Multer from 'multer';
 
-import * as filenamify from 'filenamify';
+import filenamify from 'filenamify';
 
 import { existsSync, mkdirSync } from 'fs';
 import { unsupportedMediaType } from '@hapi/boom';
@@ -86,7 +86,7 @@ class UploadConfiguration {
       },
       filename: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        const name = filenamify( foldername(file.originalname), { replacement: '-', maxLength: 123 } )
+        const name = filenamify( foldername(file.originalname), { replacement: '-', maxLength: 128 } )
           .replace(' ', '-')
           .replace('_', '-')
           .toLowerCase()

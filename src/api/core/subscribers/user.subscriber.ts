@@ -44,7 +44,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
    * @description Called before user update.
    */
   beforeUpdate(event: UpdateEvent<User>): void {
-    event.entity.apikey = encrypt(event.entity.email)
+    event.entity.apikey = encrypt(event.entity.email as string);
     event.entity.updatedAt = Dayjs( new Date() ).toDate();
     if (event.entity.email !== event.databaseEntity.email) {
       event.entity.status = STATUS.REVIEWED;

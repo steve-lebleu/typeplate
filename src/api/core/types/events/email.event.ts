@@ -1,6 +1,6 @@
 import * as Events from 'events';
 import { Cliam } from 'cliam';
-
+import { RENDER_ENGINE } from 'cliam/dist/types/enums/render-engine.enum';
 import { URL } from '@config/environment.config';
 import { User } from '@models/user.model';
 
@@ -19,7 +19,8 @@ EmailEmitter.on('user.confirm', (user: User) => {
         username: user.username
       },
       cta: `${URL}/auth/confirm?token=${user.token(120)}`
-    }
+    },
+    renderEngine: 'cliam' as RENDER_ENGINE
   });
 });
 
@@ -35,7 +36,8 @@ EmailEmitter.on('user.welcome', (user: User) => {
       user: {
         username: user.username
       }
-    }
+    },
+    renderEngine: 'cliam' as RENDER_ENGINE
   });
 });
 
@@ -52,7 +54,8 @@ EmailEmitter.on('password.request', (user: User) => {
         username: user.username
       },
       cta: `${URL}/auth/change-password?token=${user.token()}`
-    }
+    },
+    renderEngine: 'cliam' as RENDER_ENGINE
   });
 });
 

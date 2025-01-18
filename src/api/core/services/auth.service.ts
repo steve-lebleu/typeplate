@@ -101,7 +101,7 @@ class AuthService {
       const user = await UserRepository.oAuthLogin(iRegistrable);
       return next(null, user);
     } catch (err) {
-      return next(err, false);
+      return next(err as Error, false);
     }
   }
 
@@ -119,7 +119,7 @@ class AuthService {
       }
       return next(null, false);
     } catch (err) {
-      return next(err, false);
+      return next(err as Error, false);
     }
   }
 }

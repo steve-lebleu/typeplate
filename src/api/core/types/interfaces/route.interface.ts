@@ -13,7 +13,8 @@ export interface IRoute {
   /**
    * @description Router definition or Router concrete instance
    */
-  provider: any|Router;
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+  provider: Router|any;
 
   /**
    * @description Indicates if the route response must be serialized

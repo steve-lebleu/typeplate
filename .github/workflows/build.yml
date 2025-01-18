@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '20.9.0'
       - name: Create directories
-        run: mkdir -p ./dist/env && cp ./src/env/template.env ./dist/env/test.env
+        run: mkdir -p ./dist/env && .env.example ./dist/env/test.env
       - name: Setup .env file
         run: |
           echo FACEBOOK_CONSUMER_ID = "${{ secrets.FACEBOOK_CONSUMER_ID }}" >> ./dist/env/test.env

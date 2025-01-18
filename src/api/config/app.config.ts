@@ -189,13 +189,6 @@ export class ExpressConfiguration {
     this.application.use(`/api/${API_VERSION}`, RateLimit(this.options.rate), Cache.read, ProxyRouter.map(), Sanitize.sanitize, Resolve.write);
 
     /**
-     * Desktop error notification
-     */
-    if( [ENVIRONMENT.development].includes(ENV as ENVIRONMENT) ) {
-      this.application.use( Catch.notification );
-    }
-
-    /**
      * Lifecycle of an error request
      *
      * - Generate typed error

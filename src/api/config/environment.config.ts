@@ -722,7 +722,7 @@ export class Environment {
       this.environment = ENVIRONMENT[process.env.NODE_ENV as ENVIRONMENT];
     }
 
-    const path = `${process.cwd()}/${this.base}/env/${this.environment}.env`;
+    const path = `${process.cwd()}/.env.${this.environment}`;
 
     if (!existsSync(path)) {
       this.exit(`Environment file not found at ${path}`);

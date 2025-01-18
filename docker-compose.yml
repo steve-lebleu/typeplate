@@ -5,17 +5,11 @@ services:
       dockerfile: Dockerfile
       args:
         - NODE_ENV=development
-        - PORT=${PORT}
     ports:
-      - ${PORT}:8101
+      - ${PORT}:${PORT}
     depends_on:
       db:
         condition: service_healthy
-    environment:
-      - PORT=${PORT}
-      - TYPEORM_DB=${TYPEORM_DB}
-      - TYPEORM_USER=${TYPEORM_USER}
-      - TYPEORM_PWD=${TYPEORM_PWD}
     env_file:
       - .env
     volumes:
@@ -34,7 +28,7 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     env_file:
-    - .env
+    - development.env
     environment:
       - MARIADB_ROOT_PASSWORD=${TYPEORM_PWD}
       - MARIADB_DATABASE=${TYPEORM_DB}

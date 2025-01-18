@@ -39,7 +39,7 @@
   "scripts": {
     "init": "npm-run-all -s init:*",
     "init:install": "npm i typescript@5.7.2 -g && npm i typeorm@0.3.20 -g && npm i rsgen -g && npm i ",
-    "init:copy": "mkdir -p ./dist/env && cp .env.example ./dist/env/development.env && cp .env.example ./dist/env/test.env && cp .env.example ./dist/env/staging.env && cp .env.example ./dist/env/production.env",
+    "init:copy": "cp .env.example .env.development && cp .env.example .env.test && cp .env.example .env.production",
     "init:compile": "tsc",
     "init:version": "rm -rf ./.git && git init && git add . --all && git commit -m \"First commit\"",
     "ci:test": "nyc --reporter=lcov --report-dir=./reports/coverage npm-run-all -s test:*",

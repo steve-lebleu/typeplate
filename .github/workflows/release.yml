@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: '20.9.0'
       - name: Create directories
-        run: mkdir -p ./dist/env && cp .env.example ./dist/env/test.env
+        run: cp .env.example .env.test
       - name: Setup .env file
         run: |
           echo FACEBOOK_CONSUMER_ID = "${{ secrets.FACEBOOK_CONSUMER_ID }}" >> ./dist/env/test.env
@@ -61,7 +61,7 @@ jobs:
         with:
           mysql version: '5.7' 
           mysql database: 'typeplate_test'
-          mysql root password: passw0rd 
+          mysql root password: passw0rd!
       - name: Install global dependencies
         run:  npm i typescript@5.7.2 -g
       - name: Install local dependencies

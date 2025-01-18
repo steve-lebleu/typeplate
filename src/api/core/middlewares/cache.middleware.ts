@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { CacheService } from '@services/cache.service';
 
 /**
@@ -30,7 +30,7 @@ class Cache {
    * @param res Express response
    * @param next Middleware function
    */
-  async read(req: Request, res: Response, next: () => void): Promise<void> {
+  read(req: Request, res: Response, next: NextFunction): void {
     if ( !CacheService.isCachable(req) ) {
       return next();
     }

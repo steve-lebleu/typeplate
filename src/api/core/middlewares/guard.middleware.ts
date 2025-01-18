@@ -40,7 +40,6 @@ class Guard {
    * @param roles Authorized roles
    */
   handleJWT = (req: IUserRequest, res: IResponse, next: (error?: Error) => void, roles: string|string[]) => async (err: Error, user: User, info: string): Promise<void> => {
-
     const error = err || info;
     const logIn = promisify(req.logIn) as ( user, { session } ) => Promise<void>;
 
@@ -54,7 +53,7 @@ class Guard {
 
     if (!roles.includes(user.role)) {
       return next( forbidden('Forbidden area') );
-    } else if (user.role as ROLE !== ROLE.admin && ( req.params.userId && parseInt(req.params.userId, 10) !== user.id ) ) {
+    } else if (user.role as ROLE !== ROLE.admin && ( req.params.userId && parseInt(req.params.userId as string, 10) !== user.id ) ) {
       return next( forbidden('Forbidden area') );
     }
 
@@ -95,7 +94,7 @@ class Guard {
    * @see http://www.passportjs.org/
    */
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
-  authentify = ( req, res, next, roles, callback ) => passport.authenticate('jwt', { session: false }, callback(req, res, next, roles) ) (req, res, next)
+  authentify = ( req: IUserRequest, res: IResponse, next: (error?: Error) => void, roles: ROLE|ROLE[], callback: (req: IUserRequest, res: IResponse, next: (error?: Error) => void, roles: string | string[]) => (err: Error, user: User, info: string) => Promise<void> ) => passport.authenticate('jwt', { session: false }, callback(req, res, next, roles) ) (req, res, next)
 
   /**
    * @description
@@ -110,7 +109,7 @@ class Guard {
    * @see http://www.passportjs.org/
    */
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
-  oAuthentify = ( req, res, next, service, callback ) => passport.authenticate(service, { session: false }, callback(req, res, next) ) (req, res, next)
+  oAuthentify = ( req: IUserRequest, res: IResponse, next: (error?: Error) => void, service: 'jwt'|OAuthProvider, callback: (req: IUserRequest, res: IResponse, next: (error?: Error) => void) => (err: Error, user: User, info: string) => Promise<void> ) => passport.authenticate(service, { session: false }, callback(req, res, next) ) (req, res, next)
 
   /**
    * @description Authorize user access according to role(s) in arguments
@@ -118,7 +117,7 @@ class Guard {
    * @param roles
    */
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  authorize = ( roles ) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => this.authentify(req, res, next, roles, this.handleJWT );
+  authorize = ( roles: ROLE|ROLE[] ) => (req: IUserRequest, res: IResponse, next: (e?: Error) => void): void => this.authentify(req, res, next, roles, this.handleJWT );
 
   /**
    * @description Authorize user access according to external service access_token

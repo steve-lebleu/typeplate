@@ -1,5 +1,4 @@
 const { expect } = require('chai');
-const { existsSync } = require('fs');
 const Util = require('util');
 
 exports.routes = {

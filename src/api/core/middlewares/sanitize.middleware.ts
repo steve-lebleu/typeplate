@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { NextFunction, Request } from 'express';
 
 import { CONTENT_TYPE } from '@config/environment.config';
 import { CONTENT_TYPE as CONTENT_TYPE_ENUM } from '@enums';
@@ -35,11 +35,10 @@ import { SanitizeService } from '@services/sanitizer.service';
    * @param res Express Response instance
    * @param next Callback function
    */
-   async sanitize(req: Request, res: IResponse, next: () => void): Promise<void> {
-
+   sanitize(req: Request, res: IResponse, next: NextFunction): void {
     const hasContent = typeof res.locals.data !== 'undefined';
 
-    if (req.method === 'DELETE' || CONTENT_TYPE !== CONTENT_TYPE_ENUM['application/json'] || !hasContent) {
+    if (req.method === 'DELETE' || CONTENT_TYPE !== CONTENT_TYPE_ENUM['application/json'].toString() || !hasContent) {
       return next();
     }
 

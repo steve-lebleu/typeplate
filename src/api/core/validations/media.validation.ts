@@ -16,7 +16,7 @@ const listMedias = {
     fieldname: fieldname(),
     filename: filename(false),
     path: path(),
-    mimetype: mimetype(MIME_TYPE_LIST),
+    mimetype: mimetype(MIME_TYPE_LIST as string[]),
     size: Joi.number(),
     type: Joi.any().valid(...list(MEDIA_TYPE)),
     owner: Joi.number()
@@ -31,7 +31,7 @@ const insertMedia = {
         fieldname: fieldname().required(),
         filename: filename().required(),
         path: path().required(),
-        mimetype: mimetype(MIME_TYPE_LIST).required(),
+        mimetype: mimetype(MIME_TYPE_LIST as string[]).required(),
         size: Joi.number().required(),
         owner: Joi.number().required()
       })
@@ -56,7 +56,7 @@ const replaceMedia = {
       fieldname: fieldname().required(),
       filename: filename().required(),
       path: path().required(),
-      mimetype: mimetype(MIME_TYPE_LIST).required(),
+      mimetype: mimetype(MIME_TYPE_LIST as string[]).required(),
       size: Joi.number().required(),
       owner: Joi.number().required()
     }
@@ -73,7 +73,7 @@ const updateMedia = {
       fieldname: fieldname(),
       filename: filename(),
       path: path(),
-      mimetype: mimetype(MIME_TYPE_LIST),
+      mimetype: mimetype(MIME_TYPE_LIST as string[]),
       size: Joi.number(),
       owner: Joi.number()
     }

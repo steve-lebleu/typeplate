@@ -1,8 +1,8 @@
-![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/tbqXm9Q/header-ts-boilerplate-4.png)
+![Typescript / Express / Typeorm REST API boilerplate](https://i.ibb.co/dM2bhNJ/cover-typeplate.png)
 
 [![Node](https://img.shields.io/badge/Node-18.19.0-informational?logo=node.js&color=43853D)](https://nodejs.org/docs/latest-v18.x/api/index.html)
-[![TypeScript](https://img.shields.io/badge/Typescript-5.3.3-informational?logo=typescript&color=2F74C0)](https://www.typescriptlang.org/)
-[![Express](https://img.shields.io/badge/Express-4.18.2-informational?logo=express&color=B1B1B1)](https://expressjs.com/)
+[![TypeScript](https://img.shields.io/badge/Typescript-5.7.2-informational?logo=typescript&color=2F74C0)](https://www.typescriptlang.org/)
+[![Express](https://img.shields.io/badge/Express-4.21.2-informational?logo=express&color=B1B1B1)](https://expressjs.com/)
 [![Typeorm](https://img.shields.io/badge/Typeorm-0.3.20-informational?logo=typeorm&color=FFAB00)](https://typeorm.io/#/)
 [![Mocha](https://img.shields.io/badge/Mocha-10.3.0-informational?logo=mocha&color=8A6343)](https://mochajs.org)
 
@@ -12,9 +12,9 @@
 ![GitHub Release](https://img.shields.io/github/v/release/steve-lebleu/typeplate?logo=Github)
 ![GitHub License](https://img.shields.io/github/license/steve-lebleu/typeplate?color=%230A7BBC)
 
-Ready to use RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript)  [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘
+Ready to use RESTful API boilerplate builded with [Express.js](http://expressjs.com/en/4x/api.html), [Typescript](https://github.com/Microsoft/TypeScript), [TypeORM](https://github.com/typeorm/typeorm) and [Mocha](https://mochajs.org/). 🤘
 
-Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boilerplate](https://github.com/danielfsousa/express-rest-boilerplate) :beer:
+Thanks to Daniel F. Sousa for inspiration with his [ExpressREST API boilerplate](https://github.com/danielfsousa/express-rest-boilerplate) :beer:
 
 ## > Features
 
@@ -61,16 +61,14 @@ Thanks to Daniel F. Sousa for inspiration with her [Express ES2017 REST API boil
 ### Prerequisites
 
 * Git
-* Node.js >= 14.16.0
-* NPM >= 6.14.0
+* Node.js >= 18.19.0
+* NPM >= 10.2.3
 * A database engine with a dedicated database
-
-When you're with that, starting your project is a matter of minutes. :clock12:
 
 ### Step 1: install
 
 ```bash
-$ git clone https://github.com/konfer-be/typeplate.git path-to/your-project-name/
+$ git clone https://github.com/steve-lebleu/typeplate.git path-to/your-project-name/
 ```
 
 ### Step 2: go to

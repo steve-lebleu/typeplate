@@ -1,4 +1,4 @@
-import * as Jimp from 'jimp';
+import { Jimp } from 'jimp';
 
 import { unlink, existsSync } from 'fs';
 import { promisify } from 'es6-promisify';
@@ -40,7 +40,7 @@ class MediaService {
    */
   static get(config: any): MediaService {
     if (!MediaService.instance) {
-      MediaService.instance = new MediaService(config);
+      MediaService.instance = new MediaService(config as EnvImageScaling);
     }
     return MediaService.instance;
   }
@@ -58,12 +58,12 @@ class MediaService {
       .then( (image) => {
         this.SIZES
           .forEach( size => {
-            image
+            const path = `${media.path.split('/').slice(0, -1).join('/').replace(this.OPTIONS.PATH_MASTER, this.OPTIONS.PATH_SCALE)}/${size}/${media.filename}.jpg`;
+            void image
               .clone()
-              .resize(this.OPTIONS.SIZES[size.toUpperCase()], Jimp.AUTO)
-              .write(`${media.path.split('/').slice(0, -1).join('/').replace(this.OPTIONS.PATH_MASTER, this.OPTIONS.PATH_SCALE)}/${size}/${media.filename as string}`, (err: Error) => {
-                if(err) throw expectationFailed(err.message);
-              });
+              .resize({ w: this.OPTIONS.SIZES[size.toUpperCase() as keyof typeof this.OPTIONS.SIZES] })
+              .write(path as `${string}.${string}`)
+              .catch(error => console.error(`Error resizing image for size ${size}:`, error));
           });
       })
       .catch();

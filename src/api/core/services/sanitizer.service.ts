@@ -3,6 +3,8 @@ import * as Pluralize from 'pluralize';
 import { IModel } from '@interfaces';
 import { isObject } from '@utils/object.util';
 
+type SanitizableData = Record<string, unknown> | unknown[] | string | number | boolean;
+
 class SanitizeService {
 
   /**
@@ -39,7 +41,9 @@ class SanitizeService {
   process(data: { [key: string]: any }) {
 
     if ( Array.isArray(data) ) {
-      return [].concat(data).map( (d: any ) => this.implementsWhitelist(d) ? this.sanitize(d as IModel) : d as Record<string,unknown>);
+      return []
+        .concat(data)
+        .map( (d: any ) => this.implementsWhitelist(d) ? this.sanitize(d as IModel) : d as Record<string,unknown>);
     }
 
     if ( this.implementsWhitelist(data) ) {
@@ -49,7 +53,7 @@ class SanitizeService {
     if ( isObject(data) ) {
       return Object.keys(data)
         .reduce( (acc: Record<string,unknown>, current: string) => {
-          acc[current] = this.implementsWhitelist(data[current]) ? this.sanitize(data[current]) : data[current]
+          acc[current] = this.implementsWhitelist(data[current]) ? this.sanitize(data[current] as IModel) : data[current]
           return acc ;
         }, {});
     }
@@ -58,17 +62,21 @@ class SanitizeService {
   /**
    * @description Whitelist an entity
    *
-   * @param whitelist Whitelisted properties
    * @param entity Entity to sanitize
-   *
    */
   private sanitize(entity: IModel): Record<string, unknown> {
     const output = {} as Record<string, unknown>;
     Object.keys(entity)
-      .map( (key) => {
+      .map( (key: string) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         if (entity.whitelist.includes(key) || entity.whitelist.includes(Pluralize(key))) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          output[key] = this.isSanitizable( entity[key] ) ? Array.isArray(entity[key]) ? entity[key].length > 0 ? entity[key].map(e => this.sanitize(e)) : [] : this.sanitize(entity[key]) : entity[key];
+          output[key] = this.isSanitizable( entity[key] as Record<string, unknown> )
+            ? Array.isArray(entity[key])
+              ? entity[key].length > 0
+                ? entity[key].map(e => this.sanitize(e as IModel))
+                : []
+              : this.sanitize(entity[key] as IModel)
+            : entity[key];
         }
     });
     return output;

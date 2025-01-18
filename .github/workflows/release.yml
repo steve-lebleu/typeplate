@@ -17,18 +17,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.9.0'
-      - name: Create directories
-        run: cp .env.example .env.test
-      - name: Setup .env file
-        run: |
-          echo FACEBOOK_CONSUMER_ID = "${{ secrets.FACEBOOK_CONSUMER_ID }}" >> .env.test
-          echo FACEBOOK_CONSUMER_SECRET = "${{ secrets.FACEBOOK_CONSUMER_SECRET }}" >> .env.test
-          echo GITHUB_CONSUMER_ID = "${{ secrets.GTHB_CONSUMER_ID }}" >> .env.test
-          echo GITHUB_CONSUMER_SECRET = "${{ secrets.GTHB_CONSUMER_SECRET }}" >> .env.test
-          echo GOOGLE_CONSUMER_ID = "${{ secrets.GOOGLE_CONSUMER_ID }}" >> .env.test
-          echo GOOGLE_CONSUMER_SECRET = "${{ secrets.GOOGLE_CONSUMER_SECRET }}" >> .env.test
-          echo LINKEDIN_CONSUMER_ID = "${{ secrets.LINKEDIN_CONSUMER_ID }}" >> .env.test
-          echo LINKEDIN_CONSUMER_SECRET = "${{ secrets.LINKEDIN_CONSUMER_SECRET }}" >> .env.test
       - name: Install global dependencies
         run:  npm i typescript@5.7.2 -g
       - name: Install local dependencies
@@ -66,6 +54,18 @@ jobs:
         run:  npm i typescript@5.7.2 -g
       - name: Install local dependencies
         run:  npm i
+      - name: Copy .env.example to .env.test
+        run: cp .env.example .env.test
+      - name: Setup .env file
+        run: |
+          echo FACEBOOK_CONSUMER_ID = "${{ secrets.FACEBOOK_CONSUMER_ID }}" >> .env.test
+          echo FACEBOOK_CONSUMER_SECRET = "${{ secrets.FACEBOOK_CONSUMER_SECRET }}" >> .env.test
+          echo GITHUB_CONSUMER_ID = "${{ secrets.GTHB_CONSUMER_ID }}" >> .env.test
+          echo GITHUB_CONSUMER_SECRET = "${{ secrets.GTHB_CONSUMER_SECRET }}" >> .env.test
+          echo GOOGLE_CONSUMER_ID = "${{ secrets.GOOGLE_CONSUMER_ID }}" >> .env.test
+          echo GOOGLE_CONSUMER_SECRET = "${{ secrets.GOOGLE_CONSUMER_SECRET }}" >> .env.test
+          echo LINKEDIN_CONSUMER_ID = "${{ secrets.LINKEDIN_CONSUMER_ID }}" >> .env.test
+          echo LINKEDIN_CONSUMER_SECRET = "${{ secrets.LINKEDIN_CONSUMER_SECRET }}" >> .env.test
       - name: Create dist directory
         run: mkdir dist
       - name: Download build artifact
@@ -77,7 +77,7 @@ jobs:
         run: npm run schema:sync
       - name: Execute tests suites
         run: npm run ci:test
-      - name: Publish to coveralls.io
+      - name: Publish coverage to coveralls.io
         uses: coverallsapp/github-action@v1.1.2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

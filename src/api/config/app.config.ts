@@ -2,7 +2,7 @@ import * as Express from 'express';
 import * as Hpp from 'hpp';
 import * as Cors from 'cors';
 import * as Compression from 'compression';
-import * as RateLimit from 'express-rate-limit';
+import { rateLimit as RateLimit } from 'express-rate-limit';
 import * as Helmet from 'helmet';
 
 import { notAcceptable } from '@hapi/boom';
@@ -69,8 +69,11 @@ export class ExpressConfiguration {
     },
     rate: {
       windowMs: 60 * 60 * 1000, // 1 hour
-      max: 2500,
-      message: 'Too many requests from this IP, please try again after an hour'
+      limit: 2500,
+      message: {
+        status: 429,
+        message: 'Too many requests from this IP, please try again after an hour'
+      },
     }
   };
 

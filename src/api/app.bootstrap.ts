@@ -10,7 +10,7 @@ ApplicationDataSource.initialize()
     Logger.log('info', `Connection to MySQL server established on port ${TYPEORM.PORT} (${ENV})`);
   })
   .catch((error: Error) => {
-    process.stdout.write(`error: ${error.message}`);
+    console.error('Error while connecting to database:', error.message);
     process.exit(1);
   });
 

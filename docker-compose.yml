@@ -1,0 +1,60 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=development
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
+    develop:
+      watch:
+        - action: sync
+          path: ./
+          target: /app
+          
+  db:
+    image: mariadb
+    restart: always
+    user: ${TYPEORM_USER}
+    volumes:
+      - db-data:/var/lib/mysql
+    env_file:
+    - development.env
+    environment:
+      - MARIADB_ROOT_PASSWORD=${TYPEORM_PWD}
+      - MARIADB_DATABASE=${TYPEORM_DB}
+    expose:
+      - 3306
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "/usr/local/bin/healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+    environment:
+      - PMA_HOST=db
+
+volumes:
+  db-data:

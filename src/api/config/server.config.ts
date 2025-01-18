@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import { Server as HTTPServer, createServer } from 'https';
+import { RequestListener } from 'http';
 import { Application } from 'express';
 
 import { ENV, SSL, PORT } from '@config/environment.config';
@@ -48,7 +49,11 @@ export class ServerConfiguration {
    * @param app Express application
    */
   init(app: Application): ServerConfiguration {
-    this.server = !this.server ? SSL.IS_ACTIVE ? createServer(this.options.credentials, app) : app : this.server;
+    this.server = !this.server
+      ? SSL.IS_ACTIVE
+        ? createServer(this.options.credentials, app as RequestListener)
+        : app
+      : this.server;
     return this;
   }
 

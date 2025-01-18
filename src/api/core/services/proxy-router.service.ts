@@ -25,7 +25,7 @@ class ProxyRouter {
   /**
    * @description Routes descriptions
    */
-  private readonly routes = [
+  private readonly routes: Array<{ segment: string, provider: any }> = [
     { segment: '', provider: MainRouter },
     { segment: '/auth/', provider: AuthRouter },
     { segment: '/medias/', provider: MediaRouter },

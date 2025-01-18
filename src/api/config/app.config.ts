@@ -2,14 +2,15 @@ import * as Express from 'express';
 import * as Hpp from 'hpp';
 import * as Cors from 'cors';
 import * as Compression from 'compression';
-import * as RateLimit from 'express-rate-limit';
+import { rateLimit as RateLimit } from 'express-rate-limit';
 import * as Helmet from 'helmet';
+import { Handler as MorganHandler } from 'morgan';
 
 import { notAcceptable } from '@hapi/boom';
 
 import { ENVIRONMENT } from '@enums/environment.enum';
 
-import { API_VERSION, AUTHORIZED, CONTENT_TYPE, DOMAIN, ENV, UPLOAD } from '@config/environment.config';
+import { API_VERSION, AUTHORIZED, DOMAIN, ENV } from '@config/environment.config';
 
 import { Authentication } from '@config/authentication.config';
 import { LoggerConfiguration } from '@config/logger.config';
@@ -69,8 +70,11 @@ export class ExpressConfiguration {
     },
     rate: {
       windowMs: 60 * 60 * 1000, // 1 hour
-      max: 2500,
-      message: 'Too many requests from this IP, please try again after an hour'
+      limit: 2500,
+      message: {
+        status: 429,
+        message: 'Too many requests from this IP, please try again after an hour'
+      },
     }
   };
 
@@ -170,7 +174,7 @@ export class ExpressConfiguration {
      * @see https://github.com/winstonjs/winston
      * @see https://github.com/expressjs/morgan
      */
-    this.application.use( LoggerConfiguration.writeStream() as any );
+    this.application.use( LoggerConfiguration.writeStream() as MorganHandler );
 
     /**
      * Lifecyle of a classic request
@@ -183,13 +187,6 @@ export class ExpressConfiguration {
      */
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     this.application.use(`/api/${API_VERSION}`, RateLimit(this.options.rate), Cache.read, ProxyRouter.map(), Sanitize.sanitize, Resolve.write);
-
-    /**
-     * Desktop error notification
-     */
-    if( [ENVIRONMENT.development].includes(ENV as ENVIRONMENT) ) {
-      this.application.use( Catch.notification );
-    }
 
     /**
      * Lifecycle of an error request

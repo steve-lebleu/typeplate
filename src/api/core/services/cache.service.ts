@@ -5,7 +5,6 @@ import { ICache } from '@interfaces';
 import { CacheConfiguration } from '@config/cache.config';
 import { encrypt } from '@utils/string.util';
 
-
 /**
  * @description Cache service interface with memory cache module
  */
@@ -18,17 +17,10 @@ class CacheService {
 
   private constructor() {}
 
-  static get(): CacheService {
-    if (!CacheService.instance) {
-      CacheService.instance = new CacheService();
-    }
-    return CacheService.instance;
-  }
-
   /**
    * @description
    */
-   get engine(): ICache {
+  get engine(): ICache {
     return CacheConfiguration.start
   }
 
@@ -42,8 +34,15 @@ class CacheService {
   /**
    * @description
    */
-   get isActive(): boolean {
+  get isActive(): boolean {
     return CacheConfiguration.options.IS_ACTIVE;
+  }
+
+  static get(): CacheService {
+    if (!CacheService.instance) {
+      CacheService.instance = new CacheService();
+    }
+    return CacheService.instance;
   }
 
   /**

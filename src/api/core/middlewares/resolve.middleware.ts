@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Request, NextFunction } from 'express';
 import { NOT_FOUND } from 'http-status';
 import { expectationFailed } from '@hapi/boom';
 
@@ -35,7 +35,7 @@ import { CacheService } from '@services/cache.service';
    * @param res Express response object
    * @param next Callback function
    */
-   async write(req: Request, res: IResponse, next: (e?: Error) => void): Promise<void> {
+   write(req: Request, res: IResponse, next: NextFunction): void {
 
     const hasContent = typeof res.locals?.data !== 'undefined';
     const hasNullContent = res.locals.data === null;

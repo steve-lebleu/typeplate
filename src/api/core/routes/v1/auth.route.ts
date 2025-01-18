@@ -1,3 +1,4 @@
+import { RequestHandler } from 'express';
 import { Router } from '@classes';
 import { Validator } from '@middlewares/validator.middleware';
 import { Guard } from '@middlewares/guard.middleware';
@@ -257,7 +258,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/facebook')
-        .get( Guard.oAuth('facebook') );
+        .get( Guard.oAuth('facebook') as RequestHandler );
 
     /**
      * @api {get} /auth/facebook/callback?code=:code Oauth FacebookCallback
@@ -306,7 +307,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/google')
-       .get( Guard.oAuth('google'), AuthController.oAuth );
+       .get( Guard.oAuth('google') as RequestHandler, AuthController.oAuth );
 
     /**
      * @api {get} /auth/google/callback?code=:code Oauth GoogleCallback
@@ -355,7 +356,7 @@ export class AuthRouter extends Router {
      */
     this.router
       .route('/github')
-        .get( Guard.oAuth('github'), AuthController.oAuth );
+        .get( Guard.oAuth('github') as RequestHandler, AuthController.oAuth );
 
     /**
      * @api {get} /auth/github/callback?code=:code Oauth GithubCallback
@@ -404,7 +405,7 @@ export class AuthRouter extends Router {
      */
       this.router
         .route('/linkedin')
-          .get( Guard.oAuth('linkedin'), AuthController.oAuth );
+          .get( Guard.oAuth('linkedin') as RequestHandler, AuthController.oAuth );
 
     /**
      * @api {get} /auth/linkedin/callback?code=:code Oauth LinkedinCallback

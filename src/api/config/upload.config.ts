@@ -1,5 +1,4 @@
 import * as Multer from 'multer';
-
 import * as filenamify from 'filenamify';
 
 import { existsSync, mkdirSync } from 'fs';
@@ -57,7 +56,7 @@ class UploadConfiguration {
       limits: {
         fileSize: options.filesize
       },
-      fileFilter: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
+      fileFilter: (req: Request, file: IMedia, next: (e?: Error, v?: boolean) => void) => {
         if(options.wildcards.filter( mime => file.mimetype === mime ).length === 0) {
           return next( unsupportedMediaType('File mimetype not supported'), false );
         }
@@ -73,7 +72,7 @@ class UploadConfiguration {
   private storage(destination?: string): IStorage {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return Multer.diskStorage({
-      destination: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
+      destination: (req: Request, file: IMedia, next: (e?: Error, v?: string) => void) => {
         let towards = `${destination}/${getTypeOfMedia(file.mimetype)}s`;
         if (IMAGE_MIME_TYPE[file.mimetype]) {
           towards += `/${SCALING.PATH_MASTER}`;
@@ -84,9 +83,9 @@ class UploadConfiguration {
         }
         next(null, towards);
       },
-      filename: (req: Request, file: IMedia, next: (e?: Error, v?: any) => void) => {
+      filename: (req: Request, file: IMedia, next: (e?: Error, v?: string) => void) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        const name = filenamify( foldername(file.originalname), { replacement: '-', maxLength: 123 } )
+        const name = filenamify( foldername(file.originalname), { replacement: '-', maxLength: 128 } )
           .replace(' ', '-')
           .replace('_', '-')
           .toLowerCase()

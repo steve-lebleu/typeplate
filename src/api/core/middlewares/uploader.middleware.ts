@@ -44,7 +44,7 @@ import { IMediaRequest, IResponse, IUploadOptions, IMedia } from '@interfaces';
    *
    * @fixme many files with the same fieldname is not managed if not media route
    */
-  upload = ( options?: IUploadOptions ) => async (req: IMediaRequest, res: IResponse, next: (error?: Error) => void): Promise<void> => {
+  upload = ( options?: IUploadOptions ) => (req: IMediaRequest, res: IResponse, next: (error?: Error) => void): void => {
 
     this.options = options ? Object.keys(options)
       .filter(key => this.options[key])

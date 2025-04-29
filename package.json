@@ -139,7 +139,7 @@
     "nyc": "15.1.0",
     "rsgen": "^0.4.1",
     "sinon": "^17.0.1",
-    "supertest": "^6.3.4",
+    "supertest": "^7.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   }
